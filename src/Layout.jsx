@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "./pages/utils";
+import { createPageUrl } from "@/pages/utils";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Plane, MapPin, BookOpen, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

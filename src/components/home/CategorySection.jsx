@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Palmtree, Mountain, Landmark, Ship, TreePine, Building, Heart, Church } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "../utils";
+import { createPageUrl } from "@/pages/utils";
 
 const categories = [
   { id: "beach", label: "Beach", icon: Palmtree, color: "from-cyan-400 to-blue-500" },

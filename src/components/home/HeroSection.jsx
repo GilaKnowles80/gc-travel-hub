@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Search, MapPin, Calendar, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "../utils";
+import { createPageUrl } from "@/pages/utils";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
