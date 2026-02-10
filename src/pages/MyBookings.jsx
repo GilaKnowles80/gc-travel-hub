@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { MapPin, Calendar, Users, CreditCard, PackageOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "./utils";
+import { createPageUrl } from "@/pages/utils";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",

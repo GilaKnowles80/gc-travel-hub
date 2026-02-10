@@ -9,7 +9,7 @@ import {
   Star, MapPin, Clock, Users, CheckCircle, XCircle, ArrowLeft, CalendarDays, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "./utils";
+import { createPageUrl } from "@/pages/utils";
 import BookingForm from "../components/tours/BookingForm";
 
 export default function TourDetail() {
