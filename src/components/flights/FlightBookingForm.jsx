@@ -341,9 +341,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
             onSeatsSelected={(seats) => setFormData({ ...formData, selected_seats: seats })}
           />
 
-          <div className="bg-slate-50 rounded-xl p-4 mt-4">
-            <p className="text-sm text-slate-600">
-              <strong>Note:</strong> Seat selection is included in your booking at no extra cost. You can change your seats later if needed.
+          <div className="bg-amber-50 rounded-xl p-4 mt-4 border border-amber-200">
+            <p className="text-sm text-slate-700">
+              <strong>Note:</strong> Your booking will be confirmed immediately after payment. Seat selection is included at no extra cost.
             </p>
           </div>
 

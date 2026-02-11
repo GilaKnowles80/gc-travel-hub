@@ -281,11 +281,11 @@ export default function FlightDetail() {
                   disabled={flight.status === "sold_out"}
                   className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base"
                 >
-                  {flight.status === "sold_out" ? "Sold Out" : "Book Now"}
+                  {flight.status === "sold_out" ? "Sold Out" : "Book & Pay Now"}
                 </Button>
 
                 <p className="text-center text-xs text-slate-400 mt-3">
-                  No payment required to reserve
+                  Secure payment • Instant confirmation
                 </p>
               </motion.div>
             </div>
@@ -296,7 +296,7 @@ export default function FlightDetail() {
       <Dialog open={showBooking} onOpenChange={setShowBooking}>
         <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-xl">Book Your Flight</DialogTitle>
+            <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
           </DialogHeader>
           <FlightBookingForm flight={flight} cabinClass={selectedClass} onClose={() => setShowBooking(false)} />
         </DialogContent>
