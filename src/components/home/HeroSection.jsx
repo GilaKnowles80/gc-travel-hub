@@ -15,6 +15,13 @@ const heroImages = [
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0);
   const [tripType, setTripType] = useState("round_trip");
+  const [origin, setOrigin] = useState("");
+  const [destination, setDestination] = useState("");
+
+  const cities = [
+    "Manila", "Cebu", "Davao", "Singapore", "Hong Kong", "Tokyo", "Seoul", 
+    "Bangkok", "Kuala Lumpur", "Dubai", "Sydney", "Los Angeles", "New York"
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,7 +79,7 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-3xl"
         >
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-2 border border-white/20">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-2">
               <div className="bg-white rounded-xl px-4 py-3">
                 <div className="flex items-center gap-2 mb-1">
                   <ArrowLeftRight className="w-4 h-4 text-amber-500" />
@@ -88,14 +95,37 @@ export default function HeroSection() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
-                <MapPin className="w-5 h-5 text-amber-500 shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Where to?"
-                  className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm"
-                  id="hero-destination"
-                />
+              <div className="bg-white rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs text-slate-500">Origin</span>
+                </div>
+                <Select value={origin} onValueChange={setOrigin}>
+                  <SelectTrigger className="border-0 p-0 h-auto text-sm font-medium text-slate-800">
+                    <SelectValue placeholder="Select city" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cities.map((city) => (
+                      <SelectItem key={city} value={city}>{city}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="bg-white rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs text-slate-500">Destination</span>
+                </div>
+                <Select value={destination} onValueChange={setDestination}>
+                  <SelectTrigger className="border-0 p-0 h-auto text-sm font-medium text-slate-800">
+                    <SelectValue placeholder="Select city" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cities.map((city) => (
+                      <SelectItem key={city} value={city}>{city}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
                 <Calendar className="w-5 h-5 text-amber-500 shrink-0" />
@@ -113,18 +143,10 @@ export default function HeroSection() {
                   className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm"
                 />
               </div>
-              <Link
-                to={createPageUrl("Tours")}
-                onClick={() => {
-                  const dest = document.getElementById("hero-destination")?.value;
-                  if (dest) {
-                    window.location.href = createPageUrl("Tours") + `?search=${dest}`;
-                  }
-                }}
-              >
+              <Link to={createPageUrl("Flights")}>
                 <Button className="w-full h-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-semibold text-sm py-3">
                   <Search className="w-4 h-4 mr-2" />
-                  Explore
+                  Search Flights
                 </Button>
               </Link>
             </div>
