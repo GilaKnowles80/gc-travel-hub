@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plane, Calendar, Users, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plane, Calendar, Users, Loader2, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
+import FlightBookingEditForm from "../components/flights/FlightBookingEditForm";
 import moment from "moment";
 
 const statusColors = {
@@ -24,6 +27,8 @@ const paymentColors = {
 };
 
 export default function MyFlightBookings() {
+  const [editingBooking, setEditingBooking] = useState(null);
+
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["flight-bookings"],
     queryFn: () => base44.entities.FlightBooking.list("-created_date", 50),
@@ -110,11 +115,24 @@ export default function MyFlightBookings() {
                         )}
                       </div>
 
-                      <div className="text-right">
-                        <p className="text-sm text-slate-500 mb-1">Total Price</p>
-                        <p className="text-3xl font-bold text-slate-900">
-                          ${booking.total_price?.toLocaleString()}
-                        </p>
+                      <div className="text-right space-y-3">
+                        <div>
+                          <p className="text-sm text-slate-500 mb-1">Total Price</p>
+                          <p className="text-3xl font-bold text-slate-900">
+                            ${booking.total_price?.toLocaleString()}
+                          </p>
+                        </div>
+                        {booking.status === "pending" && (
+                          <Button
+                            onClick={() => setEditingBooking(booking)}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl"
+                          >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit Booking
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -124,6 +142,20 @@ export default function MyFlightBookings() {
           </div>
         )}
       </div>
+
+      <Dialog open={!!editingBooking} onOpenChange={() => setEditingBooking(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Flight Booking</DialogTitle>
+          </DialogHeader>
+          {editingBooking && (
+            <FlightBookingEditForm
+              booking={editingBooking}
+              onClose={() => setEditingBooking(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
