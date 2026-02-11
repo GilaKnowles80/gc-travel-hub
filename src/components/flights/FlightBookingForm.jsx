@@ -11,6 +11,7 @@ import { CheckCircle, Loader2 } from "lucide-react";
 export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    trip_type: "roundtrip",
     passenger_name: "",
     passenger_email: "",
     passenger_phone: "",
@@ -36,12 +37,13 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       setStep(2);
     } else if (step === 2) {
       const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
+      const tripMultiplier = formData.trip_type === "roundtrip" ? 2 : 1;
       bookingMutation.mutate({
         flight_id: flight.id,
         flight_number: flight.flight_number,
         route: `${flight.origin} - ${flight.destination}`,
         cabin_class: cabinClass,
-        total_price: (selectedClass?.price || 0) * formData.number_of_passengers,
+        total_price: (selectedClass?.price || 0) * formData.number_of_passengers * tripMultiplier,
         ...formData,
       });
     }
@@ -68,6 +70,18 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       {step === 1 && (
         <>
+          <div className="space-y-2">
+            <Label>Trip Type *</Label>
+            <Select value={formData.trip_type} onValueChange={(value) => setFormData({ ...formData, trip_type: value })}>
+              <SelectTrigger className="rounded-xl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="roundtrip">Round Trip</SelectItem>
+                <SelectItem value="one_way">One Way</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label>Full Name *</Label>
             <Input
@@ -140,6 +154,10 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           </div>
           <div className="bg-slate-50 rounded-xl p-4">
             <div className="flex justify-between text-sm mb-2">
+              <span className="text-slate-600">Trip Type:</span>
+              <span className="font-medium capitalize">{formData.trip_type === "roundtrip" ? "Round Trip" : "One Way"}</span>
+            </div>
+            <div className="flex justify-between text-sm mb-2">
               <span className="text-slate-600">Cabin Class:</span>
               <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
             </div>
@@ -159,7 +177,8 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 $
                 {(
                   (flight.cabin_classes?.find((c) => c.class === cabinClass)?.price || 0) *
-                  formData.number_of_passengers
+                  formData.number_of_passengers *
+                  (formData.trip_type === "roundtrip" ? 2 : 1)
                 ).toLocaleString()}
               </span>
             </div>
