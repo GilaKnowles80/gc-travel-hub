@@ -1,26 +1,48 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tantml:react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Save, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 export default function TravelPreferencesTab({ user }) {
-  const [preferences, setPreferences] = useState(
-    user.travel_preferences || {
-      preferred_cabin_class: "economy",
-      meal_preference: "regular",
-      seat_preference: "no_preference",
-    }
-  );
+  const [preferences, setPreferences] = useState({
+    preferred_cabin_class: user?.preferred_cabin_class || "economy",
+    meal_preference: user?.meal_preference || "regular",
+    seat_preference: user?.seat_preference || "no_preference",
+    travel_style: user?.travel_style || "leisure",
+    interests: user?.interests || [],
+  });
 
   const queryClient = useQueryClient();
 
+  const availableInterests = [
+    "Beach & Relaxation",
+    "Adventure & Sports",
+    "Culture & History",
+    "Food & Culinary",
+    "Wildlife & Nature",
+    "Shopping",
+    "Photography",
+    "Nightlife",
+    "Wellness & Spa",
+    "Family Activities",
+  ];
+
+  const toggleInterest = (interest) => {
+    const current = preferences.interests || [];
+    const updated = current.includes(interest)
+      ? current.filter((i) => i !== interest)
+      : [...current, interest];
+    setPreferences({ ...preferences, interests: updated });
+  };
+
   const updateMutation = useMutation({
-    mutationFn: async (data) => await base44.auth.updateMe({ travel_preferences: data }),
+    mutationFn: async (data) => await base44.auth.updateMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-user"] });
       toast.success("Preferences updated successfully");
@@ -44,7 +66,48 @@ export default function TravelPreferencesTab({ user }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label>Travel Style</Label>
+            <Select
+              value={preferences.travel_style}
+              onValueChange={(value) => setPreferences({ ...preferences, travel_style: value })}
+            >
+              <SelectTrigger className="rounded-xl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="leisure">Leisure & Relaxation</SelectItem>
+                <SelectItem value="adventure">Adventure & Exploration</SelectItem>
+                <SelectItem value="luxury">Luxury & Premium</SelectItem>
+                <SelectItem value="budget">Budget-Friendly</SelectItem>
+                <SelectItem value="business">Business Travel</SelectItem>
+                <SelectItem value="family">Family Vacation</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Travel Interests</Label>
+            <p className="text-xs text-slate-500 mb-3">Select all that apply</p>
+            <div className="flex flex-wrap gap-2">
+              {availableInterests.map((interest) => (
+                <Badge
+                  key={interest}
+                  variant={preferences.interests?.includes(interest) ? "default" : "outline"}
+                  className={`cursor-pointer rounded-xl transition-colors ${
+                    preferences.interests?.includes(interest)
+                      ? "bg-amber-500 hover:bg-amber-600 text-white"
+                      : "hover:bg-slate-100"
+                  }`}
+                  onClick={() => toggleInterest(interest)}
+                >
+                  {interest}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Preferred Cabin Class</Label>

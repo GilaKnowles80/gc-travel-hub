@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Save, User, Mail, Phone, Calendar, CreditCard, Globe } from "lucide-react";
+import { Loader2, Save, User, Mail, Phone, Calendar, CreditCard, Globe, Camera } from "lucide-react";
 import { toast } from "sonner";
 
 export default function PersonalInfoTab({ user }) {
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     full_name: user.full_name || "",
     email: user.email || "",
@@ -16,6 +17,7 @@ export default function PersonalInfoTab({ user }) {
     date_of_birth: user.date_of_birth || "",
     passport_number: user.passport_number || "",
     nationality: user.nationality || "",
+    profile_picture: user.profile_picture || "",
   });
 
   const queryClient = useQueryClient();
@@ -31,6 +33,24 @@ export default function PersonalInfoTab({ user }) {
     },
   });
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData({ ...formData, profile_picture: file_url });
+      await base44.auth.updateMe({ profile_picture: file_url });
+      queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      toast.success("Profile picture updated!");
+    } catch (error) {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     updateMutation.mutate(formData);
@@ -45,6 +65,38 @@ export default function PersonalInfoTab({ user }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative">
+            {formData.profile_picture ? (
+              <img
+                src={formData.profile_picture}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-amber-100 shadow-lg"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center border-4 border-amber-100 shadow-lg">
+                <User className="w-16 h-16 text-amber-600" />
+              </div>
+            )}
+            <label className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-white p-3 rounded-full cursor-pointer shadow-lg transition-colors">
+              <Camera className="w-5 h-5" />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+                disabled={uploading}
+              />
+            </label>
+          </div>
+          {uploading && (
+            <p className="text-sm text-slate-500 mt-3 flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Uploading...
+            </p>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
