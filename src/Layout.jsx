@@ -9,6 +9,7 @@ const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
   { name: "Tours", page: "Tours", icon: MapPin },
   { name: "Flights", page: "Flights", icon: Plane },
+  { name: "Hotels", page: "Hotels", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
 ];
 

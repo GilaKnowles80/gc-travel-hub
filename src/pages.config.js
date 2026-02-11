@@ -55,6 +55,8 @@ import utils from './pages/utils';
 import Flights from './pages/Flights';
 import FlightDetail from './pages/FlightDetail';
 import MyFlightBookings from './pages/MyFlightBookings';
+import Hotels from './pages/Hotels';
+import HotelDetail from './pages/HotelDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +69,8 @@ export const PAGES = {
     "Flights": Flights,
     "FlightDetail": FlightDetail,
     "MyFlightBookings": MyFlightBookings,
+    "Hotels": Hotels,
+    "HotelDetail": HotelDetail,
 }
 
 export const pagesConfig = {

@@ -14,16 +14,16 @@ export default function BookingForm({ tour, onClose }) {
   const [step, setStep] = useState(1);
   const [booked, setBooked] = useState(false);
   const [form, setForm] = useState({
+    trip_type: "roundtrip",
     customer_name: "",
     customer_email: "",
     customer_phone: "",
     number_of_travelers: 1,
     departure_date: "",
-    trip_type: "round_trip",
     special_requests: "",
   });
 
-  const tripMultiplier = form.trip_type === "round_trip" ? 2 : 1;
+  const tripMultiplier = form.trip_type === "roundtrip" ? 2 : 1;
   const totalPrice = (form.number_of_travelers || 1) * (tour.price_per_person || 0) * tripMultiplier;
 
   const mutation = useMutation({
@@ -127,13 +127,13 @@ export default function BookingForm({ tour, onClose }) {
               <h3 className="font-semibold">Trip Details</h3>
             </div>
             <div className="space-y-2">
-              <Label>Trip Type</Label>
+              <Label>Trip Type *</Label>
               <Select value={form.trip_type} onValueChange={(v) => update("trip_type", v)}>
                 <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="round_trip">Round Trip</SelectItem>
+                  <SelectItem value="roundtrip">Round Trip</SelectItem>
                   <SelectItem value="one_way">One Way</SelectItem>
                 </SelectContent>
               </Select>
@@ -195,16 +195,16 @@ export default function BookingForm({ tour, onClose }) {
                 <span className="font-medium text-slate-900">{tour.title}</span>
               </div>
               <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Trip Type</span>
+                <span className="font-medium capitalize">{form.trip_type === "roundtrip" ? "Round Trip" : "One Way"}</span>
+              </div>
+              <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Name</span>
                 <span className="font-medium">{form.customer_name}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Email</span>
                 <span className="font-medium">{form.customer_email}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Trip Type</span>
-                <span className="font-medium capitalize">{form.trip_type === "round_trip" ? "Round Trip" : "One Way"}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Travelers</span>
