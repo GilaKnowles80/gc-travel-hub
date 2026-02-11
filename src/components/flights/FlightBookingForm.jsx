@@ -56,8 +56,6 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
-      setStep(3);
-    } else if (step === 3) {
       const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
       const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
       const basePrice = selectedClass?.price || 0;
@@ -99,22 +97,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
     }
   };
 
-  if (step === 3) {
-    return (
-      <div className="text-center py-8">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="w-8 h-8 text-green-600" />
-        </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-2">Booking Confirmed!</h3>
-        <p className="text-slate-600 mb-6">
-          Your flight reservation has been created. Check your email for confirmation details.
-        </p>
-        <Button onClick={onClose} className="bg-amber-500 hover:bg-amber-600 rounded-xl">
-          Close
-        </Button>
-      </div>
-    );
-  }
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -343,9 +326,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
         </>
       )}
 
-      {step === 3 && (
+      {step === 2 && (
         <>
-          <div className="mb-4">
+          <div className="mb-4 mt-6 pt-6 border-t border-slate-200">
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Select Your Seats</h3>
             <p className="text-sm text-slate-600">
               Choose {formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd} seat{(formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd) > 1 ? 's' : ''} for your flight
@@ -371,14 +354,14 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       )}
 
       <div className="flex gap-3 pt-2">
-        {(step === 2 || step === 3) && (
+        {step === 2 && (
           <Button type="button" variant="outline" onClick={() => setStep(step - 1)} className="flex-1 rounded-xl">
             Back
           </Button>
         )}
         <Button
           type="submit"
-          disabled={bookingMutation.isPending || (step === 3 && formData.selected_seats.length !== (formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd))}
+          disabled={bookingMutation.isPending || (step === 2 && formData.selected_seats.length !== (formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd))}
           className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl"
         >
           {bookingMutation.isPending ? (
@@ -386,7 +369,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               Processing...
             </>
-          ) : step === 3 ? (
+          ) : step === 2 ? (
             "Proceed to Payment"
           ) : (
             "Continue"
