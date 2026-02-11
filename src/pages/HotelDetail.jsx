@@ -14,6 +14,7 @@ import { Star, MapPin, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import moment from "moment";
+import LocationMap from "../components/shared/LocationMap";
 
 export default function HotelDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -138,8 +139,22 @@ export default function HotelDetail() {
               </p>
             </motion.div>
 
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-amber-500" />
+                Location
+              </h3>
+              <p className="text-slate-600 mb-4">{hotel.address || hotel.location}</p>
+              <LocationMap
+                lat={14.5995}
+                lng={120.9842}
+                title={hotel.name}
+                className="h-80 border border-slate-200"
+              />
+            </motion.div>
+
             {hotel.amenities?.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
                 <h3 className="text-xl font-bold text-slate-900 mb-4">Amenities</h3>
                 <div className="flex flex-wrap gap-2">
                   {hotel.amenities.map((amenity, i) => (

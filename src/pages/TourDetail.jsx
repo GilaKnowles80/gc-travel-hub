@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import BookingForm from "../components/tours/BookingForm";
+import LocationMap from "../components/shared/LocationMap";
 
 export default function TourDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -198,6 +199,20 @@ export default function TourDetail() {
                 </motion.div>
               )}
             </div>
+
+            {/* Location Map */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+              <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-amber-500" />
+                Tour Location
+              </h3>
+              <LocationMap
+                lat={14.5995}
+                lng={120.9842}
+                title={tour.destination}
+                className="h-80 border border-slate-200"
+              />
+            </motion.div>
 
             {/* Gallery */}
             {tour.gallery_urls?.length > 0 && (
