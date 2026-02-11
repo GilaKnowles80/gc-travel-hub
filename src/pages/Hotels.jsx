@@ -5,12 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Star, MapPin, PackageOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Star, MapPin, PackageOpen, Search, Calendar, Users, Hotel as HotelIcon, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 
 export default function Hotels() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [rooms, setRooms] = useState("1");
+  const [guests, setGuests] = useState("1");
+  const [starCategory, setStarCategory] = useState("all");
+  const [nationality, setNationality] = useState("");
 
   const { data: hotels = [], isLoading } = useQuery({
     queryKey: ["hotels"],
@@ -21,14 +29,19 @@ export default function Hotels() {
     return hotels.filter((hotel) => {
       if (searchTerm) {
         const s = searchTerm.toLowerCase();
-        return (
-          hotel.name?.toLowerCase().includes(s) ||
-          hotel.location?.toLowerCase().includes(s)
-        );
+        if (
+          !hotel.name?.toLowerCase().includes(s) &&
+          !hotel.location?.toLowerCase().includes(s)
+        ) {
+          return false;
+        }
+      }
+      if (starCategory !== "all" && hotel.star_rating !== parseInt(starCategory)) {
+        return false;
       }
       return true;
     });
-  }, [hotels, searchTerm]);
+  }, [hotels, searchTerm, starCategory]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -42,13 +55,122 @@ export default function Hotels() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
-          <Input
-            placeholder="Search hotels or locations..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="rounded-xl"
-          />
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <HotelIcon className="w-3.5 h-3.5" />
+                Hotel Name / City / Landmarks
+              </label>
+              <Input
+                placeholder="Search hotels, cities, landmarks..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
+                Check-In Date
+              </label>
+              <Input
+                type="date"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
+                Check-Out Date
+              </label>
+              <Input
+                type="date"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" />
+                Rooms & Guests
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <Select value={rooms} onValueChange={setRooms}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n} Room{n > 1 ? "s" : ""}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={guests} onValueChange={setGuests}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n} Guest{n > 1 ? "s" : ""}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5" />
+                Star Category
+              </label>
+              <Select value={starCategory} onValueChange={setStarCategory}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="All categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="5">5 Star</SelectItem>
+                  <SelectItem value="4">4 Star</SelectItem>
+                  <SelectItem value="3">3 Star</SelectItem>
+                  <SelectItem value="2">2 Star</SelectItem>
+                  <SelectItem value="1">1 Star</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5" />
+                Nationality
+              </label>
+              <Select value={nationality} onValueChange={setNationality}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Select nationality" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ph">Philippines</SelectItem>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="uk">United Kingdom</SelectItem>
+                  <SelectItem value="sg">Singapore</SelectItem>
+                  <SelectItem value="jp">Japan</SelectItem>
+                  <SelectItem value="kr">South Korea</SelectItem>
+                  <SelectItem value="cn">China</SelectItem>
+                  <SelectItem value="ae">UAE</SelectItem>
+                  <SelectItem value="au">Australia</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end">
+              <Button className="w-full bg-amber-500 hover:bg-amber-600 rounded-xl h-10">
+                <Search className="w-4 h-4 mr-2" />
+                Search Hotels
+              </Button>
+            </div>
+          </div>
         </div>
 
         {isLoading ? (
