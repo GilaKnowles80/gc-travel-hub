@@ -29,26 +29,42 @@ Deno.serve(async (req) => {
 
     // Header with gradient background
     doc.setFillColor(245, 158, 11); // Amber color
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 50, 'F');
 
-    // Logo/Title
-    doc.setFontSize(24);
+    // Logo placeholder (square)
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(15, 10, 15, 15, 2, 2, 'F');
+    doc.setFillColor(245, 158, 11);
+    doc.setFontSize(10);
+    doc.setTextColor(245, 158, 11);
+    doc.text('GC', 18, 19);
+
+    // Company Name
+    doc.setFontSize(20);
     doc.setTextColor(255, 255, 255);
-    doc.text('GC Travel & Tours', 20, 20);
+    doc.setFont(undefined, 'bold');
+    doc.text('GC Travel and Tours Agency', 35, 18);
     
-    doc.setFontSize(12);
-    doc.text('Flight Booking Confirmation', 20, 30);
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('Flight Booking Confirmation', 35, 25);
+
+    // Contact Information
+    doc.setFontSize(8);
+    doc.text('Business No: 3956850', 35, 32);
+    doc.text('Mobile: +63915-440-1150 / +639620595263', 35, 37);
+    doc.text('Email: gctravelandtours2021@gmail.com', 35, 42);
 
     // Booking reference
     doc.setFontSize(10);
-    doc.setTextColor(255, 255, 255);
+    doc.setFont(undefined, 'bold');
     doc.text(`Booking Ref: ${booking.id.substring(0, 8).toUpperCase()}`, 150, 20);
 
     // Reset text color
     doc.setTextColor(0, 0, 0);
 
     // Flight Details Section
-    let yPos = 55;
+    let yPos = 65;
     doc.setFontSize(16);
     doc.setFont(undefined, 'bold');
     doc.text('Flight Details', 20, yPos);
@@ -137,9 +153,9 @@ Deno.serve(async (req) => {
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal');
     doc.setTextColor(100, 100, 100);
-    doc.text('Thank you for choosing GC Travel & Tours!', 20, yPos);
-    doc.text('For inquiries, contact us at info@gctraveltours.com or +63 917 123 4567', 20, yPos + 5);
-    doc.text(`Generated on ${new Date().toLocaleDateString()}`, 20, yPos + 10);
+    doc.text('Thank you for choosing GC Travel and Tours Agency!', 20, yPos);
+    doc.text('Mobile: +63915-440-1150 / +639620595263 | Email: gctravelandtours2021@gmail.com', 20, yPos + 5);
+    doc.text(`Business No: 3956850 | Generated on ${new Date().toLocaleDateString()}`, 20, yPos + 10);
 
     const pdfBytes = doc.output('arraybuffer');
 
