@@ -17,6 +17,8 @@ export default function HeroSection() {
   const [tripType, setTripType] = useState("round_trip");
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
+  const [onwardDate, setOnwardDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
 
   const cities = [
     "Manila", "Cebu", "Davao", "Singapore", "Hong Kong", "Tokyo", "Seoul", 
@@ -79,7 +81,7 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-3xl"
         >
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-2 border border-white/20">
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-2">
               <div className="bg-white rounded-xl px-4 py-3">
                 <div className="flex items-center gap-2 mb-1">
                   <ArrowLeftRight className="w-4 h-4 text-amber-500" />
@@ -127,23 +129,45 @@ export default function HeroSection() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
-                <Calendar className="w-5 h-5 text-amber-500 shrink-0" />
+              <div className="bg-white rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs text-slate-500">Onward Date</span>
+                </div>
                 <input
-                  type="text"
-                  placeholder="When?"
-                  className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm"
+                  type="date"
+                  value={onwardDate}
+                  onChange={(e) => setOnwardDate(e.target.value)}
+                  className="w-full bg-transparent text-slate-800 outline-none text-sm font-medium"
                 />
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
-                <Users className="w-5 h-5 text-amber-500 shrink-0" />
+              {tripType === "round_trip" && (
+                <div className="bg-white rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar className="w-4 h-4 text-amber-500" />
+                    <span className="text-xs text-slate-500">Return Date</span>
+                  </div>
+                  <input
+                    type="date"
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                    className="w-full bg-transparent text-slate-800 outline-none text-sm font-medium"
+                  />
+                </div>
+              )}
+              <div className="bg-white rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Users className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs text-slate-500">Travelers</span>
+                </div>
                 <input
-                  type="text"
-                  placeholder="Travelers"
-                  className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm"
+                  type="number"
+                  min="1"
+                  placeholder="1"
+                  className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm font-medium"
                 />
               </div>
-              <Link to={createPageUrl("Flights")}>
+              <Link to={createPageUrl("Flights")} className={tripType === "one_way" ? "lg:col-span-2" : ""}>
                 <Button className="w-full h-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-semibold text-sm py-3">
                   <Search className="w-4 h-4 mr-2" />
                   Search Flights
