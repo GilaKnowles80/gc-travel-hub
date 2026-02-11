@@ -47,30 +47,30 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import FlightDetail from './pages/FlightDetail';
+import Flights from './pages/Flights';
 import Home from './pages/Home';
+import HotelDetail from './pages/HotelDetail';
+import Hotels from './pages/Hotels';
 import MyBookings from './pages/MyBookings';
+import MyFlightBookings from './pages/MyFlightBookings';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import Flights from './pages/Flights';
-import FlightDetail from './pages/FlightDetail';
-import MyFlightBookings from './pages/MyFlightBookings';
-import Hotels from './pages/Hotels';
-import HotelDetail from './pages/HotelDetail';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "FlightDetail": FlightDetail,
+    "Flights": Flights,
     "Home": Home,
+    "HotelDetail": HotelDetail,
+    "Hotels": Hotels,
     "MyBookings": MyBookings,
+    "MyFlightBookings": MyFlightBookings,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "Flights": Flights,
-    "FlightDetail": FlightDetail,
-    "MyFlightBookings": MyFlightBookings,
-    "Hotels": Hotels,
-    "HotelDetail": HotelDetail,
 }
 
 export const pagesConfig = {

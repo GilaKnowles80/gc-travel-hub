@@ -15,6 +15,9 @@ export default function Flights() {
     search: "",
     cabin_class: "all",
     is_direct: "all",
+    airline: "all",
+    departure_time: "all",
+    price_max: 5000,
   });
 
   const { data: flights = [], isLoading } = useQuery({
@@ -27,8 +30,25 @@ export default function Flights() {
   };
 
   const clearFilters = () => {
-    setFilters({ search: "", cabin_class: "all", is_direct: "all" });
+    setFilters({ 
+      search: "", 
+      cabin_class: "all", 
+      is_direct: "all",
+      airline: "all",
+      departure_time: "all",
+      price_max: 5000,
+    });
   };
+
+  const airlines = useMemo(() => {
+    const uniqueAirlines = [...new Set(flights.map(f => f.airline_name).filter(Boolean))];
+    return uniqueAirlines.sort();
+  }, [flights]);
+
+  const maxPrice = useMemo(() => {
+    const prices = flights.flatMap(f => f.cabin_classes?.map(c => c.price) || []);
+    return prices.length > 0 ? Math.max(...prices) : 5000;
+  }, [flights]);
 
   const filteredFlights = useMemo(() => {
     return flights.filter((flight) => {
@@ -41,6 +61,9 @@ export default function Flights() {
         )
           return false;
       }
+      if (filters.airline !== "all" && flight.airline_name !== filters.airline) {
+        return false;
+      }
       if (filters.cabin_class !== "all") {
         if (!flight.cabin_classes?.some((c) => c.class === filters.cabin_class)) return false;
       }
@@ -48,6 +71,16 @@ export default function Flights() {
         if (filters.is_direct === "true" && !flight.is_direct) return false;
         if (filters.is_direct === "false" && flight.is_direct) return false;
       }
+      if (filters.departure_time !== "all") {
+        const hour = new Date(flight.departure_time).getHours();
+        if (filters.departure_time === "morning" && (hour < 6 || hour >= 12)) return false;
+        if (filters.departure_time === "afternoon" && (hour < 12 || hour >= 18)) return false;
+        if (filters.departure_time === "evening" && (hour < 18 || hour >= 24)) return false;
+        if (filters.departure_time === "night" && (hour >= 6)) return false;
+      }
+      const lowestPrice = Math.min(...(flight.cabin_classes?.map((c) => c.price) || [Infinity]));
+      if (lowestPrice > filters.price_max) return false;
+      
       return true;
     });
   }, [flights, filters]);
@@ -64,7 +97,12 @@ export default function Flights() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
-        <FlightFilters filters={filters} onFilterChange={handleFilterChange} onClear={clearFilters} />
+        <FlightFilters 
+          filters={filters} 
+          onFilterChange={handleFilterChange} 
+          onClear={clearFilters}
+          airlines={airlines}
+          maxPrice={maxPrice} />
 
         {isLoading ? (
           <div className="grid grid-cols-1 gap-4">
