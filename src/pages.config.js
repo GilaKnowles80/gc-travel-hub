@@ -52,6 +52,9 @@ import MyBookings from './pages/MyBookings';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
+import Flights from './pages/Flights';
+import FlightDetail from './pages/FlightDetail';
+import MyFlightBookings from './pages/MyFlightBookings';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +64,9 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
+    "Flights": Flights,
+    "FlightDetail": FlightDetail,
+    "MyFlightBookings": MyFlightBookings,
 }
 
 export const pagesConfig = {

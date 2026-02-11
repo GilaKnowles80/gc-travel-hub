@@ -1,0 +1,176 @@
+import React, { useState, useMemo } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plane, Clock, Calendar, PackageOpen } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/pages/utils";
+import FlightFilters from "../components/flights/FlightFilters";
+import moment from "moment";
+
+export default function Flights() {
+  const [filters, setFilters] = useState({
+    search: "",
+    cabin_class: "all",
+    is_direct: "all",
+  });
+
+  const { data: flights = [], isLoading } = useQuery({
+    queryKey: ["flights"],
+    queryFn: () => base44.entities.Flight.filter({ status: "active" }, "-departure_time", 100),
+  });
+
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const clearFilters = () => {
+    setFilters({ search: "", cabin_class: "all", is_direct: "all" });
+  };
+
+  const filteredFlights = useMemo(() => {
+    return flights.filter((flight) => {
+      if (filters.search) {
+        const s = filters.search.toLowerCase();
+        if (
+          !flight.origin?.toLowerCase().includes(s) &&
+          !flight.destination?.toLowerCase().includes(s) &&
+          !flight.airline_name?.toLowerCase().includes(s)
+        )
+          return false;
+      }
+      if (filters.cabin_class !== "all") {
+        if (!flight.cabin_classes?.some((c) => c.class === filters.cabin_class)) return false;
+      }
+      if (filters.is_direct !== "all") {
+        if (filters.is_direct === "true" && !flight.is_direct) return false;
+        if (filters.is_direct === "false" && flight.is_direct) return false;
+      }
+      return true;
+    });
+  }, [flights, filters]);
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <div className="bg-slate-900 py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">Book Your Flight</h1>
+          <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+            Find the best flights to your destination
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+        <FlightFilters filters={filters} onFilterChange={handleFilterChange} onClear={clearFilters} />
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white rounded-2xl h-40 animate-pulse" />
+            ))}
+          </div>
+        ) : filteredFlights.length === 0 ? (
+          <div className="text-center py-20">
+            <PackageOpen className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+            <h3 className="text-xl font-semibold text-slate-600">No flights found</h3>
+            <p className="text-slate-400 mt-2">Try adjusting your filters</p>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-slate-500 mb-6">
+              {filteredFlights.length} flight{filteredFlights.length !== 1 ? "s" : ""} found
+            </p>
+            <div className="space-y-4 pb-16">
+              <AnimatePresence>
+                {filteredFlights.map((flight, i) => {
+                  const lowestPrice = Math.min(...(flight.cabin_classes?.map((c) => c.price) || [0]));
+                  return (
+                    <motion.div
+                      key={flight.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <Link to={createPageUrl("FlightDetail") + `?id=${flight.id}`}>
+                        <Card className="group hover:shadow-xl transition-all duration-300 rounded-2xl border-0 shadow-sm bg-white overflow-hidden">
+                          <div className="p-6">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <Badge className="bg-slate-100 text-slate-700 border-0">
+                                    {flight.airline_name}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {flight.flight_number}
+                                  </Badge>
+                                  {flight.is_direct && (
+                                    <Badge className="bg-green-100 text-green-700 border-0 text-xs">
+                                      Direct
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center gap-6">
+                                  <div>
+                                    <p className="text-2xl font-bold text-slate-900">
+                                      {moment(flight.departure_time).format("HH:mm")}
+                                    </p>
+                                    <p className="text-sm text-slate-500 mt-1">{flight.origin}</p>
+                                  </div>
+
+                                  <div className="flex-1 flex flex-col items-center">
+                                    <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
+                                      <Clock className="w-3 h-3" />
+                                      {flight.duration_hours}h
+                                    </div>
+                                    <div className="w-full h-px bg-slate-200 relative">
+                                      <Plane className="w-4 h-4 text-slate-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90" />
+                                    </div>
+                                    {!flight.is_direct && flight.stops?.length > 0 && (
+                                      <p className="text-xs text-slate-400 mt-1">
+                                        {flight.stops.length} stop{flight.stops.length > 1 ? "s" : ""}
+                                      </p>
+                                    )}
+                                  </div>
+
+                                  <div className="text-right">
+                                    <p className="text-2xl font-bold text-slate-900">
+                                      {moment(flight.arrival_time).format("HH:mm")}
+                                    </p>
+                                    <p className="text-sm text-slate-500 mt-1">{flight.destination}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 mt-3 text-xs text-slate-500">
+                                  <Calendar className="w-3 h-3" />
+                                  {moment(flight.departure_time).format("MMM DD, YYYY")}
+                                </div>
+                              </div>
+
+                              <div className="md:border-l md:pl-6 md:ml-6 text-center md:text-right">
+                                <p className="text-xs text-slate-400 mb-1">from</p>
+                                <p className="text-3xl font-bold text-slate-900">${lowestPrice.toLocaleString()}</p>
+                                <p className="text-xs text-slate-400 mt-1">per person</p>
+                                <div className="text-xs text-slate-500 mt-2">
+                                  {flight.cabin_classes?.length || 0} cabin options
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
