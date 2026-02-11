@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, Users, ArrowLeftRight } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowLeftRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
+import TravelersSelector from "./TravelersSelector";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
@@ -19,6 +20,7 @@ export default function HeroSection() {
   const [destination, setDestination] = useState("");
   const [onwardDate, setOnwardDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
+  const [travelers, setTravelers] = useState({ adults: 1, children: 0, infants: 0, seniors: 0, pwd: 0 });
 
   const cities = [
     "Manila", "Cebu", "Davao", "Singapore", "Hong Kong", "Tokyo", "Seoul", 
@@ -156,16 +158,7 @@ export default function HeroSection() {
                 </div>
               )}
               <div className="bg-white rounded-xl px-4 py-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <Users className="w-4 h-4 text-amber-500" />
-                  <span className="text-xs text-slate-500">Travelers</span>
-                </div>
-                <input
-                  type="number"
-                  min="1"
-                  placeholder="1"
-                  className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 outline-none text-sm font-medium"
-                />
+                <TravelersSelector value={travelers} onChange={setTravelers} />
               </div>
               <Link to={createPageUrl("Flights")} className={tripType === "one_way" ? "lg:col-span-2" : ""}>
                 <Button className="w-full h-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-semibold text-sm py-3">
