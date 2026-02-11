@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import AddToItineraryDialog from "../itinerary/AddToItineraryDialog";
 import moment from "moment";
 
-export default function BookingHistoryTab({ user }) {
+export default function BookingHistoryTab({ user, isPastTrips = false }) {
   const { data: flightBookings = [], isLoading: loadingFlights } = useQuery({
     queryKey: ["user-flight-bookings"],
     queryFn: async () => await base44.entities.FlightBooking.filter({ created_by: user.email }),
