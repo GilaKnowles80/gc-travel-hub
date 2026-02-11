@@ -410,19 +410,23 @@ Deno.serve(async (req) => {
     // Important Notes
     yPos += 15;
     doc.setFillColor(255, 243, 224);
-    doc.rect(15, yPos - 3, 180, 40, 'F');
+    doc.rect(15, yPos - 3, 180, 60, 'F');
 
     doc.setFontSize(10);
     doc.setFont(undefined, 'bold');
-    doc.text('IMPORTANT NOTES:', 20, yPos + 3);
+    doc.text('IMPORTANT NOTES & REMINDERS:', 20, yPos + 3);
 
     doc.setFontSize(8);
     doc.setFont(undefined, 'normal');
-    doc.text('• This is an electronic ticket. Please check-in online or at the airport.', 20, yPos + 10);
-    doc.text('• Arrive at the airport at least 2 hours before domestic flights, 3 hours for international.', 20, yPos + 15);
-    doc.text('• Ticket is non-refundable. Changes may be subject to airline fees.', 20, yPos + 20);
-    doc.text('• Please verify all details are correct. Contact us immediately if corrections are needed.', 20, yPos + 25);
-    doc.text('• Ensure your passport is valid for at least 6 months from travel date for international flights.', 20, yPos + 30);
+    doc.text('• DOMESTIC FLIGHTS: Check-in counters open two (2) hours before scheduled departure time.', 20, yPos + 10);
+    doc.text('• INTERNATIONAL FLIGHTS: Check-in counters open three (3) hours before scheduled departure time.', 20, yPos + 15);
+    doc.text('• This is an electronic ticket. Please check-in online or at the airport counter.', 20, yPos + 20);
+    doc.text('• Ticket is non-refundable. Changes may be subject to airline fees.', 20, yPos + 25);
+    doc.text('• Please verify all details are correct. Contact us immediately if corrections are needed.', 20, yPos + 30);
+    doc.text('• Ensure your passport is valid for at least 6 months from travel date for international flights.', 20, yPos + 35);
+    doc.text('• Travel bookings are subject to regulations by DOTC, OTA, DOT, BI and authorized agencies.', 20, yPos + 40);
+    doc.text('• For international travel, ensure compliance with destination country immigration requirements.', 20, yPos + 45);
+    doc.text('• Keep this itinerary for your records and present when required by immigration authorities.', 20, yPos + 50);
 
     // Footer
     doc.setFontSize(8);
