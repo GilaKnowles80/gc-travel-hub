@@ -42,6 +42,9 @@ Deno.serve(async (req) => {
       mode: 'payment',
       success_url: `${req.headers.get('origin')}/MyFlightBookings?payment=success`,
       cancel_url: `${req.headers.get('origin')}/Flights?payment=cancelled`,
+      payment_intent_data: {
+        setup_future_usage: 'off_session',
+      },
       metadata: {
         base44_app_id: Deno.env.get("BASE44_APP_ID"),
         booking_id: booking.id,
