@@ -1,4 +1,4 @@
-function createPageUrl(pageName) {
+export function createPageUrl(pageName) {
   return `/${pageName}`;
 }
 
