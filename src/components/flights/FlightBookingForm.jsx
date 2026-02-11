@@ -212,10 +212,10 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-base font-semibold">Passenger Details *</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <Label className="text-base font-semibold">Travelers *</Label>
+            <div className="grid grid-cols-1 gap-3">
               <div className="space-y-2">
-                <Label className="text-sm">Adults</Label>
+                <Label className="text-sm font-medium">Adults (18-59 years)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -225,7 +225,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm">Children</Label>
+                <Label className="text-sm font-medium">Children (2-17 years)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -235,7 +235,17 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm">Senior Citizens (10% off)</Label>
+                <Label className="text-sm font-medium">Infants (Under 2 years) - 50% off</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.infants}
+                  onChange={(e) => setFormData({ ...formData, infants: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Senior Citizens (60+ years) - 10% off</Label>
                 <Input
                   type="number"
                   min="0"
@@ -245,22 +255,12 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm">PWD (10% off)</Label>
+                <Label className="text-sm font-medium">PWD (Persons with Disability) - 10% off</Label>
                 <Input
                   type="number"
                   min="0"
                   value={formData.pwd}
                   onChange={(e) => setFormData({ ...formData, pwd: parseInt(e.target.value) || 0 })}
-                  className="rounded-xl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-sm">Infants (50% off)</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  value={formData.infants}
-                  onChange={(e) => setFormData({ ...formData, infants: parseInt(e.target.value) || 0 })}
                   className="rounded-xl"
                 />
               </div>
