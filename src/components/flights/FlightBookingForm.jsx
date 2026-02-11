@@ -80,10 +80,10 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       {step === 1 && (
         <>
           <div className="space-y-2">
-            <Label>Trip Type *</Label>
+            <Label htmlFor="trip-type">Trip Type *</Label>
             <Select value={formData.trip_type} onValueChange={(value) => setFormData({ ...formData, trip_type: value })}>
-              <SelectTrigger className="rounded-xl">
-                <SelectValue />
+              <SelectTrigger id="trip-type" className="rounded-xl">
+                <SelectValue placeholder="Select trip type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="round_trip">Round Trip</SelectItem>
@@ -93,8 +93,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           </div>
           {formData.trip_type === "round_trip" && (
             <div className="space-y-2">
-              <Label>Return Date</Label>
+              <Label htmlFor="return-date">Return Date</Label>
               <Input
+                id="return-date"
                 type="date"
                 value={formData.return_date}
                 onChange={(e) => setFormData({ ...formData, return_date: e.target.value })}
@@ -103,8 +104,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
             </div>
           )}
           <div className="space-y-2">
-            <Label>Full Name *</Label>
+            <Label htmlFor="passenger-name">Full Name *</Label>
             <Input
+              id="passenger-name"
               required
               value={formData.passenger_name}
               onChange={(e) => setFormData({ ...formData, passenger_name: e.target.value })}
