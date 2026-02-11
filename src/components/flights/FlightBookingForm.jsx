@@ -18,7 +18,11 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
     passenger_phone: "",
     passport_number: "",
     date_of_birth: "",
-    number_of_passengers: 1,
+    adults: 1,
+    children: 0,
+    seniors: 0,
+    infants: 0,
+    pwd: 0,
     special_requests: "",
   });
 
@@ -39,6 +43,17 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
     } else if (step === 2) {
       const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
       const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
+      const basePrice = selectedClass?.price || 0;
+      
+      // Calculate total with discounts
+      const totalPassengers = formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
+      const adultsPrice = formData.adults * basePrice;
+      const childrenPrice = formData.children * basePrice;
+      const seniorsPrice = formData.seniors * (basePrice * 0.9); // 10% off
+      const infantsPrice = formData.infants * (basePrice * 0.5); // 50% off for infants
+      const pwdPrice = formData.pwd * (basePrice * 0.9); // 10% off
+      const totalPrice = (adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice) * tripMultiplier;
+      
       bookingMutation.mutate({
         flight_id: flight.id,
         flight_number: flight.flight_number,
@@ -46,13 +61,13 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
         cabin_class: cabinClass,
         trip_type: formData.trip_type,
         return_date: formData.return_date || null,
-        total_price: (selectedClass?.price || 0) * formData.number_of_passengers * tripMultiplier,
+        total_price: totalPrice,
         passenger_name: formData.passenger_name,
         passenger_email: formData.passenger_email,
         passenger_phone: formData.passenger_phone,
         passport_number: formData.passport_number,
         date_of_birth: formData.date_of_birth,
-        number_of_passengers: formData.number_of_passengers,
+        number_of_passengers: totalPassengers,
         special_requests: formData.special_requests,
       });
     }
@@ -154,17 +169,84 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
 
       {step === 2 && (
         <>
-          <div className="space-y-2">
-            <Label>Number of Passengers *</Label>
-            <Input
-              type="number"
-              min="1"
-              required
-              value={formData.number_of_passengers}
-              onChange={(e) => setFormData({ ...formData, number_of_passengers: parseInt(e.target.value) })}
-              className="rounded-xl"
-            />
+          <div className="bg-slate-50 rounded-xl p-4 mb-4">
+            <h3 className="font-semibold text-slate-900 mb-3">Flight Details</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600">Airline:</span>
+                <span className="font-medium">{flight.airline_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Flight Number:</span>
+                <span className="font-medium">{flight.flight_number}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Route:</span>
+                <span className="font-medium">{flight.origin} → {flight.destination}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Cabin Class:</span>
+                <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
+              </div>
+            </div>
           </div>
+
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">Passenger Details *</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label className="text-sm">Adults</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.adults}
+                  onChange={(e) => setFormData({ ...formData, adults: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Children</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.children}
+                  onChange={(e) => setFormData({ ...formData, children: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Senior Citizens (10% off)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.seniors}
+                  onChange={(e) => setFormData({ ...formData, seniors: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">PWD (10% off)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.pwd}
+                  onChange={(e) => setFormData({ ...formData, pwd: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Infants (50% off)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.infants}
+                  onChange={(e) => setFormData({ ...formData, infants: parseInt(e.target.value) || 0 })}
+                  className="rounded-xl"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Special Requests</Label>
             <Textarea
@@ -174,36 +256,63 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
               className="rounded-xl h-24"
             />
           </div>
-          <div className="bg-slate-50 rounded-xl p-4">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-slate-600">Trip Type:</span>
-              <span className="font-medium capitalize">{formData.trip_type === "round_trip" ? "Round Trip" : "One Way"}</span>
-            </div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-slate-600">Cabin Class:</span>
-              <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
-            </div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-slate-600">Price per person:</span>
-              <span className="font-medium">
-                ${flight.cabin_classes?.find((c) => c.class === cabinClass)?.price?.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-slate-600">Passengers:</span>
-              <span className="font-medium">{formData.number_of_passengers}</span>
-            </div>
-            <div className="border-t border-slate-200 mt-3 pt-3 flex justify-between font-bold">
-              <span>Total:</span>
-              <span className="text-amber-600">
-                $
-                {(
-                  (flight.cabin_classes?.find((c) => c.class === cabinClass)?.price || 0) *
-                  formData.number_of_passengers *
-                  (formData.trip_type === "round_trip" ? 2 : 1)
-                ).toLocaleString()}
-              </span>
-            </div>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <h3 className="font-semibold text-slate-900 mb-3">Price Breakdown</h3>
+            {(() => {
+              const basePrice = flight.cabin_classes?.find((c) => c.class === cabinClass)?.price || 0;
+              const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
+              const adultsPrice = formData.adults * basePrice * tripMultiplier;
+              const childrenPrice = formData.children * basePrice * tripMultiplier;
+              const seniorsPrice = formData.seniors * (basePrice * 0.9) * tripMultiplier;
+              const infantsPrice = formData.infants * (basePrice * 0.5) * tripMultiplier;
+              const pwdPrice = formData.pwd * (basePrice * 0.9) * tripMultiplier;
+              const totalPrice = adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice;
+              const totalPassengers = formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
+
+              return (
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between text-slate-600">
+                    <span>Trip Type:</span>
+                    <span className="font-medium">{formData.trip_type === "round_trip" ? "Round Trip" : "One Way"}</span>
+                  </div>
+                  {formData.adults > 0 && (
+                    <div className="flex justify-between text-slate-600">
+                      <span>{formData.adults} Adult(s):</span>
+                      <span>${adultsPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.children > 0 && (
+                    <div className="flex justify-between text-slate-600">
+                      <span>{formData.children} Child(ren):</span>
+                      <span>${childrenPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.seniors > 0 && (
+                    <div className="flex justify-between text-slate-600">
+                      <span>{formData.seniors} Senior(s) (10% off):</span>
+                      <span>${seniorsPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.pwd > 0 && (
+                    <div className="flex justify-between text-slate-600">
+                      <span>{formData.pwd} PWD (10% off):</span>
+                      <span>${pwdPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.infants > 0 && (
+                    <div className="flex justify-between text-slate-600">
+                      <span>{formData.infants} Infant(s) (50% off):</span>
+                      <span>${infantsPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="border-t border-amber-300 pt-2 mt-2 flex justify-between font-bold text-base">
+                    <span>Total ({totalPassengers} passenger{totalPassengers !== 1 ? 's' : ''}):</span>
+                    <span className="text-amber-600">${totalPrice.toLocaleString()}</span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </>
       )}
