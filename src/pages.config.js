@@ -58,6 +58,9 @@ import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
 import Profile from './pages/Profile';
+import Itineraries from './pages/Itineraries';
+import ItineraryView from './pages/ItineraryView';
+import SharedItinerary from './pages/SharedItinerary';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +76,9 @@ export const PAGES = {
     "Tours": Tours,
     "utils": utils,
     "Profile": Profile,
+    "Itineraries": Itineraries,
+    "ItineraryView": ItineraryView,
+    "SharedItinerary": SharedItinerary,
 }
 
 export const pagesConfig = {

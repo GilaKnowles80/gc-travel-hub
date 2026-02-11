@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "Hotels", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
+  { name: "Itineraries", page: "Itineraries", icon: MapPin },
   { name: "Profile", page: "Profile", icon: User },
 ];
 

@@ -3,7 +3,11 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plane, MapPin, Calendar, Loader2 } from "lucide-react";
+import { Plane, MapPin, Calendar, Loader2, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import AddToItineraryDialog from "../itinerary/AddToItineraryDialog";
 import moment from "moment";
 
 export default function BookingHistoryTab({ user }) {
