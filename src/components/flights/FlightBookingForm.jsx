@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, Loader2 } from "lucide-react";
 import SeatMap from "./SeatMap";
+import PaymentMethodSelector from "./PaymentMethodSelector";
 
 export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const [step, setStep] = useState(1);
@@ -361,6 +362,10 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
             <p className="text-sm text-slate-600">
               <strong>Note:</strong> Seat selection is included in your booking at no extra cost. You can change your seats later if needed.
             </p>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <PaymentMethodSelector />
           </div>
         </>
       )}
