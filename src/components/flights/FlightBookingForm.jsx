@@ -29,11 +29,23 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const queryClient = useQueryClient();
 
   const bookingMutation = useMutation({
-    mutationFn: (data) => base44.entities.FlightBooking.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
-      setStep(3);
+    mutationFn: async (data) => {
+      // Check if running in iframe
+      if (window.self !== window.top) {
+        throw new Error('Payment checkout is only available in the published app. Please open the app in a new tab.');
+      }
+
+      const response = await base44.functions.invoke('createFlightCheckout', data);
+      return response.data;
     },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+    },
+    onError: (error) => {
+      alert(error.message || 'Payment processing failed. Please try again.');
+    }
   });
 
   const handleSubmit = (e) => {
@@ -55,20 +67,28 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       const totalPrice = (adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice) * tripMultiplier;
       
       bookingMutation.mutate({
-        flight_id: flight.id,
-        flight_number: flight.flight_number,
-        route: `${flight.origin} - ${flight.destination}`,
-        cabin_class: cabinClass,
-        trip_type: formData.trip_type,
-        return_date: formData.return_date || null,
-        total_price: totalPrice,
-        passenger_name: formData.passenger_name,
-        passenger_email: formData.passenger_email,
-        passenger_phone: formData.passenger_phone,
-        passport_number: formData.passport_number,
-        date_of_birth: formData.date_of_birth,
-        number_of_passengers: totalPassengers,
-        special_requests: formData.special_requests,
+        bookingData: {
+          flight_id: flight.id,
+          flight_number: flight.flight_number,
+          route: `${flight.origin} - ${flight.destination}`,
+          cabin_class: cabinClass,
+          trip_type: formData.trip_type,
+          return_date: formData.return_date || null,
+          total_price: totalPrice,
+          passenger_name: formData.passenger_name,
+          passenger_email: formData.passenger_email,
+          passenger_phone: formData.passenger_phone,
+          passport_number: formData.passport_number,
+          date_of_birth: formData.date_of_birth,
+          number_of_passengers: totalPassengers,
+          special_requests: formData.special_requests,
+        },
+        flightDetails: {
+          route: `${flight.origin} - ${flight.destination}`,
+          airline: flight.airline_name,
+          flightNumber: flight.flight_number,
+          cabinClass: cabinClass.replace(/_/g, " "),
+        }
       });
     }
   };
@@ -336,7 +356,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           ) : step === 1 ? (
             "Continue"
           ) : (
-            "Confirm Booking"
+            "Proceed to Payment"
           )}
         </Button>
       </div>
