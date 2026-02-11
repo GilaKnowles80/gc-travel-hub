@@ -222,7 +222,7 @@ export default function FlightDetail() {
       </div>
 
       <Dialog open={showBooking} onOpenChange={setShowBooking}>
-        <DialogContent className="sm:max-w-md rounded-2xl">
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl">Book Your Flight</DialogTitle>
           </DialogHeader>
