@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
-import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase } from "lucide-react";
+import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
@@ -70,6 +70,23 @@ export default function FlightDetail() {
             <Badge variant="outline" className="bg-white/10 text-white border-white/30">
               {flight.flight_number}
             </Badge>
+            {flight.flight_status && (
+              <Badge className={`border-0 ${
+                flight.flight_status === 'on_time' ? 'bg-green-500 text-white' :
+                flight.flight_status === 'delayed' ? 'bg-red-500 text-white' :
+                flight.flight_status === 'boarding' ? 'bg-blue-500 text-white' :
+                flight.flight_status === 'departed' ? 'bg-amber-500 text-white' :
+                flight.flight_status === 'arrived' ? 'bg-green-600 text-white' :
+                'bg-gray-500 text-white'
+              }`}>
+                {flight.flight_status === 'on_time' ? 'On Time' :
+                 flight.flight_status === 'delayed' ? 'Delayed' :
+                 flight.flight_status === 'boarding' ? 'Boarding' :
+                 flight.flight_status === 'departed' ? 'Departed' :
+                 flight.flight_status === 'arrived' ? 'Arrived' :
+                 'Cancelled'}
+              </Badge>
+            )}
             {flight.is_direct && (
               <Badge className="bg-green-500/20 text-green-200 border-green-500/30">Direct Flight</Badge>
             )}
@@ -133,6 +150,32 @@ export default function FlightDetail() {
                       <p className="font-semibold text-slate-900">{flight.baggage_allowance || "23 kg checked, 7 kg cabin"}</p>
                     </div>
                   </div>
+                  {(flight.departure_terminal || flight.departure_gate) && (
+                    <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+                      <DoorOpen className="w-5 h-5 text-amber-500" />
+                      <div>
+                        <p className="text-sm text-slate-500">Departure Gate</p>
+                        <p className="font-semibold text-slate-900">
+                          {flight.departure_terminal && `Terminal ${flight.departure_terminal}`}
+                          {flight.departure_terminal && flight.departure_gate && ' • '}
+                          {flight.departure_gate && `Gate ${flight.departure_gate}`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {(flight.arrival_terminal || flight.arrival_gate) && (
+                    <div className="flex items-center gap-3">
+                      <DoorOpen className="w-5 h-5 text-amber-500" />
+                      <div>
+                        <p className="text-sm text-slate-500">Arrival Gate</p>
+                        <p className="font-semibold text-slate-900">
+                          {flight.arrival_terminal && `Terminal ${flight.arrival_terminal}`}
+                          {flight.arrival_terminal && flight.arrival_gate && ' • '}
+                          {flight.arrival_gate && `Gate ${flight.arrival_gate}`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Card>
             </motion.div>
