@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Calendar, Users } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, MapPin, Calendar, Users, ArrowLeftRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 
@@ -13,6 +14,7 @@ const heroImages = [
 
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0);
+  const [tripType, setTripType] = useState("round_trip");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,7 +72,22 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-3xl"
         >
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-2 border border-white/20">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+              <div className="bg-white rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <ArrowLeftRight className="w-4 h-4 text-amber-500" />
+                  <span className="text-xs text-slate-500">Trip Type</span>
+                </div>
+                <Select value={tripType} onValueChange={setTripType}>
+                  <SelectTrigger className="border-0 p-0 h-auto text-sm font-medium text-slate-800">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="round_trip">Round Trip</SelectItem>
+                    <SelectItem value="one_way">One Way</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3">
                 <MapPin className="w-5 h-5 text-amber-500 shrink-0" />
                 <input
