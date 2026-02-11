@@ -11,7 +11,8 @@ import { CheckCircle, Loader2 } from "lucide-react";
 export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    trip_type: "roundtrip",
+    trip_type: "round_trip",
+    return_date: "",
     passenger_name: "",
     passenger_email: "",
     passenger_phone: "",
@@ -37,14 +38,22 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       setStep(2);
     } else if (step === 2) {
       const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
-      const tripMultiplier = formData.trip_type === "roundtrip" ? 2 : 1;
+      const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
       bookingMutation.mutate({
         flight_id: flight.id,
         flight_number: flight.flight_number,
         route: `${flight.origin} - ${flight.destination}`,
         cabin_class: cabinClass,
+        trip_type: formData.trip_type,
+        return_date: formData.return_date || null,
         total_price: (selectedClass?.price || 0) * formData.number_of_passengers * tripMultiplier,
-        ...formData,
+        passenger_name: formData.passenger_name,
+        passenger_email: formData.passenger_email,
+        passenger_phone: formData.passenger_phone,
+        passport_number: formData.passport_number,
+        date_of_birth: formData.date_of_birth,
+        number_of_passengers: formData.number_of_passengers,
+        special_requests: formData.special_requests,
       });
     }
   };
@@ -77,11 +86,22 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="roundtrip">Round Trip</SelectItem>
+                <SelectItem value="round_trip">Round Trip</SelectItem>
                 <SelectItem value="one_way">One Way</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          {formData.trip_type === "round_trip" && (
+            <div className="space-y-2">
+              <Label>Return Date</Label>
+              <Input
+                type="date"
+                value={formData.return_date}
+                onChange={(e) => setFormData({ ...formData, return_date: e.target.value })}
+                className="rounded-xl"
+              />
+            </div>
+          )}
           <div className="space-y-2">
             <Label>Full Name *</Label>
             <Input
@@ -155,7 +175,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           <div className="bg-slate-50 rounded-xl p-4">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-slate-600">Trip Type:</span>
-              <span className="font-medium capitalize">{formData.trip_type === "roundtrip" ? "Round Trip" : "One Way"}</span>
+              <span className="font-medium capitalize">{formData.trip_type === "round_trip" ? "Round Trip" : "One Way"}</span>
             </div>
             <div className="flex justify-between text-sm mb-2">
               <span className="text-slate-600">Cabin Class:</span>
@@ -178,7 +198,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 {(
                   (flight.cabin_classes?.find((c) => c.class === cabinClass)?.price || 0) *
                   formData.number_of_passengers *
-                  (formData.trip_type === "roundtrip" ? 2 : 1)
+                  (formData.trip_type === "round_trip" ? 2 : 1)
                 ).toLocaleString()}
               </span>
             </div>
