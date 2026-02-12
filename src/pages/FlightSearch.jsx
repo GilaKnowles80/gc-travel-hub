@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plane, Calendar, Users, Loader2, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
+import BookingDialog from "@/components/flights/BookingDialog";
 
 export default function FlightSearch() {
     const [searchParams, setSearchParams] = useState({
@@ -20,6 +21,13 @@ export default function FlightSearch() {
         cabinClass: "ECONOMY"
     });
     const [hasSearched, setHasSearched] = useState(false);
+    const [selectedFlight, setSelectedFlight] = useState(null);
+    const [showBookingDialog, setShowBookingDialog] = useState(false);
+
+    const handleSelectFlight = (offer) => {
+        setSelectedFlight(offer);
+        setShowBookingDialog(true);
+    };
 
     const { data: flightResults, isLoading, error, refetch } = useQuery({
         queryKey: ['flight-search', searchParams],
@@ -251,7 +259,10 @@ export default function FlightSearch() {
                                                         <div className="text-xs text-slate-500 mb-3">
                                                             per person • includes markup
                                                         </div>
-                                                        <Button className="bg-amber-500 hover:bg-amber-600">
+                                                        <Button 
+                                                            className="bg-amber-500 hover:bg-amber-600"
+                                                            onClick={() => handleSelectFlight(offer)}
+                                                        >
                                                             Select Flight
                                                         </Button>
                                                     </div>
@@ -273,6 +284,19 @@ export default function FlightSearch() {
                             <p className="text-sm text-slate-500 mt-2">Try adjusting your dates or destinations</p>
                         </CardContent>
                     </Card>
+                )}
+
+                {/* Booking Dialog */}
+                {selectedFlight && (
+                    <BookingDialog
+                        isOpen={showBookingDialog}
+                        onClose={() => {
+                            setShowBookingDialog(false);
+                            setSelectedFlight(null);
+                        }}
+                        flightOffer={selectedFlight}
+                        passengers={searchParams.adults}
+                    />
                 )}
             </div>
         </div>
