@@ -52,15 +52,16 @@ import Flights from './pages/Flights';
 import Home from './pages/Home';
 import HotelDetail from './pages/HotelDetail';
 import Hotels from './pages/Hotels';
+import Itineraries from './pages/Itineraries';
+import ItineraryView from './pages/ItineraryView';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
+import Profile from './pages/Profile';
+import SharedItinerary from './pages/SharedItinerary';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import Profile from './pages/Profile';
-import Itineraries from './pages/Itineraries';
-import ItineraryView from './pages/ItineraryView';
-import SharedItinerary from './pages/SharedItinerary';
+import FlightSearch from './pages/FlightSearch';
 import __Layout from './Layout.jsx';
 
 
@@ -70,15 +71,16 @@ export const PAGES = {
     "Home": Home,
     "HotelDetail": HotelDetail,
     "Hotels": Hotels,
+    "Itineraries": Itineraries,
+    "ItineraryView": ItineraryView,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
+    "Profile": Profile,
+    "SharedItinerary": SharedItinerary,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "Profile": Profile,
-    "Itineraries": Itineraries,
-    "ItineraryView": ItineraryView,
-    "SharedItinerary": SharedItinerary,
+    "FlightSearch": FlightSearch,
 }
 
 export const pagesConfig = {
