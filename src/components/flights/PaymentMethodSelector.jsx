@@ -45,7 +45,15 @@ const PaymentMethodSelector = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {paymentMethods.map((category) => (
-          <Card key={category.category} className={`p-4 rounded-xl border-2 ${category.color}`}>
+          <Card 
+            key={category.category} 
+            className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+              selectedCategory === category.category 
+                ? 'ring-2 ring-blue-500 ring-offset-2' 
+                : category.color
+            }`}
+            onClick={() => setSelectedCategory(category.category)}
+          >
             <div className="flex items-start gap-3">
               <div className="p-2 bg-white rounded-lg">
                 <category.icon className="w-5 h-5 text-slate-700" />
