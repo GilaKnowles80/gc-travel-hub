@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { createPageUrl } from "@/pages/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, User } from "lucide-react";
+import { Loader2, User, CreditCard } from "lucide-react";
 import { toast } from "sonner";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, guests }) {
-    const navigate = useNavigate();
     const [guestDetails, setGuestDetails] = useState(
         Array.from({ length: guests }, (_, i) => ({
             id: i + 1,
@@ -29,24 +29,27 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
 
     const bookingMutation = useMutation({
         mutationFn: async () => {
-            const response = await base44.functions.invoke('bookHotel', {
-                hotelOffer: {
-                    ...offer,
-                    hotel: hotel
-                },
+            const response = await base44.functions.invoke('createHotelCheckout', {
+                hotel,
+                offer,
                 guestDetails: {
                     guests: guestDetails
                 }
             });
             return response.data;
         },
-        onSuccess: (data) => {
-            sessionStorage.setItem('hotelBookingConfirmation', JSON.stringify(data));
-            navigate(createPageUrl('HotelBookingConfirmation'));
-            toast.success('Hotel booked successfully!');
+        onSuccess: async (data) => {
+            const stripe = await stripePromise;
+            const { error } = await stripe.redirectToCheckout({
+                sessionId: data.sessionId
+            });
+            
+            if (error) {
+                toast.error(error.message);
+            }
         },
         onError: (error) => {
-            toast.error(error.message || 'Failed to book hotel');
+            toast.error(error.message || 'Failed to create checkout');
         }
     });
 
@@ -157,10 +160,13 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                             {bookingMutation.isPending ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Booking...
+                                    Processing...
                                 </>
                             ) : (
-                                'Confirm Booking'
+                                <>
+                                    <CreditCard className="w-4 h-4 mr-2" />
+                                    Proceed to Payment
+                                </>
                             )}
                         </Button>
                     </div>

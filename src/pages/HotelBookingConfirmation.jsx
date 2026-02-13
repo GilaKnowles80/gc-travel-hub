@@ -3,20 +3,41 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Hotel, Calendar, Users, Mail, FileText, Home, MapPin } from "lucide-react";
+import { CheckCircle2, Hotel, Calendar, Users, Mail, FileText, Home, MapPin, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
 
 export default function HotelBookingConfirmation() {
     const [bookingData, setBookingData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = sessionStorage.getItem('hotelBookingConfirmation');
-        if (data) {
-            setBookingData(JSON.parse(data));
-            sessionStorage.removeItem('hotelBookingConfirmation');
+        // Check for Stripe session
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            // Payment successful via Stripe
+            setLoading(false);
+            setBookingData({ paymentSuccessful: true, sessionId });
+        } else {
+            // Direct booking
+            const data = sessionStorage.getItem('hotelBookingConfirmation');
+            if (data) {
+                setBookingData(JSON.parse(data));
+                sessionStorage.removeItem('hotelBookingConfirmation');
+            }
+            setLoading(false);
         }
     }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+            </div>
+        );
+    }
 
     if (!bookingData) {
         return (
@@ -31,6 +52,51 @@ export default function HotelBookingConfirmation() {
                         </Link>
                     </CardContent>
                 </Card>
+            </div>
+        );
+    }
+
+    // If payment was successful via Stripe but no booking details yet
+    if (bookingData.paymentSuccessful && !bookingData.hotelName) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4">
+                <div className="max-w-4xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center"
+                    >
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                            <CheckCircle2 className="w-12 h-12 text-green-600" />
+                        </div>
+                        <h1 className="text-4xl font-bold text-slate-900 mb-2">Payment Successful!</h1>
+                        <p className="text-lg text-slate-600 mb-8">Your hotel booking is being processed</p>
+                        
+                        <Card className="mb-6 border-blue-200 bg-blue-50">
+                            <CardContent className="py-4 flex items-center gap-3">
+                                <Mail className="w-5 h-5 text-blue-600" />
+                                <p className="text-sm text-blue-900">
+                                    A confirmation email with your booking details will be sent shortly.
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        <div className="flex gap-4 justify-center mt-8">
+                            <Link to={createPageUrl("Home")}>
+                                <Button variant="outline" className="gap-2">
+                                    <Home className="w-4 h-4" />
+                                    Back to Home
+                                </Button>
+                            </Link>
+                            <Link to={createPageUrl("MyBookings")}>
+                                <Button className="bg-blue-500 hover:bg-blue-600 gap-2">
+                                    <FileText className="w-4 h-4" />
+                                    View My Bookings
+                                </Button>
+                            </Link>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         );
     }
