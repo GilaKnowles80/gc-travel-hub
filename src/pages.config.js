@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import BookingConfirmation from './pages/BookingConfirmation';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import Flights from './pages/Flights';
@@ -62,11 +63,13 @@ import SharedItinerary from './pages/SharedItinerary';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import BookingConfirmation from './pages/BookingConfirmation';
+import HotelSearch from './pages/HotelSearch';
+import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "BookingConfirmation": BookingConfirmation,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
     "Flights": Flights,
@@ -82,7 +85,8 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "BookingConfirmation": BookingConfirmation,
+    "HotelSearch": HotelSearch,
+    "HotelBookingConfirmation": HotelBookingConfirmation,
 }
 
 export const pagesConfig = {
