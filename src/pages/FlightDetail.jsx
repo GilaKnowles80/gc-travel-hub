@@ -98,7 +98,11 @@ export default function FlightDetail() {
           <div className="flex items-center gap-8 text-white">
             <div>
               <p className="text-4xl font-bold">{moment(flight.departure_time).format("HH:mm")}</p>
+              <p className="text-sm text-white/70 mt-1">{moment(flight.departure_time).format("MMM DD, YYYY")}</p>
               <p className="text-xl text-white/80 mt-1">{flight.origin}</p>
+              {flight.departure_terminal && (
+                <p className="text-sm text-white/60 mt-1">Terminal {flight.departure_terminal}</p>
+              )}
             </div>
 
             <div className="flex-1 flex flex-col items-center">
@@ -118,13 +122,12 @@ export default function FlightDetail() {
 
             <div className="text-right">
               <p className="text-4xl font-bold">{moment(flight.arrival_time).format("HH:mm")}</p>
+              <p className="text-sm text-white/70 mt-1">{moment(flight.arrival_time).format("MMM DD, YYYY")}</p>
               <p className="text-xl text-white/80 mt-1">{flight.destination}</p>
+              {flight.arrival_terminal && (
+                <p className="text-sm text-white/60 mt-1">Terminal {flight.arrival_terminal}</p>
+              )}
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 mt-4 text-white/70">
-            <Calendar className="w-4 h-4" />
-            {moment(flight.departure_time).format("MMMM DD, YYYY")}
           </div>
         </div>
       </div>
