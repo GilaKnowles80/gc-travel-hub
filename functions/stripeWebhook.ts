@@ -28,6 +28,7 @@ Deno.serve(async (req) => {
       const session = event.data.object;
       const bookingId = session.metadata.booking_id;
       const bookingType = session.metadata.booking_type;
+      const bookingData = session.metadata.booking_data;
 
       if (bookingType === 'flight' && bookingId) {
         await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
@@ -36,6 +37,32 @@ Deno.serve(async (req) => {
         });
         
         console.log(`Flight booking ${bookingId} marked as paid`);
+      }
+
+      // Handle hotel booking via Amadeus
+      if (bookingData) {
+        try {
+          const data = JSON.parse(bookingData);
+          
+          if (data.hotel && data.offer) {
+            const bookingResult = await base44.asServiceRole.functions.invoke('bookHotel', {
+              hotelOffer: {
+                ...data.offer,
+                hotel: data.hotel
+              },
+              guestDetails: data.guestDetails
+            });
+            console.log('Hotel booking completed via webhook:', bookingResult.data);
+          } else if (data.flightOffer) {
+            const bookingResult = await base44.asServiceRole.functions.invoke('bookFlight', {
+              flightOffer: data.flightOffer,
+              passengerDetails: data.passengerDetails
+            });
+            console.log('Flight booking completed via webhook:', bookingResult.data);
+          }
+        } catch (err) {
+          console.error('Error processing booking:', err);
+        }
       }
     }
 
