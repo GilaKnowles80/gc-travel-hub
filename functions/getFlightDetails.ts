@@ -60,8 +60,9 @@ Deno.serve(async (req) => {
 
         const pricingData = await priceResponse.json();
 
-        // Apply markup
-        const markup = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '0') / 100;
+        // Get markup from admin settings
+        const markupResponse = await base44.asServiceRole.functions.invoke('getAdminMarkup');
+        const markup = markupResponse.data.markup / 100;
 
         const offer = pricingData.data.flightOffers[0];
         const basePrice = parseFloat(offer.price.total);

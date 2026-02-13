@@ -18,8 +18,9 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Missing required data' }, { status: 400 });
         }
 
-        // Calculate markup
-        const markup = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '0') / 100;
+        // Get markup from admin settings
+        const markupResponse = await base44.asServiceRole.functions.invoke('getAdminMarkup');
+        const markup = markupResponse.data.markup / 100;
         const basePrice = parseFloat(offer.price.total);
         const markedUpPrice = basePrice * (1 + markup);
         const totalAmount = Math.round(markedUpPrice * 100);

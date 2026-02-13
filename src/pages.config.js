@@ -65,6 +65,7 @@ import Tours from './pages/Tours';
 import utils from './pages/utils';
 import HotelSearch from './pages/HotelSearch';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +88,7 @@ export const PAGES = {
     "utils": utils,
     "HotelSearch": HotelSearch,
     "HotelBookingConfirmation": HotelBookingConfirmation,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {
