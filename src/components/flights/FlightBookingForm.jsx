@@ -11,7 +11,7 @@ import SeatMap from "./SeatMap";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 
 export default function FlightBookingForm({ flight, cabinClass, onClose }) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 1: Flight Details, 2: Passenger Details, 3: Payment
   const [formData, setFormData] = useState({
     trip_type: "round_trip",
     return_date: "",
@@ -54,8 +54,26 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (step === 1) {
+      // Validate flight details step
+      if (formData.trip_type === "round_trip" && !formData.return_date) {
+        alert("Please select a return date");
+        return;
+      }
       setStep(2);
     } else if (step === 2) {
+      // Validate passenger details
+      const totalPassengers = formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
+      if (totalPassengers === 0) {
+        alert("Please add at least one passenger");
+        return;
+      }
+      if (formData.selected_seats.length !== totalPassengers) {
+        alert("Please select seats for all passengers");
+        return;
+      }
+      setStep(3);
+    } else if (step === 3) {
+      // Proceed to payment
       const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
       const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
       const basePrice = selectedClass?.price || 0;
@@ -99,10 +117,61 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
 
 
 
+  // Progress indicator
+  const stepLabels = ['Flight Details', 'Passenger Details', 'Payment'];
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Step Progress */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          {stepLabels.map((label, index) => (
+            <div key={index} className="flex items-center flex-1">
+              <div className="flex flex-col items-center">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
+                  step > index + 1 ? 'bg-green-500 text-white' :
+                  step === index + 1 ? 'bg-amber-500 text-white' :
+                  'bg-slate-200 text-slate-500'
+                }`}>
+                  {step > index + 1 ? <CheckCircle className="w-5 h-5" /> : index + 1}
+                </div>
+                <span className="text-xs mt-2 font-medium">{label}</span>
+              </div>
+              {index < stepLabels.length - 1 && (
+                <div className={`flex-1 h-1 mx-2 ${
+                  step > index + 1 ? 'bg-green-500' : 'bg-slate-200'
+                }`} />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {step === 1 && (
         <>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">1. Flight Details</h3>
+          
+          <div className="bg-slate-50 rounded-xl p-4 mb-4">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600">Airline:</span>
+                <span className="font-medium">{flight.airline_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Flight Number:</span>
+                <span className="font-medium">{flight.flight_number}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Route:</span>
+                <span className="font-medium">{flight.origin} → {flight.destination}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Cabin Class:</span>
+                <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="trip-type">Trip Type *</Label>
             <Select value={formData.trip_type} onValueChange={(value) => setFormData({ ...formData, trip_type: value })}>
@@ -173,13 +242,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
               className="rounded-xl"
             />
           </div>
-        </>
-      )}
-
-      {step === 2 && (
-        <>
-          <div className="bg-slate-50 rounded-xl p-4 mb-4">
-            <h3 className="font-semibold text-slate-900 mb-3">Flight Details</h3>
+        
+          <div className="space-y-3 mt-6">
+            <Label className="text-base font-semibold">Number of Travelers *</Label>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-slate-600">Airline:</span>
@@ -197,11 +262,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
                 <span className="text-slate-600">Cabin Class:</span>
                 <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
               </div>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">Travelers *</Label>
             <div className="grid grid-cols-1 gap-3">
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Adults (18-59 years)</Label>
@@ -256,14 +317,55 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
             </div>
           </div>
 
+          <div className="mb-4 mt-6 pt-6 border-t border-slate-200">
+            <h3 className="text-base font-semibold text-slate-900 mb-2">Select Your Seats</h3>
+            <p className="text-sm text-slate-600 mb-4">
+              Choose {formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd} seat{(formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd) > 1 ? 's' : ''} for your flight
+            </p>
+            
+            <SeatMap
+              cabinClass={cabinClass}
+              numberOfPassengers={formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd}
+              onSeatsSelected={(seats) => setFormData({ ...formData, selected_seats: seats })}
+            />
+          </div>
+
           <div className="space-y-2">
-            <Label>Special Requests</Label>
+            <Label>Special Requests (Optional)</Label>
             <Textarea
-              placeholder="Meal preferences, seat requests, accessibility needs..."
+              placeholder="Meal preferences, accessibility needs..."
               value={formData.special_requests}
               onChange={(e) => setFormData({ ...formData, special_requests: e.target.value })}
               className="rounded-xl h-24"
             />
+          </div>
+        </>
+      )}
+
+      {step === 3 && (
+        <>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">3. Payment Details</h3>
+          
+          <div className="bg-slate-50 rounded-xl p-4 mb-4">
+            <h4 className="font-semibold text-slate-900 mb-3">Booking Summary</h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600">Flight:</span>
+                <span className="font-medium">{flight.airline_name} {flight.flight_number}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Route:</span>
+                <span className="font-medium">{flight.origin} → {flight.destination}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Passenger:</span>
+                <span className="font-medium">{formData.passenger_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Seats:</span>
+                <span className="font-medium">{formData.selected_seats.join(', ')}</span>
+              </div>
+            </div>
           </div>
 
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -323,54 +425,40 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
               );
             })()}
           </div>
-        </>
-      )}
 
-      {step === 2 && (
-        <>
-          <div className="mb-4 mt-6 pt-6 border-t border-slate-200">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Select Your Seats</h3>
-            <p className="text-sm text-slate-600">
-              Choose {formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd} seat{(formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd) > 1 ? 's' : ''} for your flight
-            </p>
-          </div>
-
-          <SeatMap
-            cabinClass={cabinClass}
-            numberOfPassengers={formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd}
-            onSeatsSelected={(seats) => setFormData({ ...formData, selected_seats: seats })}
-          />
-
-          <div className="bg-amber-50 rounded-xl p-4 mt-4 border border-amber-200">
-            <p className="text-sm text-slate-700">
-              <strong>Note:</strong> Your booking will be confirmed immediately after payment. Seat selection is included at no extra cost.
-            </p>
-          </div>
-
-          <div className="mt-6 pt-6 border-t border-slate-200">
+          <div className="mt-6">
             <PaymentMethodSelector />
+          </div>
+          
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+            <p className="text-sm text-blue-900">
+              <strong>Note:</strong> After payment, your e-ticket will be generated and can be sent via email, SMS, or printed.
+            </p>
           </div>
         </>
       )}
 
       <div className="flex gap-3 pt-2">
-        {step === 2 && (
+        {step > 1 && (
           <Button type="button" variant="outline" onClick={() => setStep(step - 1)} className="flex-1 rounded-xl">
             Back
           </Button>
         )}
         <Button
           type="submit"
-          disabled={bookingMutation.isPending || (step === 2 && formData.selected_seats.length !== (formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd))}
+          disabled={
+            bookingMutation.isPending || 
+            (step === 2 && formData.selected_seats.length !== (formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd))
+          }
           className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl"
         >
           {bookingMutation.isPending ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Processing...
+              Processing Payment...
             </>
-          ) : step === 2 ? (
-            "Proceed to Payment"
+          ) : step === 3 ? (
+            "Pay Now"
           ) : (
             "Continue"
           )}

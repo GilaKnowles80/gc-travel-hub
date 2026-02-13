@@ -37,6 +37,28 @@ Deno.serve(async (req) => {
         });
         
         console.log(`Flight booking ${bookingId} marked as paid`);
+        
+        // Get booking details to send confirmation email
+        const bookings = await base44.asServiceRole.entities.FlightBooking.filter({ id: bookingId });
+        const booking = bookings[0];
+        
+        if (booking) {
+          // Send confirmation email with ticket link
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            to: booking.passenger_email,
+            subject: `Flight Booking Confirmed - ${booking.flight_number}`,
+            body: `
+              <h2>Booking Confirmed!</h2>
+              <p>Dear ${booking.passenger_name},</p>
+              <p>Your flight booking has been confirmed and payment received.</p>
+              <p><strong>Booking Reference:</strong> ${bookingId.substring(0, 8).toUpperCase()}</p>
+              <p><strong>Flight:</strong> ${booking.flight_number}</p>
+              <p><strong>Route:</strong> ${booking.route}</p>
+              <p><a href="${Deno.env.get('APP_URL') || 'https://your-app-url'}/FlightTicket?id=${bookingId}" style="display:inline-block;background:#f59e0b;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;margin:16px 0;">View Your E-Ticket</a></p>
+              <p>Thank you for choosing GC Travel & Tours!</p>
+            `
+          });
+        }
       }
 
       // Handle hotel booking via Amadeus
