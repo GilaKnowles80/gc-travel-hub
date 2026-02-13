@@ -6,16 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
-import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen, Sparkles, Tag } from "lucide-react";
+import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen, Sparkles, Tag, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
+import PriceAlertDialog from "../components/flights/PriceAlertDialog";
 import moment from "moment";
 
 export default function FlightDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const flightId = urlParams.get("id");
   const [showBooking, setShowBooking] = useState(false);
+  const [showPriceAlert, setShowPriceAlert] = useState(false);
   const [selectedClass, setSelectedClass] = useState("economy");
 
   const { data: flight, isLoading } = useQuery({
@@ -282,9 +284,18 @@ export default function FlightDetail() {
                 <Button
                   onClick={() => setShowBooking(true)}
                   disabled={flight.status === "sold_out"}
-                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base"
+                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base mb-3"
                 >
                   {flight.status === "sold_out" ? "Sold Out" : "Book & Pay Now"}
+                </Button>
+
+                <Button
+                  onClick={() => setShowPriceAlert(true)}
+                  variant="outline"
+                  className="w-full rounded-xl py-6 font-semibold text-base border-2"
+                >
+                  <Bell className="w-4 h-4 mr-2" />
+                  Set Price Alert
                 </Button>
 
                 <p className="text-center text-xs text-slate-400 mt-3">
@@ -304,6 +315,13 @@ export default function FlightDetail() {
           <FlightBookingForm flight={flight} cabinClass={selectedClass} onClose={() => setShowBooking(false)} />
         </DialogContent>
       </Dialog>
+
+      <PriceAlertDialog 
+        flight={flight} 
+        cabinClass={selectedClass} 
+        open={showPriceAlert} 
+        onOpenChange={setShowPriceAlert} 
+      />
     </div>
   );
 }

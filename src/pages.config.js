@@ -67,6 +67,7 @@ import HotelSearch from './pages/HotelSearch';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
 import Settings from './pages/Settings';
 import FlightTicket from './pages/FlightTicket';
+import PriceAlerts from './pages/PriceAlerts';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +92,7 @@ export const PAGES = {
     "HotelBookingConfirmation": HotelBookingConfirmation,
     "Settings": Settings,
     "FlightTicket": FlightTicket,
+    "PriceAlerts": PriceAlerts,
 }
 
 export const pagesConfig = {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
+  { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
   { name: "Itineraries", page: "Itineraries", icon: MapPin },
   { name: "Profile", page: "Profile", icon: User },
 ];
