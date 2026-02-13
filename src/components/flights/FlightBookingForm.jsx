@@ -242,27 +242,15 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
               className="rounded-xl"
             />
           </div>
-        
-          <div className="space-y-3 mt-6">
-            <Label className="text-base font-semibold">Number of Travelers *</Label>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-slate-600">Airline:</span>
-                <span className="font-medium">{flight.airline_name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-600">Flight Number:</span>
-                <span className="font-medium">{flight.flight_number}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-600">Route:</span>
-                <span className="font-medium">{flight.origin} → {flight.destination}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-600">Cabin Class:</span>
-                <span className="font-medium capitalize">{cabinClass.replace(/_/g, " ")}</span>
-              </div>
+        </>
+      )}
 
+      {step === 2 && (
+        <>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">2. Passenger Details</h3>
+        
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">Number of Travelers *</Label>
             <div className="grid grid-cols-1 gap-3">
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Adults (18-59 years)</Label>
