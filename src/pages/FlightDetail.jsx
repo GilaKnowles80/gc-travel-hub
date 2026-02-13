@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
 import PriceAlertDialog from "../components/flights/PriceAlertDialog";
+import ReviewList from "../components/reviews/ReviewList";
+import ReviewForm from "../components/reviews/ReviewForm";
 import moment from "moment";
 
 export default function FlightDetail() {
@@ -322,6 +324,24 @@ export default function FlightDetail() {
         open={showPriceAlert} 
         onOpenChange={setShowPriceAlert} 
       />
+
+      {/* Reviews Section */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">Reviews & Ratings</h2>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <ReviewList itemType="flight" itemId={flight.id} />
+          </div>
+          <div>
+            <ReviewForm
+              itemType="flight"
+              itemId={flight.id}
+              itemName={`${flight.airline_name} ${flight.flight_number}`}
+              bookingId={null}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

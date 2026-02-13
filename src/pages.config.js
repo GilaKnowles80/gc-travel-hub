@@ -50,24 +50,26 @@
 import BookingConfirmation from './pages/BookingConfirmation';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
+import FlightTicket from './pages/FlightTicket';
 import Flights from './pages/Flights';
 import Home from './pages/Home';
+import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
 import HotelDetail from './pages/HotelDetail';
+import HotelSearch from './pages/HotelSearch';
 import Hotels from './pages/Hotels';
 import Itineraries from './pages/Itineraries';
 import ItineraryView from './pages/ItineraryView';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
+import PriceAlerts from './pages/PriceAlerts';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import HotelSearch from './pages/HotelSearch';
-import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
-import Settings from './pages/Settings';
-import FlightTicket from './pages/FlightTicket';
-import PriceAlerts from './pages/PriceAlerts';
+import MyReviews from './pages/MyReviews';
+import AdminReviews from './pages/AdminReviews';
 import __Layout from './Layout.jsx';
 
 
@@ -75,24 +77,26 @@ export const PAGES = {
     "BookingConfirmation": BookingConfirmation,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
+    "FlightTicket": FlightTicket,
     "Flights": Flights,
     "Home": Home,
+    "HotelBookingConfirmation": HotelBookingConfirmation,
     "HotelDetail": HotelDetail,
+    "HotelSearch": HotelSearch,
     "Hotels": Hotels,
     "Itineraries": Itineraries,
     "ItineraryView": ItineraryView,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
+    "PriceAlerts": PriceAlerts,
     "Profile": Profile,
+    "Settings": Settings,
     "SharedItinerary": SharedItinerary,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "HotelSearch": HotelSearch,
-    "HotelBookingConfirmation": HotelBookingConfirmation,
-    "Settings": Settings,
-    "FlightTicket": FlightTicket,
-    "PriceAlerts": PriceAlerts,
+    "MyReviews": MyReviews,
+    "AdminReviews": AdminReviews,
 }
 
 export const pagesConfig = {
