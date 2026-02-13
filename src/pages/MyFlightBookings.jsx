@@ -6,11 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plane, Calendar, Users, Loader2, Edit } from "lucide-react";
+import { Plane, Calendar, Users, Loader2, Edit, Mail, Smartphone, Printer, FileText, XCircle, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingEditForm from "../components/flights/FlightBookingEditForm";
 import moment from "moment";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -28,11 +30,100 @@ const paymentColors = {
 
 export default function MyFlightBookings() {
   const [editingBooking, setEditingBooking] = useState(null);
+  const [viewingDetails, setViewingDetails] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["flight-bookings"],
     queryFn: () => base44.entities.FlightBooking.list("-created_date", 50),
   });
+
+  const cancelBookingMutation = useMutation({
+    mutationFn: async (bookingId) => {
+      return await base44.entities.FlightBooking.update(bookingId, {
+        status: "cancelled",
+        payment_status: "refunded"
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
+      toast.success("Booking cancelled successfully");
+    },
+    onError: () => {
+      toast.error("Failed to cancel booking");
+    },
+  });
+
+  const handleSendEmail = async (booking) => {
+    try {
+      toast.loading("Sending e-ticket...");
+      await base44.integrations.Core.SendEmail({
+        to: booking.passenger_email,
+        subject: `Flight Ticket - ${booking.route}`,
+        body: `
+          <h2>Flight Ticket Confirmation</h2>
+          <p><strong>Booking Reference:</strong> ${booking.id}</p>
+          <p><strong>Route:</strong> ${booking.route}</p>
+          <p><strong>Flight Number:</strong> ${booking.flight_number}</p>
+          <p><strong>Passenger:</strong> ${booking.passenger_name}</p>
+          <p><strong>Cabin Class:</strong> ${booking.cabin_class?.replace(/_/g, " ")}</p>
+          <p><strong>Total Price:</strong> $${booking.total_price}</p>
+          <p><strong>Status:</strong> ${booking.status}</p>
+        `
+      });
+      toast.dismiss();
+      toast.success("E-ticket sent to your email");
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to send email");
+    }
+  };
+
+  const handlePrint = (booking) => {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Flight Ticket - ${booking.route}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            h1 { color: #1e293b; }
+            .details { margin: 20px 0; }
+            .row { margin: 10px 0; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Flight Ticket</h1>
+          <div class="details">
+            <div class="row"><span class="label">Booking Reference:</span> ${booking.id}</div>
+            <div class="row"><span class="label">Route:</span> ${booking.route}</div>
+            <div class="row"><span class="label">Flight Number:</span> ${booking.flight_number}</div>
+            <div class="row"><span class="label">Passenger:</span> ${booking.passenger_name}</div>
+            <div class="row"><span class="label">Cabin Class:</span> ${booking.cabin_class?.replace(/_/g, " ")}</div>
+            <div class="row"><span class="label">Total Price:</span> $${booking.total_price}</div>
+            <div class="row"><span class="label">Status:</span> ${booking.status}</div>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  const handleCancelBooking = (booking) => {
+    if (booking.status === "cancelled") {
+      toast.error("Booking is already cancelled");
+      return;
+    }
+    if (booking.status === "completed") {
+      toast.error("Cannot cancel completed bookings");
+      return;
+    }
+    if (confirm("Are you sure you want to cancel this booking?")) {
+      cancelBookingMutation.mutate(booking.id);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -135,17 +226,28 @@ export default function MyFlightBookings() {
                             ${booking.total_price?.toLocaleString()}
                           </p>
                         </div>
-                        {booking.status === "pending" && (
+                        <div className="flex flex-col gap-2">
                           <Button
-                            onClick={() => setEditingBooking(booking)}
-                            variant="outline"
+                            onClick={() => setViewingDetails(booking)}
+                            variant="default"
                             size="sm"
-                            className="rounded-xl"
+                            className="rounded-xl bg-amber-500 hover:bg-amber-600"
                           >
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Booking
+                            <FileText className="w-4 h-4 mr-2" />
+                            View Details
                           </Button>
-                        )}
+                          {booking.status === "pending" && (
+                            <Button
+                              onClick={() => setEditingBooking(booking)}
+                              variant="outline"
+                              size="sm"
+                              className="rounded-xl"
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Edit
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -166,6 +268,144 @@ export default function MyFlightBookings() {
               booking={editingBooking}
               onClose={() => setEditingBooking(null)}
             />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!viewingDetails} onOpenChange={() => setViewingDetails(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Booking Details</DialogTitle>
+          </DialogHeader>
+          {viewingDetails && (
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">{viewingDetails.route}</h3>
+                <p className="text-slate-600">Flight {viewingDetails.flight_number}</p>
+                <div className="flex gap-2 mt-3">
+                  <Badge className={statusColors[viewingDetails.status]}>
+                    {viewingDetails.status}
+                  </Badge>
+                  <Badge className={paymentColors[viewingDetails.payment_status]}>
+                    {viewingDetails.payment_status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-slate-500">Booking Reference</p>
+                  <p className="font-semibold text-slate-900">{viewingDetails.id}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Cabin Class</p>
+                  <p className="font-semibold text-slate-900 capitalize">{viewingDetails.cabin_class?.replace(/_/g, " ")}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Passenger Name</p>
+                  <p className="font-semibold text-slate-900">{viewingDetails.passenger_name}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Email</p>
+                  <p className="font-semibold text-slate-900">{viewingDetails.passenger_email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Phone</p>
+                  <p className="font-semibold text-slate-900">{viewingDetails.passenger_phone || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Passengers</p>
+                  <p className="font-semibold text-slate-900">{viewingDetails.number_of_passengers}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Total Price</p>
+                  <p className="font-semibold text-slate-900 text-xl">${viewingDetails.total_price?.toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Booked On</p>
+                  <p className="font-semibold text-slate-900">{moment(viewingDetails.created_date).format("MMM DD, YYYY")}</p>
+                </div>
+              </div>
+
+              {viewingDetails.selected_seats && viewingDetails.selected_seats.length > 0 && (
+                <div>
+                  <p className="text-sm text-slate-500 mb-2">Selected Seats</p>
+                  <div className="flex flex-wrap gap-2">
+                    {viewingDetails.selected_seats.map((seat) => (
+                      <span key={seat} className="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-lg text-sm font-medium">
+                        {seat}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {viewingDetails.special_requests && (
+                <div>
+                  <p className="text-sm text-slate-500 mb-2">Special Requests</p>
+                  <p className="text-slate-700 bg-slate-50 p-3 rounded-lg">{viewingDetails.special_requests}</p>
+                </div>
+              )}
+
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-slate-900 mb-3">Ticket Options</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <Button
+                    onClick={() => handleSendEmail(viewingDetails)}
+                    variant="outline"
+                    className="rounded-xl"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Email
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      toast.info("SMS feature coming soon");
+                    }}
+                    variant="outline"
+                    className="rounded-xl"
+                  >
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    SMS
+                  </Button>
+                  <Button
+                    onClick={() => handlePrint(viewingDetails)}
+                    variant="outline"
+                    className="rounded-xl"
+                  >
+                    <Printer className="w-4 h-4 mr-2" />
+                    Print
+                  </Button>
+                </div>
+              </div>
+
+              {viewingDetails.status !== "cancelled" && viewingDetails.status !== "completed" && (
+                <div className="border-t pt-4">
+                  <Button
+                    onClick={() => handleCancelBooking(viewingDetails)}
+                    variant="destructive"
+                    className="w-full rounded-xl"
+                    disabled={cancelBookingMutation.isPending}
+                  >
+                    {cancelBookingMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Cancel Booking
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-slate-500 text-center mt-2 flex items-center justify-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Cancellation may be subject to airline policies
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </DialogContent>
       </Dialog>
