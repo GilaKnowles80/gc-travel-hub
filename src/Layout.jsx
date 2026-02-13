@@ -13,7 +13,6 @@ const navLinks = [
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "Itineraries", page: "Itineraries", icon: MapPin },
   { name: "Profile", page: "Profile", icon: User },
-  { name: "Settings", page: "Settings", icon: User },
 ];
 
 export default function Layout({ children, currentPageName }) {
