@@ -15,6 +15,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import moment from "moment";
 import LocationMap from "../components/shared/LocationMap";
+import ReviewList from "../components/reviews/ReviewList";
+import ReviewForm from "../components/reviews/ReviewForm";
 
 export default function HotelDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -407,6 +409,24 @@ export default function HotelDetail() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Reviews Section */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">Reviews & Ratings</h2>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <ReviewList itemType="hotel" itemId={hotel.id} />
+          </div>
+          <div>
+            <ReviewForm
+              itemType="hotel"
+              itemId={hotel.id}
+              itemName={hotel.name}
+              bookingId={null}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
