@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CreditCard, Smartphone, Wallet } from "lucide-react";
 
 const PaymentMethodSelector = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const paymentMethods = [
     {
       category: "Cards",
