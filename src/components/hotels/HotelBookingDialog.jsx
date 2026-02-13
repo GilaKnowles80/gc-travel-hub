@@ -7,9 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, User, CreditCard } from "lucide-react";
 import { toast } from "sonner";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, guests }) {
     const [guestDetails, setGuestDetails] = useState(
@@ -38,15 +35,9 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
             });
             return response.data;
         },
-        onSuccess: async (data) => {
-            const stripe = await stripePromise;
-            const { error } = await stripe.redirectToCheckout({
-                sessionId: data.sessionId
-            });
-            
-            if (error) {
-                toast.error(error.message);
-            }
+        onSuccess: (data) => {
+            // Redirect to Stripe Checkout
+            window.location.href = data.url;
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to create checkout');
