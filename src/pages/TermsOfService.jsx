@@ -62,13 +62,13 @@ export default function TermsOfService() {
             </p>
 
             <h2>9. Contact Information</h2>
-            <p>
-              For questions about these Terms of Service, please contact us at:
-              <br />
-              Email: info@gctraveltours.com
-              <br />
-              Phone: +63 917 123 4567
-            </p>
+             <p>
+               For questions about these Terms of Service, please contact us at:
+               <br />
+               Email: info@gctravelandtours.com
+               <br />
+               Phone: +639154401150
+             </p>
           </div>
         </Card>
       </div>
