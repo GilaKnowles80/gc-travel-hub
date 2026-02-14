@@ -256,12 +256,12 @@ export default function TourDetail() {
                 className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"
               >
                 <div className="text-center mb-6">
-                  <p className="text-sm text-slate-400">Starting from</p>
-                  <p className="text-4xl font-bold text-slate-900 mt-1">
-                    ${tour.price_per_person?.toLocaleString()}
-                  </p>
-                  <p className="text-sm text-slate-400">per person</p>
-                </div>
+                   <p className="text-sm text-slate-400">{showCustomizer ? "Customized" : "Starting from"}</p>
+                   <p className="text-4xl font-bold text-slate-900 mt-1">
+                     ${(customizedPrice ?? tour.price_per_person)?.toLocaleString()}
+                   </p>
+                   <p className="text-sm text-slate-400">{showCustomizer ? "total price" : "per person"}</p>
+                 </div>
 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3 text-sm text-slate-600">
