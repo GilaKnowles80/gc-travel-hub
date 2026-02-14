@@ -55,6 +55,7 @@ import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
 import AdminHotels from './pages/AdminHotels';
 import AdminLoyalty from './pages/AdminLoyalty';
+import AdminPricing from './pages/AdminPricing';
 import AdminReviews from './pages/AdminReviews';
 import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
 import AdminSupplierPayments from './pages/AdminSupplierPayments';
@@ -86,7 +87,6 @@ import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import AdminPricing from './pages/AdminPricing';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +99,7 @@ export const PAGES = {
     "AdminFlights": AdminFlights,
     "AdminHotels": AdminHotels,
     "AdminLoyalty": AdminLoyalty,
+    "AdminPricing": AdminPricing,
     "AdminReviews": AdminReviews,
     "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
     "AdminSupplierPayments": AdminSupplierPayments,
@@ -130,7 +131,6 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "AdminPricing": AdminPricing,
 }
 
 export const pagesConfig = {

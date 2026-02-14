@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Plane, Calendar, Users, Mail, FileText, Home } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
+import PriceDisplay from "@/components/currency/PriceDisplay";
+import CurrencySelector from "@/components/currency/CurrencySelector";
 
 export default function BookingConfirmation() {
     const [bookingData, setBookingData] = useState(null);
