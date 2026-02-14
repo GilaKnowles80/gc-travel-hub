@@ -22,6 +22,7 @@ const navLinks = [
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
   { name: "Pricing", page: "AdminPricing", icon: Plane, adminOnly: true },
   { name: "Email Clients", page: "AdminEmailClients", icon: Mail, adminOnly: true },
+  { name: "Helpdesk", page: "AdminHelpdesk", icon: Mail, adminOnly: true },
 ];
 
 export default function Layout({ children, currentPageName }) {

@@ -90,6 +90,7 @@ import TravelAssistant from './pages/TravelAssistant';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
 import AdminHelpdesk from './pages/AdminHelpdesk';
+import Helpdesk from './pages/Helpdesk';
 import __Layout from './Layout.jsx';
 
 
@@ -137,6 +138,7 @@ export const PAGES = {
     "Visas": Visas,
     "utils": utils,
     "AdminHelpdesk": AdminHelpdesk,
+    "Helpdesk": Helpdesk,
 }
 
 export const pagesConfig = {
