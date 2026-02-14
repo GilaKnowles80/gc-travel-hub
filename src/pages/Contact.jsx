@@ -9,9 +9,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft, Facebook, Instagram, X, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft, Facebook, Instagram, X, Youtube, ZoomIn, ZoomOut } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+
+const defaultIcon = L.icon({
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -22,6 +33,7 @@ export default function Contact() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [mapZoom, setMapZoom] = useState(13);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data) => {
@@ -226,15 +238,41 @@ export default function Contact() {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <Card className="p-8 border-0 shadow-sm h-full">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Visit Our Office</h2>
-              <div className="aspect-video bg-slate-200 rounded-xl mb-6 overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3862.6245789012345!2d120.88457!3d14.30698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd64c5f0a0a0a1%3A0xblock12kapatiran!2sBlock%2012%20Lot%208%20Kapatiran%20Village%20Pasong%20Buaya%202%20Imus%20Cavite%204103!5e0!3m2!1sen!2s!4v1708998456789"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                ></iframe>
+              <div className="aspect-video bg-slate-200 rounded-xl mb-6 overflow-hidden relative">
+                <MapContainer center={[14.30698, 120.88457]} zoom={mapZoom} style={{ height: "100%", width: "100%" }}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  />
+                  <Marker position={[14.30698, 120.88457]} icon={defaultIcon}>
+                    <Popup>
+                      <div className="font-semibold">GC Travel & Tours</div>
+                      <div className="text-sm">Block 12, Lot 8, Kapatiran Village</div>
+                      <div className="text-sm">Pasong Buaya 2, Imus, Cavite 4103</div>
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+              <div className="flex gap-2 mb-6">
+                <Button
+                  onClick={() => setMapZoom(mapZoom + 1)}
+                  variant="outline"
+                  size="icon"
+                  className="border-amber-200 hover:bg-amber-50"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-4 h-4 text-amber-600" />
+                </Button>
+                <Button
+                  onClick={() => setMapZoom(Math.max(mapZoom - 1, 1))}
+                  variant="outline"
+                  size="icon"
+                  className="border-amber-200 hover:bg-amber-50"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-4 h-4 text-amber-600" />
+                </Button>
+                <span className="text-sm text-slate-600 flex items-center ml-2">Zoom Level: {mapZoom}</span>
               </div>
 
               <div className="space-y-4">
