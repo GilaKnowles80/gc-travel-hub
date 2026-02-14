@@ -214,27 +214,29 @@ export default function HeroSection() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    Dates
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input
-                      type="date"
-                      value={onwardDate}
-                      onChange={(e) => setOnwardDate(e.target.value)}
-                      className="rounded-xl"
-                    />
-                    {tripType === "round_trip" && (
-                      <Input
-                        type="date"
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        className="rounded-xl"
-                      />
-                    )}
-                  </div>
-                </div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     Dates
+                   </label>
+                   <div className="grid grid-cols-2 gap-2">
+                     <Input
+                       type="date"
+                       value={onwardDate}
+                       onChange={(e) => setOnwardDate(e.target.value)}
+                       placeholder="mm/dd/yyyy"
+                       className="rounded-xl cursor-pointer"
+                     />
+                     {tripType === "round_trip" && (
+                       <Input
+                         type="date"
+                         value={returnDate}
+                         onChange={(e) => setReturnDate(e.target.value)}
+                         placeholder="mm/dd/yyyy"
+                         className="rounded-xl cursor-pointer"
+                       />
+                     )}
+                   </div>
+                 </div>
 
                 <div className="lg:col-span-4">
                   <Link to={createPageUrl("Flights")}>
@@ -257,12 +259,12 @@ export default function HeroSection() {
                   <Input placeholder="Where do you want to go?" className="rounded-xl" />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    When
-                  </label>
-                  <Input type="date" className="rounded-xl" />
-                </div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     When
+                   </label>
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                 </div>
                 <div className="md:col-span-3">
                   <Link to={createPageUrl("Tours")}>
                     <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
@@ -284,19 +286,19 @@ export default function HeroSection() {
                   <Input placeholder="City, hotel, or landmark" className="rounded-xl" />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    Check-in
-                  </label>
-                  <Input type="date" className="rounded-xl" />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    Check-out
-                  </label>
-                  <Input type="date" className="rounded-xl" />
-                </div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     Check-in
+                   </label>
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                 </div>
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     Check-out
+                   </label>
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                 </div>
                 <div className="md:col-span-3">
                   <Link to={createPageUrl("Hotels")}>
                     <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
