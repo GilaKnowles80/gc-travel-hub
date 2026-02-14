@@ -374,7 +374,7 @@ export default function HeroSection() {
                     <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
                   </div>
                  <div className="md:col-span-3">
-                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                      <Search className="w-4 h-4 mr-2" />
                      Search Buses
                    </Button>
