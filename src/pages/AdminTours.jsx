@@ -215,11 +215,53 @@ export default function AdminTours() {
           ))}
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingTour ? "Edit Tour" : "Add New Tour"}</DialogTitle>
+              <DialogTitle>Bulk Import Tours</DialogTitle>
             </DialogHeader>
+            <form onSubmit={handleBulkImport} className="space-y-4">
+              <div className="space-y-2">
+                <Label>JSON File *</Label>
+                <Input
+                  type="file"
+                  accept=".json"
+                  required
+                  onChange={(e) => setImportFile(e.target.files?.[0])}
+                />
+                <p className="text-xs text-slate-600">Upload a JSON file with an array of tours. Required fields: title, destination, price_per_person, duration_days</p>
+              </div>
+              <div className="flex gap-3">
+                <Button type="button" variant="outline" onClick={() => setIsImportOpen(false)} className="flex-1">
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isImporting}
+                  className="flex-1 bg-green-500 hover:bg-green-600"
+                >
+                  {isImporting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Import
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+             <DialogHeader>
+               <DialogTitle>{editingTour ? "Edit Tour" : "Add New Tour"}</DialogTitle>
+             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label>Tour Title *</Label>
