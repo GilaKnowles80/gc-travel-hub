@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminReviews from './pages/AdminReviews';
 import BookingConfirmation from './pages/BookingConfirmation';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
@@ -61,6 +62,7 @@ import Itineraries from './pages/Itineraries';
 import ItineraryView from './pages/ItineraryView';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
+import MyReviews from './pages/MyReviews';
 import PriceAlerts from './pages/PriceAlerts';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -68,12 +70,15 @@ import SharedItinerary from './pages/SharedItinerary';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import MyReviews from './pages/MyReviews';
-import AdminReviews from './pages/AdminReviews';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminFlights from './pages/AdminFlights';
+import AdminHotels from './pages/AdminHotels';
+import AdminTours from './pages/AdminTours';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminReviews": AdminReviews,
     "BookingConfirmation": BookingConfirmation,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
@@ -88,6 +93,7 @@ export const PAGES = {
     "ItineraryView": ItineraryView,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
+    "MyReviews": MyReviews,
     "PriceAlerts": PriceAlerts,
     "Profile": Profile,
     "Settings": Settings,
@@ -95,8 +101,10 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "MyReviews": MyReviews,
-    "AdminReviews": AdminReviews,
+    "AdminDashboard": AdminDashboard,
+    "AdminFlights": AdminFlights,
+    "AdminHotels": AdminHotels,
+    "AdminTours": AdminTours,
 }
 
 export const pagesConfig = {

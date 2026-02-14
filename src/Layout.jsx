@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
+import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -14,12 +15,18 @@ const navLinks = [
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
   { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
   { name: "Profile", page: "Profile", icon: User },
+  { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
 ];
 
 export default function Layout({ children, currentPageName }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const isHome = currentPageName === "Home";
+
+  React.useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => setUser(null));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -58,7 +65,7 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
+              {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)}>
                   <button
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
@@ -95,7 +102,7 @@ export default function Layout({ children, currentPageName }) {
               className="md:hidden bg-white border-t border-slate-100"
             >
               <div className="px-4 py-4 space-y-1">
-                {navLinks.map((link) => (
+                {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                   <Link key={link.page} to={createPageUrl(link.page)}>
                     <button
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
