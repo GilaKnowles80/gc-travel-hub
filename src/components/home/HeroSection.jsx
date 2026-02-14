@@ -77,10 +77,10 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mb-6"
         >
-          <p className="text-amber-400 font-semibold tracking-[0.15em] uppercase text-[10px] mb-4">
+          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-4">
             GC Travel & Tours
           </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-lg">
             Discover the Hidden Wonders
           </h1>
         </motion.div>
