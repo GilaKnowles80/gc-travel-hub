@@ -32,7 +32,7 @@ export default function FlightSearch() {
     const { data: flightResults, isLoading, error, refetch } = useQuery({
         queryKey: ['flight-search', searchParams],
         queryFn: async () => {
-            const response = await base44.functions.invoke('searchFlights', searchParams);
+            const response = await base44.functions.invoke('searchFlightsAMADEUS', searchParams);
             return response.data;
         },
         enabled: false
@@ -186,20 +186,19 @@ export default function FlightSearch() {
                     </Card>
                 )}
 
-                {hasSearched && !isLoading && !error && flightResults?.data && (
+                {hasSearched && !isLoading && !error && flightResults?.flights && (
                     <div>
                         <h2 className="text-2xl font-bold mb-4">
-                            {flightResults.data.length} Flights Found
+                            {flightResults.flights.length} Flights Found
                         </h2>
                         <div className="space-y-4">
-                            {flightResults.data.map((offer, idx) => {
-                                const outbound = offer.itineraries[0];
-                                const firstSegment = outbound.segments[0];
-                                const lastSegment = outbound.segments[outbound.segments.length - 1];
+                            {flightResults.flights.map((offer, idx) => {
+                                const departure = new Date(offer.departure_time);
+                                const arrival = new Date(offer.arrival_time);
 
                                 return (
                                     <motion.div
-                                        key={offer.id}
+                                        key={offer.amadeus_id}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: idx * 0.05 }}
@@ -211,10 +210,10 @@ export default function FlightSearch() {
                                                         <div className="flex items-center gap-4 mb-3">
                                                             <div className="text-center">
                                                                 <div className="text-2xl font-bold">
-                                                                    {moment(firstSegment.departure.at).format('HH:mm')}
+                                                                    {moment(departure).format('HH:mm')}
                                                                 </div>
                                                                 <div className="text-sm text-slate-600">
-                                                                    {firstSegment.departure.iataCode}
+                                                                    {offer.origin}
                                                                 </div>
                                                             </div>
                                                             
@@ -223,38 +222,38 @@ export default function FlightSearch() {
                                                                     <div className="h-px flex-1 bg-slate-300"></div>
                                                                     <div className="flex items-center gap-1 text-xs text-slate-600">
                                                                         <Clock className="w-3 h-3" />
-                                                                        {formatDuration(outbound.duration)}
+                                                                        {offer.duration_hours}h
                                                                     </div>
                                                                     <ArrowRight className="w-4 h-4 text-slate-400" />
                                                                     <div className="h-px flex-1 bg-slate-300"></div>
                                                                 </div>
                                                                 <div className="text-xs text-center mt-1 text-slate-500">
-                                                                    {outbound.segments.length === 1 ? 'Direct' : `${outbound.segments.length - 1} stop(s)`}
+                                                                    {offer.is_direct ? 'Direct' : `${offer.stops} stop(s)`}
                                                                 </div>
                                                             </div>
 
                                                             <div className="text-center">
                                                                 <div className="text-2xl font-bold">
-                                                                    {moment(lastSegment.arrival.at).format('HH:mm')}
+                                                                    {moment(arrival).format('HH:mm')}
                                                                 </div>
                                                                 <div className="text-sm text-slate-600">
-                                                                    {lastSegment.arrival.iataCode}
+                                                                    {offer.destination}
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div className="flex items-center gap-4 text-sm text-slate-600">
                                                             <span className="font-medium">
-                                                                {flightResults.dictionaries?.carriers?.[firstSegment.carrierCode] || firstSegment.carrierCode}
+                                                                {offer.airline_name}
                                                             </span>
                                                             <span>•</span>
-                                                            <span>{offer.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.cabin || searchParams.cabinClass}</span>
+                                                            <span>{offer.cabin_classes?.[0]?.class || 'Economy'}</span>
                                                         </div>
                                                     </div>
 
                                                     <div className="text-right md:border-l md:pl-6">
                                                         <div className="text-3xl font-bold text-amber-600">
-                                                            ${offer.price.total}
+                                                            ₱{offer.price.toLocaleString()}
                                                         </div>
                                                         <div className="text-xs text-slate-500 mb-3">
                                                             per person • includes markup
@@ -276,7 +275,7 @@ export default function FlightSearch() {
                     </div>
                 )}
 
-                {hasSearched && !isLoading && !error && (!flightResults?.data || flightResults.data.length === 0) && (
+                {hasSearched && !isLoading && !error && (!flightResults?.flights || flightResults.flights.length === 0) && (
                     <Card>
                         <CardContent className="py-12 text-center">
                             <Plane className="w-12 h-12 mx-auto mb-4 text-slate-300" />
