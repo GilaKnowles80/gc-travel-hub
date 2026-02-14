@@ -3,116 +3,102 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    const {
-      originLocationCode,
-      destinationLocationCode,
-      departureDate,
-      returnDate = null,
-      adults = 1,
-      children = 0,
-      infants = 0,
-      travelClass = 'ECONOMY',
-      nonStop = false,
-      maxPrice = null
-    } = await req.json();
+    const { origin, destination, departureDate, returnDate, adults, children, infants, cabin } = await req.json();
 
-    // Get AMADEUS token
-    const tokenResponse = await base44.functions.invoke('amadeusBearerToken', {});
-    const token = tokenResponse.data.token;
+    // Get AMADEUS credentials
+    const apiKey = Deno.env.get("AMADEUS_API_KEY");
+    const apiSecret = Deno.env.get("AMADEUS_API_SECRET");
 
-    if (!token) {
-      throw new Error('Failed to obtain AMADEUS token');
+    if (!apiKey || !apiSecret) {
+      return Response.json({ error: "AMADEUS credentials not configured" }, { status: 500 });
     }
 
-    // Build AMADEUS search request
+    // Get access token
+    const tokenResponse = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: apiKey,
+        client_secret: apiSecret,
+      }),
+    });
+
+    if (!tokenResponse.ok) {
+      throw new Error("Failed to get AMADEUS token");
+    }
+
+    const { access_token } = await tokenResponse.json();
+
+    // Build search parameters
     const params = new URLSearchParams({
-      originLocationCode,
-      destinationLocationCode,
+      originLocationCode: origin,
+      destinationLocationCode: destination,
       departureDate,
       adults: adults.toString(),
-      max: '250'
+      nonStop: "false",
+      max: "50",
     });
 
-    if (returnDate) {
-      params.append('returnDate', returnDate);
-    }
-    if (children > 0) {
-      params.append('children', children.toString());
-    }
-    if (infants > 0) {
-      params.append('infants', infants.toString());
-    }
-    if (travelClass && travelClass !== 'ECONOMY') {
-      params.append('travelClass', travelClass);
-    }
-    if (nonStop) {
-      params.append('nonStop', 'true');
-    }
-    if (maxPrice) {
-      params.append('maxPrice', maxPrice.toString());
-    }
+    if (children) params.append("children", children.toString());
+    if (infants) params.append("infants", infants.toString());
+    if (returnDate) params.append("returnDate", returnDate);
+    if (cabin) params.append("travelClass", cabin.toUpperCase());
 
-    const searchUrl = `https://api.amadeus.com/v2/shopping/flight-offers?${params}`;
-
-    const response = await fetch(searchUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.amadeus+json'
+    // Search flights
+    const searchResponse = await fetch(
+      `https://test.api.amadeus.com/v2/shopping/flight-offers?${params}`,
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
       }
-    });
+    );
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.errors?.[0]?.detail || 'AMADEUS search failed');
+    if (!searchResponse.ok) {
+      const error = await searchResponse.text();
+      console.error("AMADEUS search error:", error);
+      return Response.json({ error: "Flight search failed", details: error }, { status: searchResponse.status });
     }
 
-    // Transform AMADEUS response to app format
-    const transformedFlights = (data.data || []).map((offer, idx) => ({
+    const data = await searchResponse.json();
+
+    // Transform AMADEUS response to match app format
+    const flights = data.data.map((offer, idx) => ({
       id: `amadeus_${idx}`,
       amadeus_id: offer.id,
-      airline_name: offer.validatingAirlineCodes[0] || 'Unknown',
-      flight_number: offer.itineraries[0]?.segments[0]?.number || '',
-      origin: originLocationCode,
-      destination: destinationLocationCode,
-      departure_time: offer.itineraries[0]?.segments[0]?.departure?.at || '',
-      arrival_time: offer.itineraries[0]?.segments[0]?.arrival?.at || '',
-      duration_hours: parseDuration(offer.itineraries[0]?.duration),
-      is_direct: offer.itineraries[0]?.segments.length === 1,
-      stops: offer.itineraries[0]?.segments.length - 1,
-      cabin_classes: (offer.travelerPricings || []).map((tp, idx) => ({
-        class: travelClass || 'economy',
-        price: parseFloat(offer.price?.grandTotal || 0),
-        seats_available: 99 // AMADEUS doesn't provide seat count
-      })),
-      price: parseFloat(offer.price?.grandTotal || 0),
-      currency: offer.price?.currency || 'USD',
-      amenities: [],
-      status: 'active'
+      airline_name: offer.validatingAirlineCodes?.[0] || "Unknown",
+      flight_number: offer.itineraries?.[0]?.segments?.[0]?.operating?.carrierCode || "N/A",
+      origin: offer.itineraries?.[0]?.segments?.[0]?.departure?.iataCode,
+      destination: offer.itineraries?.[0]?.segments?.[offer.itineraries[0].segments.length - 1]?.arrival?.iataCode,
+      departure_time: offer.itineraries?.[0]?.segments?.[0]?.departure?.at,
+      arrival_time: offer.itineraries?.[0]?.segments?.[offer.itineraries[0].segments.length - 1]?.arrival?.at,
+      duration_hours: calculateDuration(offer.itineraries?.[0]),
+      is_direct: offer.itineraries?.[0]?.segments?.length === 1,
+      stops: offer.itineraries?.[0]?.segments?.length - 1 || 0,
+      price: parseFloat(offer.price.total),
+      currency: offer.price.currency,
+      cabin_classes: [
+        {
+          class: (offer.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.cabin || "economy").toLowerCase(),
+          price: parseFloat(offer.price.total),
+          seats_available: 9,
+        },
+      ],
+      baggage_allowance: "1 checked bag, 1 carry-on",
+      amenities: ["Seat selection", "Online check-in"],
+      status: "active",
+      baggage_details: offer.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.includedCheckedBags?.weight,
     }));
 
-    return Response.json({
-      flights: transformedFlights,
-      meta: {
-        count: transformedFlights.length,
-        source: 'amadeus'
-      }
-    });
+    return Response.json({ flights, total: flights.length });
   } catch (error) {
-    console.error('Flight search error:', error);
-    return Response.json({
-      error: error.message,
-      flights: []
-    }, { status: 500 });
+    console.error("Error:", error);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });
 
-function parseDuration(duration) {
-  if (!duration) return 0;
-  const match = duration.match(/PT(\d+H)?(\d+M)?/);
-  const hours = parseInt(match?.[1] || 0);
-  const minutes = parseInt(match?.[2] || 0);
-  return hours + (minutes / 60);
+function calculateDuration(itinerary) {
+  if (!itinerary?.segments?.length) return 0;
+  const departure = new Date(itinerary.segments[0].departure.at);
+  const arrival = new Date(itinerary.segments[itinerary.segments.length - 1].arrival.at);
+  return (arrival - departure) / (1000 * 60 * 60); // Convert to hours
 }
