@@ -89,7 +89,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
-          className="mb-12"
+          className="mb-8"
         >
           <p className="text-white text-sm md:text-base max-w-xl mx-auto leading-relaxed font-light">
             Curated travel experiences that transform ordinary trips into extraordinary memories
