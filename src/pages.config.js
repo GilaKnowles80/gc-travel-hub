@@ -78,6 +78,9 @@ import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
+import AdminFerries from './pages/AdminFerries';
+import AdminBuses from './pages/AdminBuses';
+import AdminVisas from './pages/AdminVisas';
 import __Layout from './Layout.jsx';
 
 
@@ -113,6 +116,9 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
+    "AdminFerries": AdminFerries,
+    "AdminBuses": AdminBuses,
+    "AdminVisas": AdminVisas,
 }
 
 export const pagesConfig = {
