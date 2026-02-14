@@ -43,11 +43,14 @@ export default function CategorySection() {
               transition={{ delay: i * 0.05 }}
             >
               <Link to={createPageUrl("Tours") + `?category=${cat.id}`}>
-                <div className="group relative overflow-hidden rounded-2xl bg-slate-50 p-6 md:p-8 text-center hover:shadow-xl transition-all duration-500 cursor-pointer border border-slate-100 hover:border-transparent">
+                <div className="group relative overflow-hidden rounded-2xl bg-slate-50 p-6 md:p-8 text-center hover:shadow-xl transition-all duration-500 cursor-pointer border border-slate-100 hover:border-transparent hover:bg-gradient-to-br hover:from-slate-100 hover:to-slate-50">
                   <div className={`mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <cat.icon className="w-6 h-6 text-white" />
                   </div>
                   <p className="font-semibold text-black text-base">{cat.label}</p>
+                  <p className="text-sm text-slate-500 mt-2 max-h-0 overflow-hidden group-hover:max-h-20 transition-all duration-300">
+                    Explore amazing {cat.label.toLowerCase()} destinations
+                  </p>
                 </div>
               </Link>
             </motion.div>
