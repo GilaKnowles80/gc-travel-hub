@@ -83,6 +83,7 @@ import AdminBuses from './pages/AdminBuses';
 import AdminVisas from './pages/AdminVisas';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminBankAccounts from './pages/AdminBankAccounts';
+import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import __Layout from './Layout.jsx';
 
 
@@ -123,6 +124,7 @@ export const PAGES = {
     "AdminVisas": AdminVisas,
     "AdminLoyalty": AdminLoyalty,
     "AdminBankAccounts": AdminBankAccounts,
+    "AdminSupplierPayments": AdminSupplierPayments,
 }
 
 export const pagesConfig = {

@@ -72,6 +72,7 @@ export default function AdminDashboard() {
     { title: "Manage Buses", icon: Bus, page: "AdminBuses", color: "orange" },
     { title: "Manage Visas", icon: FileText, page: "AdminVisas", color: "indigo" },
     { title: "Bank Accounts", icon: Building2, page: "AdminBankAccounts", color: "blue" },
+    { title: "Supplier Payments", icon: DollarSign, page: "AdminSupplierPayments", color: "green" },
     { title: "Loyalty Program", icon: TrendingUp, page: "AdminLoyalty", color: "purple" },
     { title: "Moderate Reviews", icon: MessageSquare, page: "AdminReviews", color: "rose" },
   ];
