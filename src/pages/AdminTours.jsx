@@ -63,6 +63,33 @@ export default function AdminTours() {
     },
   });
 
+  const handleBulkImport = async (e) => {
+    e.preventDefault();
+    if (!importFile) {
+      toast.error("Please select a file");
+      return;
+    }
+
+    setIsImporting(true);
+    try {
+      const fileContent = await importFile.text();
+      const tours = JSON.parse(fileContent);
+      
+      const response = await base44.functions.invoke('bulkImportTours', { tours });
+      
+      if (response.data.success) {
+        toast.success(`Successfully imported ${response.data.count} tours`);
+        queryClient.invalidateQueries({ queryKey: ["admin-tours"] });
+        setImportFile(null);
+        setIsImportOpen(false);
+      }
+    } catch (error) {
+      toast.error(error.message || 'Import failed');
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       title: "",
