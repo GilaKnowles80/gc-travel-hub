@@ -53,6 +53,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
+import AdminHelpdesk from './pages/AdminHelpdesk';
 import AdminHotels from './pages/AdminHotels';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminPricing from './pages/AdminPricing';
@@ -67,6 +68,7 @@ import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
 import Flights from './pages/Flights';
+import Helpdesk from './pages/Helpdesk';
 import Home from './pages/Home';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
 import HotelDetail from './pages/HotelDetail';
@@ -89,8 +91,6 @@ import Tours from './pages/Tours';
 import TravelAssistant from './pages/TravelAssistant';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminHelpdesk from './pages/AdminHelpdesk';
-import Helpdesk from './pages/Helpdesk';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +101,7 @@ export const PAGES = {
     "AdminEmailClients": AdminEmailClients,
     "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
+    "AdminHelpdesk": AdminHelpdesk,
     "AdminHotels": AdminHotels,
     "AdminLoyalty": AdminLoyalty,
     "AdminPricing": AdminPricing,
@@ -115,6 +116,7 @@ export const PAGES = {
     "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
     "Flights": Flights,
+    "Helpdesk": Helpdesk,
     "Home": Home,
     "HotelBookingConfirmation": HotelBookingConfirmation,
     "HotelDetail": HotelDetail,
@@ -137,8 +139,6 @@ export const PAGES = {
     "TravelAssistant": TravelAssistant,
     "Visas": Visas,
     "utils": utils,
-    "AdminHelpdesk": AdminHelpdesk,
-    "Helpdesk": Helpdesk,
 }
 
 export const pagesConfig = {

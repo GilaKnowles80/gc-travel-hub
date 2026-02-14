@@ -22,19 +22,33 @@ export default function RefundPolicy() {
 
         <Card className="p-8 border-0 shadow-sm">
           <div className="prose prose-slate max-w-none">
+            <h2>Legal Framework & Key Timeframes</h2>
+            
+            <h3>Refund Processing Requirements</h3>
+            <p>
+              In accordance with international regulations and industry standards, GC Travel & Tours processes refunds within <strong>7 to 14 business days</strong> for cancelled flights under international/regional regulations (e.g., EU law) and US DOT rules. Airlines require a <strong>24-hour cancellation window</strong> for bookings made 7+ days before departure, with Amadeus systems processing involuntary refunds based on carrier-specific rules.
+            </p>
+
+            <h3>Refund Timeline by Payment Method</h3>
+            <ul>
+              <li><strong>Bank/Credit Card Payments:</strong> Refunds are typically processed within 7 business days of the cancellation request, though some financial institutions may take up to 20 calendar days.</li>
+              <li><strong>Other Payment Methods:</strong> Alternative payment methods may take up to 20 calendar days for full processing.</li>
+            </ul>
+
             <h2>Flight Bookings</h2>
             
             <h3>Cancellation by Customer</h3>
             <ul>
               <li><strong>More than 7 days before departure:</strong> 80% refund (20% cancellation fee)</li>
               <li><strong>3-7 days before departure:</strong> 50% refund</li>
-              <li><strong>Less than 3 days before departure:</strong> No refund</li>
+              <li><strong>Less than 3 days before departure:</strong> No refund (subject to airline policy)</li>
               <li><strong>No-show:</strong> No refund</li>
+              <li><strong>24-Hour Rule:</strong> For flights booked at least 7 days before departure, you may cancel for free within 24 hours of booking.</li>
             </ul>
 
             <h3>Flight Cancellation by Airline</h3>
             <p>
-              If the airline cancels the flight, you are entitled to a full refund or rebooking on the next available flight at no additional cost.
+              If the airline cancels the flight, you are entitled to a full refund or rebooking on the next available flight at no additional cost. All involuntary refunds comply with Amadeus system policies and airline-specific rules including status codes (UN).
             </p>
 
             <h2>Hotel Bookings</h2>
@@ -55,26 +69,30 @@ export default function RefundPolicy() {
             
             <h3>Cancellation Terms</h3>
             <ul>
-              <li><strong>More than 30 days before tour:</strong> 90% refund</li>
+              <li><strong>More than 30 days before tour:</strong> 90% refund (10% administrative fee)</li>
               <li><strong>15-30 days before tour:</strong> 50% refund</li>
               <li><strong>Less than 15 days before tour:</strong> No refund</li>
             </ul>
 
-            <h3>Weather-Related Cancellations</h3>
             <p>
-              If a tour is cancelled due to severe weather or safety concerns, you will receive a full refund or the option to reschedule.
+              <strong>Note:</strong> Package tour cancellation generally requires refund within 14 calendar days of cancellation request, in accordance with OTA standards.
             </p>
 
-            <h2>Refund Processing</h2>
+            <h3>Weather-Related Cancellations & Force Majeure</h3>
+            <p>
+              If a tour is cancelled due to severe weather, natural disasters, pandemics, political unrest, or other force majeure events, you will receive a full refund or credit for rescheduling. Special refund policies apply during extraordinary circumstances.
+            </p>
+
+            <h2>Refund Processing & Timeline</h2>
             
-            <h3>Timeline</h3>
+            <h3>Processing Timeline</h3>
             <p>
-              Approved refunds are processed within 7-10 business days. The refund will be credited to the original payment method used for booking.
+              Approved refunds are processed within <strong>7 to 14 business days</strong> from the date of cancellation request. For credit card and bank transfer payments, refunds are typically credited within 7 business days; however, your financial institution may require an additional 5-10 business days to reflect the credit.
             </p>
 
-            <h3>Processing Fees</h3>
+            <h3>Refund Processing Requirements</h3>
             <p>
-              All refunds are subject to a $10 processing fee to cover administrative costs.
+              All refunds will be credited to the original payment method used for the booking. Refund amounts are subject to applicable cancellation fees as outlined in the respective booking categories above. Processing times begin immediately upon approval of the refund request.
             </p>
 
             <h2>Special Circumstances</h2>
@@ -111,13 +129,20 @@ export default function RefundPolicy() {
 
             <h2>Contact Us</h2>
             <p>
-              For refund inquiries:
+              For refund inquiries and assistance:
               <br />
-              Email: refunds@gctraveltours.com
+              <strong>Email:</strong> refunds@gctravelandtours.com
               <br />
-              Phone: +63 917 123 4567
+              <strong>Phone:</strong> +63 915 440 1150 / +63 962 059 5263
               <br />
-              Business Hours: Monday-Friday, 9 AM - 6 PM (PHT)
+              <strong>Business Hours:</strong> 24/7 Online Transactions (Email and Phone support available)
+              <br />
+              <strong>Address:</strong> Block 12, Lot 8, Kapatiran Village, Pasong Buaya 2, Imus, Cavite 4103, Philippines
+            </p>
+
+            <h2>Legal Disclaimer</h2>
+            <p>
+              GC Travel & Tours acts as an online travel agency (OTA) and is bound by airline, hotel, and tour operator policies regarding cancellations and refunds. OTA obligations may not be the same as carrier obligations. Refund eligibility and processing are subject to the specific terms and conditions of the service provider (airline, hotel, tour operator) and the fare class selected at time of booking. For legal advice regarding refund disputes, please consult with the appropriate regulatory authority or legal counsel.
             </p>
           </div>
         </Card>
