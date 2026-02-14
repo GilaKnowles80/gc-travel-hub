@@ -62,6 +62,9 @@ export default function BookingConfirmation() {
                             {bookingData.amadeusPNR}
                         </span>
                     </div>
+                    <div className="mt-6">
+                        <CurrencySelector defaultCurrency="PHP" />
+                    </div>
                 </motion.div>
 
                 {/* Email Confirmation Notice */}
