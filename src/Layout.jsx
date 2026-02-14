@@ -107,7 +107,7 @@ export default function Layout({ children, currentPageName }) {
               {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)}>
                   <button
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                       currentPageName === link.page
                         ? isHome && !scrolled
                           ? "bg-white/20 text-white"
@@ -115,14 +115,19 @@ export default function Layout({ children, currentPageName }) {
                         : `${textColor} hover:bg-slate-100/50`
                     }`}
                   >
-                    {link.name === "Home" && (
-                      <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/a59c23110_LogoAgency.jpeg"
-                        alt="GC Logo"
-                        className="h-6 w-auto"
-                      />
+                    {link.name === "Home" ? (
+                      <span className="font-bold text-xs">
+                        <span style={{ color: '#FF0000' }}>G</span>
+                        <span style={{ color: '#FF7F00' }}>C</span>
+                        <span style={{ color: '#FFFF00' }}> </span>
+                        <span style={{ color: '#00FF00' }}>T</span>
+                        <span style={{ color: '#0000FF' }}>r</span>
+                        <span style={{ color: '#4B0082' }}>a</span>
+                        <span style={{ color: '#9400D3' }}>v</span>
+                      </span>
+                    ) : (
+                      link.name
                     )}
-                    {link.name}
                   </button>
                 </Link>
               ))}
