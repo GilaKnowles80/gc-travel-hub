@@ -172,8 +172,8 @@ export default function Layout({ children, currentPageName }) {
               </h4>
               <ul className="space-y-2.5 text-slate-400 text-sm">
                 <li>info@gctraveltours.com</li>
-                <li>+63 917 123 4567</li>
-                <li>Makati City, Metro Manila</li>
+                <li>+63 915 440 1150</li>
+                <li>Imus City, Cavite</li>
                 <li>Philippines</li>
               </ul>
             </div>
