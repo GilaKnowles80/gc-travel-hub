@@ -21,10 +21,6 @@ Deno.serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: [
         'card',
-        'paynow',
-        'grabpay',
-        'alipay',
-        'wechat_pay',
       ],
       line_items: [
         {
