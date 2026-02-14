@@ -99,7 +99,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="w-full max-w-5xl"
         >
-          <h2 className="text-white text-xl md:text-2xl font-bold mb-6">GC Travel and Tours Agency</h2>
+
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
             <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
               {[
