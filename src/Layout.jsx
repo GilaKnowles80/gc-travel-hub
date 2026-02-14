@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
