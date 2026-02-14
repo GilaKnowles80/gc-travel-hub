@@ -38,15 +38,24 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
         throw new Error('Payment checkout is only available in the published app. Please open the app in a new tab.');
       }
 
-      const response = await base44.functions.invoke('createFlightCheckout', data);
-      return response.data;
+      try {
+        const response = await base44.functions.invoke('createFlightCheckout', data);
+        return response.data;
+      } catch (error) {
+        throw new Error(error.message || 'Failed to create checkout session');
+      }
     },
     onSuccess: (data) => {
+      if (!data.url) {
+        alert('Invalid checkout session. Please try again.');
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
       // Redirect to Stripe checkout
       window.location.href = data.url;
     },
     onError: (error) => {
+      console.error('Payment error:', error);
       alert(error.message || 'Payment processing failed. Please try again.');
     }
   });
