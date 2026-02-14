@@ -1,12 +1,18 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/pages/utils";
 import { Card } from "@/components/ui/card";
-import { FileText } from "lucide-react";
+import { FileText, ArrowLeft } from "lucide-react";
 
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
+          <Link to={createPageUrl("Home")} className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-600 mb-4 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3 mb-2">
             <FileText className="w-8 h-8 text-amber-500" />
             Terms of Service
