@@ -34,6 +34,9 @@ export default function Contact() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [mapZoom, setMapZoom] = useState(13);
+  const [pinLocation, setPinLocation] = useState([14.30698, 120.88457]);
+  const [isLocationLocked, setIsLocationLocked] = useState(false);
+  const mapRef = React.useRef(null);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data) => {
@@ -238,22 +241,39 @@ export default function Contact() {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <Card className="p-8 border-0 shadow-sm h-full">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Visit Our Office</h2>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p className="text-sm font-semibold text-blue-900">Current Pin Location:</p>
+                <p className="text-sm text-blue-700">Latitude: {pinLocation[0].toFixed(5)}, Longitude: {pinLocation[1].toFixed(5)}</p>
+                <p className="text-xs text-blue-600 mt-1">{isLocationLocked ? "📍 Location Locked" : "🗺️ Click on map to pin new location"}</p>
+              </div>
               <div className="aspect-video bg-slate-200 rounded-xl mb-6 overflow-hidden relative">
-                <MapContainer center={[14.30698, 120.88457]} zoom={mapZoom} style={{ height: "100%", width: "100%" }}>
+                <MapContainer 
+                  ref={mapRef}
+                  center={pinLocation} 
+                  zoom={mapZoom} 
+                  style={{ height: "100%", width: "100%" }}
+                  onClick={(e) => {
+                    if (!isLocationLocked) {
+                      setPinLocation([e.latlng.lat, e.latlng.lng]);
+                    }
+                  }}
+                >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   />
-                  <Marker position={[14.30698, 120.88457]} icon={defaultIcon}>
+                  <Marker position={pinLocation} icon={defaultIcon}>
                     <Popup>
                       <div className="font-semibold">GC Travel & Tours</div>
                       <div className="text-sm">Block 12, Lot 8, Kapatiran Village</div>
                       <div className="text-sm">Pasong Buaya 2, Imus, Cavite 4103</div>
+                      <div className="text-xs mt-1">Lat: {pinLocation[0].toFixed(5)}</div>
+                      <div className="text-xs">Lng: {pinLocation[1].toFixed(5)}</div>
                     </Popup>
                   </Marker>
                 </MapContainer>
               </div>
-              <div className="flex gap-2 mb-6">
+              <div className="flex gap-2 mb-6 flex-wrap">
                 <Button
                   onClick={() => setMapZoom(mapZoom + 1)}
                   variant="outline"
@@ -272,7 +292,13 @@ export default function Contact() {
                 >
                   <ZoomOut className="w-4 h-4 text-amber-600" />
                 </Button>
-                <span className="text-sm text-slate-600 flex items-center ml-2">Zoom Level: {mapZoom}</span>
+                <span className="text-sm text-slate-600 flex items-center ml-2">Zoom: {mapZoom}</span>
+                <Button
+                  onClick={() => setIsLocationLocked(!isLocationLocked)}
+                  className={`ml-auto ${isLocationLocked ? "bg-green-600 hover:bg-green-700" : "bg-amber-500 hover:bg-amber-600"}`}
+                >
+                  {isLocationLocked ? "🔒 Locked" : "Unlock & Pin"}
+                </Button>
               </div>
 
               <div className="space-y-4">
