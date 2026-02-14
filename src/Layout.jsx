@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -80,6 +81,7 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                 </Link>
               ))}
+              {user && <NotificationBell />}
             </nav>
 
             {/* Mobile Toggle */}

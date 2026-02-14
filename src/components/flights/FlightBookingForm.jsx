@@ -41,7 +41,21 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const primaryBankAccount = bankAccounts.find(acc => acc.is_primary) || bankAccounts[0];
 
   const bookFlightMutation = useMutation({
-    mutationFn: (data) => base44.entities.FlightBooking.create(data),
+    mutationFn: async (data) => {
+      const booking = await base44.entities.FlightBooking.create(data);
+      
+      // Send notification
+      await base44.functions.invoke('sendNotification', {
+        userEmail: data.passenger_email,
+        title: "Flight Booking Created",
+        message: `Your flight booking for ${data.route} has been created. Please complete payment to confirm your booking.`,
+        type: "booking_created",
+        bookingId: booking.id,
+        link: "/my-bookings"
+      });
+      
+      return booking;
+    },
     onSuccess: (booking) => {
       queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
       setStep(4);

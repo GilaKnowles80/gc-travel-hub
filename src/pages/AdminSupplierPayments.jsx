@@ -29,7 +29,39 @@ export default function AdminSupplierPayments() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.SupplierPayment.update(id, data),
+    mutationFn: async ({ id, data, payment }) => {
+      const updated = await base44.entities.SupplierPayment.update(id, data);
+      
+      // Fetch booking to get customer email
+      const entityMap = {
+        flight: 'FlightBooking',
+        hotel: 'HotelBooking',
+        tour: 'Booking',
+        ferry: 'FerryBooking',
+        bus: 'BusBooking',
+        car_rental: 'CarRentalBooking',
+      };
+      
+      const bookings = await base44.entities[entityMap[payment.booking_type]].filter({ 
+        id: payment.booking_id 
+      });
+      
+      if (bookings[0]) {
+        const customerEmail = bookings[0].passenger_email || bookings[0].customer_email || bookings[0].guest_email || bookings[0].driver_email;
+        
+        // Notify customer
+        await base44.functions.invoke('sendNotification', {
+          userEmail: customerEmail,
+          title: "Booking Confirmed with Supplier",
+          message: "Your booking has been forwarded to our supplier and is being processed. You'll receive updates soon.",
+          type: "supplier_payment_done",
+          bookingId: payment.booking_id,
+          link: "/my-bookings"
+        });
+      }
+      
+      return updated;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["supplier-payments"]);
       setShowDialog(false);
@@ -43,6 +75,7 @@ export default function AdminSupplierPayments() {
     const formData = new FormData(e.target);
     updateMutation.mutate({
       id: selectedPayment.id,
+      payment: selectedPayment,
       data: {
         payment_status: "paid",
         payment_date: formData.get("payment_date"),
