@@ -74,6 +74,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminFlights from './pages/AdminFlights';
 import AdminHotels from './pages/AdminHotels';
 import AdminTours from './pages/AdminTours';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
+import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
@@ -105,6 +109,10 @@ export const PAGES = {
     "AdminFlights": AdminFlights,
     "AdminHotels": AdminHotels,
     "AdminTours": AdminTours,
+    "TermsOfService": TermsOfService,
+    "PrivacyPolicy": PrivacyPolicy,
+    "RefundPolicy": RefundPolicy,
+    "Contact": Contact,
 }
 
 export const pagesConfig = {

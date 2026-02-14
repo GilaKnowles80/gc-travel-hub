@@ -26,21 +26,30 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
 
     const bookingMutation = useMutation({
         mutationFn: async () => {
-            const response = await base44.functions.invoke('createHotelCheckout', {
-                hotel,
-                offer,
-                guestDetails: {
-                    guests: guestDetails
-                }
-            });
-            return response.data;
+            try {
+                const response = await base44.functions.invoke('createHotelCheckout', {
+                    hotel,
+                    offer,
+                    guestDetails: {
+                        guests: guestDetails
+                    }
+                });
+                return response.data;
+            } catch (error) {
+                throw new Error(error.message || 'Failed to create checkout session');
+            }
         },
         onSuccess: (data) => {
+            if (!data.url) {
+                toast.error('Invalid checkout session. Please try again.');
+                return;
+            }
             // Redirect to Stripe Checkout
             window.location.href = data.url;
         },
         onError: (error) => {
-            toast.error(error.message || 'Failed to create checkout');
+            console.error('Checkout error:', error);
+            toast.error(error.message || 'Failed to create checkout. Please try again.');
         }
     });
 

@@ -130,7 +130,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Footer */}
       <footer className="bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
@@ -148,29 +148,21 @@ export default function Layout({ children, currentPageName }) {
                 Quick Links
               </h4>
               <ul className="space-y-2.5">
-                {navLinks.map((link) => (
-                  <li key={link.page}>
-                    <Link
-                      to={createPageUrl(link.page)}
-                      className="text-slate-400 hover:text-amber-400 text-sm transition-colors"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
+                <li><Link to={createPageUrl("Tours")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Tours</Link></li>
+                <li><Link to={createPageUrl("Flights")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Flights</Link></li>
+                <li><Link to={createPageUrl("HotelSearch")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Hotels</Link></li>
+                <li><Link to={createPageUrl("Contact")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Contact Us</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4 text-sm tracking-wider uppercase text-slate-300">
-                Tour Types
+                Legal
               </h4>
-              <ul className="space-y-2.5 text-slate-400 text-sm">
-                <li>Beach Getaways</li>
-                <li>Adventure Tours</li>
-                <li>Cultural Experiences</li>
-                <li>Cruise Packages</li>
-                <li>Honeymoon Specials</li>
+              <ul className="space-y-2.5">
+                <li><Link to={createPageUrl("TermsOfService")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Terms of Service</Link></li>
+                <li><Link to={createPageUrl("PrivacyPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Privacy Policy</Link></li>
+                <li><Link to={createPageUrl("RefundPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Refund Policy</Link></li>
               </ul>
             </div>
 
@@ -181,7 +173,8 @@ export default function Layout({ children, currentPageName }) {
               <ul className="space-y-2.5 text-slate-400 text-sm">
                 <li>info@gctraveltours.com</li>
                 <li>+63 917 123 4567</li>
-                <li>Manila, Philippines</li>
+                <li>Makati City, Metro Manila</li>
+                <li>Philippines</li>
               </ul>
             </div>
           </div>
