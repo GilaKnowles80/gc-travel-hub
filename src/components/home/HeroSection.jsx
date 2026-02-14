@@ -81,7 +81,7 @@ export default function HeroSection() {
             GC Travel & Tours
           </p>
           <h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight"
             style={{
               textShadow: "0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)"
             }}
