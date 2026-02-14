@@ -13,6 +13,7 @@ const navLinks = [
   { name: "Tours", page: "Tours", icon: MapPin },
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
+  { name: "Visas", page: "Visas", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
   { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
