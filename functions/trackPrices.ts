@@ -176,26 +176,35 @@ async function updatePriceTracking(base44, entityName, item, newChecks, now) {
 }
 
 async function sendPriceAlerts(base44, alerts) {
+  const markup = parseFloat(Deno.env.get("FLIGHT_MARKUP_PERCENTAGE") || "15");
+
   const emailBody = `
-    <h2>🔔 Price Drop Alerts</h2>
-    <p>The following items have significant price drops:</p>
+    <h2>🔔 Price Drop Alerts - Profit Opportunities</h2>
+    <p>The following items have significant price drops with excellent profit margins:</p>
     <ul>
-      ${alerts.map(alert => `
-        <li>
+      ${alerts.map(alert => {
+        const expectedPrice = alert.newPrice * (1 + markup / 100);
+        const profitAmount = expectedPrice - alert.newPrice;
+        const profitMargin = markup;
+        
+        return `
+        <li style="margin-bottom: 15px;">
           <strong>${alert.itemName}</strong> (${alert.itemType})<br>
-          Old Price: ₱${alert.oldPrice.toFixed(2)}<br>
-          New Price: ₱${alert.newPrice.toFixed(2)} at ${alert.supplier}<br>
-          <span style="color: green; font-weight: bold;">Drop: ${alert.dropPercentage}%</span>
+          <span style="color: #dc2626;">Old Supplier Price: ₱${alert.oldPrice.toFixed(2)}</span><br>
+          <span style="color: #059669; font-weight: bold;">New Supplier Price: ₱${alert.newPrice.toFixed(2)} @ ${alert.supplier}</span><br>
+          <span style="color: #f59e0b; font-weight: bold;">💰 Expected Profit: ₱${profitAmount.toFixed(2)} (${profitMargin}% margin)</span><br>
+          <span style="color: green; font-weight: bold;">📉 Price Drop: ${alert.dropPercentage}%</span>
         </li>
-      `).join('')}
+      `}).join('')}
     </ul>
-    <p>Consider booking these items soon to maximize profit margins!</p>
+    <p><strong>Action Required:</strong> Book these items now to maximize profit margins!</p>
+    <p><em>Profit calculations based on ${markup}% markup percentage.</em></p>
   `;
 
   try {
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: 'info@gctraveltours.com',
-      subject: `🔔 ${alerts.length} Price Drop Alert${alerts.length > 1 ? 's' : ''}`,
+      subject: `💰 ${alerts.length} Profit Opportunit${alerts.length > 1 ? 'ies' : 'y'} - Price Drops Detected`,
       body: emailBody
     });
     console.log('Price alert email sent successfully');
