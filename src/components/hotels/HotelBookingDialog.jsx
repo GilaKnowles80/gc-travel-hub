@@ -70,6 +70,12 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
     const handleSubmit = (e) => {
         e.preventDefault();
         
+        // Check if running in iframe
+        if (window.self !== window.top) {
+            toast.error("Checkout must be completed in the main app window");
+            return;
+        }
+        
         for (let i = 0; i < guestDetails.length; i++) {
             const g = guestDetails[i];
             if (!g.name.firstName || !g.name.lastName) {

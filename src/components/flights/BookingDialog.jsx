@@ -85,6 +85,12 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
     const handleSubmit = (e) => {
         e.preventDefault();
         
+        // Check if running in iframe
+        if (window.self !== window.top) {
+            toast.error("Checkout must be completed in the main app window");
+            return;
+        }
+        
         // Basic validation
         for (let i = 0; i < travelers.length; i++) {
             const t = travelers[i];

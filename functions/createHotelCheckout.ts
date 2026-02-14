@@ -59,7 +59,11 @@ Deno.serve(async (req) => {
         });
 
     } catch (error) {
-        console.error('Create hotel checkout error:', error);
+        console.error('Hotel checkout error:', {
+            message: error.message,
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        });
         return Response.json({ error: error.message }, { status: 500 });
     }
 });

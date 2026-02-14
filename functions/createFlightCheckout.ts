@@ -54,7 +54,11 @@ Deno.serve(async (req) => {
       bookingId: booking.id
     });
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+  console.error('Flight checkout error:', {
+    message: error.message,
+    stack: error.stack,
+    timestamp: new Date().toISOString()
+  });
+  return Response.json({ error: error.message }, { status: 500 });
   }
 });
