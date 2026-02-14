@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, User, CreditCard } from "lucide-react";
+import { Loader2, User, CreditCard, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, guests }) {
@@ -23,6 +23,20 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
             }
         }))
     );
+
+    const { data: currentUser } = useQuery({
+        queryKey: ["current-user"],
+        queryFn: async () => await base44.auth.me()
+    });
+
+    const { data: savedGuests } = useQuery({
+        queryKey: ["saved-guests", currentUser?.email],
+        queryFn: async () => {
+            const result = await base44.entities.SavedGuest.filter({ user_email: currentUser.email });
+            return result || [];
+        },
+        enabled: !!currentUser?.email
+    });
 
     const bookingMutation = useMutation({
         mutationFn: async () => {
@@ -80,6 +94,24 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
         });
     };
 
+    const fillFromSavedGuest = (index, savedGuest) => {
+        const updated = [...guestDetails];
+        updated[index] = {
+            ...updated[index],
+            name: {
+                title: savedGuest.title || "MR",
+                firstName: savedGuest.first_name || "",
+                lastName: savedGuest.last_name || ""
+            },
+            contact: {
+                phone: savedGuest.phone || "",
+                email: savedGuest.email || ""
+            }
+        };
+        setGuestDetails(updated);
+        toast.success(`Filled guest ${index + 1} from saved guest`);
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -90,9 +122,31 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {guestDetails.map((guest, idx) => (
                         <div key={idx} className="p-4 border rounded-lg space-y-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <User className="w-4 h-4 text-blue-600" />
-                                <h3 className="font-semibold">Guest {idx + 1}</h3>
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                    <User className="w-4 h-4 text-blue-600" />
+                                    <h3 className="font-semibold">Guest {idx + 1}</h3>
+                                </div>
+                                {savedGuests && savedGuests.length > 0 && (
+                                    <div className="text-xs">
+                                        <span className="text-slate-600 mr-2">Quick fill:</span>
+                                        <div className="space-x-1 inline-flex">
+                                            {savedGuests.map((sg) => (
+                                                <Button
+                                                    key={sg.id}
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="text-xs py-1 h-auto"
+                                                    onClick={() => fillFromSavedGuest(idx, sg)}
+                                                >
+                                                    <Copy className="w-3 h-3 mr-1" />
+                                                    {sg.label || `${sg.first_name} ${sg.last_name}`}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-3 gap-4">
