@@ -171,6 +171,28 @@ export default function Layout({ children, currentPageName }) {
                 <li><Link to={createPageUrl("Flights")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Flights</Link></li>
                 <li><Link to={createPageUrl("HotelSearch")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Hotels</Link></li>
                 <li><Link to={createPageUrl("Contact")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Contact Us</Link></li>
+                <li>
+                  <button 
+                    onClick={() => {
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                          (position) => {
+                            const { latitude, longitude } = position.coords;
+                            window.open(`https://maps.google.com/?q=Block+12,+Lot+8,+Kapatiran+Village,+Pasong+Buaya+2,+Imus,+Cavite+4103,+Philippines&saddr=${latitude},${longitude}`, '_blank');
+                          },
+                          () => {
+                            window.open('https://maps.google.com/?q=Block+12,+Lot+8,+Kapatiran+Village,+Pasong+Buaya+2,+Imus,+Cavite+4103,+Philippines', '_blank');
+                          }
+                        );
+                      } else {
+                        window.open('https://maps.google.com/?q=Block+12,+Lot+8,+Kapatiran+Village,+Pasong+Buaya+2,+Imus,+Cavite+4103,+Philippines', '_blank');
+                      }
+                    }}
+                    className="text-slate-400 hover:text-amber-400 text-sm transition-colors cursor-pointer"
+                  >
+                    Visit Our Office
+                  </button>
+                </li>
               </ul>
             </div>
 
