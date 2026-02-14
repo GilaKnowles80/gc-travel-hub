@@ -137,16 +137,26 @@ export default function AdminTours() {
             </h1>
             <p className="text-slate-600">{tours.length} total tours</p>
           </div>
-          <Button
-            onClick={() => {
-              resetForm();
-              setIsDialogOpen(true);
-            }}
-            className="bg-green-500 hover:bg-green-600"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Tour
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => {
+                resetForm();
+                setIsDialogOpen(true);
+              }}
+              className="bg-green-500 hover:bg-green-600"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Tour
+            </Button>
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant="outline"
+              className="border-green-500 text-green-600 hover:bg-green-50"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Bulk Import
+            </Button>
+          </div>
         </div>
 
         <div className="mb-6">
