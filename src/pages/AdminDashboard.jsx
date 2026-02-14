@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { 
   Plane, Hotel, MapPin, Users, DollarSign, 
-  TrendingUp, Calendar, Shield, MessageSquare 
+  TrendingUp, Calendar, Shield, MessageSquare, Ship, Bus, FileText 
 } from "lucide-react";
 import { motion } from "framer-motion";
 import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
@@ -68,6 +68,9 @@ export default function AdminDashboard() {
     { title: "Manage Flights", icon: Plane, page: "AdminFlights", color: "amber" },
     { title: "Manage Hotels", icon: Hotel, page: "AdminHotels", color: "blue" },
     { title: "Manage Tours", icon: MapPin, page: "AdminTours", color: "green" },
+    { title: "Manage Ferries", icon: Ship, page: "AdminFerries", color: "cyan" },
+    { title: "Manage Buses", icon: Bus, page: "AdminBuses", color: "orange" },
+    { title: "Manage Visas", icon: FileText, page: "AdminVisas", color: "indigo" },
     { title: "Moderate Reviews", icon: MessageSquare, page: "AdminReviews", color: "purple" },
   ];
 
