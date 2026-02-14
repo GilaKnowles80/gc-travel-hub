@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap, Car } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import TravelersSelector from "./TravelersSelector";
@@ -99,7 +99,7 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-5xl"
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
-            <div className="grid grid-cols-2 md:grid-cols-7 gap-2 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
               <Button
                 onClick={() => setSearchType("flights")}
                 variant={searchType === "flights" ? "default" : "ghost"}
@@ -155,6 +155,14 @@ export default function HeroSection() {
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Visa
+              </Button>
+              <Button
+                onClick={() => setSearchType("carRental")}
+                variant={searchType === "carRental" ? "default" : "ghost"}
+                className={`rounded-xl ${searchType === "carRental" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+              >
+                <Car className="w-4 h-4 mr-2" />
+                Car Rental
               </Button>
             </div>
 
@@ -447,14 +455,46 @@ export default function HeroSection() {
                     </label>
                     <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
                   </div>
-                 <div className="md:col-span-2">
-                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
-                     <Search className="w-4 h-4 mr-2" />
-                     Check Visa Requirements
-                   </Button>
+                  <div className="md:col-span-2">
+                    <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                      <Search className="w-4 h-4 mr-2" />
+                      Check Visa Requirements
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+            {searchType === "carRental" && (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     Pickup Location
+                   </label>
+                   <Input placeholder="City or airport" className="rounded-xl" />
                  </div>
-               </div>
-             )}
+                 <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Pickup Date
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Dropoff Date
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                      <Search className="w-4 h-4 mr-2" />
+                      Search Car Rentals
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
