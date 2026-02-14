@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 
@@ -17,6 +17,7 @@ const navLinks = [
   { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Email Clients", page: "AdminEmailClients", icon: Mail, adminOnly: true },
 ];
 
 export default function Layout({ children, currentPageName }) {

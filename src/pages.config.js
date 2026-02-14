@@ -47,11 +47,18 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminBankAccounts from './pages/AdminBankAccounts';
+import AdminBuses from './pages/AdminBuses';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
 import AdminHotels from './pages/AdminHotels';
+import AdminLoyalty from './pages/AdminLoyalty';
 import AdminReviews from './pages/AdminReviews';
+import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
+import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import AdminTours from './pages/AdminTours';
+import AdminVisas from './pages/AdminVisas';
 import BookingConfirmation from './pages/BookingConfirmation';
 import Contact from './pages/Contact';
 import FlightDetail from './pages/FlightDetail';
@@ -78,22 +85,23 @@ import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import AdminFerries from './pages/AdminFerries';
-import AdminBuses from './pages/AdminBuses';
-import AdminVisas from './pages/AdminVisas';
-import AdminLoyalty from './pages/AdminLoyalty';
-import AdminBankAccounts from './pages/AdminBankAccounts';
-import AdminSupplierPayments from './pages/AdminSupplierPayments';
-import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
+import AdminEmailClients from './pages/AdminEmailClients';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminBankAccounts": AdminBankAccounts,
+    "AdminBuses": AdminBuses,
     "AdminDashboard": AdminDashboard,
+    "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
     "AdminHotels": AdminHotels,
+    "AdminLoyalty": AdminLoyalty,
     "AdminReviews": AdminReviews,
+    "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
+    "AdminSupplierPayments": AdminSupplierPayments,
     "AdminTours": AdminTours,
+    "AdminVisas": AdminVisas,
     "BookingConfirmation": BookingConfirmation,
     "Contact": Contact,
     "FlightDetail": FlightDetail,
@@ -120,13 +128,7 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "AdminFerries": AdminFerries,
-    "AdminBuses": AdminBuses,
-    "AdminVisas": AdminVisas,
-    "AdminLoyalty": AdminLoyalty,
-    "AdminBankAccounts": AdminBankAccounts,
-    "AdminSupplierPayments": AdminSupplierPayments,
-    "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
+    "AdminEmailClients": AdminEmailClients,
 }
 
 export const pagesConfig = {
