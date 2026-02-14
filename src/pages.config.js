@@ -86,9 +86,9 @@ import SharedItinerary from './pages/SharedItinerary';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
+import TravelAssistant from './pages/TravelAssistant';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import TravelAssistant from './pages/TravelAssistant';
 import __Layout from './Layout.jsx';
 
 
@@ -132,9 +132,9 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
+    "TravelAssistant": TravelAssistant,
     "Visas": Visas,
     "utils": utils,
-    "TravelAssistant": TravelAssistant,
 }
 
 export const pagesConfig = {
