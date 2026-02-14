@@ -241,9 +241,11 @@ export default function TourDetail() {
                     </div>
                   ))}
                 </div>
-              </motion.div>
-            )}
-          </div>
+                </motion.div>
+                )}
+                </>
+                )}
+                </div>
 
           {/* Sidebar - Booking Card */}
           <div className="lg:col-span-1">
