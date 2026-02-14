@@ -79,12 +79,8 @@ export default function HeroSection() {
           <p className="text-amber-300 font-medium tracking-[0.3em] uppercase text-sm mb-4">
             GC Travel & Tours
           </p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight max-w-4xl">
-            Discover the World's
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">
-              Hidden Wonders
-            </span>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-snug max-w-4xl">
+            Discover the World's <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Hidden Wonders</span>
           </h1>
           <p className="mt-6 text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
             Curated travel experiences that transform ordinary trips into
