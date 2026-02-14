@@ -47,7 +47,7 @@ export default function CategorySection() {
                   <div className={`mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <cat.icon className="w-6 h-6 text-white" />
                   </div>
-                  <p className="font-semibold text-slate-800 text-sm">{cat.label}</p>
+                  <p className="font-semibold text-black text-base">{cat.label}</p>
                 </div>
               </Link>
             </motion.div>
