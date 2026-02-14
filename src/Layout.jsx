@@ -50,6 +50,7 @@ export default function Layout({ children, currentPageName }) {
   const logoColor = isHome && !scrolled ? "text-white" : "text-slate-900";
 
   return (
+    <CurrencyProvider>
     <div className="min-h-screen">
       {/* Header */}
       <header
