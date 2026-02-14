@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { DollarSign, CheckCircle, Clock, Ban, TrendingUp, Zap, Building2 } from "lucide-react";
+import { DollarSign, CheckCircle, Clock, Ban, TrendingUp, Zap, Building2, Download, FileText } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
@@ -17,6 +18,13 @@ import { createPageUrl } from "./utils";
 export default function AdminSupplierPayments() {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [exportFilters, setExportFilters] = useState({
+    startDate: "",
+    endDate: "",
+    supplier: "all",
+    status: "all"
+  });
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -83,6 +91,27 @@ export default function AdminSupplierPayments() {
     },
   });
 
+  const handleExportReport = async () => {
+    try {
+      const response = await base44.functions.invoke('exportSupplierPayments', exportFilters);
+      
+      const blob = new Blob([response.data], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `supplier-payouts-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      
+      toast.success("Report exported successfully");
+      setShowExportDialog(false);
+    } catch (error) {
+      toast.error("Failed to export report");
+    }
+  };
+
   const handleMarkAsPaid = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -125,12 +154,18 @@ export default function AdminSupplierPayments() {
               </h1>
               <p className="text-slate-600">Manage payments to suppliers and track your retained markup</p>
             </div>
-            <Link to={createPageUrl("AdminSupplierBankAccounts")}>
-              <Button variant="outline" className="gap-2">
-                <Building2 className="w-4 h-4" />
-                Manage Supplier Bank Accounts
+            <div className="flex gap-2">
+              <Button onClick={() => setShowExportDialog(true)} variant="outline" className="gap-2">
+                <FileText className="w-4 h-4" />
+                Export Report
               </Button>
-            </Link>
+              <Link to={createPageUrl("AdminSupplierBankAccounts")}>
+                <Button variant="outline" className="gap-2">
+                  <Building2 className="w-4 h-4" />
+                  Bank Accounts
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -401,16 +436,7 @@ export default function AdminSupplierPayments() {
 
               <div>
                 <Label>Payment Method</Label>
-                <Select name="payment_method" defaultValue="manual">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="manual">Manual Bank Transfer</SelectItem>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="check">Check</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Input name="payment_method" placeholder="e.g., Bank Transfer, Cash" required defaultValue="manual" />
               </div>
 
               <div>
