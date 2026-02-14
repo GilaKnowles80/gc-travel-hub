@@ -80,9 +80,6 @@ export default function HeroSection() {
           <p className="text-amber-400 font-semibold tracking-[0.15em] uppercase text-[10px] mb-2">
             GC Travel & Tours
           </p>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-snug max-w-3xl">
-            Discover the World's <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Hidden Wonders</span>
-          </h1>
         </motion.div>
 
         <motion.div
