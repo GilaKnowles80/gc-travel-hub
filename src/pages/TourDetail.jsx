@@ -228,7 +228,9 @@ export default function TourDetail() {
             </>
             )}
 
-            {/* Gallery */}
+            {!showCustomizer && (
+              <>
+                {/* Gallery */}
             {tour.gallery_urls?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                 <h2 className="text-2xl font-bold text-slate-900 mb-6">Gallery</h2>
