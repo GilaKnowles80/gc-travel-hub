@@ -62,12 +62,15 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to={createPageUrl("Home")} className="flex items-center gap-2">
+            <Link to={createPageUrl("Home")} className="flex items-center gap-3">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/5c57257de_LogoAgency.jpeg"
                 alt="GC Travel and Tours Agency"
                 className="h-10 w-auto"
               />
+              <span className={`hidden md:block font-bold text-lg ${logoColor}`}>
+                GC Travel and Tours Agency
+              </span>
             </Link>
 
             {/* Desktop Nav */}
