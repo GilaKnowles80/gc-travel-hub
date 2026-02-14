@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft, Facebook, Instagram, X, Youtube } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
@@ -65,25 +65,25 @@ export default function Contact() {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+63 917 123 4567", "+63 2 8888 9999"],
+      details: ["+639154401150 (GLOBE)", "+639620595263 (SMART)"],
       color: "amber",
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@gctraveltours.com", "support@gctraveltours.com"],
+      details: ["info@gctravelandtours.com", "support@gctravelandtours.com"],
       color: "blue",
     },
     {
       icon: MapPin,
       title: "Office",
-      details: ["123 Travel Street", "Makati City, Metro Manila", "Philippines"],
+      details: ["Block 12, Lot 8, Kapatiran Village", "Pasong Buaya 2, Imus, Cavite 4103", "Philippines"],
       color: "green",
     },
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Monday - Friday: 9 AM - 6 PM", "Saturday: 10 AM - 4 PM", "Sunday: Closed"],
+      details: ["Monday - Friday: 9 AM - 6 PM", "Saturday: 10 AM - 4 PM", "24/7 Online Transactions"],
       color: "purple",
     },
   ];
@@ -228,7 +228,7 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Visit Our Office</h2>
               <div className="aspect-video bg-slate-200 rounded-xl mb-6 overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.520742347644!2d121.01977631484048!3d14.554772689827445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90264a0f201%3A0x92e154ac5f6179e0!2sMakati%2C%20Metro%20Manila%2C%20Philippines!5e0!3m2!1sen!2s!4v1645123456789!5m2!1sen!2s"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3862.5527823426456!2d120.8873!3d14.3086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd64d1f0a0a0a1%3A0x1234567890abcdef!2sImus%2C%20Cavite%204103!5e0!3m2!1sen!2s!4v1645123456789"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -251,14 +251,17 @@ export default function Contact() {
                 <div className="border-t border-slate-200 pt-4">
                   <h3 className="font-semibold text-slate-900 mb-2">Follow Us</h3>
                   <div className="flex gap-3">
-                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
-                      <span className="text-slate-600 font-semibold text-sm">FB</span>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-blue-100 flex items-center justify-center transition-colors" title="Facebook">
+                      <Facebook className="w-5 h-5 text-blue-600" />
                     </a>
-                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
-                      <span className="text-slate-600 font-semibold text-sm">IG</span>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-pink-100 flex items-center justify-center transition-colors" title="Instagram">
+                      <Instagram className="w-5 h-5 text-pink-600" />
                     </a>
-                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
-                      <span className="text-slate-600 font-semibold text-sm">TW</span>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors" title="X (Twitter)">
+                      <X className="w-5 h-5 text-slate-700" />
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 hover:bg-red-100 flex items-center justify-center transition-colors" title="YouTube">
+                      <Youtube className="w-5 h-5 text-red-600" />
                     </a>
                   </div>
                 </div>
