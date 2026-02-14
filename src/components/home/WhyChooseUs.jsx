@@ -56,13 +56,13 @@ export default function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="text-center"
+              className="text-center group cursor-pointer"
             >
-              <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5">
+              <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 group-hover:scale-110 transition-all duration-300">
                 <feat.icon className="w-7 h-7 text-amber-400" />
               </div>
-              <h3 className="text-black font-bold text-lg mb-2">{feat.title}</h3>
-              <p className="text-black text-sm leading-relaxed">{feat.description}</p>
+              <h3 className="text-black font-bold text-lg mb-2 group-hover:text-amber-400 transition-colors duration-300">{feat.title}</h3>
+              <p className="text-black text-sm leading-relaxed max-h-16 overflow-hidden opacity-100 group-hover:opacity-100 transition-all duration-300 group-hover:max-h-24">{feat.description}</p>
             </motion.div>
           ))}
         </div>
