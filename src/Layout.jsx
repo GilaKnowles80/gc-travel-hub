@@ -68,10 +68,39 @@ export default function Layout({ children, currentPageName }) {
                 alt="GC Travel and Tours Agency"
                 className="h-10 w-auto"
               />
-              <span className={`hidden md:block font-bold text-lg ${logoColor}`}>
-                GC Travel and Tours Agency
-              </span>
             </Link>
+
+            {/* Center Title */}
+            <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+              <h1 className="font-bold text-xl">
+                <span style={{ color: '#FF0000' }}>G</span>
+                <span style={{ color: '#FF7F00' }}>C</span>
+                <span style={{ color: '#FFFF00' }}> </span>
+                <span style={{ color: '#00FF00' }}>T</span>
+                <span style={{ color: '#0000FF' }}>r</span>
+                <span style={{ color: '#4B0082' }}>a</span>
+                <span style={{ color: '#9400D3' }}>v</span>
+                <span style={{ color: '#FF0000' }}>e</span>
+                <span style={{ color: '#FF7F00' }}>l</span>
+                <span style={{ color: '#FFFF00' }}> </span>
+                <span style={{ color: '#00FF00' }}>a</span>
+                <span style={{ color: '#0000FF' }}>n</span>
+                <span style={{ color: '#4B0082' }}>d</span>
+                <span style={{ color: '#9400D3' }}> </span>
+                <span style={{ color: '#FF0000' }}>T</span>
+                <span style={{ color: '#FF7F00' }}>o</span>
+                <span style={{ color: '#FFFF00' }}>u</span>
+                <span style={{ color: '#00FF00' }}>r</span>
+                <span style={{ color: '#0000FF' }}>s</span>
+                <span style={{ color: '#4B0082' }}> </span>
+                <span style={{ color: '#9400D3' }}>A</span>
+                <span style={{ color: '#FF0000' }}>g</span>
+                <span style={{ color: '#FF7F00' }}>e</span>
+                <span style={{ color: '#FFFF00' }}>n</span>
+                <span style={{ color: '#00FF00' }}>c</span>
+                <span style={{ color: '#0000FF' }}>y</span>
+              </h1>
+            </div>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
