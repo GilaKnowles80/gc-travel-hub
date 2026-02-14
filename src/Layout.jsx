@@ -53,6 +53,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <CurrencyProvider>
+      <FloatingContactWidget />
       <div className="min-h-screen">
       {/* Header */}
       <header
