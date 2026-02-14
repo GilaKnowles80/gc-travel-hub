@@ -51,7 +51,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <CurrencyProvider>
-    <div className="min-h-screen">
+      <div className="min-h-screen">
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}
