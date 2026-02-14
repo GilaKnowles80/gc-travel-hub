@@ -86,8 +86,8 @@ import SharedItinerary from './pages/SharedItinerary';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
-import utils from './pages/utils';
 import Visas from './pages/Visas';
+import utils from './pages/utils';
 import __Layout from './Layout.jsx';
 
 
@@ -131,8 +131,8 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
-    "utils": utils,
     "Visas": Visas,
+    "utils": utils,
 }
 
 export const pagesConfig = {
