@@ -197,15 +197,15 @@ export default function BookingConfirmation() {
                             <div className="space-y-3">
                                 <div className="flex justify-between text-slate-700">
                                     <span>Base Fare</span>
-                                    <span>{bookingData.currency} {bookingData.basePrice}</span>
+                                    <PriceDisplay amount={bookingData.basePrice} showOriginal={true} />
                                 </div>
                                 <div className="flex justify-between text-slate-700">
                                     <span>Service Fee</span>
-                                    <span>{bookingData.currency} {bookingData.markup}</span>
+                                    <PriceDisplay amount={bookingData.markup} showOriginal={true} />
                                 </div>
                                 <div className="flex justify-between text-lg font-bold text-slate-900 pt-3 border-t">
                                     <span>Total Paid</span>
-                                    <span className="text-amber-600">{bookingData.currency} {bookingData.totalPrice}</span>
+                                    <PriceDisplay amount={bookingData.totalPrice} showOriginal={true} />
                                 </div>
                             </div>
                         </CardContent>
