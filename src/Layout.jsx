@@ -64,9 +64,9 @@ export default function Layout({ children, currentPageName }) {
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/5c57257de_LogoAgency.jpeg"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/a59c23110_LogoAgency.jpeg"
                 alt="GC Travel and Tours Agency"
-                className="h-10 w-auto"
+                className="h-16 w-auto"
               />
             </Link>
 
