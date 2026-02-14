@@ -117,8 +117,11 @@ export default function TourDetail() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-10">
+           {/* Main Content */}
+           <div className="lg:col-span-2 space-y-10">
+             {showCustomizer ? (
+               <TourCustomizer tour={tour} onPriceChange={setCustomizedPrice} />
+             ) : null}
             {/* Description */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Tour</h2>
