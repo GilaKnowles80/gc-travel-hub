@@ -228,7 +228,7 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Visit Our Office</h2>
               <div className="aspect-video bg-slate-200 rounded-xl mb-6 overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3862.5527823426456!2d120.8873!3d14.3086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd64d1f0a0a0a1%3A0x1234567890abcdef!2sImus%2C%20Cavite%204103!5e0!3m2!1sen!2s!4v1645123456789"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3862.6245789012345!2d120.88457!3d14.30698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd64c5f0a0a0a1%3A0xblock12kapatiran!2sBlock%2012%20Lot%208%20Kapatiran%20Village%20Pasong%20Buaya%202%20Imus%20Cavite%204103!5e0!3m2!1sen!2s!4v1708998456789"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
