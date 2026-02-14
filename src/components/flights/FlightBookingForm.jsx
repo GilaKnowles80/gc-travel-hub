@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SeatMap from "./SeatMap";
-import PaymentMethodSelector from "./PaymentMethodSelector";
+import BankTransferPayment from "../payment/BankTransferPayment";
 
 export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   const [step, setStep] = useState(1); // 1: Flight Details, 2: Passenger Details, 3: Payment
+  const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
   const [formData, setFormData] = useState({
     trip_type: "round_trip",
     return_date: "",
@@ -30,6 +32,21 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
   });
 
   const queryClient = useQueryClient();
+
+  const { data: bankAccounts = [] } = useQuery({
+    queryKey: ["bank-accounts"],
+    queryFn: () => base44.entities.BankAccount.list(),
+  });
+
+  const primaryBankAccount = bankAccounts.find(acc => acc.is_primary) || bankAccounts[0];
+
+  const bookFlightMutation = useMutation({
+    mutationFn: (data) => base44.entities.FlightBooking.create(data),
+    onSuccess: (booking) => {
+      queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
+      setStep(4);
+    },
+  });
 
   const bookingMutation = useMutation({
     mutationFn: async (data) => {
@@ -96,8 +113,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
       const pwdPrice = formData.pwd * (basePrice * 0.9); // 10% off
       const totalPrice = (adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice) * tripMultiplier;
       
-      bookingMutation.mutate({
-        bookingData: {
+      if (paymentMethod === "bank_transfer") {
+        // Create booking directly for bank transfer
+        bookFlightMutation.mutate({
           flight_id: flight.id,
           flight_number: flight.flight_number,
           route: `${flight.origin} - ${flight.destination}`,
@@ -113,28 +131,64 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           number_of_passengers: totalPassengers,
           selected_seats: formData.selected_seats,
           special_requests: formData.special_requests,
-        },
-        flightDetails: {
-          route: `${flight.origin} - ${flight.destination}`,
-          airline: flight.airline_name,
-          flightNumber: flight.flight_number,
-          cabinClass: cabinClass.replace(/_/g, " "),
-        }
-      });
+          payment_status: "unpaid",
+          status: "pending",
+        });
+      } else {
+        // Stripe checkout
+        bookingMutation.mutate({
+          bookingData: {
+            flight_id: flight.id,
+            flight_number: flight.flight_number,
+            route: `${flight.origin} - ${flight.destination}`,
+            cabin_class: cabinClass,
+            trip_type: formData.trip_type,
+            return_date: formData.return_date || null,
+            total_price: totalPrice,
+            passenger_name: formData.passenger_name,
+            passenger_email: formData.passenger_email,
+            passenger_phone: formData.passenger_phone,
+            passport_number: formData.passport_number,
+            date_of_birth: formData.date_of_birth,
+            number_of_passengers: totalPassengers,
+            selected_seats: formData.selected_seats,
+            special_requests: formData.special_requests,
+          },
+          flightDetails: {
+            route: `${flight.origin} - ${flight.destination}`,
+            airline: flight.airline_name,
+            flightNumber: flight.flight_number,
+            cabinClass: cabinClass.replace(/_/g, " "),
+          }
+        });
+      }
     }
   };
 
 
 
   // Progress indicator
-  const stepLabels = ['Flight Details', 'Passenger Details', 'Payment'];
+  const stepLabels = ['Flight Details', 'Passenger Details', 'Payment', 'Confirmation'];
+  
+  const selectedClass = flight.cabin_classes?.find((c) => c.class === cabinClass);
+  const tripMultiplier = formData.trip_type === "round_trip" ? 2 : 1;
+  const basePrice = selectedClass?.price || 0;
+  const totalPassengers = formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
+  const adultsPrice = formData.adults * basePrice * tripMultiplier;
+  const childrenPrice = formData.children * basePrice * tripMultiplier;
+  const seniorsPrice = formData.seniors * (basePrice * 0.9) * tripMultiplier;
+  const infantsPrice = formData.infants * (basePrice * 0.5) * tripMultiplier;
+  const pwdPrice = formData.pwd * (basePrice * 0.9) * tripMultiplier;
+  const totalPrice = adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice;
+
+  const bookingReference = bookFlightMutation.data?.id?.slice(-8).toUpperCase() || `REF${Date.now()}`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Step Progress */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
-          {stepLabels.map((label, index) => (
+          {stepLabels.slice(0, step === 4 ? 4 : 3).map((label, index) => (
             <div key={index} className="flex items-center flex-1">
               <div className="flex flex-col items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
@@ -424,7 +478,19 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
           </div>
 
           <div className="mt-6">
-            <PaymentMethodSelector />
+            <h4 className="font-semibold mb-3">Choose Payment Method</h4>
+            <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="bank_transfer">Bank Transfer (Primary)</TabsTrigger>
+                <TabsTrigger value="stripe">Credit/Debit Card</TabsTrigger>
+              </TabsList>
+              <TabsContent value="bank_transfer" className="mt-4">
+                <p className="text-sm text-slate-600 mb-3">Pay directly to our bank account</p>
+              </TabsContent>
+              <TabsContent value="stripe" className="mt-4">
+                <p className="text-sm text-slate-600 mb-3">Secure payment via Stripe</p>
+              </TabsContent>
+            </Tabs>
           </div>
           
           <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
@@ -435,32 +501,61 @@ export default function FlightBookingForm({ flight, cabinClass, onClose }) {
         </>
       )}
 
-      <div className="flex gap-3 pt-2">
-        {step > 1 && (
-          <Button type="button" variant="outline" onClick={() => setStep(step - 1)} className="flex-1 rounded-xl">
-            Back
-          </Button>
-        )}
-        <Button
-          type="submit"
-          disabled={
-            bookingMutation.isPending || 
-            (step === 2 && formData.selected_seats.length !== (formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd))
-          }
-          className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl"
-        >
-          {bookingMutation.isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Processing Payment...
-            </>
-          ) : step === 3 ? (
-            "Pay Now"
-          ) : (
-            "Continue"
+      {step === 4 && (
+        <>
+          <div className="text-center py-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Booking Created!</h3>
+            <p className="text-slate-600 mb-6">Complete your payment using the bank details below</p>
+          </div>
+
+          <BankTransferPayment 
+            bankAccount={primaryBankAccount}
+            bookingReference={bookingReference}
+          />
+
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-xl">
+              Close
+            </Button>
+            <Button type="button" onClick={() => window.location.href = "/my-bookings"} className="flex-1 rounded-xl bg-amber-500 hover:bg-amber-600">
+              View My Bookings
+            </Button>
+          </div>
+        </>
+      )}
+
+      {step < 4 && (
+        <div className="flex gap-3 pt-2">
+          {step > 1 && (
+            <Button type="button" variant="outline" onClick={() => setStep(step - 1)} className="flex-1 rounded-xl">
+              Back
+            </Button>
           )}
-        </Button>
-      </div>
+          <Button
+            type="submit"
+            disabled={
+              bookingMutation.isPending || 
+              bookFlightMutation.isPending ||
+              (step === 2 && formData.selected_seats.length !== totalPassengers)
+            }
+            className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl"
+          >
+            {(bookingMutation.isPending || bookFlightMutation.isPending) ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : step === 3 ? (
+              paymentMethod === "bank_transfer" ? "Proceed to Payment Details" : "Pay Now"
+            ) : (
+              "Continue"
+            )}
+          </Button>
+        </div>
+      )}
     </form>
   );
 }
