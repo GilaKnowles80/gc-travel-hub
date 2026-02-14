@@ -88,6 +88,7 @@ import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import TravelAssistant from './pages/TravelAssistant';
 import __Layout from './Layout.jsx';
 
 
@@ -133,6 +134,7 @@ export const PAGES = {
     "Tours": Tours,
     "Visas": Visas,
     "utils": utils,
+    "TravelAssistant": TravelAssistant,
 }
 
 export const pagesConfig = {
