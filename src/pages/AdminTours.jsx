@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Plus, Edit, Trash2, Search } from "lucide-react";
+import { MapPin, Plus, Edit, Trash2, Search, Upload, Download, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
@@ -17,7 +17,10 @@ export default function AdminTours() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingTour, setEditingTour] = useState(null);
+  const [importFile, setImportFile] = useState(null);
+  const [isImporting, setIsImporting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     destination: "",
