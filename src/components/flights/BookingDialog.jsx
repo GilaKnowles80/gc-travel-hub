@@ -7,11 +7,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, User } from "lucide-react";
+import { Loader2, User, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import BookingConfirmationStep from "./BookingConfirmationStep";
 
 export default function BookingDialog({ isOpen, onClose, flightOffer, passengers }) {
     const navigate = useNavigate();
+    const [currentStep, setCurrentStep] = useState(1);
+    const [bookingData, setBookingData] = useState(null);
     const [travelers, setTravelers] = useState(
         Array.from({ length: passengers }, (_, i) => ({
             id: `${i + 1}`,
@@ -56,8 +59,8 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
             return response.data;
         },
         onSuccess: (data) => {
-            sessionStorage.setItem('bookingConfirmation', JSON.stringify(data));
-            navigate(createPageUrl('BookingConfirmation'));
+            setBookingData(data);
+            setCurrentStep(4);
             toast.success('Flight booked successfully!');
         },
         onError: (error) => {
@@ -93,14 +96,46 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
         });
     };
 
+    const handleCompleteBooking = () => {
+        sessionStorage.setItem('bookingConfirmation', JSON.stringify(bookingData));
+        navigate(createPageUrl('BookingConfirmation'));
+        onClose();
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Passenger Information</DialogTitle>
+                    <DialogTitle>Complete Your Booking</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Step Indicators */}
+                <div className="flex items-center justify-between mb-6">
+                    {[1, 2, 3, 4].map((step) => (
+                        <div key={step} className="flex-1 flex items-center">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                                currentStep >= step 
+                                    ? 'bg-amber-500 text-white' 
+                                    : 'bg-slate-200 text-slate-600'
+                            }`}>
+                                {currentStep > step ? <CheckCircle2 className="w-5 h-5" /> : step}
+                            </div>
+                            <div className={`flex-1 h-1 mx-2 ${
+                                currentStep > step ? 'bg-amber-500' : 'bg-slate-200'
+                            }`}></div>
+                        </div>
+                    ))}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                        currentStep >= 4 
+                            ? 'bg-amber-500 text-white' 
+                            : 'bg-slate-200 text-slate-600'
+                    }`}>
+                        {currentStep > 4 ? <CheckCircle2 className="w-5 h-5" /> : 4}
+                    </div>
+                </div>
+
+                {currentStep === 1 && (
+                    <form onSubmit={handleSubmit} className="space-y-6">
                     {travelers.map((traveler, idx) => (
                         <div key={idx} className="p-4 border rounded-lg space-y-4">
                             <div className="flex items-center gap-2 mb-3">
@@ -195,7 +230,15 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                             )}
                         </Button>
                     </div>
-                </form>
+                    </form>
+                )}
+
+                {currentStep === 4 && bookingData && (
+                    <BookingConfirmationStep 
+                        booking={bookingData}
+                        onComplete={handleCompleteBooking}
+                    />
+                )}
             </DialogContent>
         </Dialog>
     );
