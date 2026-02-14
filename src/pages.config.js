@@ -50,6 +50,7 @@
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
 import AdminHotels from './pages/AdminHotels';
@@ -85,7 +86,6 @@ import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import AdminEmailClients from './pages/AdminEmailClients';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +93,7 @@ export const PAGES = {
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
     "AdminDashboard": AdminDashboard,
+    "AdminEmailClients": AdminEmailClients,
     "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
     "AdminHotels": AdminHotels,
@@ -128,7 +129,6 @@ export const PAGES = {
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "AdminEmailClients": AdminEmailClients,
 }
 
 export const pagesConfig = {
