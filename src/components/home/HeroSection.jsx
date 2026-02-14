@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import TravelersSelector from "./TravelersSelector";
@@ -99,11 +99,11 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-5xl"
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
-            <div className="flex gap-2 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
               <Button
                 onClick={() => setSearchType("flights")}
                 variant={searchType === "flights" ? "default" : "ghost"}
-                className={`flex-1 rounded-xl ${searchType === "flights" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+                className={`rounded-xl ${searchType === "flights" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
               >
                 <Plane className="w-4 h-4 mr-2" />
                 Flights
@@ -111,7 +111,7 @@ export default function HeroSection() {
               <Button
                 onClick={() => setSearchType("tours")}
                 variant={searchType === "tours" ? "default" : "ghost"}
-                className={`flex-1 rounded-xl ${searchType === "tours" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+                className={`rounded-xl ${searchType === "tours" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
               >
                 <Compass className="w-4 h-4 mr-2" />
                 Tours
@@ -119,10 +119,42 @@ export default function HeroSection() {
               <Button
                 onClick={() => setSearchType("hotels")}
                 variant={searchType === "hotels" ? "default" : "ghost"}
-                className={`flex-1 rounded-xl ${searchType === "hotels" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+                className={`rounded-xl ${searchType === "hotels" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
               >
                 <Hotel className="w-4 h-4 mr-2" />
                 Hotels
+              </Button>
+              <Button
+                onClick={() => setSearchType("ferry")}
+                variant={searchType === "ferry" ? "default" : "ghost"}
+                className={`rounded-xl ${searchType === "ferry" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+              >
+                <Ship className="w-4 h-4 mr-2" />
+                Ferry
+              </Button>
+              <Button
+                onClick={() => setSearchType("bus")}
+                variant={searchType === "bus" ? "default" : "ghost"}
+                className={`rounded-xl ${searchType === "bus" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+              >
+                <Bus className="w-4 h-4 mr-2" />
+                Bus
+              </Button>
+              <Button
+                onClick={() => setSearchType("insurance")}
+                variant={searchType === "insurance" ? "default" : "ghost"}
+                className={`rounded-xl ${searchType === "insurance" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+              >
+                <Umbrella className="w-4 h-4 mr-2" />
+                Insurance
+              </Button>
+              <Button
+                onClick={() => setSearchType("visa")}
+                variant={searchType === "visa" ? "default" : "ghost"}
+                className={`rounded-xl ${searchType === "visa" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Visa
               </Button>
             </div>
 
@@ -277,38 +309,152 @@ export default function HeroSection() {
             )}
 
             {searchType === "hotels" && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    Location
-                  </label>
-                  <Input placeholder="City, hotel, or landmark" className="rounded-xl" />
-                </div>
-                <div>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     Location
+                   </label>
+                   <Input placeholder="City, hotel, or landmark" className="rounded-xl" />
+                 </div>
+                 <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Check-in
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Check-out
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                 <div className="md:col-span-3">
+                   <Link to={createPageUrl("Hotels")}>
+                     <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                       <Search className="w-4 h-4 mr-2" />
+                       Find Hotels
+                     </Button>
+                   </Link>
+                 </div>
+               </div>
+             )}
+
+            {searchType === "ferry" && (
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     From
+                   </label>
+                   <Input placeholder="Departure port" className="rounded-xl" />
+                 </div>
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     To
+                   </label>
+                   <Input placeholder="Destination port" className="rounded-xl" />
+                 </div>
+                 <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Date
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                 <div className="md:col-span-3">
+                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                     <Search className="w-4 h-4 mr-2" />
+                     Search Ferries
+                   </Button>
+                 </div>
+               </div>
+             )}
+
+            {searchType === "bus" && (
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     From
+                   </label>
+                   <Input placeholder="Departure city" className="rounded-xl" />
+                 </div>
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     To
+                   </label>
+                   <Input placeholder="Destination city" className="rounded-xl" />
+                 </div>
+                 <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Date
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                 <div className="md:col-span-3">
+                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                     <Search className="w-4 h-4 mr-2" />
+                     Search Buses
+                   </Button>
+                 </div>
+               </div>
+             )}
+
+            {searchType === "insurance" && (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                      <Calendar className="w-3 h-3" />
-                     Check-in
+                     Trip Start
                    </label>
                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
                  </div>
                  <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Check-out
-                   </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Trip End
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                 <div className="md:col-span-2">
+                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                     <Search className="w-4 h-4 mr-2" />
+                     Get Insurance Quotes
+                   </Button>
                  </div>
-                <div className="md:col-span-3">
-                  <Link to={createPageUrl("Hotels")}>
-                    <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
-                      <Search className="w-4 h-4 mr-2" />
-                      Find Hotels
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
+               </div>
+             )}
+
+            {searchType === "visa" && (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <MapPin className="w-3 h-3" />
+                     Destination Country
+                   </label>
+                   <Input placeholder="Which country?" className="rounded-xl" />
+                 </div>
+                 <div>
+                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Travel Date
+                    </label>
+                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                  </div>
+                 <div className="md:col-span-2">
+                   <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl h-12 font-semibold">
+                     <Search className="w-4 h-4 mr-2" />
+                     Check Visa Requirements
+                   </Button>
+                 </div>
+               </div>
+             )}
             </div>
           </div>
         </motion.div>
