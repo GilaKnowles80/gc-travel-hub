@@ -263,32 +263,55 @@ export default function TourDetail() {
                    <p className="text-sm text-slate-400">{showCustomizer ? "total price" : "per person"}</p>
                  </div>
 
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <Clock className="w-4 h-4 text-amber-500" />
-                    {tour.duration_days} days
-                  </div>
-                  {tour.group_size_max && (
-                    <div className="flex items-center gap-3 text-sm text-slate-600">
-                      <Users className="w-4 h-4 text-amber-500" />
-                      Max {tour.group_size_max} travelers
-                    </div>
-                  )}
-                  {tour.departure_dates?.length > 0 && (
-                    <div className="flex items-center gap-3 text-sm text-slate-600">
-                      <CalendarDays className="w-4 h-4 text-amber-500" />
-                      {tour.departure_dates.length} available dates
-                    </div>
-                  )}
-                </div>
+                {!showCustomizer && (
+                   <div className="space-y-3 mb-6">
+                     <div className="flex items-center gap-3 text-sm text-slate-600">
+                       <Clock className="w-4 h-4 text-amber-500" />
+                       {tour.duration_days} days
+                     </div>
+                     {tour.group_size_max && (
+                       <div className="flex items-center gap-3 text-sm text-slate-600">
+                         <Users className="w-4 h-4 text-amber-500" />
+                         Max {tour.group_size_max} travelers
+                       </div>
+                     )}
+                     {tour.departure_dates?.length > 0 && (
+                       <div className="flex items-center gap-3 text-sm text-slate-600">
+                         <CalendarDays className="w-4 h-4 text-amber-500" />
+                         {tour.departure_dates.length} available dates
+                       </div>
+                     )}
+                   </div>
+                 )}
 
-                <Button
-                  onClick={() => setShowBooking(true)}
-                  disabled={tour.status === "sold_out"}
-                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base"
-                >
-                  {tour.status === "sold_out" ? "Sold Out" : "Book Now"}
-                </Button>
+                <div className="space-y-2">
+                   <Button
+                     onClick={() => showCustomizer ? setShowCustomizer(false) : setShowCustomizer(true)}
+                     className="w-full bg-slate-600 hover:bg-slate-700 text-white rounded-xl py-6 font-semibold text-base"
+                   >
+                     {showCustomizer ? "Back to Details" : "Customize Tour"}
+                   </Button>
+
+                   {!showCustomizer && (
+                     <Button
+                       onClick={() => setShowBooking(true)}
+                       disabled={tour.status === "sold_out"}
+                       className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base"
+                     >
+                       {tour.status === "sold_out" ? "Sold Out" : "Book Now"}
+                     </Button>
+                   )}
+
+                   {showCustomizer && (
+                     <Button
+                       onClick={() => setShowBooking(true)}
+                       disabled={tour.status === "sold_out"}
+                       className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl py-6 font-semibold text-base"
+                     >
+                       {tour.status === "sold_out" ? "Sold Out" : "Book with Customizations"}
+                     </Button>
+                   )}
+                 </div>
 
                 <p className="text-center text-xs text-slate-400 mt-3">
                   No payment required to reserve
