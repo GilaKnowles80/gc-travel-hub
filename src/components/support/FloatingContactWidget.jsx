@@ -113,7 +113,7 @@ export default function FloatingContactWidget() {
                 >
                   <Phone className="w-5 h-5 text-amber-600" />
                   <span className="font-semibold">{phone.provider}</span>
-                  <span className="text-sm text-slate-600">{phone.formatted}</span>
+                  <span className="text-sm text-slate-600">{phone.number}</span>
                 </Button>
               ))}
               <p className="text-xs text-slate-500 text-center mt-4">
