@@ -58,6 +58,17 @@ Deno.serve(async (req) => {
               <p>Thank you for choosing GC Travel & Tours!</p>
             `
           });
+          
+          // Send notification
+          await base44.asServiceRole.functions.invoke('sendNotification', {
+            userEmail: booking.passenger_email,
+            title: "Payment Confirmed",
+            message: "Your flight booking payment has been confirmed. Your e-ticket is ready!",
+            type: "payment_confirmed",
+            bookingId: bookingId,
+            link: "/my-bookings",
+            sendEmail: false
+          });
         }
       }
 
