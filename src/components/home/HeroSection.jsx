@@ -96,70 +96,33 @@ export default function HeroSection() {
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
             <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
-              <Button
-                onClick={() => setSearchType("flights")}
-                variant={searchType === "flights" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "flights" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Plane className="w-4 h-4 mr-2" />
-                Flights
-              </Button>
-              <Button
-                onClick={() => setSearchType("tours")}
-                variant={searchType === "tours" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "tours" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Compass className="w-4 h-4 mr-2" />
-                Tours
-              </Button>
-              <Button
-                onClick={() => setSearchType("hotels")}
-                variant={searchType === "hotels" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "hotels" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Hotel className="w-4 h-4 mr-2" />
-                Hotels
-              </Button>
-              <Button
-                onClick={() => setSearchType("ferry")}
-                variant={searchType === "ferry" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "ferry" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Ship className="w-4 h-4 mr-2" />
-                Ferry
-              </Button>
-              <Button
-                onClick={() => setSearchType("bus")}
-                variant={searchType === "bus" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "bus" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Bus className="w-4 h-4 mr-2" />
-                Bus
-              </Button>
-              <Button
-                onClick={() => setSearchType("insurance")}
-                variant={searchType === "insurance" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "insurance" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Umbrella className="w-4 h-4 mr-2" />
-                Insurance
-              </Button>
-              <Button
-                onClick={() => setSearchType("visa")}
-                variant={searchType === "visa" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "visa" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                Visa
-              </Button>
-              <Button
-                onClick={() => setSearchType("carRental")}
-                variant={searchType === "carRental" ? "default" : "ghost"}
-                className={`rounded-xl ${searchType === "carRental" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-              >
-                <Car className="w-4 h-4 mr-2" />
-                Car Rental
-              </Button>
+              {[
+                { type: "flights", label: "Flights", icon: Plane },
+                { type: "tours", label: "Tours", icon: Compass },
+                { type: "hotels", label: "Hotels", icon: Hotel },
+                { type: "ferry", label: "Ferry", icon: Ship },
+                { type: "bus", label: "Bus", icon: Bus },
+                { type: "insurance", label: "Insurance", icon: Umbrella },
+                { type: "visa", label: "Visa", icon: Zap },
+                { type: "carRental", label: "Car Rental", icon: Car },
+              ].map(({ type, label, icon: Icon }) => (
+                <motion.div
+                  key={type}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    onClick={() => setSearchType(type)}
+                    variant={searchType === type ? "default" : "ghost"}
+                    className={`rounded-xl w-full transition-all ${
+                      searchType === type ? "bg-amber-500 hover:bg-amber-600 shadow-lg" : "hover:bg-amber-50"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {label}
+                  </Button>
+                </motion.div>
+              ))}
             </div>
 
             <div className="bg-slate-50 rounded-2xl p-4">
