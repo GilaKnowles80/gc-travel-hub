@@ -37,10 +37,13 @@ export default function HelpdeskForm() {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      return await base44.entities.HelpdeskTicket.create(data);
+      const ticket = await base44.entities.HelpdeskTicket.create(data);
+      // Send emails to department and customer
+      await base44.functions.invoke('sendHelpdeskEmail', { ticket_id: ticket.id });
+      return ticket;
     },
-    onSuccess: () => {
-      toast.success("Ticket submitted successfully! We'll respond within 24 hours.");
+    onSuccess: (data) => {
+      toast.success(`Ticket #${data.id} submitted! Check your email for confirmation.`);
       setFormData({
         category: "general",
         name: "",
