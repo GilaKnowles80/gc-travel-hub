@@ -121,131 +121,122 @@ export default function TourDetail() {
            <div className="lg:col-span-2 space-y-10">
              {showCustomizer ? (
                <TourCustomizer tour={tour} onPriceChange={setCustomizedPrice} />
-             ) : null}
-            {!showCustomizer && (
-              <>
-                {/* Description */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Tour</h2>
-                  <p className="text-slate-600 leading-relaxed">
-                    {tour.long_description || tour.description || "An amazing travel experience awaits you."}
-                  </p>
-                </motion.div>
-              </>
-            )}
+             ) : (
+               <>
+                 {/* Description */}
+                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                   <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Tour</h2>
+                   <p className="text-slate-600 leading-relaxed">
+                     {tour.long_description || tour.description || "An amazing travel experience awaits you."}
+                   </p>
+                 </motion.div>
 
-            {!showCustomizer && (
-              <>
-                {/* Itinerary */}
-            {tour.itinerary?.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Itinerary</h2>
-                <div className="space-y-3">
-                  {tour.itinerary.map((day, i) => (
-                    <div
-                      key={i}
-                      className="bg-white rounded-xl border border-slate-100 overflow-hidden"
-                    >
-                      <button
-                        onClick={() => setExpandedDay(expandedDay === i ? null : i)}
-                        className="w-full flex items-center justify-between p-5 text-left"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
-                            <CalendarDays className="w-5 h-5 text-amber-600" />
-                          </div>
-                          <div>
-                            <p className="text-xs text-amber-500 font-semibold">Day {day.day || i + 1}</p>
-                            <p className="font-semibold text-slate-900">{day.title}</p>
-                          </div>
-                        </div>
-                        {expandedDay === i ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
-                      </button>
-                      {expandedDay === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          className="px-5 pb-5"
-                        >
-                          <p className="text-slate-500 text-sm leading-relaxed pl-14">
-                            {day.description}
-                          </p>
-                        </motion.div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                 {/* Itinerary */}
+                 {tour.itinerary?.length > 0 && (
+                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                     <h2 className="text-2xl font-bold text-slate-900 mb-6">Itinerary</h2>
+                     <div className="space-y-3">
+                       {tour.itinerary.map((day, i) => (
+                         <div
+                           key={i}
+                           className="bg-white rounded-xl border border-slate-100 overflow-hidden"
+                         >
+                           <button
+                             onClick={() => setExpandedDay(expandedDay === i ? null : i)}
+                             className="w-full flex items-center justify-between p-5 text-left"
+                           >
+                             <div className="flex items-center gap-4">
+                               <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                                 <CalendarDays className="w-5 h-5 text-amber-600" />
+                               </div>
+                               <div>
+                                 <p className="text-xs text-amber-500 font-semibold">Day {day.day || i + 1}</p>
+                                 <p className="font-semibold text-slate-900">{day.title}</p>
+                               </div>
+                             </div>
+                             {expandedDay === i ? (
+                               <ChevronUp className="w-5 h-5 text-slate-400" />
+                             ) : (
+                               <ChevronDown className="w-5 h-5 text-slate-400" />
+                             )}
+                           </button>
+                           {expandedDay === i && (
+                             <motion.div
+                               initial={{ height: 0, opacity: 0 }}
+                               animate={{ height: "auto", opacity: 1 }}
+                               className="px-5 pb-5"
+                             >
+                               <p className="text-slate-500 text-sm leading-relaxed pl-14">
+                                 {day.description}
+                               </p>
+                             </motion.div>
+                           )}
+                         </div>
+                       ))}
+                     </div>
+                   </motion.div>
+                 )}
 
-            {/* Inclusions / Exclusions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {tour.inclusions?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">What's Included</h3>
-                  <ul className="space-y-2">
-                    {tour.inclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-              {tour.exclusions?.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Not Included</h3>
-                  <ul className="space-y-2">
-                    {tour.exclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-500">
-                        <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-            </div>
+                 {/* Inclusions / Exclusions */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   {tour.inclusions?.length > 0 && (
+                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                       <h3 className="text-lg font-bold text-slate-900 mb-4">What's Included</h3>
+                       <ul className="space-y-2">
+                         {tour.inclusions.map((item, i) => (
+                           <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                             <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                             {item}
+                           </li>
+                         ))}
+                       </ul>
+                     </motion.div>
+                   )}
+                   {tour.exclusions?.length > 0 && (
+                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                       <h3 className="text-lg font-bold text-slate-900 mb-4">Not Included</h3>
+                       <ul className="space-y-2">
+                         {tour.exclusions.map((item, i) => (
+                           <li key={i} className="flex items-start gap-2 text-sm text-slate-500">
+                             <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                             {item}
+                           </li>
+                         ))}
+                       </ul>
+                     </motion.div>
+                   )}
+                 </div>
 
-            {/* Location Map */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-              <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-amber-500" />
-                Tour Location
-              </h3>
-              <LocationMap
-                lat={14.5995}
-                lng={120.9842}
-                title={tour.destination}
-                className="h-80 border border-slate-200"
-              />
-            </motion.div>
-            </>
-            )}
+                 {/* Location Map */}
+                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                   <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                     <MapPin className="w-5 h-5 text-amber-500" />
+                     Tour Location
+                   </h3>
+                   <LocationMap
+                     lat={14.5995}
+                     lng={120.9842}
+                     title={tour.destination}
+                     className="h-80 border border-slate-200"
+                   />
+                 </motion.div>
 
-            {!showCustomizer && (
-              <>
-                {/* Gallery */}
-            {tour.gallery_urls?.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">Gallery</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {tour.gallery_urls.map((url, i) => (
-                    <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden">
-                      <img src={url} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  ))}
-                </div>
-                </motion.div>
-                )}
-                </>
-                )}
-                </div>
+                 {/* Gallery */}
+                 {tour.gallery_urls?.length > 0 && (
+                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                     <h2 className="text-2xl font-bold text-slate-900 mb-6">Gallery</h2>
+                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                       {tour.gallery_urls.map((url, i) => (
+                         <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden">
+                           <img src={url} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                         </div>
+                       ))}
+                     </div>
+                   </motion.div>
+                 )}
+               </>
+             )}
+           </div>
 
           {/* Sidebar - Booking Card */}
           <div className="lg:col-span-1">
