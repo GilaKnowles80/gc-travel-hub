@@ -109,6 +109,12 @@ export default function TravelPreferencesTab({ user }) {
             </div>
           </div>
 
+          <div className="bg-amber-50 rounded-xl p-4 mb-4">
+            <Label className="font-semibold mb-2 block">Currency Preference</Label>
+            <p className="text-sm text-slate-600 mb-3">Select your preferred currency for all transactions and bookings</p>
+            <CurrencySelector defaultCurrency={user?.preferred_currency || 'PHP'} />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Preferred Cabin Class</Label>
