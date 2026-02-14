@@ -84,9 +84,9 @@ export default function PrivacyPolicy() {
             <p>
               For privacy-related inquiries, contact us at:
               <br />
-              Email: privacy@gctraveltours.com
+              <strong>Email:</strong> privacy@gctravelandtours.com
               <br />
-              Phone: +63 917 123 4567
+              <strong>Phone:</strong> +63 915 440 1150 / +63 962 059 5263
             </p>
           </div>
         </Card>
