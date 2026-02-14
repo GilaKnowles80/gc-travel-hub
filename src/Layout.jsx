@@ -7,6 +7,7 @@ import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail } fro
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
+import FloatingContactWidget from "@/components/support/FloatingContactWidget";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
