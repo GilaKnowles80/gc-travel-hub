@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { DollarSign, CheckCircle, Clock, Ban, TrendingUp } from "lucide-react";
+import { DollarSign, CheckCircle, Clock, Ban, TrendingUp, Zap, Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "./utils";
 
 export default function AdminSupplierPayments() {
   const [selectedPayment, setSelectedPayment] = useState(null);
@@ -70,6 +72,17 @@ export default function AdminSupplierPayments() {
     },
   });
 
+  const triggerPayoutMutation = useMutation({
+    mutationFn: (paymentId) => base44.functions.invoke('triggerSupplierPayout', { paymentId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["supplier-payments"]);
+      toast.success("Payout initiated successfully");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || "Payout failed");
+    },
+  });
+
   const handleMarkAsPaid = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -104,11 +117,21 @@ export default function AdminSupplierPayments() {
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3 mb-2">
-            <DollarSign className="w-8 h-8 text-green-500" />
-            Supplier Payments & Profit Tracking
-          </h1>
-          <p className="text-slate-600">Manage payments to suppliers and track your retained markup</p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3 mb-2">
+                <DollarSign className="w-8 h-8 text-green-500" />
+                Supplier Payments & Profit Tracking
+              </h1>
+              <p className="text-slate-600">Manage payments to suppliers and track your retained markup</p>
+            </div>
+            <Link to={createPageUrl("AdminSupplierBankAccounts")}>
+              <Button variant="outline" className="gap-2">
+                <Building2 className="w-4 h-4" />
+                Manage Supplier Bank Accounts
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Summary Cards */}
@@ -226,15 +249,25 @@ export default function AdminSupplierPayments() {
                         </p>
                       </div>
                     </div>
-                    <Button
-                      onClick={() => {
-                        setSelectedPayment(payment);
-                        setShowDialog(true);
-                      }}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      Mark as Paid to Supplier
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => triggerPayoutMutation.mutate(payment.id)}
+                        disabled={triggerPayoutMutation.isPending}
+                        className="bg-blue-600 hover:bg-blue-700 gap-2"
+                      >
+                        <Zap className="w-4 h-4" />
+                        {triggerPayoutMutation.isPending ? "Processing..." : "Auto Payout (PayMongo)"}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSelectedPayment(payment);
+                          setShowDialog(true);
+                        }}
+                        variant="outline"
+                      >
+                        Mark Manually
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))
@@ -368,7 +401,16 @@ export default function AdminSupplierPayments() {
 
               <div>
                 <Label>Payment Method</Label>
-                <Input name="payment_method" placeholder="e.g., Bank Transfer, Cash" required />
+                <Select name="payment_method" defaultValue="manual">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="manual">Manual Bank Transfer</SelectItem>
+                    <SelectItem value="cash">Cash</SelectItem>
+                    <SelectItem value="check">Check</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
