@@ -235,7 +235,12 @@ export default function HeroSection() {
                      <Input
                        type="date"
                        value={onwardDate}
-                       onChange={(e) => setOnwardDate(e.target.value)}
+                       onChange={(e) => {
+                         setOnwardDate(e.target.value);
+                         if (returnDate && e.target.value > returnDate) {
+                          setReturnDate(e.target.value);
+                        }
+                       }}
                        placeholder="mm/dd/yyyy"
                        className="rounded-xl cursor-pointer"
                      />
@@ -244,6 +249,7 @@ export default function HeroSection() {
                          type="date"
                          value={returnDate}
                          onChange={(e) => setReturnDate(e.target.value)}
+                         min={onwardDate}
                          placeholder="mm/dd/yyyy"
                          className="rounded-xl cursor-pointer"
                        />
