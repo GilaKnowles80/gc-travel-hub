@@ -77,10 +77,10 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mb-32"
         >
-          <p className="text-amber-400 font-semibold tracking-[0.2em] uppercase text-xs mb-3">
+          <p className="text-amber-400 font-semibold tracking-[0.15em] uppercase text-[10px] mb-2">
             GC Travel & Tours
           </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-4xl">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-snug max-w-3xl">
             Discover the World's <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Hidden Wonders</span>
           </h1>
         </motion.div>
