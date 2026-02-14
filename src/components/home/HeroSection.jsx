@@ -91,7 +91,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="mb-12"
         >
-          <p className="text-white text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-light">
+          <p className="text-white text-sm md:text-base max-w-xl mx-auto leading-relaxed font-light">
             Curated travel experiences that transform ordinary trips into extraordinary memories
           </p>
         </motion.div>
