@@ -75,6 +75,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
+          className="mb-4"
         >
           <p className="text-amber-300 font-medium tracking-[0.3em] uppercase text-sm mb-4">
             GC Travel & Tours
@@ -82,9 +83,16 @@ export default function HeroSection() {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-snug max-w-4xl">
             Discover the World's <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Hidden Wonders</span>
           </h1>
-          <p className="mt-6 text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Curated travel experiences that transform ordinary trips into
-            extraordinary memories
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.45 }}
+          className="mb-8"
+        >
+          <p className="text-black text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+            Curated travel experiences that transform ordinary trips into extraordinary memories
           </p>
         </motion.div>
 
@@ -92,7 +100,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-10 w-full max-w-5xl"
+          className="w-full max-w-5xl"
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
             <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
