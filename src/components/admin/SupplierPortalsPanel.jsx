@@ -57,6 +57,13 @@ export default function SupplierPortalsPanel() {
     toast.success(`${label} copied`);
   };
 
+  const openPortalWithCredentials = async (supplier) => {
+    const fieldsToCopy = supplier.fields.map(f => `${f.label}: ${formData[f.key] || ''}`).join('\n');
+    await navigator.clipboard.writeText(fieldsToCopy);
+    window.open(supplier.url, '_blank');
+    toast.success(`Credentials copied - Portal opened`);
+  };
+
   const togglePasswordVisibility = (field) => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
   };
@@ -112,14 +119,16 @@ export default function SupplierPortalsPanel() {
         <div className="grid gap-6 md:grid-cols-3">
           {suppliers.map((supplier) => (
             <div key={supplier.name} className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <h3 className="font-semibold text-sm">{supplier.name}</h3>
                 <Button
-                  variant="ghost"
+                  variant="default"
                   size="sm"
-                  onClick={() => window.open(supplier.url, '_blank')}
+                  onClick={() => openPortalWithCredentials(supplier)}
+                  className="bg-amber-600 hover:bg-amber-700 text-xs"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  <Copy className="w-3 h-3 mr-1" />
+                  Copy & Open
                 </Button>
               </div>
 
