@@ -1,14 +1,31 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, User, Mail, Phone, Calendar, CreditCard, Globe, Camera } from "lucide-react";
 import { toast } from "sonner";
+import LoyaltyCard from "../loyalty/LoyaltyCard";
 
 export default function PersonalInfoTab({ user }) {
+  const { data: loyaltyAccount } = useQuery({
+    queryKey: ["loyalty-account", user?.email],
+    queryFn: async () => {
+      const accounts = await base44.entities.LoyaltyAccount.filter({ user_email: user.email });
+      return accounts[0] || null;
+    },
+    enabled: !!user?.email,
+  });
+
+  const { data: loyaltySettings } = useQuery({
+    queryKey: ["loyalty-settings"],
+    queryFn: async () => {
+      const list = await base44.entities.LoyaltySettings.list();
+      return list[0] || null;
+    },
+  });
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     full_name: user.full_name || "",
@@ -57,14 +74,17 @@ export default function PersonalInfoTab({ user }) {
   };
 
   return (
-    <Card className="rounded-2xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <User className="w-5 h-5 text-amber-500" />
-          Personal Information
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="space-y-6">
+      <LoyaltyCard account={loyaltyAccount} settings={loyaltySettings} />
+      
+      <Card className="rounded-2xl">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="w-5 h-5 text-amber-500" />
+            Personal Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
             {formData.profile_picture ? (
@@ -201,5 +221,6 @@ export default function PersonalInfoTab({ user }) {
         </form>
       </CardContent>
     </Card>
+    </div>
   );
 }

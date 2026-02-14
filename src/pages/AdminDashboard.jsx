@@ -71,7 +71,8 @@ export default function AdminDashboard() {
     { title: "Manage Ferries", icon: Ship, page: "AdminFerries", color: "cyan" },
     { title: "Manage Buses", icon: Bus, page: "AdminBuses", color: "orange" },
     { title: "Manage Visas", icon: FileText, page: "AdminVisas", color: "indigo" },
-    { title: "Moderate Reviews", icon: MessageSquare, page: "AdminReviews", color: "purple" },
+    { title: "Loyalty Program", icon: TrendingUp, page: "AdminLoyalty", color: "purple" },
+    { title: "Moderate Reviews", icon: MessageSquare, page: "AdminReviews", color: "rose" },
   ];
 
   const statCards = [
