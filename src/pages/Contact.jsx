@@ -262,7 +262,18 @@ export default function Contact() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   />
-                  <Marker position={pinLocation} icon={defaultIcon}>
+                  <Marker 
+                    position={pinLocation} 
+                    icon={defaultIcon}
+                    draggable={!isLocationLocked}
+                    eventHandlers={{
+                      dragend: (e) => {
+                        if (!isLocationLocked) {
+                          setPinLocation([e.target.getLatLng().lat, e.target.getLatLng().lng]);
+                        }
+                      },
+                    }}
+                  >
                     <Popup>
                       <div className="font-semibold">GC Travel & Tours</div>
                       <div className="text-sm">Block 12, Lot 8, Kapatiran Village</div>
