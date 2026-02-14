@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap, Car, BookOpen, Star, Bell } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap, Car } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import TravelersSelector from "./TravelersSelector";
@@ -94,37 +94,6 @@ export default function HeroSection() {
           <p className="text-white text-sm md:text-base max-w-xl mx-auto leading-relaxed font-light">
             Curated travel experiences that transform ordinary trips into extraordinary memories
           </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55 }}
-          className="w-full max-w-5xl mb-10"
-        >
-          <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-2">
-            {[
-              { name: "Home", page: "Home", icon: Plane },
-              { name: "Tours", page: "Tours", icon: Compass },
-              { name: "Flights", page: "Flights", icon: Plane },
-              { name: "Hotels", page: "HotelSearch", icon: Hotel },
-              { name: "Visas", page: "Visas", icon: Zap },
-              { name: "My Bookings", page: "MyBookings", icon: BookOpen },
-              { name: "My Reviews", page: "MyReviews", icon: Star },
-              { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
-            ].map(({ name, page, icon: Icon }) => (
-              <Link key={page} to={createPageUrl(page)}>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
-                >
-                  <Icon className="w-5 h-5 text-white" />
-                  <span className="text-[10px] text-white text-center leading-tight">{name}</span>
-                </motion.div>
-              </Link>
-            ))}
-          </div>
         </motion.div>
 
         <motion.div
