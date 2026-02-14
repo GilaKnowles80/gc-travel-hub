@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/pages/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, User, CheckCircle2 } from "lucide-react";
+import { Loader2, User, CheckCircle2, Copy } from "lucide-react";
 import { toast } from "sonner";
 import BookingConfirmationStep from "./BookingConfirmationStep";
 
@@ -46,6 +46,20 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
             }]
         }))
     );
+
+    const { data: currentUser } = useQuery({
+        queryKey: ["current-user"],
+        queryFn: async () => await base44.auth.me()
+    });
+
+    const { data: savedTravelers } = useQuery({
+        queryKey: ["saved-travelers", currentUser?.email],
+        queryFn: async () => {
+            const result = await base44.entities.SavedTraveler.filter({ user_email: currentUser.email });
+            return result || [];
+        },
+        enabled: !!currentUser?.email
+    });
 
     const bookingMutation = useMutation({
         mutationFn: async () => {
@@ -96,6 +110,41 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
         });
     };
 
+    const fillFromSavedTraveler = (index, savedTraveler) => {
+        const updated = [...travelers];
+        updated[index] = {
+            ...updated[index],
+            dateOfBirth: savedTraveler.date_of_birth || "",
+            name: {
+                firstName: savedTraveler.first_name || "",
+                lastName: savedTraveler.last_name || ""
+            },
+            gender: savedTraveler.gender || "MALE",
+            contact: {
+                emailAddress: savedTraveler.email || "",
+                phones: [{
+                    deviceType: "MOBILE",
+                    countryCallingCode: "63",
+                    number: savedTraveler.phone || ""
+                }]
+            },
+            documents: [{
+                documentType: "PASSPORT",
+                birthPlace: "",
+                issuanceLocation: "",
+                issuanceDate: "",
+                number: savedTraveler.passport_number || "",
+                expiryDate: savedTraveler.passport_expiry || "",
+                issuanceCountry: savedTraveler.passport_country || "PH",
+                validityCountry: "PH",
+                nationality: savedTraveler.nationality || "PH",
+                holder: true
+            }]
+        };
+        setTravelers(updated);
+        toast.success(`Filled passenger ${index + 1} from saved traveler`);
+    };
+
     const handleCompleteBooking = () => {
         sessionStorage.setItem('bookingConfirmation', JSON.stringify(bookingData));
         navigate(createPageUrl('BookingConfirmation'));
@@ -138,9 +187,31 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                     <form onSubmit={handleSubmit} className="space-y-6">
                     {travelers.map((traveler, idx) => (
                         <div key={idx} className="p-4 border rounded-lg space-y-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <User className="w-4 h-4 text-amber-600" />
-                                <h3 className="font-semibold">Passenger {idx + 1}</h3>
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                    <User className="w-4 h-4 text-amber-600" />
+                                    <h3 className="font-semibold">Passenger {idx + 1}</h3>
+                                </div>
+                                {savedTravelers && savedTravelers.length > 0 && (
+                                    <div className="text-xs">
+                                        <span className="text-slate-600 mr-2">Quick fill:</span>
+                                        <div className="space-x-1 inline-flex">
+                                            {savedTravelers.map((st) => (
+                                                <Button
+                                                    key={st.id}
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="text-xs py-1 h-auto"
+                                                    onClick={() => fillFromSavedTraveler(idx, st)}
+                                                >
+                                                    <Copy className="w-3 h-3 mr-1" />
+                                                    {st.label || `${st.first_name} ${st.last_name}`}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
