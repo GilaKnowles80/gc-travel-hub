@@ -99,7 +99,7 @@ export default function HeroSection() {
           className="mt-10 w-full max-w-5xl"
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-7 gap-2 mb-6">
               <Button
                 onClick={() => setSearchType("flights")}
                 variant={searchType === "flights" ? "default" : "ghost"}
