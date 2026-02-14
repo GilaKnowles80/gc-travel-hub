@@ -18,6 +18,8 @@ export default function UnifiedBookingsTable() {
   const [selectedBooking, setSelectedBooking] = React.useState(null);
   const [supplierRef, setSupplierRef] = React.useState("");
   const [newStatus, setNewStatus] = React.useState("");
+  const [supplierUsed, setSupplierUsed] = React.useState("");
+  const [priceNotes, setPriceNotes] = React.useState("");
   const queryClient = useQueryClient();
 
   const { data: flightBookings = [] } = useQuery({
@@ -82,7 +84,9 @@ export default function UnifiedBookingsTable() {
     
     const updateData = {
       status: newStatus,
-      ...(supplierRef && { supplier_reference: supplierRef })
+      ...(supplierRef && { supplier_reference: supplierRef }),
+      ...(supplierUsed && { supplier: supplierUsed }),
+      ...(priceNotes && { price_comparison_notes: priceNotes })
     };
 
     updateBookingMutation.mutate({
@@ -201,10 +205,38 @@ export default function UnifiedBookingsTable() {
                           setSelectedBooking(booking);
                           setNewStatus(booking.status);
                           setSupplierRef(booking.supplier_reference || '');
+                          setSupplierUsed(booking.supplier || '');
+                          setPriceNotes(booking.price_comparison_notes || '');
                         }}
                       >
                         Update Status
                       </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open('https://biyaheko.ph', '_blank')}
+                          className="text-xs"
+                        >
+                          Biyaheko
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open('https://mywanderlinx.com', '_blank')}
+                          className="text-xs"
+                        >
+                          Wanderlinx
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open('https://tripzynx.com', '_blank')}
+                          className="text-xs"
+                        >
+                          Tripzynx
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -215,36 +247,68 @@ export default function UnifiedBookingsTable() {
       </Tabs>
 
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Update Booking Status</DialogTitle>
+            <DialogTitle>Update Booking & Price Comparison</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Status</label>
-              <Select value={newStatus} onValueChange={setNewStatus}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+              <strong>Price Check Workflow:</strong> Check prices on all 3 suppliers → Choose best rate → Update booking
             </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Status</label>
+                <Select value={newStatus} onValueChange={setNewStatus}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Supplier Used</label>
+                <Select value={supplierUsed} onValueChange={setSupplierUsed}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select supplier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="biyaheko">Biyaheko.ph</SelectItem>
+                    <SelectItem value="wanderlinx">Wanderlinx.com</SelectItem>
+                    <SelectItem value="tripzynx">Tripzynx.com</SelectItem>
+                    <SelectItem value="direct">Direct/Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
             <div>
-              <label className="text-sm font-medium">Supplier Reference (Optional)</label>
+              <label className="text-sm font-medium">Supplier Reference</label>
               <Input
                 placeholder="e.g., BIYA-12345"
                 value={supplierRef}
                 onChange={(e) => setSupplierRef(e.target.value)}
               />
             </div>
+            
+            <div>
+              <label className="text-sm font-medium">Price Comparison Notes</label>
+              <Input
+                placeholder="e.g., Biyaheko: ₱5,200 | Wanderlinx: ₱5,500 | Tripzynx: ₱5,350"
+                value={priceNotes}
+                onChange={(e) => setPriceNotes(e.target.value)}
+              />
+              <p className="text-xs text-slate-500 mt-1">Track which supplier quoted what price</p>
+            </div>
+            
             <div className="flex gap-2">
               <Button onClick={handleUpdateStatus} className="flex-1">
-                Update
+                Update Booking
               </Button>
               <Button variant="outline" onClick={() => setSelectedBooking(null)}>
                 Cancel
