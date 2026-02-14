@@ -123,8 +123,8 @@ export default function HeroSection() {
                   <Button
                     onClick={() => setSearchType(type)}
                     variant={searchType === type ? "default" : "ghost"}
-                    className={`rounded-xl w-full transition-all ${
-                      searchType === type ? "bg-amber-500 hover:bg-amber-600 shadow-lg" : "hover:bg-amber-50"
+                    className={`rounded-xl w-full transition-all font-semibold ${
+                      searchType === type ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg text-white" : "text-slate-700 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100"
                     }`}
                   >
                     <Icon className="w-4 h-4 mr-2" />
