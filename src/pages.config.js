@@ -47,8 +47,13 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminDashboard from './pages/AdminDashboard';
+import AdminFlights from './pages/AdminFlights';
+import AdminHotels from './pages/AdminHotels';
 import AdminReviews from './pages/AdminReviews';
+import AdminTours from './pages/AdminTours';
 import BookingConfirmation from './pages/BookingConfirmation';
+import Contact from './pages/Contact';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
@@ -64,26 +69,26 @@ import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
 import MyReviews from './pages/MyReviews';
 import PriceAlerts from './pages/PriceAlerts';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
+import RefundPolicy from './pages/RefundPolicy';
 import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
+import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import utils from './pages/utils';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminFlights from './pages/AdminFlights';
-import AdminHotels from './pages/AdminHotels';
-import AdminTours from './pages/AdminTours';
-import TermsOfService from './pages/TermsOfService';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import RefundPolicy from './pages/RefundPolicy';
-import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminDashboard": AdminDashboard,
+    "AdminFlights": AdminFlights,
+    "AdminHotels": AdminHotels,
     "AdminReviews": AdminReviews,
+    "AdminTours": AdminTours,
     "BookingConfirmation": BookingConfirmation,
+    "Contact": Contact,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
@@ -99,20 +104,15 @@ export const PAGES = {
     "MyFlightBookings": MyFlightBookings,
     "MyReviews": MyReviews,
     "PriceAlerts": PriceAlerts,
+    "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
+    "RefundPolicy": RefundPolicy,
     "Settings": Settings,
     "SharedItinerary": SharedItinerary,
+    "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "utils": utils,
-    "AdminDashboard": AdminDashboard,
-    "AdminFlights": AdminFlights,
-    "AdminHotels": AdminHotels,
-    "AdminTours": AdminTours,
-    "TermsOfService": TermsOfService,
-    "PrivacyPolicy": PrivacyPolicy,
-    "RefundPolicy": RefundPolicy,
-    "Contact": Contact,
 }
 
 export const pagesConfig = {

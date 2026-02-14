@@ -9,6 +9,7 @@ import {
   TrendingUp, Calendar, Shield, MessageSquare 
 } from "lucide-react";
 import { motion } from "framer-motion";
+import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
 
 export default function AdminDashboard() {
   const { data: user } = useQuery({
@@ -136,29 +137,19 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* Recent Activity */}
+        {/* All Bookings - Unified View */}
         <Card className="mt-8 border-0 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-amber-500" />
-              Platform Overview
+              <Calendar className="w-5 h-5 text-amber-500" />
+              All Bookings - Manual Fulfillment Center
             </CardTitle>
+            <p className="text-sm text-slate-600 mt-1">
+              Process bookings via biyaheko.ph, wanderlinx.com, or tripzynx.com
+            </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <h4 className="text-sm font-medium text-slate-600 mb-2">Flight Bookings</h4>
-                <p className="text-3xl font-bold text-amber-600">{stats?.flightBookings || 0}</p>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-slate-600 mb-2">Hotel Bookings</h4>
-                <p className="text-3xl font-bold text-blue-600">{stats?.hotelBookings || 0}</p>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-slate-600 mb-2">Tour Bookings</h4>
-                <p className="text-3xl font-bold text-green-600">{stats?.tourBookings || 0}</p>
-              </div>
-            </div>
+            <UnifiedBookingsTable />
           </CardContent>
         </Card>
       </div>
