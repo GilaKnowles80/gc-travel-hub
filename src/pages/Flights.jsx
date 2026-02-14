@@ -8,6 +8,7 @@ import { Plane, Clock, Calendar, PackageOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
+import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
 import moment from "moment";
 
 export default function Flights() {
@@ -186,6 +187,13 @@ export default function Flights() {
                                 <div className="flex items-center gap-2 mt-3 text-xs text-slate-500">
                                   <Calendar className="w-3 h-3" />
                                   {moment(flight.departure_time).format("MMM DD, YYYY")}
+                                </div>
+
+                                <div className="mt-3">
+                                  <PriceTrackingBadge 
+                                    priceTracking={flight.price_tracking} 
+                                    listingPrice={lowestPrice}
+                                  />
                                 </div>
                               </div>
 
