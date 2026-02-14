@@ -429,6 +429,66 @@ export default function AdminSupplierPayments() {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Export Report Dialog */}
+        <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Export Supplier Payments Report</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Start Date</Label>
+                <Input
+                  type="date"
+                  value={exportFilters.startDate}
+                  onChange={(e) => setExportFilters({ ...exportFilters, startDate: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>End Date</Label>
+                <Input
+                  type="date"
+                  value={exportFilters.endDate}
+                  onChange={(e) => setExportFilters({ ...exportFilters, endDate: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Supplier</Label>
+                <Select value={exportFilters.supplier} onValueChange={(value) => setExportFilters({ ...exportFilters, supplier: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Suppliers</SelectItem>
+                    <SelectItem value="biyaheko">Biyaheko</SelectItem>
+                    <SelectItem value="wanderlinx">Wanderlinx</SelectItem>
+                    <SelectItem value="tripzynx">Tripzynx</SelectItem>
+                    <SelectItem value="direct">Direct</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select value={exportFilters.status} onValueChange={(value) => setExportFilters({ ...exportFilters, status: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                    <SelectItem value="failed">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={handleExportReport} className="w-full bg-amber-600 hover:bg-amber-700">
+                <Download className="w-4 h-4 mr-2" />
+                Download CSV Report
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

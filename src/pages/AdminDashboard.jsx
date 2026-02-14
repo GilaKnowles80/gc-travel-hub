@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
 import SupplierPortalsPanel from "../components/admin/SupplierPortalsPanel";
+import SupplierPayoutSummary from "../components/admin/SupplierPayoutSummary";
 
 export default function AdminDashboard() {
   const { data: user } = useQuery({
@@ -143,6 +144,11 @@ export default function AdminDashboard() {
               </Card>
             </motion.div>
           ))}
+        </div>
+
+        {/* Supplier Payout Management */}
+        <div className="mt-8">
+          <SupplierPayoutSummary />
         </div>
 
         {/* Supplier Portal Credentials */}
