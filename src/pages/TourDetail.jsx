@@ -225,6 +225,8 @@ export default function TourDetail() {
                 className="h-80 border border-slate-200"
               />
             </motion.div>
+            </>
+            )}
 
             {/* Gallery */}
             {tour.gallery_urls?.length > 0 && (
