@@ -34,8 +34,8 @@ export default function Contact() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [mapZoom, setMapZoom] = useState(13);
-  const [pinLocation, setPinLocation] = useState([14.3072, 120.8843]);
-  const [isLocationLocked, setIsLocationLocked] = useState(false);
+  const [pinLocation, setPinLocation] = useState([14.38759, 120.96783]);
+  const [isLocationLocked, setIsLocationLocked] = useState(true);
   const mapRef = React.useRef(null);
 
   const sendMessageMutation = useMutation({
