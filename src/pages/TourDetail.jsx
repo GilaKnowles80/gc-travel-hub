@@ -122,13 +122,17 @@ export default function TourDetail() {
              {showCustomizer ? (
                <TourCustomizer tour={tour} onPriceChange={setCustomizedPrice} />
              ) : null}
-            {/* Description */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Tour</h2>
-              <p className="text-slate-600 leading-relaxed">
-                {tour.long_description || tour.description || "An amazing travel experience awaits you."}
-              </p>
-            </motion.div>
+            {!showCustomizer && (
+              <>
+                {/* Description */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-4">About This Tour</h2>
+                  <p className="text-slate-600 leading-relaxed">
+                    {tour.long_description || tour.description || "An amazing travel experience awaits you."}
+                  </p>
+                </motion.div>
+              </>
+            )}
 
             {/* Itinerary */}
             {tour.itinerary?.length > 0 && (
