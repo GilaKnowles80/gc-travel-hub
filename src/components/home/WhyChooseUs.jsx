@@ -61,8 +61,8 @@ export default function WhyChooseUs() {
               <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5">
                 <feat.icon className="w-7 h-7 text-amber-400" />
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">{feat.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{feat.description}</p>
+              <h3 className="text-black font-bold text-lg mb-2">{feat.title}</h3>
+              <p className="text-black text-sm leading-relaxed">{feat.description}</p>
             </motion.div>
           ))}
         </div>
