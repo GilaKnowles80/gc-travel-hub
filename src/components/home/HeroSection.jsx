@@ -75,7 +75,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-16"
+          className="mb-32"
         >
           <p className="text-amber-400 font-semibold tracking-[0.2em] uppercase text-xs mb-3">
             GC Travel & Tours
