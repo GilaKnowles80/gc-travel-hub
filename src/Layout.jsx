@@ -117,7 +117,7 @@ export default function Layout({ children, currentPageName }) {
                   >
                     {link.name === "Home" && (
                       <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/a59c23110_LogoAgency.jpeg"
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/0ebce75b4_LogoAgency.jpeg"
                         alt="GC Logo"
                         className="h-6 w-auto"
                       />
