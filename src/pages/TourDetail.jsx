@@ -12,12 +12,15 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import BookingForm from "../components/tours/BookingForm";
 import LocationMap from "../components/shared/LocationMap";
+import TourCustomizer from "../components/tours/TourCustomizer";
 
 export default function TourDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const tourId = urlParams.get("id");
   const [showBooking, setShowBooking] = useState(false);
   const [expandedDay, setExpandedDay] = useState(null);
+  const [showCustomizer, setShowCustomizer] = useState(false);
+  const [customizedPrice, setCustomizedPrice] = useState(null);
 
   const { data: tour, isLoading } = useQuery({
     queryKey: ["tour", tourId],
