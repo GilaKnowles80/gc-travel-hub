@@ -80,7 +80,12 @@ export default function HeroSection() {
           <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-4">
             GC Travel & Tours
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-lg">
+          <h1 
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight"
+            style={{
+              textShadow: "0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)"
+            }}
+          >
             Discover the Hidden Wonders
           </h1>
         </motion.div>
