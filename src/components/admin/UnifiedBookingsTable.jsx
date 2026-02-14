@@ -1,0 +1,258 @@
+import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plane, Hotel, Ship, Bus, Car, Calendar, DollarSign, User, ExternalLink } from "lucide-react";
+import BookingQuickCopy from "./BookingQuickCopy";
+import moment from "moment";
+import { toast } from "sonner";
+
+export default function UnifiedBookingsTable() {
+  const [activeTab, setActiveTab] = React.useState("all");
+  const [selectedBooking, setSelectedBooking] = React.useState(null);
+  const [supplierRef, setSupplierRef] = React.useState("");
+  const [newStatus, setNewStatus] = React.useState("");
+  const queryClient = useQueryClient();
+
+  const { data: flightBookings = [] } = useQuery({
+    queryKey: ['admin-flight-bookings'],
+    queryFn: () => base44.entities.FlightBooking.list('-created_date')
+  });
+
+  const { data: hotelBookings = [] } = useQuery({
+    queryKey: ['admin-hotel-bookings'],
+    queryFn: () => base44.entities.HotelBooking.list('-created_date')
+  });
+
+  const { data: ferryBookings = [] } = useQuery({
+    queryKey: ['admin-ferry-bookings'],
+    queryFn: () => base44.entities.FerryBooking.list('-created_date')
+  });
+
+  const { data: busBookings = [] } = useQuery({
+    queryKey: ['admin-bus-bookings'],
+    queryFn: () => base44.entities.BusBooking.list('-created_date')
+  });
+
+  const { data: carBookings = [] } = useQuery({
+    queryKey: ['admin-car-bookings'],
+    queryFn: () => base44.entities.CarRentalBooking.list('-created_date')
+  });
+
+  const updateBookingMutation = useMutation({
+    mutationFn: async ({ type, id, data }) => {
+      const entity = {
+        flight: 'FlightBooking',
+        hotel: 'HotelBooking',
+        ferry: 'FerryBooking',
+        bus: 'BusBooking',
+        car: 'CarRentalBooking'
+      }[type];
+      return base44.entities[entity].update(id, data);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}-bookings`] });
+      toast.success("Booking updated successfully");
+      setSelectedBooking(null);
+    }
+  });
+
+  const allBookings = [
+    ...flightBookings.map(b => ({ ...b, type: 'flight', icon: Plane })),
+    ...hotelBookings.map(b => ({ ...b, type: 'hotel', icon: Hotel })),
+    ...ferryBookings.map(b => ({ ...b, type: 'ferry', icon: Ship })),
+    ...busBookings.map(b => ({ ...b, type: 'bus', icon: Bus })),
+    ...carBookings.map(b => ({ ...b, type: 'car', icon: Car }))
+  ].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+
+  const filteredBookings = activeTab === 'all' 
+    ? allBookings 
+    : allBookings.filter(b => b.type === activeTab);
+
+  const pendingCount = allBookings.filter(b => b.status === 'pending').length;
+
+  const handleUpdateStatus = () => {
+    if (!selectedBooking || !newStatus) return;
+    
+    const updateData = {
+      status: newStatus,
+      ...(supplierRef && { supplier_reference: supplierRef })
+    };
+
+    updateBookingMutation.mutate({
+      type: selectedBooking.type,
+      id: selectedBooking.id,
+      data: updateData
+    });
+  };
+
+  const StatusBadge = ({ status }) => {
+    const colors = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
+      completed: 'bg-blue-100 text-blue-800'
+    };
+    return <Badge className={colors[status]}>{status}</Badge>;
+  };
+
+  const PaymentBadge = ({ status }) => {
+    const colors = {
+      unpaid: 'bg-red-100 text-red-800',
+      partial: 'bg-orange-100 text-orange-800',
+      paid: 'bg-green-100 text-green-800',
+      refunded: 'bg-gray-100 text-gray-800'
+    };
+    return <Badge className={colors[status]}>{status}</Badge>;
+  };
+
+  const SupplierBadge = ({ supplier }) => {
+    if (!supplier) return null;
+    const colors = {
+      biyaheko: 'bg-blue-100 text-blue-800',
+      wanderlinx: 'bg-purple-100 text-purple-800',
+      tripzynx: 'bg-indigo-100 text-indigo-800',
+      direct: 'bg-green-100 text-green-800'
+    };
+    return <Badge variant="outline" className={colors[supplier]}>{supplier}</Badge>;
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-amber-800">
+          <div className="font-semibold">⚡ Quick Workflow:</div>
+          <div className="text-sm">
+            1. Click "Quick Copy" → 2. Paste in supplier portal → 3. Update status with reference
+          </div>
+        </div>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-6 w-full">
+          <TabsTrigger value="all">All {pendingCount > 0 && `(${pendingCount})`}</TabsTrigger>
+          <TabsTrigger value="flight">Flights</TabsTrigger>
+          <TabsTrigger value="hotel">Hotels</TabsTrigger>
+          <TabsTrigger value="ferry">Ferry</TabsTrigger>
+          <TabsTrigger value="bus">Bus</TabsTrigger>
+          <TabsTrigger value="car">Car Rental</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={activeTab} className="space-y-4">
+          {filteredBookings.length === 0 ? (
+            <Card className="p-8 text-center text-slate-500">
+              No bookings found
+            </Card>
+          ) : (
+            filteredBookings.map((booking) => {
+              const Icon = booking.icon;
+              const customerName = booking.passenger_name || booking.guest_name || booking.driver_name;
+              const customerEmail = booking.passenger_email || booking.guest_email || booking.driver_email;
+              
+              return (
+                <Card key={`${booking.type}-${booking.id}`} className="p-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <div className="lg:col-span-6 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-5 h-5 text-slate-600" />
+                        <span className="font-semibold text-slate-900">
+                          {booking.route || booking.hotel_name || booking.car_type}
+                        </span>
+                        <StatusBadge status={booking.status} />
+                        <SupplierBadge supplier={booking.supplier} />
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-slate-600">
+                        <span className="flex items-center gap-1">
+                          <User className="w-4 h-4" />
+                          {customerName}
+                        </span>
+                        <span>{customerEmail}</span>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-slate-600">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {moment(booking.created_date).format('MMM D, YYYY h:mm A')}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <DollarSign className="w-4 h-4" />
+                          ₱{booking.total_price}
+                        </span>
+                        <PaymentBadge status={booking.payment_status} />
+                      </div>
+                      {booking.supplier_reference && (
+                        <div className="text-sm text-slate-600">
+                          <span className="font-medium">Supplier Ref:</span> {booking.supplier_reference}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="lg:col-span-6 flex items-center justify-end gap-2">
+                      <BookingQuickCopy booking={booking} type={booking.type} />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedBooking(booking);
+                          setNewStatus(booking.status);
+                          setSupplierRef(booking.supplier_reference || '');
+                        }}
+                      >
+                        Update Status
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })
+          )}
+        </TabsContent>
+      </Tabs>
+
+      <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Booking Status</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Status</label>
+              <Select value={newStatus} onValueChange={setNewStatus}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="confirmed">Confirmed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Supplier Reference (Optional)</label>
+              <Input
+                placeholder="e.g., BIYA-12345"
+                value={supplierRef}
+                onChange={(e) => setSupplierRef(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleUpdateStatus} className="flex-1">
+                Update
+              </Button>
+              <Button variant="outline" onClick={() => setSelectedBooking(null)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
