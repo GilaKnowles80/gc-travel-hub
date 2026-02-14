@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Save, Settings } from "lucide-react";
 import { toast } from "sonner";
+import CurrencySelector from "../currency/CurrencySelector";
 
 export default function TravelPreferencesTab({ user }) {
   const [preferences, setPreferences] = useState({
