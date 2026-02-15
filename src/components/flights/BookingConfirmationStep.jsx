@@ -31,7 +31,7 @@ export default function BookingConfirmationStep({ booking, onComplete }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-2 md:px-0">
       <Card className="border-green-200 bg-green-50">
         <CardContent className="py-6">
           <div className="flex items-start gap-4">
@@ -51,7 +51,7 @@ export default function BookingConfirmationStep({ booking, onComplete }) {
           <CardTitle className="text-lg">Booking Summary</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-slate-600">Booking Reference</p>
               <p className="font-semibold">{booking.id}</p>
