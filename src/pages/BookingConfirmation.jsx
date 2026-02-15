@@ -158,7 +158,7 @@ export default function BookingConfirmation() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Users className="w-5 h-5" />
-                                Passenger Information
+                                Passenger Information ({bookingData.travelers.length} Passenger{bookingData.travelers.length > 1 ? 's' : ''})
                             </CardTitle>
                         </CardHeader>
                         <CardContent>

@@ -222,7 +222,7 @@ export default function HotelBookingConfirmation() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Users className="w-5 h-5" />
-                                Guest Information
+                                Guest Information ({bookingData.guests.length} Guest{bookingData.guests.length > 1 ? 's' : ''})
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
