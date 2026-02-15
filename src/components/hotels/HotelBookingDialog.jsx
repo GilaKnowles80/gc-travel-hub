@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, User, CreditCard, Copy } from "lucide-react";
 import { toast } from "sonner";
 
@@ -15,7 +16,15 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
             name: {
                 title: "MR",
                 firstName: "",
-                lastName: ""
+                middleName: "",
+                lastName: "",
+                suffix: ""
+            },
+            dateOfBirth: "",
+            nationality: "PH",
+            governmentId: {
+                type: "PASSPORT",
+                number: ""
             },
             contact: {
                 phone: "",
@@ -78,7 +87,7 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
         
         for (let i = 0; i < guestDetails.length; i++) {
             const g = guestDetails[i];
-            if (!g.name.firstName || !g.name.lastName) {
+            if (!g.name.firstName || !g.name.lastName || !g.dateOfBirth || !g.governmentId.number || !g.contact.email || !g.contact.phone) {
                 toast.error(`Please fill all required fields for guest ${i + 1}`);
                 return;
             }
@@ -107,7 +116,15 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
             name: {
                 title: savedGuest.title || "MR",
                 firstName: savedGuest.first_name || "",
-                lastName: savedGuest.last_name || ""
+                middleName: "",
+                lastName: savedGuest.last_name || "",
+                suffix: ""
+            },
+            dateOfBirth: "",
+            nationality: "PH",
+            governmentId: {
+                type: "PASSPORT",
+                number: ""
             },
             contact: {
                 phone: savedGuest.phone || "",
@@ -157,16 +174,17 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
 
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
-                                    <Label>Title</Label>
-                                    <select
-                                        className="w-full h-9 rounded-md border border-input bg-background px-3"
-                                        value={guest.name.title}
-                                        onChange={(e) => updateGuest(idx, 'name.title', e.target.value)}
-                                    >
-                                        <option value="MR">Mr.</option>
-                                        <option value="MRS">Mrs.</option>
-                                        <option value="MS">Ms.</option>
-                                    </select>
+                                    <Label>Title *</Label>
+                                    <Select value={guest.name.title} onValueChange={(val) => updateGuest(idx, 'name.title', val)}>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="MR">Mr.</SelectItem>
+                                            <SelectItem value="MRS">Mrs.</SelectItem>
+                                            <SelectItem value="MS">Ms.</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div>
                                     <Label>First Name *</Label>
@@ -177,6 +195,16 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                                     />
                                 </div>
                                 <div>
+                                    <Label>Middle Name</Label>
+                                    <Input
+                                        value={guest.name.middleName}
+                                        onChange={(e) => updateGuest(idx, 'name.middleName', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
                                     <Label>Last Name *</Label>
                                     <Input
                                         value={guest.name.lastName}
@@ -184,27 +212,92 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                                         required
                                     />
                                 </div>
+                                <div>
+                                    <Label>Suffix</Label>
+                                    <Input
+                                        value={guest.name.suffix}
+                                        onChange={(e) => updateGuest(idx, 'name.suffix', e.target.value)}
+                                        placeholder="Jr., Sr., III"
+                                    />
+                                </div>
                             </div>
 
-                            {idx === 0 && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <Label>Email</Label>
-                                        <Input
-                                            type="email"
-                                            value={guest.contact.email}
-                                            onChange={(e) => updateGuest(idx, 'contact.email', e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label>Phone</Label>
-                                        <Input
-                                            value={guest.contact.phone}
-                                            onChange={(e) => updateGuest(idx, 'contact.phone', e.target.value)}
-                                        />
-                                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Birthdate *</Label>
+                                    <Input
+                                        type="date"
+                                        value={guest.dateOfBirth}
+                                        onChange={(e) => updateGuest(idx, 'dateOfBirth', e.target.value)}
+                                        required
+                                    />
                                 </div>
-                            )}
+                                <div>
+                                    <Label>Nationality *</Label>
+                                    <Input
+                                        value={guest.nationality}
+                                        onChange={(e) => updateGuest(idx, 'nationality', e.target.value)}
+                                        placeholder="PH"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Email Address *</Label>
+                                    <Input
+                                        type="email"
+                                        value={guest.contact.email}
+                                        onChange={(e) => updateGuest(idx, 'contact.email', e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Contact Number *</Label>
+                                    <Input
+                                        value={guest.contact.phone}
+                                        onChange={(e) => updateGuest(idx, 'contact.phone', e.target.value)}
+                                        placeholder="+63 XXX XXX XXXX"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Government ID *</Label>
+                                    <Select 
+                                        value={guest.governmentId.type} 
+                                        onValueChange={(val) => {
+                                            const updated = { ...guest.governmentId, type: val };
+                                            updateGuest(idx, 'governmentId', updated);
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="PASSPORT">Passport</SelectItem>
+                                            <SelectItem value="DRIVERS_LICENSE">Driver's License</SelectItem>
+                                            <SelectItem value="NATIONAL_ID">National ID</SelectItem>
+                                            <SelectItem value="SSS">SSS ID</SelectItem>
+                                            <SelectItem value="UMID">UMID</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <Label>Government ID Number *</Label>
+                                    <Input
+                                        value={guest.governmentId.number}
+                                        onChange={(e) => {
+                                            const updated = { ...guest.governmentId, number: e.target.value };
+                                            updateGuest(idx, 'governmentId', updated);
+                                        }}
+                                        required
+                                    />
+                                </div>
+                            </div>
                         </div>
                     ))}
 

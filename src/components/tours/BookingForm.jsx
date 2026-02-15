@@ -15,9 +15,18 @@ export default function BookingForm({ tour, onClose }) {
   const [booked, setBooked] = useState(false);
   const [form, setForm] = useState({
     trip_type: "roundtrip",
-    customer_name: "",
+    title: "MR",
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    suffix: "",
     customer_email: "",
     customer_phone: "",
+    date_of_birth: "",
+    nationality: "PH",
+    government_id_type: "PASSPORT",
+    government_id_number: "",
+    passport_number: "",
     number_of_travelers: 1,
     departure_date: "",
     special_requests: "",
@@ -35,8 +44,10 @@ export default function BookingForm({ tour, onClose }) {
   });
 
   const handleSubmit = () => {
+    const customer_name = `${form.title} ${form.first_name} ${form.middle_name ? form.middle_name + ' ' : ''}${form.last_name}${form.suffix ? ' ' + form.suffix : ''}`.trim();
     mutation.mutate({
       ...form,
+      customer_name,
       tour_id: tour.id,
       tour_title: tour.title,
       total_price: totalPrice,
@@ -59,7 +70,7 @@ export default function BookingForm({ tour, onClose }) {
         </div>
         <h3 className="text-xl font-bold text-slate-900 mb-2">Booking Confirmed!</h3>
         <p className="text-slate-500 text-sm max-w-sm mx-auto">
-          We've received your booking request for <strong>{tour.title}</strong>. 
+  We've received your booking request for <strong>{tour.title}</strong>. 
           A confirmation email will be sent to <strong>{form.customer_email}</strong>.
         </p>
         <Button onClick={onClose} className="mt-6 bg-amber-500 hover:bg-amber-600 rounded-xl">
@@ -98,21 +109,88 @@ export default function BookingForm({ tour, onClose }) {
               <Users className="w-5 h-5 text-amber-500" />
               <h3 className="font-semibold">Personal Details</h3>
             </div>
-            <div className="space-y-2">
-              <Label>Full Name *</Label>
-              <Input value={form.customer_name} onChange={(e) => update("customer_name", e.target.value)} placeholder="John Doe" className="rounded-xl" />
+            
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label>Title *</Label>
+                <Select value={form.title} onValueChange={(v) => update("title", v)}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MR">Mr.</SelectItem>
+                    <SelectItem value="MRS">Mrs.</SelectItem>
+                    <SelectItem value="MS">Ms.</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>First Name *</Label>
+                <Input value={form.first_name} onChange={(e) => update("first_name", e.target.value)} placeholder="Juan" className="rounded-xl" />
+              </div>
+              <div className="space-y-2">
+                <Label>Middle Name</Label>
+                <Input value={form.middle_name} onChange={(e) => update("middle_name", e.target.value)} placeholder="Santos" className="rounded-xl" />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Email *</Label>
-              <Input type="email" value={form.customer_email} onChange={(e) => update("customer_email", e.target.value)} placeholder="john@example.com" className="rounded-xl" />
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Last Name *</Label>
+                <Input value={form.last_name} onChange={(e) => update("last_name", e.target.value)} placeholder="Dela Cruz" className="rounded-xl" />
+              </div>
+              <div className="space-y-2">
+                <Label>Suffix</Label>
+                <Input value={form.suffix} onChange={(e) => update("suffix", e.target.value)} placeholder="Jr., Sr., III" className="rounded-xl" />
+              </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Birthdate *</Label>
+                <Input type="date" value={form.date_of_birth} onChange={(e) => update("date_of_birth", e.target.value)} className="rounded-xl" />
+              </div>
+              <div className="space-y-2">
+                <Label>Nationality *</Label>
+                <Input value={form.nationality} onChange={(e) => update("nationality", e.target.value)} placeholder="PH" className="rounded-xl" />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label>Phone</Label>
+              <Label>Email Address *</Label>
+              <Input type="email" value={form.customer_email} onChange={(e) => update("customer_email", e.target.value)} placeholder="juan@example.com" className="rounded-xl" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Contact Number *</Label>
               <Input value={form.customer_phone} onChange={(e) => update("customer_phone", e.target.value)} placeholder="+63 912 345 6789" className="rounded-xl" />
             </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Government ID *</Label>
+                <Select value={form.government_id_type} onValueChange={(v) => update("government_id_type", v)}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PASSPORT">Passport</SelectItem>
+                    <SelectItem value="DRIVERS_LICENSE">Driver's License</SelectItem>
+                    <SelectItem value="NATIONAL_ID">National ID</SelectItem>
+                    <SelectItem value="SSS">SSS ID</SelectItem>
+                    <SelectItem value="UMID">UMID</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Government ID Number *</Label>
+                <Input value={form.government_id_number} onChange={(e) => update("government_id_number", e.target.value)} placeholder="ID Number" className="rounded-xl" />
+              </div>
+            </div>
+
             <Button
               onClick={() => setStep(2)}
-              disabled={!form.customer_name || !form.customer_email}
+              disabled={!form.first_name || !form.last_name || !form.customer_email || !form.date_of_birth || !form.government_id_number}
               className="w-full bg-amber-500 hover:bg-amber-600 rounded-xl mt-2"
             >
               Continue
@@ -200,7 +278,7 @@ export default function BookingForm({ tour, onClose }) {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Name</span>
-                <span className="font-medium">{form.customer_name}</span>
+                <span className="font-medium">{form.title} {form.first_name} {form.middle_name} {form.last_name} {form.suffix}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Email</span>
