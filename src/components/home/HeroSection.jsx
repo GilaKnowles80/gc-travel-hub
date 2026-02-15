@@ -286,7 +286,7 @@ export default function HeroSection() {
                  </div>
                 <div className="md:col-span-3">
                   <Link to={createPageUrl("Tours")}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                    <Button type="button" className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                       <Search className="w-4 h-4 mr-2" />
                       Explore Tours
                     </Button>
