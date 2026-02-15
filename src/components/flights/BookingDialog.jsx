@@ -213,7 +213,7 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-2">
                                     <User className="w-4 h-4 text-amber-600" />
-                                    <h3 className="font-semibold">Passenger {idx + 1}</h3>
+                                    <h3 className="font-semibold">Customer Information - Passenger {idx + 1}</h3>
                                 </div>
                                 {savedTravelers && savedTravelers.length > 0 && (
                                     <div className="text-xs">
