@@ -263,9 +263,13 @@ export default function CorporateBooking() {
 
             {step === 2 && (
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-wrap gap-3">
                   <h3 className="font-semibold">Passengers ({passengers.length})</h3>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
+                    <Button variant="outline" size="sm" onClick={load20Passengers} className="bg-amber-50 border-amber-300 hover:bg-amber-100">
+                      <Users className="w-4 h-4 mr-2" />
+                      Load 20 Pax
+                    </Button>
                     <Button variant="outline" size="sm" onClick={downloadCSVTemplate}>
                       <Download className="w-4 h-4 mr-2" />
                       Template
