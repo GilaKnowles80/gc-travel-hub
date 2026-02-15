@@ -50,12 +50,12 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 md:px-0">
       <div ref={receiptRef} className="bg-white">
         {/* Page 1: Flight Details */}
-        <Card className="p-8 mb-6">
+        <Card className="p-4 md:p-8 mb-6">
           {/* Header */}
-          <div className="flex justify-between items-start mb-8 pb-6 border-b-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 pb-6 border-b-2">
             <div>
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/86d6f4c8e_L7.jpg"
@@ -71,7 +71,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
           </div>
 
           {/* Agent Details */}
-          <div className="grid grid-cols-2 gap-8 mb-8 pb-6 border-b">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 pb-6 border-b">
             <div>
               <h3 className="font-bold text-slate-900 mb-3">AGENT DETAILS</h3>
               <p className="text-sm"><strong>GC TRAVEL AND TOURS SERVICES</strong></p>
@@ -95,8 +95,8 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
           {/* Passenger Details */}
           <div className="mb-6 pb-6 border-b">
             <h3 className="font-bold text-slate-900 mb-3">PASSENGER DETAILS</h3>
-            <div className="bg-slate-50 p-4 rounded-lg">
-              <table className="w-full text-sm">
+            <div className="bg-slate-50 p-4 rounded-lg overflow-x-auto">
+              <table className="w-full text-xs md:text-sm min-w-[600px]">
                 <thead>
                   <tr className="border-b border-slate-300">
                     <th className="text-left py-2">PASSENGER NAME</th>
@@ -126,8 +126,8 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
           {/* Flight Details */}
           <div className="mb-6 pb-6 border-b">
             <h3 className="font-bold text-slate-900 mb-3">FLIGHT DETAILS</h3>
-            <div className="bg-slate-50 p-4 rounded-lg mb-4">
-              <div className="grid grid-cols-6 gap-4 text-sm font-semibold border-b border-slate-300 pb-2 mb-2">
+            <div className="bg-slate-50 p-4 rounded-lg mb-4 overflow-x-auto">
+              <div className="grid grid-cols-6 gap-2 md:gap-4 text-xs md:text-sm font-semibold border-b border-slate-300 pb-2 mb-2 min-w-[600px]">
                 <div>ORIGIN</div>
                 <div>DESTINATION</div>
                 <div>FLIGHT NO</div>
@@ -135,7 +135,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
                 <div>DEP DATE & TIME</div>
                 <div>ARR DATE & TIME</div>
               </div>
-              <div className="grid grid-cols-6 gap-4 text-sm">
+              <div className="grid grid-cols-6 gap-2 md:gap-4 text-xs md:text-sm min-w-[600px]">
                 <div>DVO<br/>{flight?.origin}</div>
                 <div>MNL<br/>{flight?.destination}</div>
                 <div>{flight?.flight_number}<br/>T</div>
@@ -146,7 +146,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
             </div>
 
             <div className="bg-slate-50 p-4 rounded-lg">
-              <div className="grid grid-cols-4 gap-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm">
                 <div>
                   <p className="font-semibold">TICKET NO</p>
                   <p>{booking.id.substring(0, 14)}</p>
@@ -185,7 +185,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
         </Card>
 
         {/* Page 2: Important Information */}
-        <Card className="p-8">
+        <Card className="p-4 md:p-8">
           <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
             <AlertCircle className="w-6 h-6 text-amber-600" />
             IMPORTANT INFORMATION
@@ -285,16 +285,16 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 justify-end print:hidden">
-        <Button onClick={handleDownloadPDF} variant="outline">
+      <div className="flex flex-col sm:flex-row gap-3 justify-end print:hidden">
+        <Button onClick={handleDownloadPDF} variant="outline" className="w-full sm:w-auto">
           <Download className="w-4 h-4 mr-2" />
           Download PDF
         </Button>
-        <Button onClick={() => window.print()} variant="outline">
+        <Button onClick={() => window.print()} variant="outline" className="w-full sm:w-auto">
           <Printer className="w-4 h-4 mr-2" />
           Print
         </Button>
-        <Button onClick={onClose} className="bg-amber-600 hover:bg-amber-700">
+        <Button onClick={onClose} className="bg-amber-600 hover:bg-amber-700 w-full sm:w-auto">
           Close
         </Button>
       </div>
