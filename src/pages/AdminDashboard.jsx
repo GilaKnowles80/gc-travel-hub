@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { 
   Plane, Hotel, MapPin, Users, DollarSign, 
-  TrendingUp, Calendar, Shield, MessageSquare, Ship, Bus, FileText, Building2 
+  TrendingUp, Calendar, Shield, MessageSquare, Ship, Bus, FileText, Building2, Search 
 } from "lucide-react";
 import { motion } from "framer-motion";
 import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
@@ -14,6 +15,8 @@ import SupplierPortalsPanel from "../components/admin/SupplierPortalsPanel";
 import SupplierPayoutSummary from "../components/admin/SupplierPayoutSummary";
 
 export default function AdminDashboard() {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const { data: user } = useQuery({
     queryKey: ["user"],
     queryFn: () => base44.auth.me(),
@@ -88,6 +91,10 @@ export default function AdminDashboard() {
     { title: "Pending Reviews", value: stats?.pendingReviews || 0, icon: MessageSquare, color: "purple" },
   ];
 
+  const filteredLinks = quickLinks.filter(link => 
+    link.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
@@ -99,9 +106,23 @@ export default function AdminDashboard() {
           <p className="text-slate-600">Manage your travel platform</p>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Search admin sections..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 text-base"
+            />
+          </div>
+        </div>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {quickLinks.map((link, idx) => (
+          {filteredLinks.map((link, idx) => (
             <motion.div
               key={link.page}
               initial={{ opacity: 0, y: 20 }}
@@ -146,14 +167,14 @@ export default function AdminDashboard() {
           ))}
         </div>
 
+        {/* Supplier Portal Credentials - TOP PRIORITY */}
+        <div className="mt-8">
+          <SupplierPortalsPanel />
+        </div>
+
         {/* Supplier Payout Management */}
         <div className="mt-8">
           <SupplierPayoutSummary />
-        </div>
-
-        {/* Supplier Portal Credentials */}
-        <div className="mt-8">
-          <SupplierPortalsPanel />
         </div>
 
         {/* All Bookings - Unified View */}

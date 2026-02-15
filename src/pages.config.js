@@ -58,6 +58,7 @@ import AdminHotels from './pages/AdminHotels';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminPricing from './pages/AdminPricing';
 import AdminReviews from './pages/AdminReviews';
+import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
 import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import AdminTours from './pages/AdminTours';
@@ -96,7 +97,6 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +112,7 @@ export const PAGES = {
     "AdminLoyalty": AdminLoyalty,
     "AdminPricing": AdminPricing,
     "AdminReviews": AdminReviews,
+    "AdminSecurityCenter": AdminSecurityCenter,
     "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
     "AdminSupplierPayments": AdminSupplierPayments,
     "AdminTours": AdminTours,
@@ -150,7 +151,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "AdminSecurityCenter": AdminSecurityCenter,
 }
 
 export const pagesConfig = {
