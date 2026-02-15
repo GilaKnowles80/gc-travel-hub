@@ -43,7 +43,9 @@ export default function PersonalInfoTab({ user }) {
     mutationFn: async (data) => await base44.auth.updateMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Profile updated successfully");
+      window.location.reload();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update profile");
@@ -60,9 +62,12 @@ export default function PersonalInfoTab({ user }) {
       setFormData({ ...formData, profile_picture: file_url });
       await base44.auth.updateMe({ profile_picture: file_url });
       queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Profile picture updated!");
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to upload image");
+      console.error("Upload error:", error);
     } finally {
       setUploading(false);
     }
