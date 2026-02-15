@@ -10,11 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Loader2, User, CheckCircle2, Copy } from "lucide-react";
 import { toast } from "sonner";
 import BookingConfirmationStep from "./BookingConfirmationStep";
+import PaymentMethodSelector from "./PaymentMethodSelector";
+import ItineraryReceipt from "./ItineraryReceipt";
 
 export default function BookingDialog({ isOpen, onClose, flightOffer, passengers }) {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState(null);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
     const [travelers, setTravelers] = useState(
         Array.from({ length: passengers }, (_, i) => ({
             id: `${i + 1}`,
@@ -74,8 +77,8 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
         },
         onSuccess: (data) => {
             setBookingData(data);
-            setCurrentStep(4);
-            toast.success('Flight booked successfully!');
+            setCurrentStep(2);
+            toast.success('Passenger details saved!');
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to book flight');
@@ -166,7 +169,7 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
 
                 {/* Step Indicators */}
                 <div className="flex items-center justify-between mb-6">
-                    {[1, 2, 3, 4].map((step) => (
+                    {[1, 2, 3, 4, 5].map((step) => (
                         <div key={step} className="flex-1 flex items-center">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                                 currentStep >= step 
@@ -181,11 +184,11 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                         </div>
                     ))}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                        currentStep >= 4 
+                        currentStep >= 5 
                             ? 'bg-amber-500 text-white' 
                             : 'bg-slate-200 text-slate-600'
                     }`}>
-                        {currentStep > 4 ? <CheckCircle2 className="w-5 h-5" /> : 4}
+                        {currentStep > 5 ? <CheckCircle2 className="w-5 h-5" /> : 5}
                     </div>
                 </div>
 
@@ -310,10 +313,44 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                     </form>
                 )}
 
+                {currentStep === 2 && (
+                    <div className="space-y-6">
+                        <PaymentMethodSelector 
+                            selectedMethod={selectedPaymentMethod}
+                            onSelect={setSelectedPaymentMethod}
+                        />
+                        <div className="flex gap-3 justify-end pt-4">
+                            <Button type="button" variant="outline" onClick={() => setCurrentStep(1)}>
+                                Back
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    if (!selectedPaymentMethod) {
+                                        toast.error('Please select a payment method');
+                                        return;
+                                    }
+                                    setCurrentStep(3);
+                                }}
+                                className="bg-amber-500 hover:bg-amber-600"
+                            >
+                                Continue to Payment
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
                 {currentStep === 4 && bookingData && (
                     <BookingConfirmationStep 
                         booking={bookingData}
-                        onComplete={handleCompleteBooking}
+                        onComplete={() => setCurrentStep(5)}
+                    />
+                )}
+
+                {currentStep === 5 && bookingData && (
+                    <ItineraryReceipt
+                        booking={bookingData}
+                        flight={flightOffer}
+                        onClose={handleCompleteBooking}
                     />
                 )}
             </DialogContent>

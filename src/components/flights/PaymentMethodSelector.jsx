@@ -1,95 +1,124 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { CreditCard, Smartphone, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CreditCard, Smartphone, Wallet, QrCode, DollarSign } from "lucide-react";
 
-const PaymentMethodSelector = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+const PaymentMethodSelector = ({ onSelect, selectedMethod }) => {
   const paymentMethods = [
     {
-      category: "Cards",
-      icon: CreditCard,
-      methods: ["Credit Card", "Debit Card"],
-      color: "bg-blue-50 border-blue-200"
+      id: "gcash_qr",
+      name: "GCash QR",
+      provider: "PayMongo",
+      icon: QrCode,
+      color: "bg-blue-600",
+      description: "Scan QR code instantly"
     },
     {
-      category: "E-Wallets (Philippines)",
+      id: "paymaya_qr",
+      name: "PayMaya QR",
+      provider: "PayMongo",
+      icon: QrCode,
+      color: "bg-green-600",
+      description: "Scan QR code instantly"
+    },
+    {
+      id: "grabpay",
+      name: "GrabPay",
+      provider: "PayMongo",
+      icon: Wallet,
+      color: "bg-emerald-600",
+      description: "Pay with GrabPay"
+    },
+    {
+      id: "dragonpay",
+      name: "DragonPay",
+      provider: "Multiple Banks",
       icon: Smartphone,
-      methods: ["GCash", "Maya", "PayMongo"],
-      color: "bg-green-50 border-green-200"
+      color: "bg-orange-600",
+      description: "Online banking & OTC"
     },
     {
-      category: "International E-Wallets",
-      icon: Wallet,
-      methods: ["PayPal", "Alipay", "WeChat Pay"],
-      color: "bg-purple-50 border-purple-200"
+      id: "stripe_card",
+      name: "Credit/Debit Card",
+      provider: "Stripe",
+      icon: CreditCard,
+      color: "bg-indigo-600",
+      description: "Visa, Mastercard, Amex"
     },
     {
-      category: "Other Payment Options",
+      id: "stripe_cashapp",
+      name: "CashApp",
+      provider: "Stripe",
+      icon: DollarSign,
+      color: "bg-purple-600",
+      description: "US customers only"
+    },
+    {
+      id: "paypal",
+      name: "PayPal",
+      provider: "Stripe",
       icon: Wallet,
-      methods: ["DragonPay", "Over-the-Counter Banking"],
-      color: "bg-amber-50 border-amber-200"
+      color: "bg-blue-500",
+      description: "PayPal balance or linked card"
+    },
+    {
+      id: "bank_transfer",
+      name: "Bank Transfer",
+      provider: "Direct",
+      icon: Smartphone,
+      color: "bg-slate-700",
+      description: "InstaPay / PESONet"
     }
   ];
 
   return (
     <div className="space-y-4">
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
-        <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
-          <CreditCard className="w-5 h-5 text-blue-600" />
-          Available Payment Methods
-        </h3>
-        <p className="text-sm text-slate-600">
-          Choose from various payment options on the next page to complete your booking securely.
-        </p>
+      <h3 className="font-semibold text-slate-900 mb-3 text-lg">Choose Payment Method</h3>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {paymentMethods.map((method) => {
+          const Icon = method.icon;
+          const isSelected = selectedMethod === method.id;
+          
+          return (
+            <button
+              key={method.id}
+              onClick={() => onSelect(method.id)}
+              className={`${method.color} text-white p-4 rounded-xl transition-all transform hover:scale-105 ${
+                isSelected ? 'ring-4 ring-amber-400 ring-offset-2' : ''
+              }`}
+            >
+              <Icon className="w-8 h-8 mx-auto mb-2" />
+              <h4 className="font-bold text-sm mb-1">{method.name}</h4>
+              <p className="text-xs opacity-90 mb-1">{method.provider}</p>
+              <p className="text-xs opacity-75">{method.description}</p>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {paymentMethods.map((category) => (
-          <Card 
-            key={category.category} 
-            className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
-              selectedCategory === category.category 
-                ? 'ring-2 ring-blue-500 ring-offset-2' 
-                : category.color
-            }`}
-            onClick={() => setSelectedCategory(category.category)}
-          >
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-white rounded-lg">
-                <category.icon className="w-5 h-5 text-slate-700" />
-              </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-slate-900 text-sm mb-2">
-                  {category.category}
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {category.methods.map((method) => (
-                    <span
-                      key={method}
-                      className="text-xs bg-white px-2 py-1 rounded-md text-slate-600 font-medium"
-                    >
-                      {method}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
+        <div className="flex items-start gap-3">
+          <QrCode className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-slate-700">
+            <p className="font-semibold mb-1">Fast QR Code Payments</p>
+            <p>Instant payment confirmation via GCash, PayMaya, or GrabPay. Just scan the QR code with your e-wallet app!</p>
+          </div>
+        </div>
       </div>
 
       <div className="bg-slate-50 rounded-xl p-4 text-xs text-slate-600 space-y-2">
         <p className="flex items-start gap-2">
-          <span className="font-semibold">🔒 Secure Payment:</span>
-          <span>All transactions are encrypted and processed through Stripe's secure payment gateway.</span>
+          <span className="font-semibold">🔒 Secure:</span>
+          <span>All transactions encrypted via Stripe & PayMongo (BSP-registered)</span>
         </p>
         <p className="flex items-start gap-2">
           <span className="font-semibold">💳 No Hidden Fees:</span>
-          <span>The total price shown is the final amount you'll pay.</span>
+          <span>Final price shown is what you pay</span>
         </p>
         <p className="flex items-start gap-2">
           <span className="font-semibold">📧 Instant Confirmation:</span>
-          <span>You'll receive a booking confirmation via email immediately after payment.</span>
+          <span>Booking confirmation sent immediately</span>
         </p>
       </div>
     </div>
