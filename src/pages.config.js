@@ -97,6 +97,9 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import CorporateBooking from './pages/CorporateBooking';
+import AdminCorporateClients from './pages/AdminCorporateClients';
+import AdminPromotions from './pages/AdminPromotions';
 import __Layout from './Layout.jsx';
 
 
@@ -151,6 +154,9 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
+    "CorporateBooking": CorporateBooking,
+    "AdminCorporateClients": AdminCorporateClients,
+    "AdminPromotions": AdminPromotions,
 }
 
 export const pagesConfig = {
