@@ -80,6 +80,7 @@ import ItineraryView from './pages/ItineraryView';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
 import MyReviews from './pages/MyReviews';
+import PaymentMethods from './pages/PaymentMethods';
 import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
@@ -95,7 +96,7 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import PaymentMethods from './pages/PaymentMethods';
+import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -133,6 +134,7 @@ export const PAGES = {
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
     "MyReviews": MyReviews,
+    "PaymentMethods": PaymentMethods,
     "PriceAlerts": PriceAlerts,
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
@@ -148,7 +150,7 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "PaymentMethods": PaymentMethods,
+    "AdminSecurityCenter": AdminSecurityCenter,
 }
 
 export const pagesConfig = {

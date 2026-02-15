@@ -21,6 +21,7 @@ const navLinks = [
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
   { name: "Pricing", page: "AdminPricing", icon: Plane, adminOnly: true },
   { name: "Email Clients", page: "AdminEmailClients", icon: Mail, adminOnly: true },
   { name: "Helpdesk", page: "AdminHelpdesk", icon: Mail, adminOnly: true },
