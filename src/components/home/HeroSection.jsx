@@ -258,7 +258,7 @@ export default function HeroSection() {
                  </div>
 
                 <div className="lg:col-span-4">
-                  <Link to={createPageUrl("Flights")}>
+                  <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`}>
                     <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                       <Search className="w-4 h-4 mr-2" />
                       Search Flights
@@ -275,17 +275,28 @@ export default function HeroSection() {
                     <MapPin className="w-3 h-3" />
                     Destination
                   </label>
-                  <Input placeholder="Where do you want to go?" className="rounded-xl" />
+                  <Input 
+                    placeholder="Where do you want to go?" 
+                    className="rounded-xl"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                  />
                 </div>
                 <div>
                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                      <Calendar className="w-3 h-3" />
                      When
                    </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                   <Input 
+                     type="date" 
+                     placeholder="mm/dd/yyyy" 
+                     className="rounded-xl cursor-pointer"
+                     value={onwardDate}
+                     onChange={(e) => setOnwardDate(e.target.value)}
+                   />
                  </div>
                 <div className="md:col-span-3">
-                  <Link to={createPageUrl("Tours")}>
+                  <Link to={`${createPageUrl("Tours")}?destination=${destination}&date=${onwardDate}`}>
                     <Button type="button" className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                       <Search className="w-4 h-4 mr-2" />
                       Explore Tours
@@ -302,24 +313,42 @@ export default function HeroSection() {
                      <MapPin className="w-3 h-3" />
                      Location
                    </label>
-                   <Input placeholder="City, hotel, or landmark" className="rounded-xl" />
+                   <Input 
+                     placeholder="City, hotel, or landmark" 
+                     className="rounded-xl"
+                     value={destination}
+                     onChange={(e) => setDestination(e.target.value)}
+                   />
                  </div>
                  <div>
                     <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       Check-in
                     </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                    <Input 
+                      type="date" 
+                      placeholder="mm/dd/yyyy" 
+                      className="rounded-xl cursor-pointer"
+                      value={onwardDate}
+                      onChange={(e) => setOnwardDate(e.target.value)}
+                    />
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       Check-out
                     </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                    <Input 
+                      type="date" 
+                      placeholder="mm/dd/yyyy" 
+                      className="rounded-xl cursor-pointer"
+                      value={returnDate}
+                      onChange={(e) => setReturnDate(e.target.value)}
+                      min={onwardDate}
+                    />
                   </div>
                  <div className="md:col-span-3">
-                   <Link to={createPageUrl("Hotels")}>
+                   <Link to={`${createPageUrl("HotelSearch")}?location=${destination}&checkIn=${onwardDate}&checkOut=${returnDate}`}>
                      <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                        <Search className="w-4 h-4 mr-2" />
                        Find Hotels
