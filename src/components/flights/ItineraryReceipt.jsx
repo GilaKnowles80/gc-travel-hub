@@ -58,9 +58,9 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
           <div className="flex justify-between items-start mb-8 pb-6 border-b-2">
             <div>
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/a59c23110_LogoAgency.jpeg"
-                alt="GC Travel and Tours"
-                className="h-20 mb-2"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/86d6f4c8e_L7.jpg"
+                alt="GC Travel and Tours Agency"
+                className="h-24 w-24 object-contain mb-2"
               />
               <h2 className="text-2xl font-bold text-slate-900">Air Ticket</h2>
             </div>
