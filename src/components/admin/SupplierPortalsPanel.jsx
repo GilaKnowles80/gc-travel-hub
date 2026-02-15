@@ -1,185 +1,87 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Copy, ExternalLink, Eye, EyeOff, Save } from "lucide-react";
-import { toast } from "sonner";
+import { ExternalLink, Globe } from "lucide-react";
+
+const supplierPortals = [
+  {
+    name: "Biyaheko",
+    url: "https://www.biyaheko.com/login",
+    description: "Tours, Flights, Hotels",
+    color: "bg-blue-500"
+  },
+  {
+    name: "Wanderlinx",
+    url: "https://www.wanderlinx.com/login",
+    description: "Travel Services",
+    color: "bg-purple-500"
+  },
+  {
+    name: "Tripzynx",
+    url: "https://www.tripzynx.com/login",
+    description: "Booking Platform",
+    color: "bg-green-500"
+  },
+  {
+    name: "Trip.com",
+    url: "https://www.trip.com/",
+    description: "Global Travel",
+    color: "bg-orange-500"
+  },
+  {
+    name: "Expedia",
+    url: "https://www.expedia.com/",
+    description: "Hotels & Flights",
+    color: "bg-yellow-500"
+  },
+  {
+    name: "Traveloka",
+    url: "https://www.traveloka.com/",
+    description: "Southeast Asia Travel",
+    color: "bg-red-500"
+  },
+  {
+    name: "Amadeus",
+    url: "https://developers.amadeus.com/",
+    description: "API Dashboard",
+    color: "bg-indigo-500"
+  }
+];
 
 export default function SupplierPortalsPanel() {
-  const [editing, setEditing] = React.useState(false);
-  const [showPasswords, setShowPasswords] = React.useState({});
-  const [formData, setFormData] = React.useState({
-    biyaheko_terminal_id: "",
-    biyaheko_user_id: "",
-    biyaheko_password: "",
-    wanderlinx_email: "",
-    wanderlinx_password: "",
-    tripzynx_username: "",
-    tripzynx_password: ""
-  });
-
-  const queryClient = useQueryClient();
-
-  const { data: credentials } = useQuery({
-    queryKey: ['supplier-credentials'],
-    queryFn: async () => {
-      const creds = await base44.entities.SupplierCredentials.list();
-      return creds[0] || null;
-    }
-  });
-
-  React.useEffect(() => {
-    if (credentials) {
-      setFormData(credentials);
-    }
-  }, [credentials]);
-
-  const saveMutation = useMutation({
-    mutationFn: async (data) => {
-      if (credentials?.id) {
-        return await base44.entities.SupplierCredentials.update(credentials.id, data);
-      } else {
-        return await base44.entities.SupplierCredentials.create(data);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['supplier-credentials'] });
-      setEditing(false);
-      toast.success("Credentials saved");
-    }
-  });
-
-  const copyToClipboard = (text, label) => {
-    navigator.clipboard.writeText(text);
-    toast.success(`${label} copied`);
+  const handleOpenPortal = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
-
-  const openPortalWithCredentials = async (supplier) => {
-    const fieldsToCopy = supplier.fields.map(f => `${f.label}: ${formData[f.key] || ''}`).join('\n');
-    await navigator.clipboard.writeText(fieldsToCopy);
-    window.open(supplier.url, '_blank');
-    toast.success(`Credentials copied - Portal opened`);
-  };
-
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const suppliers = [
-    {
-      name: "Biyaheko.ph",
-      url: "https://biyaheko.ph",
-      fields: [
-        { key: "biyaheko_terminal_id", label: "Terminal ID" },
-        { key: "biyaheko_user_id", label: "User ID" },
-        { key: "biyaheko_password", label: "Password", type: "password" }
-      ]
-    },
-    {
-      name: "Wanderlinx",
-      url: "https://mywanderlinx.com",
-      fields: [
-        { key: "wanderlinx_email", label: "Email" },
-        { key: "wanderlinx_password", label: "Password", type: "password" }
-      ]
-    },
-    {
-      name: "Tripzynx",
-      url: "https://tripzynx.com",
-      fields: [
-        { key: "tripzynx_username", label: "Email/Username" },
-        { key: "tripzynx_password", label: "Password", type: "password" }
-      ]
-    }
-  ];
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Supplier Portal Access</CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => editing ? saveMutation.mutate(formData) : setEditing(true)}
-        >
-          {editing ? (
-            <>
-              <Save className="w-4 h-4 mr-2" />
-              Save
-            </>
-          ) : (
-            "Edit Credentials"
-          )}
-        </Button>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Globe className="w-5 h-5" />
+          Supplier Portals - Quick Access
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-6 md:grid-cols-3">
-          {suppliers.map((supplier) => (
-            <div key={supplier.name} className="space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-sm">{supplier.name}</h3>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => openPortalWithCredentials(supplier)}
-                  className="bg-amber-600 hover:bg-amber-700 text-xs"
-                >
-                  <Copy className="w-3 h-3 mr-1" />
-                  Copy & Open
-                </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {supplierPortals.map((supplier) => (
+            <Button
+              key={supplier.name}
+              onClick={() => handleOpenPortal(supplier.url)}
+              variant="outline"
+              className="h-auto py-4 flex flex-col items-start gap-2 hover:bg-slate-50"
+            >
+              <div className="flex items-center gap-2 w-full">
+                <div className={`w-2 h-2 rounded-full ${supplier.color}`} />
+                <span className="font-semibold">{supplier.name}</span>
+                <ExternalLink className="w-4 h-4 ml-auto text-slate-400" />
               </div>
-
-              <div className="space-y-2">
-                {supplier.fields.map((field) => (
-                  <div key={field.key}>
-                    <Label className="text-xs text-slate-600">{field.label}</Label>
-                    <div className="flex gap-1 mt-1">
-                      {editing ? (
-                        <Input
-                          type={field.type === "password" && !showPasswords[field.key] ? "password" : "text"}
-                          value={formData[field.key] || ""}
-                          onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-                          className="text-sm"
-                        />
-                      ) : (
-                        <Input
-                          type={field.type === "password" && !showPasswords[field.key] ? "password" : "text"}
-                          value={formData[field.key] || ""}
-                          readOnly
-                          className="text-sm bg-slate-50"
-                        />
-                      )}
-                      {field.type === "password" && (
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => togglePasswordVisibility(field.key)}
-                        >
-                          {showPasswords[field.key] ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
-                        </Button>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => copyToClipboard(formData[field.key], field.label)}
-                        disabled={!formData[field.key]}
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+              <span className="text-xs text-slate-500">{supplier.description}</span>
+            </Button>
           ))}
         </div>
+        <p className="text-xs text-slate-500 mt-4">
+          Click any supplier to open their portal in a new tab for manual bookings
+        </p>
       </CardContent>
     </Card>
   );
