@@ -73,6 +73,31 @@ export default function CorporateBooking() {
     a.click();
   };
 
+  const load20Passengers = async () => {
+    try {
+      const savedTravelers = await base44.entities.SavedTraveler.list();
+      const loaded = savedTravelers.slice(0, 20).map(traveler => ({
+        title: traveler.gender === "MALE" ? "MR" : "MS",
+        first_name: traveler.first_name,
+        middle_name: "",
+        last_name: traveler.last_name,
+        suffix: "",
+        birthdate: traveler.date_of_birth,
+        contact_number: traveler.phone || "+639000000000",
+        email: traveler.email,
+        government_id_type: "Passport",
+        government_id_number: traveler.passport_number || "P0000000",
+        nationality: traveler.nationality || "Filipino",
+        passport_number: traveler.passport_number,
+        passport_expiry: traveler.passport_expiry
+      }));
+      setPassengers(loaded);
+      toast.success(`Loaded ${loaded.length} passengers`);
+    } catch (error) {
+      toast.error("Failed to load passengers");
+    }
+  };
+
   const addPassenger = () => {
     setPassengers([...passengers, {
       title: "MR",
