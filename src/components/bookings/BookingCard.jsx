@@ -59,6 +59,7 @@ export default function BookingCard({ booking, index, type }) {
       date = new Date(booking.check_in_date).toLocaleDateString();
       details = [
         { icon: MapPin, label: booking.room_type },
+        { icon: Users, label: `${booking.number_of_guests || 1} guest${booking.number_of_guests > 1 ? "s" : ""}` },
         { icon: Calendar, label: `${booking.number_of_rooms} room${booking.number_of_rooms > 1 ? "s" : ""}` },
         { icon: CreditCard, label: `₱${booking.total_price?.toLocaleString()}` },
       ];
@@ -91,6 +92,7 @@ export default function BookingCard({ booking, index, type }) {
     case "visa":
       title = `${booking.country} - ${booking.visa_type} Visa`;
       details = [
+        { icon: Users, label: `${booking.number_of_applicants || 1} applicant${booking.number_of_applicants > 1 ? "s" : ""}` },
         { icon: Calendar, label: `${booking.processing_time_days} days processing` },
         { icon: CreditCard, label: `₱${booking.price?.toLocaleString()}` },
       ];
@@ -99,6 +101,7 @@ export default function BookingCard({ booking, index, type }) {
       title = `${booking.car_type} - ${booking.pickup_location}`;
       date = new Date(booking.pickup_date).toLocaleDateString();
       details = [
+        { icon: Users, label: `${booking.number_of_passengers || 1} passenger${booking.number_of_passengers > 1 ? "s" : ""}` },
         { icon: Calendar, label: `${new Date(booking.dropoff_date).toLocaleDateString()}` },
         { icon: CreditCard, label: `₱${booking.total_price?.toLocaleString()}` },
       ];

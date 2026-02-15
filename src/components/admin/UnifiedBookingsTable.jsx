@@ -184,6 +184,10 @@ export default function UnifiedBookingsTable() {
                           {moment(booking.created_date).format('MMM D, YYYY h:mm A')}
                         </span>
                         <span className="flex items-center gap-1">
+                          <User className="w-4 h-4" />
+                          {booking.number_of_passengers || booking.number_of_guests || booking.number_of_travelers || 1} pax
+                        </span>
+                        <span className="flex items-center gap-1">
                           <DollarSign className="w-4 h-4" />
                           ₱{booking.total_price}
                         </span>
