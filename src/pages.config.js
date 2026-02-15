@@ -91,6 +91,10 @@ import Tours from './pages/Tours';
 import TravelAssistant from './pages/TravelAssistant';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import SafeAndSecure from './pages/SafeAndSecure';
+import Support247 from './pages/Support247';
+import BestPriceGuarantee from './pages/BestPriceGuarantee';
+import TrustedAgency from './pages/TrustedAgency';
 import __Layout from './Layout.jsx';
 
 
@@ -139,6 +143,10 @@ export const PAGES = {
     "TravelAssistant": TravelAssistant,
     "Visas": Visas,
     "utils": utils,
+    "SafeAndSecure": SafeAndSecure,
+    "Support247": Support247,
+    "BestPriceGuarantee": BestPriceGuarantee,
+    "TrustedAgency": TrustedAgency,
 }
 
 export const pagesConfig = {
