@@ -109,7 +109,7 @@ export default function BookingConfirmationStep({ booking, onComplete }) {
       </Card>
 
       <Button onClick={onComplete} className="w-full bg-amber-500 hover:bg-amber-600">
-        Done
+        Continue to Itinerary Receipt
       </Button>
     </div>
   );
