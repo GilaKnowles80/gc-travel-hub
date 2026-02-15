@@ -64,7 +64,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
               />
               <h2 className="text-2xl font-bold text-slate-900">Air Ticket</h2>
             </div>
-            <div className="text-right">
+            <div className="text-left sm:text-right">
               <p className="text-sm text-slate-600">Issued: {moment().format("MMM DD, YYYY [at] HH:mm")}</p>
               <p className="text-sm text-slate-600">PNR: <span className="font-bold">{booking.id.substring(0, 8).toUpperCase()}</span></p>
             </div>
@@ -81,7 +81,7 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
               <p className="text-sm mt-2"><strong>09154401150</strong></p>
               <p className="text-sm text-blue-600">gilaknowles8@gmail.com</p>
             </div>
-            <div className="text-right">
+            <div className="text-left md:text-right">
               <p className="text-sm mb-1">Issued by: <strong>Philippine Airlines PR</strong></p>
               <p className="text-sm">Ninoy Aquino International Airport-Pasay City,</p>
               <p className="text-sm">Philippines (632) 879-5601 Fax: (632) 879-5637</p>
