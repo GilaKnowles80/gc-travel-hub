@@ -1,27 +1,33 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Shield, Headphones, Wallet, Award } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/pages/utils";
 
 const features = [
   {
     icon: Shield,
     title: "Safe & Secure",
     description: "Your safety is our top priority with verified partners and secure bookings",
+    link: "SafeAndSecure"
   },
   {
     icon: Headphones,
     title: "24/7 Support",
     description: "Round-the-clock assistance wherever you are in the world",
+    link: "Support247"
   },
   {
     icon: Wallet,
     title: "Best Price Guarantee",
     description: "Competitive pricing with no hidden fees — guaranteed",
+    link: "BestPriceGuarantee"
   },
   {
     icon: Award,
     title: "Trusted Agency",
     description: "Years of experience crafting perfect travel experiences",
+    link: "TrustedAgency"
   },
 ];
 
@@ -50,20 +56,21 @@ export default function WhyChooseUs() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feat, i) => (
-            <motion.div
-              key={feat.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-center group cursor-pointer"
-            >
-              <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 group-hover:scale-110 transition-all duration-300">
-                <feat.icon className="w-7 h-7 text-amber-400" />
-              </div>
-              <h3 className="text-black font-bold text-lg mb-2 group-hover:text-amber-400 transition-colors duration-300">{feat.title}</h3>
-              <p className="text-black text-sm leading-relaxed max-h-16 overflow-hidden opacity-100 group-hover:opacity-100 transition-all duration-300 group-hover:max-h-24">{feat.description}</p>
-            </motion.div>
+            <Link key={feat.title} to={createPageUrl(feat.link)}>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="text-center group cursor-pointer"
+              >
+                <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 group-hover:scale-110 transition-all duration-300">
+                  <feat.icon className="w-7 h-7 text-amber-400" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-amber-400 transition-colors duration-300">{feat.title}</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">{feat.description}</p>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>
