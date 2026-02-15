@@ -155,8 +155,7 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
     };
 
     const handleCompleteBooking = () => {
-        sessionStorage.setItem('bookingConfirmation', JSON.stringify(bookingData));
-        navigate(createPageUrl('BookingConfirmation'));
+        toast.success('Booking completed! Check My Bookings to view your ticket.');
         onClose();
     };
 
