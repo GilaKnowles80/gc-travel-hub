@@ -183,7 +183,29 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
 
           {/* Flight Details */}
           <div className="mb-6 pb-6 border-b">
-            <h3 className="font-bold text-slate-900 mb-3">FLIGHT DETAILS</h3>
+            <h3 className="font-bold text-slate-900 mb-4">1. Flight Details</h3>
+            
+            {/* Clean format matching the image */}
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <span className="text-slate-600">Airline:</span>
+                <span className="font-semibold text-slate-900">{flight?.airline_name || 'Philippine Airlines'}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <span className="text-slate-600">Flight Number:</span>
+                <span className="font-semibold text-slate-900">{flight?.flight_number}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <span className="text-slate-600">Route:</span>
+                <span className="font-semibold text-slate-900">{flight?.origin} ({flight?.origin}) → {flight?.destination} ({flight?.destination})</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <span className="text-slate-600">Cabin Class:</span>
+                <span className="font-semibold text-slate-900 capitalize">{booking.cabin_class.replace(/_/g, ' ')}</span>
+              </div>
+            </div>
+
+            {/* Detailed Flight Information Table */}
             <div className="bg-slate-50 p-4 rounded-lg mb-4 overflow-x-auto">
               <div className="grid grid-cols-6 gap-2 md:gap-4 text-xs md:text-sm font-semibold border-b border-slate-300 pb-2 mb-2 min-w-[600px]">
                 <div>ORIGIN</div>
