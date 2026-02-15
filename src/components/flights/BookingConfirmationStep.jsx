@@ -7,6 +7,33 @@ import { toast } from "sonner";
 
 export default function BookingConfirmationStep({ booking, onComplete }) {
   const [sending, setSending] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
+
+  React.useEffect(() => {
+    // Automatically trigger split payment when booking is confirmed
+    const processSplitPayment = async () => {
+      if (!booking || processingPayment) return;
+      
+      setProcessingPayment(true);
+      try {
+        await base44.functions.invoke('processSplitPayment', {
+          bookingId: booking.id,
+          bookingType: 'flight',
+          totalAmount: booking.total_price,
+          supplier: booking.supplier || 'direct',
+          supplierCost: booking.supplier_cost || (booking.total_price * 0.85) // 15% default markup if not specified
+        });
+        console.log('Split payment processed successfully');
+      } catch (error) {
+        console.error('Split payment error:', error);
+        // Don't block user flow, just log the error
+      } finally {
+        setProcessingPayment(false);
+      }
+    };
+
+    processSplitPayment();
+  }, [booking?.id]);
 
   const handleSendItinerary = async () => {
     setSending(true);
