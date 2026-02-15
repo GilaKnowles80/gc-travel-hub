@@ -70,23 +70,23 @@ export default function HeroSection() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-orange-900/40" />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center pt-40">
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center pt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-6"
+          className="mb-4"
         >
-          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-4">
+          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-3">
             GC Travel & Tours
           </p>
           <h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight"
+            className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight"
             style={{
               textShadow: "0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)"
             }}
           >
-            Discover the Hidden Wonders
+            Find Your Perfect Trip
           </h1>
         </motion.div>
 
@@ -94,7 +94,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.45 }}
-          className="mb-8"
+          className="mb-6"
         >
           <p className="text-amber-100 text-sm md:text-base max-w-xl mx-auto leading-relaxed font-medium drop-shadow-md">
             Curated travel experiences that transform ordinary trips into extraordinary memories
@@ -108,7 +108,7 @@ export default function HeroSection() {
           className="w-full max-w-5xl"
         >
 
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
             <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
               {[
                 { type: "flights", label: "Flights", icon: Plane },
@@ -174,21 +174,21 @@ export default function HeroSection() {
                     className="rounded-xl"
                   />
                   {showOriginSuggestions && filteredOriginCities.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
-                      {filteredOriginCities.map((city) => (
-                        <button
-                          key={city}
-                          onClick={() => {
-                            setOrigin(city);
-                            setOriginSearch(city);
-                            setShowOriginSuggestions(false);
-                          }}
-                          className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm"
-                        >
-                          {city}
-                        </button>
-                      ))}
-                    </div>
+                   <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
+                     {filteredOriginCities.map((city) => (
+                       <button
+                         key={city}
+                         onClick={() => {
+                           setOrigin(city);
+                           setOriginSearch(city);
+                           setShowOriginSuggestions(false);
+                         }}
+                         className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm"
+                       >
+                         {city}
+                       </button>
+                     ))}
+                   </div>
                   )}
                 </div>
 
@@ -208,21 +208,21 @@ export default function HeroSection() {
                     className="rounded-xl"
                   />
                   {showDestSuggestions && filteredDestCities.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
-                      {filteredDestCities.map((city) => (
-                        <button
-                          key={city}
-                          onClick={() => {
-                            setDestination(city);
-                            setDestinationSearch(city);
-                            setShowDestSuggestions(false);
-                          }}
-                          className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm"
-                        >
-                          {city}
-                        </button>
-                      ))}
-                    </div>
+                   <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
+                     {filteredDestCities.map((city) => (
+                       <button
+                         key={city}
+                         onClick={() => {
+                           setDestination(city);
+                           setDestinationSearch(city);
+                           setShowDestSuggestions(false);
+                         }}
+                         className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm"
+                       >
+                         {city}
+                       </button>
+                     ))}
+                   </div>
                   )}
                 </div>
 
