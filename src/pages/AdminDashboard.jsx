@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
 import SupplierPortalsPanel from "../components/admin/SupplierPortalsPanel";
 import SupplierPayoutSummary from "../components/admin/SupplierPayoutSummary";
+import SplitPaymentPanel from "../components/admin/SplitPaymentPanel";
 
 export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -167,9 +168,10 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* Supplier Portal Credentials - TOP PRIORITY */}
-        <div className="mt-8">
+        {/* Supplier Portal Credentials & Split Payment */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
           <SupplierPortalsPanel />
+          <SplitPaymentPanel />
         </div>
 
         {/* Supplier Payout Management */}
