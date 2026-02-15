@@ -62,6 +62,7 @@ import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
 import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import AdminTours from './pages/AdminTours';
 import AdminVisas from './pages/AdminVisas';
+import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BookingConfirmation from './pages/BookingConfirmation';
 import Contact from './pages/Contact';
 import FlightDetail from './pages/FlightDetail';
@@ -83,18 +84,18 @@ import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import RefundPolicy from './pages/RefundPolicy';
+import SafeAndSecure from './pages/SafeAndSecure';
 import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
+import Support247 from './pages/Support247';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import TravelAssistant from './pages/TravelAssistant';
+import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import SafeAndSecure from './pages/SafeAndSecure';
-import Support247 from './pages/Support247';
-import BestPriceGuarantee from './pages/BestPriceGuarantee';
-import TrustedAgency from './pages/TrustedAgency';
+import PaymentMethods from './pages/PaymentMethods';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "AdminSupplierPayments": AdminSupplierPayments,
     "AdminTours": AdminTours,
     "AdminVisas": AdminVisas,
+    "BestPriceGuarantee": BestPriceGuarantee,
     "BookingConfirmation": BookingConfirmation,
     "Contact": Contact,
     "FlightDetail": FlightDetail,
@@ -135,18 +137,18 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
     "RefundPolicy": RefundPolicy,
+    "SafeAndSecure": SafeAndSecure,
     "Settings": Settings,
     "SharedItinerary": SharedItinerary,
+    "Support247": Support247,
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "TravelAssistant": TravelAssistant,
+    "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "SafeAndSecure": SafeAndSecure,
-    "Support247": Support247,
-    "BestPriceGuarantee": BestPriceGuarantee,
-    "TrustedAgency": TrustedAgency,
+    "PaymentMethods": PaymentMethods,
 }
 
 export const pagesConfig = {
