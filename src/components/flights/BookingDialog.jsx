@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, User, CheckCircle2, Copy } from "lucide-react";
 import { toast } from "sonner";
 import BookingConfirmationStep from "./BookingConfirmationStep";
@@ -21,10 +22,13 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
     const [travelers, setTravelers] = useState(
         Array.from({ length: passengers }, (_, i) => ({
             id: `${i + 1}`,
+            title: "MR",
             dateOfBirth: "",
             name: {
                 firstName: "",
-                lastName: ""
+                middleName: "",
+                lastName: "",
+                suffix: ""
             },
             gender: "MALE",
             contact: {
@@ -34,6 +38,10 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                     countryCallingCode: "63",
                     number: ""
                 }]
+            },
+            governmentId: {
+                type: "PASSPORT",
+                number: ""
             },
             documents: [{
                 documentType: "PASSPORT",
@@ -123,10 +131,13 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
         const updated = [...travelers];
         updated[index] = {
             ...updated[index],
+            title: "MR",
             dateOfBirth: savedTraveler.date_of_birth || "",
             name: {
                 firstName: savedTraveler.first_name || "",
-                lastName: savedTraveler.last_name || ""
+                middleName: "",
+                lastName: savedTraveler.last_name || "",
+                suffix: ""
             },
             gender: savedTraveler.gender || "MALE",
             contact: {
@@ -136,6 +147,10 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                     countryCallingCode: "63",
                     number: savedTraveler.phone || ""
                 }]
+            },
+            governmentId: {
+                type: "PASSPORT",
+                number: savedTraveler.passport_number || ""
             },
             documents: [{
                 documentType: "PASSPORT",
@@ -222,7 +237,20 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <Label>Title *</Label>
+                                    <Select value={traveler.title} onValueChange={(val) => updateTraveler(idx, 'title', val)}>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="MR">Mr.</SelectItem>
+                                            <SelectItem value="MRS">Mrs.</SelectItem>
+                                            <SelectItem value="MS">Ms.</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                                 <div>
                                     <Label>First Name *</Label>
                                     <Input
@@ -232,11 +260,29 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                                     />
                                 </div>
                                 <div>
+                                    <Label>Middle Name</Label>
+                                    <Input
+                                        value={traveler.name.middleName}
+                                        onChange={(e) => updateTraveler(idx, 'name.middleName', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
                                     <Label>Last Name *</Label>
                                     <Input
                                         value={traveler.name.lastName}
                                         onChange={(e) => updateTraveler(idx, 'name.lastName', e.target.value)}
                                         required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Suffix</Label>
+                                    <Input
+                                        value={traveler.name.suffix}
+                                        onChange={(e) => updateTraveler(idx, 'name.suffix', e.target.value)}
+                                        placeholder="Jr., Sr., III, etc."
                                     />
                                 </div>
                             </div>
@@ -252,41 +298,94 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                                     />
                                 </div>
                                 <div>
-                                    <Label>Gender</Label>
-                                    <select
-                                        className="w-full h-9 rounded-md border border-input bg-background px-3"
-                                        value={traveler.gender}
-                                        onChange={(e) => updateTraveler(idx, 'gender', e.target.value)}
-                                    >
-                                        <option value="MALE">Male</option>
-                                        <option value="FEMALE">Female</option>
-                                    </select>
+                                    <Label>Gender *</Label>
+                                    <Select value={traveler.gender} onValueChange={(val) => updateTraveler(idx, 'gender', val)}>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="MALE">Male</SelectItem>
+                                            <SelectItem value="FEMALE">Female</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 
-                            {idx === 0 && (
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <Label>Email</Label>
-                                        <Input
-                                            type="email"
-                                            value={traveler.contact.emailAddress}
-                                            onChange={(e) => updateTraveler(idx, 'contact.emailAddress', e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label>Phone Number</Label>
-                                        <Input
-                                            value={traveler.contact.phones[0].number}
-                                            onChange={(e) => {
-                                                const phones = [...traveler.contact.phones];
-                                                phones[0].number = e.target.value;
-                                                updateTraveler(idx, 'contact', { ...traveler.contact, phones });
-                                            }}
-                                        />
-                                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Nationality *</Label>
+                                    <Input
+                                        value={traveler.documents[0].nationality}
+                                        onChange={(e) => {
+                                            const docs = [...traveler.documents];
+                                            docs[0].nationality = e.target.value;
+                                            updateTraveler(idx, 'documents', docs);
+                                        }}
+                                        placeholder="e.g., PH, US, JP"
+                                        required
+                                    />
                                 </div>
-                            )}
+                                <div>
+                                    <Label>Email *</Label>
+                                    <Input
+                                        type="email"
+                                        value={traveler.contact.emailAddress}
+                                        onChange={(e) => updateTraveler(idx, 'contact.emailAddress', e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <Label>Contact Number *</Label>
+                                    <Input
+                                        value={traveler.contact.phones[0].number}
+                                        onChange={(e) => {
+                                            const phones = [...traveler.contact.phones];
+                                            phones[0].number = e.target.value;
+                                            updateTraveler(idx, 'contact', { ...traveler.contact, phones });
+                                        }}
+                                        placeholder="+63 XXX XXX XXXX"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Government ID Type *</Label>
+                                    <Select 
+                                        value={traveler.governmentId.type} 
+                                        onValueChange={(val) => {
+                                            const updated = { ...traveler.governmentId, type: val };
+                                            updateTraveler(idx, 'governmentId', updated);
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="PASSPORT">Passport</SelectItem>
+                                            <SelectItem value="DRIVERS_LICENSE">Driver's License</SelectItem>
+                                            <SelectItem value="NATIONAL_ID">National ID</SelectItem>
+                                            <SelectItem value="SSS">SSS ID</SelectItem>
+                                            <SelectItem value="UMID">UMID</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <Label>Government ID Number *</Label>
+                                    <Input
+                                        value={traveler.governmentId.number}
+                                        onChange={(e) => {
+                                            const updated = { ...traveler.governmentId, number: e.target.value };
+                                            updateTraveler(idx, 'governmentId', updated);
+                                        }}
+                                        required
+                                    />
+                                </div>
+                            </div>
                         </div>
                     ))}
 
