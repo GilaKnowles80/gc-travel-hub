@@ -105,7 +105,7 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
         // Basic validation
         for (let i = 0; i < travelers.length; i++) {
             const t = travelers[i];
-            if (!t.name.firstName || !t.name.lastName || !t.dateOfBirth) {
+            if (!t.name.firstName || !t.name.lastName || !t.dateOfBirth || !t.governmentId.number || !t.contact.emailAddress || !t.contact.phones[0].number || !t.documents[0].nationality) {
                 toast.error(`Please fill all required fields for passenger ${i + 1}`);
                 return;
             }
