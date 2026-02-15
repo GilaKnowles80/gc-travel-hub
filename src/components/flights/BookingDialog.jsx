@@ -431,7 +431,82 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                                 }}
                                 className="bg-amber-500 hover:bg-amber-600"
                             >
-                                Continue to Payment
+                                Review Booking
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {currentStep === 3 && bookingData && (
+                    <div className="space-y-6">
+                        <h3 className="font-semibold text-lg">Review & Confirm Payment</h3>
+                        
+                        <div className="bg-slate-50 rounded-xl p-6 space-y-4">
+                            <div>
+                                <h4 className="font-semibold mb-3">Flight Details</h4>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-600">Route:</span>
+                                        <span className="font-medium">{flightOffer?.itineraries?.[0]?.segments?.[0]?.departure?.iataCode} → {flightOffer?.itineraries?.[0]?.segments?.[0]?.arrival?.iataCode}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-600">Cabin Class:</span>
+                                        <span className="font-medium capitalize">{bookingData.cabin_class}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-600">Passengers:</span>
+                                        <span className="font-medium">{passengers}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border-t pt-4">
+                                <h4 className="font-semibold mb-3">Payment Method</h4>
+                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                    <p className="font-medium capitalize">{selectedPaymentMethod?.replace('_', ' ')}</p>
+                                    {selectedPaymentMethod === 'bank_transfer' && (
+                                        <div className="mt-3 text-sm space-y-1">
+                                            <p className="font-semibold">Bank Details:</p>
+                                            <p>Bank: BDO / BPI / Metrobank</p>
+                                            <p>Account Name: GC Travel & Tours</p>
+                                            <p>Account Number: Will be provided after confirmation</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="border-t pt-4">
+                                <div className="flex justify-between text-lg font-bold">
+                                    <span>Total Amount:</span>
+                                    <span className="text-amber-600">₱{bookingData.total_price?.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                            <p className="font-semibold mb-2">📋 Next Steps:</p>
+                            <ul className="list-disc pl-5 space-y-1">
+                                <li>Click "Confirm Payment" to proceed</li>
+                                {selectedPaymentMethod === 'bank_transfer' && (
+                                    <>
+                                        <li>You'll receive bank transfer details via email</li>
+                                        <li>Transfer the exact amount within 24 hours</li>
+                                        <li>Send proof of payment to our email or WhatsApp</li>
+                                        <li>Your booking will be confirmed once payment is verified</li>
+                                    </>
+                                )}
+                            </ul>
+                        </div>
+
+                        <div className="flex gap-3 justify-end pt-4">
+                            <Button type="button" variant="outline" onClick={() => setCurrentStep(2)}>
+                                Back
+                            </Button>
+                            <Button
+                                onClick={() => setCurrentStep(4)}
+                                className="bg-amber-500 hover:bg-amber-600"
+                            >
+                                Confirm Payment
                             </Button>
                         </div>
                     </div>

@@ -6,6 +6,15 @@ import { CreditCard, Smartphone, Wallet, QrCode, DollarSign } from "lucide-react
 const PaymentMethodSelector = ({ onSelect, selectedMethod }) => {
   const paymentMethods = [
     {
+      id: "bank_transfer",
+      name: "Bank Transfer",
+      provider: "Direct",
+      icon: Smartphone,
+      color: "bg-amber-600",
+      description: "InstaPay / PESONet",
+      recommended: true
+    },
+    {
       id: "gcash_qr",
       name: "GCash QR",
       provider: "PayMongo",
@@ -60,14 +69,6 @@ const PaymentMethodSelector = ({ onSelect, selectedMethod }) => {
       icon: Wallet,
       color: "bg-blue-500",
       description: "PayPal balance or linked card"
-    },
-    {
-      id: "bank_transfer",
-      name: "Bank Transfer",
-      provider: "Direct",
-      icon: Smartphone,
-      color: "bg-slate-700",
-      description: "InstaPay / PESONet"
     }
   ];
 
@@ -84,10 +85,15 @@ const PaymentMethodSelector = ({ onSelect, selectedMethod }) => {
             <button
               key={method.id}
               onClick={() => onSelect(method.id)}
-              className={`${method.color} text-white p-4 rounded-xl transition-all transform hover:scale-105 ${
+              className={`${method.color} text-white p-4 rounded-xl transition-all transform hover:scale-105 relative ${
                 isSelected ? 'ring-4 ring-amber-400 ring-offset-2' : ''
               }`}
             >
+              {method.recommended && (
+                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                  Recommended
+                </div>
+              )}
               <Icon className="w-8 h-8 mx-auto mb-2" />
               <h4 className="font-bold text-sm mb-1">{method.name}</h4>
               <p className="text-xs opacity-90 mb-1">{method.provider}</p>
@@ -99,10 +105,10 @@ const PaymentMethodSelector = ({ onSelect, selectedMethod }) => {
 
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
         <div className="flex items-start gap-3">
-          <QrCode className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+          <Smartphone className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-slate-700">
-            <p className="font-semibold mb-1">Fast QR Code Payments</p>
-            <p>Instant payment confirmation via GCash, PayMaya, or GrabPay. Just scan the QR code with your e-wallet app!</p>
+            <p className="font-semibold mb-1">🏆 Recommended: Bank Transfer</p>
+            <p>Secure direct bank transfer via InstaPay or PESONet. No extra fees, just transfer to our account and we'll confirm your booking within 24 hours.</p>
           </div>
         </div>
       </div>

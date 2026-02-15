@@ -1,14 +1,23 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plane, Printer, Download, Mail, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plane, Printer, Download, Mail, MessageSquare, AlertCircle } from "lucide-react";
 import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 export default function ItineraryReceipt({ booking, flight, onClose }) {
   const receiptRef = useRef(null);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [showSMSDialog, setShowSMSDialog] = useState(false);
+  const [emailAddress, setEmailAddress] = useState(booking.passenger_email || "");
+  const [phoneNumber, setPhoneNumber] = useState(booking.passenger_phone || "");
+  const [sending, setSending] = useState(false);
 
   const handleDownloadPDF = async () => {
     if (!receiptRef.current) return;
@@ -47,6 +56,55 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
     } catch (error) {
       toast.error("Failed to download itinerary");
     }
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailAddress) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
+    setSending(true);
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: emailAddress,
+        subject: `Flight Itinerary - ${booking.passenger_name}`,
+        body: `
+          <h2>Your Flight Itinerary</h2>
+          <p>Dear ${booking.passenger_name},</p>
+          <p>Thank you for booking with GC Travel & Tours. Here are your flight details:</p>
+          <ul>
+            <li><strong>PNR:</strong> ${booking.id.substring(0, 8).toUpperCase()}</li>
+            <li><strong>Flight:</strong> ${flight?.flight_number}</li>
+            <li><strong>Route:</strong> ${flight?.origin} to ${flight?.destination}</li>
+            <li><strong>Departure:</strong> ${moment(flight?.departure_time).format("MMM DD, YYYY HH:mm")}</li>
+            <li><strong>Class:</strong> ${booking.cabin_class}</li>
+          </ul>
+          <p>Please arrive at the airport at least 2 hours before departure for domestic flights.</p>
+          <p>For full itinerary details, please login to your account.</p>
+          <br>
+          <p>Safe travels!</p>
+          <p><strong>GC Travel & Tours</strong></p>
+          <p>+63 915 440 1150 | gctravelandtours2021@gmail.com</p>
+        `
+      });
+      toast.success("Itinerary sent to email successfully!");
+      setShowEmailDialog(false);
+    } catch (error) {
+      toast.error("Failed to send email");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleSendSMS = async () => {
+    if (!phoneNumber) {
+      toast.error("Please enter a phone number");
+      return;
+    }
+
+    toast.info("SMS feature coming soon! For now, please use email or download PDF.");
+    setShowSMSDialog(false);
   };
 
   return (
@@ -286,6 +344,14 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 justify-end print:hidden">
+        <Button onClick={() => setShowEmailDialog(true)} variant="outline" className="w-full sm:w-auto">
+          <Mail className="w-4 h-4 mr-2" />
+          Send via Email
+        </Button>
+        <Button onClick={() => setShowSMSDialog(true)} variant="outline" className="w-full sm:w-auto">
+          <MessageSquare className="w-4 h-4 mr-2" />
+          Send via SMS
+        </Button>
         <Button onClick={handleDownloadPDF} variant="outline" className="w-full sm:w-auto">
           <Download className="w-4 h-4 mr-2" />
           Download PDF
@@ -298,6 +364,62 @@ export default function ItineraryReceipt({ booking, flight, onClose }) {
           Close
         </Button>
       </div>
+
+      {/* Email Dialog */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Itinerary via Email</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Email Address</Label>
+              <Input
+                type="email"
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
+                placeholder="passenger@example.com"
+              />
+            </div>
+            <div className="flex gap-3 justify-end">
+              <Button variant="outline" onClick={() => setShowEmailDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSendEmail} disabled={sending} className="bg-amber-600 hover:bg-amber-700">
+                {sending ? "Sending..." : "Send Email"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* SMS Dialog */}
+      <Dialog open={showSMSDialog} onOpenChange={setShowSMSDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Itinerary via SMS</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Phone Number</Label>
+              <Input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="+63 XXX XXX XXXX"
+              />
+            </div>
+            <div className="flex gap-3 justify-end">
+              <Button variant="outline" onClick={() => setShowSMSDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSendSMS} className="bg-amber-600 hover:bg-amber-700">
+                Send SMS
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
