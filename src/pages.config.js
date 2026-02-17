@@ -105,6 +105,7 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import AdminDataManager from './pages/AdminDataManager';
 import AdminInsurance from './pages/AdminInsurance';
+import AdminCarRentals from './pages/AdminCarRentals';
 import __Layout from './Layout.jsx';
 
 
@@ -167,6 +168,7 @@ export const PAGES = {
     "utils": utils,
     "AdminDataManager": AdminDataManager,
     "AdminInsurance": AdminInsurance,
+    "AdminCarRentals": AdminCarRentals,
 }
 
 export const pagesConfig = {

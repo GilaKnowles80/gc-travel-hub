@@ -1,199 +1,136 @@
-import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/pages/utils";
-import { 
-  Plane, Hotel, MapPin, Users, DollarSign, 
-  TrendingUp, Calendar, Shield, MessageSquare, Ship, Bus, FileText, Building2, Search 
-} from "lucide-react";
-import { motion } from "framer-motion";
-import UnifiedBookingsTable from "../components/admin/UnifiedBookingsTable";
-import SupplierPortalsPanel from "../components/admin/SupplierPortalsPanel";
-import SupplierPayoutSummary from "../components/admin/SupplierPayoutSummary";
-import SplitPaymentPanel from "../components/admin/SplitPaymentPanel";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from './utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LayoutDashboard, Settings, Users, Receipt, TrendingUp } from 'lucide-react';
+import DashboardStats from '@/components/admin/DashboardStats';
+import QuickActions from '@/components/admin/QuickActions';
+import SalesReports from '@/components/admin/SalesReports';
+import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
 
 export default function AdminDashboard() {
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => base44.auth.me(),
-  });
-
-  const { data: stats } = useQuery({
-    queryKey: ["admin-stats"],
-    queryFn: async () => {
-      const [flights, hotels, tours, flightBookings, hotelBookings, tourBookings, reviews] = await Promise.all([
-        base44.entities.Flight.list(),
-        base44.entities.Hotel.list(),
-        base44.entities.Tour.list(),
-        base44.entities.FlightBooking.list(),
-        base44.entities.HotelBooking.list(),
-        base44.entities.Booking.list(),
-        base44.entities.Review.list(),
-      ]);
-
-      const totalRevenue = [
-        ...flightBookings.map(b => b.total_price || 0),
-        ...hotelBookings.map(b => b.total_price || 0),
-        ...tourBookings.map(b => b.total_price || 0),
-      ].reduce((sum, price) => sum + price, 0);
-
-      return {
-        flights: flights.length,
-        hotels: hotels.length,
-        tours: tours.length,
-        totalBookings: flightBookings.length + hotelBookings.length + tourBookings.length,
-        flightBookings: flightBookings.length,
-        hotelBookings: hotelBookings.length,
-        tourBookings: tourBookings.length,
-        totalRevenue,
-        pendingReviews: reviews.filter(r => r.status === "pending").length,
-      };
-    },
-    enabled: user?.role === "admin",
-  });
-
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Card className="p-8 text-center max-w-md">
-          <Shield className="w-12 h-12 mx-auto mb-4 text-red-500" />
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Access Denied</h2>
-          <p className="text-slate-600">You need admin privileges to access this page.</p>
-        </Card>
-      </div>
-    );
-  }
-
-  const quickLinks = [
-    { title: "Manage Flights", icon: Plane, page: "AdminFlights", color: "amber" },
-    { title: "Manage Hotels", icon: Hotel, page: "AdminHotels", color: "blue" },
-    { title: "Manage Tours", icon: MapPin, page: "AdminTours", color: "green" },
-    { title: "Manage Ferries", icon: Ship, page: "AdminFerries", color: "cyan" },
-    { title: "Manage Buses", icon: Bus, page: "AdminBuses", color: "orange" },
-    { title: "Manage Visas", icon: FileText, page: "AdminVisas", color: "indigo" },
-    { title: "Bank Accounts", icon: Building2, page: "AdminBankAccounts", color: "blue" },
-    { title: "Supplier Payments", icon: DollarSign, page: "AdminSupplierPayments", color: "green" },
-    { title: "Supplier Bank Accounts", icon: Building2, page: "AdminSupplierBankAccounts", color: "cyan" },
-    { title: "Loyalty Program", icon: TrendingUp, page: "AdminLoyalty", color: "purple" },
-    { title: "Moderate Reviews", icon: MessageSquare, page: "AdminReviews", color: "rose" },
-  ];
-
-  const statCards = [
-    { title: "Total Bookings", value: stats?.totalBookings || 0, icon: Calendar, color: "blue" },
-    { title: "Total Revenue", value: `$${(stats?.totalRevenue || 0).toLocaleString()}`, icon: DollarSign, color: "green" },
-    { title: "Active Flights", value: stats?.flights || 0, icon: Plane, color: "amber" },
-    { title: "Active Hotels", value: stats?.hotels || 0, icon: Hotel, color: "indigo" },
-    { title: "Active Tours", value: stats?.tours || 0, icon: MapPin, color: "teal" },
-    { title: "Pending Reviews", value: stats?.pendingReviews || 0, icon: MessageSquare, color: "purple" },
-  ];
-
-  const filteredLinks = quickLinks.filter(link => 
-    link.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3 mb-2">
-            <Shield className="w-8 h-8 text-amber-500" />
-            Admin Dashboard
-          </h1>
-          <p className="text-slate-600">Manage your travel platform</p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <Input
-              type="text"
-              placeholder="Search admin sections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-base"
-            />
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Admin Dashboard</h1>
+            <p className="text-slate-600">Manage all travel offerings, bookings, and view reports</p>
+          </div>
+          <div className="flex gap-2">
+            <Link to={createPageUrl('AdminDataManager')}>
+              <Button variant="outline">
+                <Settings className="w-4 h-4 mr-2" />
+                Data Manager
+              </Button>
+            </Link>
+            <Link to={createPageUrl('AdminSecurityCenter')}>
+              <Button variant="outline">
+                <Settings className="w-4 h-4 mr-2" />
+                Security
+              </Button>
+            </Link>
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {filteredLinks.map((link, idx) => (
-            <motion.div
-              key={link.page}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-            >
-              <Link to={createPageUrl(link.page)}>
-                <Card className="hover:shadow-lg transition-all cursor-pointer border-0 bg-gradient-to-br from-white to-slate-50">
-                  <CardContent className="p-6">
-                    <div className={`w-12 h-12 rounded-xl bg-${link.color}-100 flex items-center justify-center mb-3`}>
-                      <link.icon className={`w-6 h-6 text-${link.color}-600`} />
-                    </div>
-                    <h3 className="font-semibold text-slate-900">{link.title}</h3>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+            <TabsTrigger value="overview">
+              <LayoutDashboard className="w-4 h-4 mr-2" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="bookings">
+              <Receipt className="w-4 h-4 mr-2" />
+              Bookings
+            </TabsTrigger>
+            <TabsTrigger value="reports">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Reports
+            </TabsTrigger>
+            <TabsTrigger value="manage">
+              <Settings className="w-4 h-4 mr-2" />
+              Manage
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {statCards.map((stat, idx) => (
-            <motion.div
-              key={stat.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + idx * 0.05 }}
-            >
-              <Card className="border-0 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-600">
-                    {stat.title}
-                  </CardTitle>
-                  <stat.icon className={`w-4 h-4 text-${stat.color}-500`} />
+          <TabsContent value="overview" className="space-y-6">
+            <DashboardStats />
+            <QuickActions />
+          </TabsContent>
+
+          <TabsContent value="bookings">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Bookings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <UnifiedBookingsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <SalesReports />
+          </TabsContent>
+
+          <TabsContent value="manage" className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Travel Inventory</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+                <CardContent className="space-y-2">
+                  <Link to={createPageUrl('AdminFlights')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Flights</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminHotels')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Hotels</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminTours')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Tours</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminVisas')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Visas</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminFerries')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Ferry Tickets</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminBuses')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Bus Tickets</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminInsurance')}>
+                    <Button variant="outline" className="w-full justify-start">Manage Insurance</Button>
+                  </Link>
                 </CardContent>
               </Card>
-            </motion.div>
-          ))}
-        </div>
 
-        {/* Supplier Portal Credentials & Split Payment */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-          <SupplierPortalsPanel />
-          <SplitPaymentPanel />
-        </div>
-
-        {/* Supplier Payout Management */}
-        <div className="mt-8">
-          <SupplierPayoutSummary />
-        </div>
-
-        {/* All Bookings - Unified View */}
-        <Card className="mt-8 border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-amber-500" />
-              All Bookings - Manual Fulfillment Center
-            </CardTitle>
-            <p className="text-sm text-slate-600 mt-1">
-              Process bookings via biyaheko.ph, wanderlinx.com, or tripzynx.com
-            </p>
-          </CardHeader>
-          <CardContent>
-            <UnifiedBookingsTable />
-          </CardContent>
-        </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Business Operations</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Link to={createPageUrl('AdminCorporateClients')}>
+                    <Button variant="outline" className="w-full justify-start">Corporate Clients</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminPromotions')}>
+                    <Button variant="outline" className="w-full justify-start">Promotions & Discounts</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminPricing')}>
+                    <Button variant="outline" className="w-full justify-start">Dynamic Pricing</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminSupplierPayments')}>
+                    <Button variant="outline" className="w-full justify-start">Supplier Payments</Button>
+                  </Link>
+                  <Link to={createPageUrl('AdminHelpdesk')}>
+                    <Button variant="outline" className="w-full justify-start">Customer Support</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
