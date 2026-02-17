@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import BookingConfirmationStep from "./BookingConfirmationStep";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import ItineraryReceipt from "./ItineraryReceipt";
+import StripeCheckout from "@/components/payment/StripeCheckout";
 
 export default function BookingDialog({ isOpen, onClose, flightOffer, passengers }) {
     const navigate = useNavigate();
@@ -413,26 +414,37 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
 
                 {currentStep === 2 && (
                     <div className="space-y-6">
-                        <PaymentMethodSelector 
-                            selectedMethod={selectedPaymentMethod}
-                            onSelect={setSelectedPaymentMethod}
+                        <h3 className="font-semibold text-lg">Choose Payment Method</h3>
+                        
+                        {/* Stripe Payment Option */}
+                        <StripeCheckout
+                            bookingType="flight"
+                            bookingId={bookingData?.id}
+                            amount={bookingData?.total_price || 0}
+                            currency="PHP"
                         />
+
+                        {/* Other Payment Methods */}
+                        <div className="space-y-3">
+                            <div className="text-sm font-medium text-slate-700">Or choose alternative payment:</div>
+                            <PaymentMethodSelector 
+                                selectedMethod={selectedPaymentMethod}
+                                onSelect={setSelectedPaymentMethod}
+                            />
+                        </div>
+
                         <div className="flex gap-3 justify-end pt-4">
                             <Button type="button" variant="outline" onClick={() => setCurrentStep(1)}>
                                 Back
                             </Button>
-                            <Button
-                                onClick={() => {
-                                    if (!selectedPaymentMethod) {
-                                        toast.error('Please select a payment method');
-                                        return;
-                                    }
-                                    setCurrentStep(3);
-                                }}
-                                className="bg-amber-500 hover:bg-amber-600"
-                            >
-                                Review Booking
-                            </Button>
+                            {selectedPaymentMethod && (
+                                <Button
+                                    onClick={() => setCurrentStep(3)}
+                                    className="bg-amber-500 hover:bg-amber-600"
+                                >
+                                    Continue with {selectedPaymentMethod.replace('_', ' ')}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 )}
