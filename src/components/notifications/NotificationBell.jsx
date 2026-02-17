@@ -14,7 +14,17 @@ import { formatDistanceToNow } from "date-fns";
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
+  const [lastNotificationCount, setLastNotificationCount] = useState(0);
   const queryClient = useQueryClient();
+  
+  // Audio instance for notification sound
+  const notificationSound = React.useRef(null);
+  
+  useEffect(() => {
+    // Create audio element for notification sound
+    notificationSound.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFA==');
+    notificationSound.current.volume = 0.5;
+  }, []);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -53,6 +63,17 @@ export default function NotificationBell() {
   });
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  // Play sound when new notification arrives
+  useEffect(() => {
+    if (notifications.length > lastNotificationCount && lastNotificationCount > 0) {
+      // New notification received
+      if (notificationSound.current) {
+        notificationSound.current.play().catch(e => console.log('Sound play failed:', e));
+      }
+    }
+    setLastNotificationCount(notifications.length);
+  }, [notifications.length]);
 
   const getNotificationIcon = (type) => {
     const icons = {
