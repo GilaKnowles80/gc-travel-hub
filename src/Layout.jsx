@@ -7,6 +7,8 @@ import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Buil
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
+import { LanguageProvider } from "@/components/language/LanguageContext";
+import LanguageSelector from "@/components/language/LanguageSelector";
 import FloatingContactWidget from "@/components/support/FloatingContactWidget";
 import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 import SessionTimeout from "@/components/security/SessionTimeout";
@@ -67,11 +69,12 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <RecaptchaProvider>
-      <CurrencyProvider>
-        <FloatingContactWidget />
-        <SessionTimeout />
-        <CookieConsent />
-        <div className="min-h-screen">
+      <LanguageProvider>
+        <CurrencyProvider>
+          <FloatingContactWidget />
+          <SessionTimeout />
+          <CookieConsent />
+          <div className="min-h-screen">
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}
@@ -91,6 +94,7 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
+              <LanguageSelector showLabel />
               {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)}>
                   <button
@@ -136,6 +140,9 @@ export default function Layout({ children, currentPageName }) {
               className="md:hidden bg-white border-t border-slate-100"
             >
               <div className="px-4 py-4 space-y-1">
+                <div className="mb-3 flex justify-center">
+                  <LanguageSelector showLabel />
+                </div>
                 {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                   <Link key={link.page} to={createPageUrl(link.page)}>
                     <button
@@ -243,7 +250,8 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
       </div>
-      </CurrencyProvider>
+        </CurrencyProvider>
+      </LanguageProvider>
     </RecaptchaProvider>
   );
 }
