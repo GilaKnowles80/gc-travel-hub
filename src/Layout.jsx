@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import FloatingContactWidget from "@/components/support/FloatingContactWidget";
+import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -58,9 +59,10 @@ export default function Layout({ children, currentPageName }) {
   const logoColor = isHome && !scrolled ? "text-white" : "text-slate-900";
 
   return (
-    <CurrencyProvider>
-      <FloatingContactWidget />
-      <div className="min-h-screen">
+    <RecaptchaProvider>
+      <CurrencyProvider>
+        <FloatingContactWidget />
+        <div className="min-h-screen">
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}
@@ -232,6 +234,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
       </div>
-    </CurrencyProvider>
+      </CurrencyProvider>
+    </RecaptchaProvider>
   );
 }

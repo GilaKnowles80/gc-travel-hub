@@ -49,6 +49,7 @@
  */
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
+import AdminCorporateClients from './pages/AdminCorporateClients';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
@@ -57,6 +58,7 @@ import AdminHelpdesk from './pages/AdminHelpdesk';
 import AdminHotels from './pages/AdminHotels';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminPricing from './pages/AdminPricing';
+import AdminPromotions from './pages/AdminPromotions';
 import AdminReviews from './pages/AdminReviews';
 import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
@@ -66,6 +68,7 @@ import AdminVisas from './pages/AdminVisas';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BookingConfirmation from './pages/BookingConfirmation';
 import Contact from './pages/Contact';
+import CorporateBooking from './pages/CorporateBooking';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
@@ -97,15 +100,13 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import CorporateBooking from './pages/CorporateBooking';
-import AdminCorporateClients from './pages/AdminCorporateClients';
-import AdminPromotions from './pages/AdminPromotions';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
+    "AdminCorporateClients": AdminCorporateClients,
     "AdminDashboard": AdminDashboard,
     "AdminEmailClients": AdminEmailClients,
     "AdminFerries": AdminFerries,
@@ -114,6 +115,7 @@ export const PAGES = {
     "AdminHotels": AdminHotels,
     "AdminLoyalty": AdminLoyalty,
     "AdminPricing": AdminPricing,
+    "AdminPromotions": AdminPromotions,
     "AdminReviews": AdminReviews,
     "AdminSecurityCenter": AdminSecurityCenter,
     "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
@@ -123,6 +125,7 @@ export const PAGES = {
     "BestPriceGuarantee": BestPriceGuarantee,
     "BookingConfirmation": BookingConfirmation,
     "Contact": Contact,
+    "CorporateBooking": CorporateBooking,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
@@ -154,9 +157,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "CorporateBooking": CorporateBooking,
-    "AdminCorporateClients": AdminCorporateClients,
-    "AdminPromotions": AdminPromotions,
 }
 
 export const pagesConfig = {
