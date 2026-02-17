@@ -100,6 +100,9 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancelled from './pages/PaymentCancelled';
+import TransactionHistory from './pages/TransactionHistory';
 import __Layout from './Layout.jsx';
 
 
@@ -157,6 +160,9 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
+    "PaymentSuccess": PaymentSuccess,
+    "PaymentCancelled": PaymentCancelled,
+    "TransactionHistory": TransactionHistory,
 }
 
 export const pagesConfig = {
