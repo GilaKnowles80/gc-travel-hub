@@ -9,6 +9,8 @@ import DashboardStats from '@/components/admin/DashboardStats';
 import QuickActions from '@/components/admin/QuickActions';
 import SalesReports from '@/components/admin/SalesReports';
 import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
+import BulkOperationsPanel from '@/components/admin/BulkOperationsPanel';
+import PerformanceMonitor from '@/components/admin/PerformanceMonitor';
 
 export default function AdminDashboard() {
   return (
@@ -57,6 +59,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="overview" className="space-y-6">
             <DashboardStats />
+            <div className="grid lg:grid-cols-2 gap-6">
+              <BulkOperationsPanel />
+              <PerformanceMonitor />
+            </div>
             <QuickActions />
           </TabsContent>
 
