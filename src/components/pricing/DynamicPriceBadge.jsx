@@ -1,50 +1,59 @@
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Zap } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, TrendingDown, Zap } from 'lucide-react';
 
-export default function DynamicPriceBadge({ pricing, showSavings = true }) {
-  if (!pricing) return null;
+export default function DynamicPriceBadge({ itemType, itemId, basePrice, departureDate, showAdjustments = false }) {
+  const [pricing, setPricing] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const priceIncrease = pricing.price_multiplier > 1;
-  const hasDiscount = pricing.discount_percent > 0;
-  const badgeColor = priceIncrease
-    ? "bg-red-100 text-red-800 border-red-200"
-    : hasDiscount
-    ? "bg-green-100 text-green-800 border-green-200"
-    : "bg-slate-100 text-slate-800 border-slate-200";
+  useEffect(() => {
+    const calculatePrice = async () => {
+      try {
+        const { data } = await base44.functions.invoke('calculateDynamicPrice', {
+          itemType,
+          itemId,
+          basePrice,
+          departureDate,
+          bookingDate: new Date().toISOString()
+        });
+        setPricing(data);
+      } catch (error) {
+        console.error('Dynamic price calculation error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (basePrice) {
+      calculatePrice();
+    }
+  }, [itemType, itemId, basePrice, departureDate]);
+
+  if (loading || !pricing) return null;
+
+  const hasAdjustment = pricing.final_price !== pricing.base_price;
+  if (!hasAdjustment) return null;
+
+  const isIncrease = pricing.final_price > pricing.base_price;
+  const percentChange = Math.abs(((pricing.final_price - pricing.base_price) / pricing.base_price) * 100);
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <div className="text-2xl font-bold text-slate-900">
-          ₱{pricing.current_price.toLocaleString()}
+      <Badge className={isIncrease ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
+        {isIncrease ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+        {isIncrease ? '+' : '-'}${Math.abs(pricing.total_adjustment).toFixed(2)} ({percentChange.toFixed(1)}%)
+      </Badge>
+      
+      {showAdjustments && pricing.adjustments.length > 0 && (
+        <div className="text-xs text-slate-600 space-y-1">
+          {pricing.adjustments.map((adj, idx) => (
+            <div key={idx} className="flex items-center gap-1">
+              <Zap className="w-3 h-3" />
+              <span>{adj.rule_name}: {adj.is_increase ? '+' : '-'}${adj.adjustment.toFixed(2)}</span>
+            </div>
+          ))}
         </div>
-        {pricing.base_price !== pricing.current_price && (
-          <div className="text-sm text-slate-500 line-through">
-            ₱{pricing.base_price.toLocaleString()}
-          </div>
-        )}
-      </div>
-
-      {hasDiscount && showSavings && (
-        <Badge className="bg-green-100 text-green-800 border-green-200 border gap-1">
-          <TrendingDown className="w-3 h-3" />
-          Save {pricing.discount_percent}%
-        </Badge>
-      )}
-
-      {priceIncrease && (
-        <Badge className="bg-orange-100 text-orange-800 border-orange-200 border gap-1">
-          <TrendingUp className="w-3 h-3" />
-          High Demand
-        </Badge>
-      )}
-
-      {pricing.price_multiplier === 1 && !hasDiscount && (
-        <Badge className="bg-blue-100 text-blue-800 border-blue-200 border gap-1">
-          <Zap className="w-3 h-3" />
-          Standard Price
-        </Badge>
       )}
     </div>
   );
