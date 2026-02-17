@@ -6,8 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Send, MessageSquare } from "lucide-react";
+import { Loader2, Send, MessageSquare, Shield } from "lucide-react";
 import { toast } from "sonner";
+import { useRecaptcha } from "@/components/security/RecaptchaProvider";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import EmailVerificationDialog from "@/components/security/EmailVerificationDialog";
 
 const CATEGORIES = [
   { value: "general", label: "General Inquiries", email: "info@gctravelandtours.com" },
@@ -25,6 +28,10 @@ const CATEGORIES = [
 ];
 
 export default function HelpdeskForm() {
+  const { executeRecaptcha } = useRecaptcha();
+  const [honeypot, setHoneypot] = useState("");
+  const [showVerification, setShowVerification] = useState(false);
+  const [pendingTicket, setPendingTicket] = useState(null);
   const [formData, setFormData] = useState({
     category: "general",
     name: "",
@@ -59,13 +66,49 @@ export default function HelpdeskForm() {
     }
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Honeypot check - if filled, it's a bot
+    if (honeypot) {
+      toast.error("Spam detected");
+      return;
+    }
+
     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
       toast.error("Please fill in all required fields");
       return;
     }
-    mutation.mutate(formData);
+
+    // Execute reCAPTCHA
+    const recaptchaToken = await executeRecaptcha('helpdesk_submit');
+    if (!recaptchaToken) {
+      toast.error("Security verification failed. Please try again.");
+      return;
+    }
+
+    // Verify reCAPTCHA with backend
+    try {
+      const { data: verification } = await base44.functions.invoke('verifyRecaptcha', { 
+        token: recaptchaToken 
+      });
+      
+      if (!verification.success) {
+        toast.error("Security check failed. Please try again later.");
+        return;
+      }
+    } catch (error) {
+      toast.error("Security verification error");
+      return;
+    }
+
+    // Store ticket data and show email verification
+    setPendingTicket(formData);
+    setShowVerification(true);
+  };
+
+  const handleVerified = () => {
+    mutation.mutate(pendingTicket);
   };
 
   const selectedCategory = CATEGORIES.find(c => c.value === formData.category);
@@ -82,7 +125,12 @@ export default function HelpdeskForm() {
         </p>
       </CardHeader>
       <CardContent>
+        <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <Shield className="w-4 h-4 text-green-600" />
+          <p className="text-xs text-green-700">Protected by anti-spam & email verification</p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-5">
+          <HoneypotField value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           <div>
             <Label htmlFor="category">Category *</Label>
             <select
@@ -189,6 +237,14 @@ export default function HelpdeskForm() {
             )}
           </Button>
         </form>
+
+        <EmailVerificationDialog
+          open={showVerification}
+          onOpenChange={setShowVerification}
+          email={formData.email}
+          onVerified={handleVerified}
+          type="helpdesk"
+        />
       </CardContent>
     </Card>
   );
