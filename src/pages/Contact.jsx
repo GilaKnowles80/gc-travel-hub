@@ -9,11 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft, Facebook, Instagram, X, Youtube, ZoomIn, ZoomOut } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowLeft, Facebook, Instagram, X, Youtube, ZoomIn, ZoomOut, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
+import { useRecaptcha } from "@/components/security/RecaptchaProvider";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import EmailVerificationDialog from "@/components/security/EmailVerificationDialog";
 
 const defaultIcon = L.icon({
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -25,6 +28,10 @@ const defaultIcon = L.icon({
 });
 
 export default function Contact() {
+  const { executeRecaptcha } = useRecaptcha();
+  const [honeypot, setHoneypot] = useState("");
+  const [showVerification, setShowVerification] = useState(false);
+  const [pendingData, setPendingData] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -71,9 +78,43 @@ export default function Contact() {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    sendMessageMutation.mutate(formData);
+
+    // Honeypot check
+    if (honeypot) {
+      toast.error("Spam detected");
+      return;
+    }
+
+    // reCAPTCHA verification
+    const recaptchaToken = await executeRecaptcha('contact_submit');
+    if (!recaptchaToken) {
+      toast.error("Security verification failed");
+      return;
+    }
+
+    try {
+      const { data: verification } = await base44.functions.invoke('verifyRecaptcha', { 
+        token: recaptchaToken 
+      });
+      
+      if (!verification.success) {
+        toast.error("Security check failed");
+        return;
+      }
+    } catch (error) {
+      toast.error("Security verification error");
+      return;
+    }
+
+    // Show email verification
+    setPendingData(formData);
+    setShowVerification(true);
+  };
+
+  const handleVerified = () => {
+    sendMessageMutation.mutate(pendingData);
   };
 
   const contactInfo = [
@@ -157,6 +198,11 @@ export default function Contact() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <Shield className="w-4 h-4 text-green-600" />
+                    <p className="text-xs text-green-700">Protected by anti-spam & email verification</p>
+                  </div>
+                  <HoneypotField value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
@@ -235,6 +281,14 @@ export default function Contact() {
                   </Button>
                 </form>
               )}
+
+              <EmailVerificationDialog
+                open={showVerification}
+                onOpenChange={setShowVerification}
+                email={formData.email}
+                onVerified={handleVerified}
+                type="contact"
+              />
             </Card>
           </motion.div>
 
