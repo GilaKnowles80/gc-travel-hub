@@ -49,13 +49,16 @@
  */
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
+import AdminCarRentals from './pages/AdminCarRentals';
 import AdminCorporateClients from './pages/AdminCorporateClients';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminDataManager from './pages/AdminDataManager';
 import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
 import AdminHelpdesk from './pages/AdminHelpdesk';
 import AdminHotels from './pages/AdminHotels';
+import AdminInsurance from './pages/AdminInsurance';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminPricing from './pages/AdminPricing';
 import AdminPromotions from './pages/AdminPromotions';
@@ -103,22 +106,24 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminDataManager from './pages/AdminDataManager';
-import AdminInsurance from './pages/AdminInsurance';
-import AdminCarRentals from './pages/AdminCarRentals';
+import GDPRSettings from './pages/GDPRSettings';
+import AdminAuditLogs from './pages/AdminAuditLogs';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
+    "AdminCarRentals": AdminCarRentals,
     "AdminCorporateClients": AdminCorporateClients,
     "AdminDashboard": AdminDashboard,
+    "AdminDataManager": AdminDataManager,
     "AdminEmailClients": AdminEmailClients,
     "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
     "AdminHelpdesk": AdminHelpdesk,
     "AdminHotels": AdminHotels,
+    "AdminInsurance": AdminInsurance,
     "AdminLoyalty": AdminLoyalty,
     "AdminPricing": AdminPricing,
     "AdminPromotions": AdminPromotions,
@@ -166,9 +171,8 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "AdminDataManager": AdminDataManager,
-    "AdminInsurance": AdminInsurance,
-    "AdminCarRentals": AdminCarRentals,
+    "GDPRSettings": GDPRSettings,
+    "AdminAuditLogs": AdminAuditLogs,
 }
 
 export const pagesConfig = {

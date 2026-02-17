@@ -9,6 +9,8 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import FloatingContactWidget from "@/components/support/FloatingContactWidget";
 import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
+import SessionTimeout from "@/components/security/SessionTimeout";
+import CookieConsent from "@/components/gdpr/CookieConsent";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -24,6 +26,8 @@ const navLinks = [
   { name: "Transactions", page: "TransactionHistory", icon: Receipt },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
   { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
+  { name: "Audit Logs", page: "AdminAuditLogs", icon: Shield, adminOnly: true },
+  { name: "Privacy", page: "GDPRSettings", icon: Shield },
   { name: "Pricing", page: "AdminPricing", icon: Plane, adminOnly: true },
   { name: "Corporate Clients", page: "AdminCorporateClients", icon: Building2, adminOnly: true },
   { name: "Promotions", page: "AdminPromotions", icon: Plane, adminOnly: true },
@@ -65,6 +69,8 @@ export default function Layout({ children, currentPageName }) {
     <RecaptchaProvider>
       <CurrencyProvider>
         <FloatingContactWidget />
+        <SessionTimeout />
+        <CookieConsent />
         <div className="min-h-screen">
       {/* Header */}
       <header
