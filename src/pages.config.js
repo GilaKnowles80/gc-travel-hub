@@ -84,7 +84,9 @@ import ItineraryView from './pages/ItineraryView';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
 import MyReviews from './pages/MyReviews';
+import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentMethods from './pages/PaymentMethods';
+import PaymentSuccess from './pages/PaymentSuccess';
 import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
@@ -96,13 +98,13 @@ import Support247 from './pages/Support247';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
+import TransactionHistory from './pages/TransactionHistory';
 import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancelled from './pages/PaymentCancelled';
-import TransactionHistory from './pages/TransactionHistory';
+import AdminDataManager from './pages/AdminDataManager';
+import AdminInsurance from './pages/AdminInsurance';
 import __Layout from './Layout.jsx';
 
 
@@ -144,7 +146,9 @@ export const PAGES = {
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
     "MyReviews": MyReviews,
+    "PaymentCancelled": PaymentCancelled,
     "PaymentMethods": PaymentMethods,
+    "PaymentSuccess": PaymentSuccess,
     "PriceAlerts": PriceAlerts,
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
@@ -156,13 +160,13 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
+    "TransactionHistory": TransactionHistory,
     "TravelAssistant": TravelAssistant,
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "PaymentSuccess": PaymentSuccess,
-    "PaymentCancelled": PaymentCancelled,
-    "TransactionHistory": TransactionHistory,
+    "AdminDataManager": AdminDataManager,
+    "AdminInsurance": AdminInsurance,
 }
 
 export const pagesConfig = {
