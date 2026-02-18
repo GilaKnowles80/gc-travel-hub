@@ -28,6 +28,22 @@ export default function SupplierDashboard() {
     setSupplier(JSON.parse(session));
   }, []);
 
+  const { data: onboarding } = useQuery({
+    queryKey: ['supplier-onboarding', supplier?.id],
+    queryFn: async () => {
+      const records = await base44.entities.SupplierOnboarding.filter({ supplier_id: supplier.id });
+      return records[0];
+    },
+    enabled: !!supplier?.id
+  });
+
+  // Redirect to onboarding if not completed
+  useEffect(() => {
+    if (supplier && (!onboarding || !onboarding.onboarding_completed)) {
+      window.location.href = createPageUrl('SupplierOnboarding');
+    }
+  }, [supplier, onboarding]);
+
   const { data: supplierData } = useQuery({
     queryKey: ['supplier', supplier?.id],
     queryFn: () => base44.asServiceRole.entities.Supplier.get(supplier.id),
