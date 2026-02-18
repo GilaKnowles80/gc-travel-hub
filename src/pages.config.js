@@ -111,6 +111,9 @@ import AdminAuditLogs from './pages/AdminAuditLogs';
 import SupplierLogin from './pages/SupplierLogin';
 import SupplierDashboard from './pages/SupplierDashboard';
 import AdminSupplierComms from './pages/AdminSupplierComms';
+import FerrySearch from './pages/FerrySearch';
+import CruiseSearch from './pages/CruiseSearch';
+import TrainSearch from './pages/TrainSearch';
 import __Layout from './Layout.jsx';
 
 
@@ -179,6 +182,9 @@ export const PAGES = {
     "SupplierLogin": SupplierLogin,
     "SupplierDashboard": SupplierDashboard,
     "AdminSupplierComms": AdminSupplierComms,
+    "FerrySearch": FerrySearch,
+    "CruiseSearch": CruiseSearch,
+    "TrainSearch": TrainSearch,
 }
 
 export const pagesConfig = {
