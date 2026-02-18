@@ -9,7 +9,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { amount, description, bookingId, bookingType, paymentMethod } = await req.json();
+    const { amount, description, booking_id, booking_type, paymentMethod } = await req.json();
+    const bookingId = booking_id;
+    const bookingType = booking_type;
 
     if (!amount || !description) {
       return Response.json({ error: 'Amount and description are required' }, { status: 400 });
@@ -48,7 +50,12 @@ Deno.serve(async (req) => {
                 name: user.full_name,
                 email: user.email
               },
-              description: description
+              description: description,
+              metadata: {
+                booking_id: bookingId,
+                booking_type: bookingType,
+                base44_app_id: Deno.env.get('BASE44_APP_ID')
+              }
             }
           }
         })
@@ -85,7 +92,8 @@ Deno.serve(async (req) => {
               metadata: {
                 booking_id: bookingId,
                 booking_type: bookingType,
-                user_email: user.email
+                user_email: user.email,
+                base44_app_id: Deno.env.get('BASE44_APP_ID')
               }
             }
           }
