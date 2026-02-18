@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminAuditLogs from './pages/AdminAuditLogs';
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
 import AdminCarRentals from './pages/AdminCarRentals';
@@ -65,6 +66,7 @@ import AdminPromotions from './pages/AdminPromotions';
 import AdminReviews from './pages/AdminReviews';
 import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
+import AdminSupplierComms from './pages/AdminSupplierComms';
 import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import AdminTours from './pages/AdminTours';
 import AdminVisas from './pages/AdminVisas';
@@ -72,10 +74,13 @@ import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BookingConfirmation from './pages/BookingConfirmation';
 import Contact from './pages/Contact';
 import CorporateBooking from './pages/CorporateBooking';
+import CruiseSearch from './pages/CruiseSearch';
+import FerrySearch from './pages/FerrySearch';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
 import Flights from './pages/Flights';
+import GDPRSettings from './pages/GDPRSettings';
 import Helpdesk from './pages/Helpdesk';
 import Home from './pages/Home';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
@@ -97,28 +102,25 @@ import RefundPolicy from './pages/RefundPolicy';
 import SafeAndSecure from './pages/SafeAndSecure';
 import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
+import SupplierDashboard from './pages/SupplierDashboard';
+import SupplierLogin from './pages/SupplierLogin';
 import Support247 from './pages/Support247';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
+import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
+import TrainSearch from './pages/TrainSearch';
 import TransactionHistory from './pages/TransactionHistory';
 import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import GDPRSettings from './pages/GDPRSettings';
-import AdminAuditLogs from './pages/AdminAuditLogs';
-import SupplierLogin from './pages/SupplierLogin';
-import SupplierDashboard from './pages/SupplierDashboard';
-import AdminSupplierComms from './pages/AdminSupplierComms';
-import FerrySearch from './pages/FerrySearch';
-import CruiseSearch from './pages/CruiseSearch';
-import TrainSearch from './pages/TrainSearch';
-import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
+import SupplierOnboarding from './pages/SupplierOnboarding';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminAuditLogs": AdminAuditLogs,
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
     "AdminCarRentals": AdminCarRentals,
@@ -137,6 +139,7 @@ export const PAGES = {
     "AdminReviews": AdminReviews,
     "AdminSecurityCenter": AdminSecurityCenter,
     "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
+    "AdminSupplierComms": AdminSupplierComms,
     "AdminSupplierPayments": AdminSupplierPayments,
     "AdminTours": AdminTours,
     "AdminVisas": AdminVisas,
@@ -144,10 +147,13 @@ export const PAGES = {
     "BookingConfirmation": BookingConfirmation,
     "Contact": Contact,
     "CorporateBooking": CorporateBooking,
+    "CruiseSearch": CruiseSearch,
+    "FerrySearch": FerrySearch,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
     "Flights": Flights,
+    "GDPRSettings": GDPRSettings,
     "Helpdesk": Helpdesk,
     "Home": Home,
     "HotelBookingConfirmation": HotelBookingConfirmation,
@@ -169,24 +175,20 @@ export const PAGES = {
     "SafeAndSecure": SafeAndSecure,
     "Settings": Settings,
     "SharedItinerary": SharedItinerary,
+    "SupplierDashboard": SupplierDashboard,
+    "SupplierLogin": SupplierLogin,
     "Support247": Support247,
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
     "Tours": Tours,
+    "TrainBookingConfirmation": TrainBookingConfirmation,
+    "TrainSearch": TrainSearch,
     "TransactionHistory": TransactionHistory,
     "TravelAssistant": TravelAssistant,
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "GDPRSettings": GDPRSettings,
-    "AdminAuditLogs": AdminAuditLogs,
-    "SupplierLogin": SupplierLogin,
-    "SupplierDashboard": SupplierDashboard,
-    "AdminSupplierComms": AdminSupplierComms,
-    "FerrySearch": FerrySearch,
-    "CruiseSearch": CruiseSearch,
-    "TrainSearch": TrainSearch,
-    "TrainBookingConfirmation": TrainBookingConfirmation,
+    "SupplierOnboarding": SupplierOnboarding,
 }
 
 export const pagesConfig = {
