@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Receipt, Search, Download, CheckCircle, XCircle, Clock, RefreshCw, Filter } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MobileSelect } from '@/components/ui/mobile-select';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function TransactionHistory() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -23,6 +26,10 @@ export default function TransactionHistory() {
     queryFn: () => user ? base44.entities.Payment.filter({ user_email: user.email }, '-created_date') : [],
     enabled: !!user
   });
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['payments', user?.email] });
+  };
 
   const filteredPayments = payments.filter(payment => {
     const matchesSearch = payment.booking_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -61,7 +68,8 @@ export default function TransactionHistory() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Transaction History</h1>
@@ -82,7 +90,7 @@ export default function TransactionHistory() {
                   />
                 </div>
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <MobileSelect value={statusFilter} onValueChange={setStatusFilter} placeholder="Filter by status">
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
@@ -93,8 +101,8 @@ export default function TransactionHistory() {
                   <SelectItem value="failed">Failed</SelectItem>
                   <SelectItem value="refunded">Refunded</SelectItem>
                 </SelectContent>
-              </Select>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
+              </MobileSelect>
+              <MobileSelect value={typeFilter} onValueChange={setTypeFilter} placeholder="Filter by type">
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
@@ -105,7 +113,7 @@ export default function TransactionHistory() {
                   <SelectItem value="tour">Tours</SelectItem>
                   <SelectItem value="bulk">Bulk Bookings</SelectItem>
                 </SelectContent>
-              </Select>
+              </MobileSelect>
             </div>
           </CardContent>
         </Card>
@@ -185,5 +193,6 @@ export default function TransactionHistory() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }

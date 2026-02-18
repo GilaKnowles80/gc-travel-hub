@@ -11,6 +11,7 @@ import { Star, Edit, Trash2, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
 import { toast } from "react-hot-toast";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 
 export default function MyReviews() {
   const queryClient = useQueryClient();
@@ -30,6 +31,10 @@ export default function MyReviews() {
     },
     enabled: !!user,
   });
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
+  };
 
   const deleteReviewMutation = useMutation({
     mutationFn: (reviewId) => base44.entities.Review.delete(reviewId),
@@ -76,7 +81,8 @@ export default function MyReviews() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3 mb-2">
@@ -238,5 +244,6 @@ export default function MyReviews() {
         </Dialog>
       </div>
     </div>
+    </PullToRefresh>
   );
 }

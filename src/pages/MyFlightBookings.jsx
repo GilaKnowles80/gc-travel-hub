@@ -13,6 +13,7 @@ import FlightBookingEditForm from "../components/flights/FlightBookingEditForm";
 import moment from "moment";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -37,6 +38,10 @@ export default function MyFlightBookings() {
     queryKey: ["flight-bookings"],
     queryFn: () => base44.entities.FlightBooking.list("-created_date", 50),
   });
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
+  };
 
   const cancelBookingMutation = useMutation({
     mutationFn: async (bookingId) => {
@@ -126,7 +131,8 @@ export default function MyFlightBookings() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50">
       <div className="bg-slate-900 py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white">My Flight Bookings</h1>
@@ -410,5 +416,6 @@ export default function MyFlightBookings() {
         </DialogContent>
       </Dialog>
     </div>
+    </PullToRefresh>
   );
 }

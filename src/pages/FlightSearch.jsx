@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plane, Calendar, Users, Loader2, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
@@ -123,9 +124,10 @@ export default function FlightSearch() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
                                 <Label>Passengers</Label>
-                                <Select
+                                <MobileSelect
                                     value={searchParams.adults.toString()}
                                     onValueChange={(value) => setSearchParams({...searchParams, adults: parseInt(value)})}
+                                    placeholder="Select passengers"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -137,13 +139,14 @@ export default function FlightSearch() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </Select>
+                                </MobileSelect>
                             </div>
                             <div>
                                 <Label>Cabin Class</Label>
-                                <Select
+                                <MobileSelect
                                     value={searchParams.cabinClass}
                                     onValueChange={(value) => setSearchParams({...searchParams, cabinClass: value})}
+                                    placeholder="Select cabin class"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -154,7 +157,7 @@ export default function FlightSearch() {
                                         <SelectItem value="BUSINESS">Business</SelectItem>
                                         <SelectItem value="FIRST">First Class</SelectItem>
                                     </SelectContent>
-                                </Select>
+                                </MobileSelect>
                             </div>
                             <div className="flex items-end">
                                 <Button 
