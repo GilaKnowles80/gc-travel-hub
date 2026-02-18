@@ -76,7 +76,7 @@ export default function Layout({ children, currentPageName }) {
       <LanguageProvider>
         <CurrencyProvider>
           <FloatingContactWidget />
-          <SessionTimeout />
+          {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />
           <div className="min-h-screen">
       {/* Header */}
