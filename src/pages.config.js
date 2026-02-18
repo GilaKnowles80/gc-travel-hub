@@ -114,6 +114,7 @@ import AdminSupplierComms from './pages/AdminSupplierComms';
 import FerrySearch from './pages/FerrySearch';
 import CruiseSearch from './pages/CruiseSearch';
 import TrainSearch from './pages/TrainSearch';
+import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
 import __Layout from './Layout.jsx';
 
 
@@ -185,6 +186,7 @@ export const PAGES = {
     "FerrySearch": FerrySearch,
     "CruiseSearch": CruiseSearch,
     "TrainSearch": TrainSearch,
+    "TrainBookingConfirmation": TrainBookingConfirmation,
 }
 
 export const pagesConfig = {

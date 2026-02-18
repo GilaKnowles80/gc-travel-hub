@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Train as TrainIcon, Clock, MapPin, Search } from 'lucide-react';
+import TrainBookingDialog from '@/components/trains/TrainBookingDialog';
 
 export default function TrainSearch() {
   const [filters, setFilters] = useState({
@@ -15,6 +16,8 @@ export default function TrainSearch() {
     origin: '',
     destination: ''
   });
+  const [selectedTrain, setSelectedTrain] = useState(null);
+  const [showBooking, setShowBooking] = useState(false);
 
   const { data: trains = [] } = useQuery({
     queryKey: ['trains', filters],
@@ -135,7 +138,15 @@ export default function TrainSearch() {
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
                     <p className="text-2xl font-bold text-green-600">${train.class_types?.[0]?.price || 'N/A'}</p>
-                    <Button className="mt-2">Book Now</Button>
+                    <Button 
+                      className="mt-2"
+                      onClick={() => {
+                        setSelectedTrain(train);
+                        setShowBooking(true);
+                      }}
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -151,6 +162,15 @@ export default function TrainSearch() {
             </CardContent>
           </Card>
         )}
+
+        <TrainBookingDialog 
+          train={selectedTrain}
+          open={showBooking}
+          onClose={() => {
+            setShowBooking(false);
+            setSelectedTrain(null);
+          }}
+        />
       </div>
     </div>
   );
