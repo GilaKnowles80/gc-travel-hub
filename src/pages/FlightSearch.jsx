@@ -10,8 +10,11 @@ import { Plane, Calendar, Users, Loader2, ArrowRight, Clock } from "lucide-react
 import { motion } from "framer-motion";
 import moment from "moment";
 import BookingDialog from "@/components/flights/BookingDialog";
+import AirportSelector from "@/components/flights/AirportSelector";
+import { useUserLocation } from "@/components/location/LocationCapture";
 
 export default function FlightSearch() {
+    const { location: userLocation, getLocation } = useUserLocation();
     const [searchParams, setSearchParams] = useState({
         origin: "",
         destination: "",
@@ -23,6 +26,10 @@ export default function FlightSearch() {
     const [hasSearched, setHasSearched] = useState(false);
     const [selectedFlight, setSelectedFlight] = useState(null);
     const [showBookingDialog, setShowBookingDialog] = useState(false);
+
+    React.useEffect(() => {
+        getLocation();
+    }, []);
 
     const handleSelectFlight = (offer) => {
         setSelectedFlight(offer);
@@ -76,19 +83,21 @@ export default function FlightSearch() {
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                             <div>
-                                <Label>Origin (Airport Code)</Label>
-                                <Input
-                                    placeholder="e.g., MNL"
+                                <Label>Origin Airport</Label>
+                                <AirportSelector
                                     value={searchParams.origin}
-                                    onChange={(e) => setSearchParams({...searchParams, origin: e.target.value.toUpperCase()})}
+                                    onChange={(code) => setSearchParams({...searchParams, origin: code})}
+                                    placeholder="Select origin airport"
+                                    userLocation={userLocation}
                                 />
                             </div>
                             <div>
-                                <Label>Destination (Airport Code)</Label>
-                                <Input
-                                    placeholder="e.g., CEB"
+                                <Label>Destination Airport</Label>
+                                <AirportSelector
                                     value={searchParams.destination}
-                                    onChange={(e) => setSearchParams({...searchParams, destination: e.target.value.toUpperCase()})}
+                                    onChange={(code) => setSearchParams({...searchParams, destination: code})}
+                                    placeholder="Select destination airport"
+                                    userLocation={userLocation}
                                 />
                             </div>
                             <div>
