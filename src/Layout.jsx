@@ -32,6 +32,7 @@ const navLinks = [
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
   { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
   { name: "Audit Logs", page: "AdminAuditLogs", icon: Shield, adminOnly: true },
+  { name: "Code Backup", page: "AdminCodeBackup", icon: Shield, adminOnly: true },
   { name: "Privacy", page: "GDPRSettings", icon: Shield },
   { name: "Pricing", page: "AdminPricing", icon: Plane, adminOnly: true },
   { name: "Corporate Clients", page: "AdminCorporateClients", icon: Building2, adminOnly: true },
