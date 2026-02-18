@@ -75,6 +75,8 @@ import AdminTours from './pages/AdminTours';
 import AdminVisas from './pages/AdminVisas';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BookingConfirmation from './pages/BookingConfirmation';
+import BusSearch from './pages/BusSearch';
+import CarRentalSearch from './pages/CarRentalSearch';
 import Contact from './pages/Contact';
 import CorporateBooking from './pages/CorporateBooking';
 import CruiseSearch from './pages/CruiseSearch';
@@ -117,12 +119,10 @@ import TrainSearch from './pages/TrainSearch';
 import TransactionHistory from './pages/TransactionHistory';
 import TravelAlerts from './pages/TravelAlerts';
 import TravelAssistant from './pages/TravelAssistant';
+import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import CarRentalSearch from './pages/CarRentalSearch';
-import BusSearch from './pages/BusSearch';
-import TravelInsurance from './pages/TravelInsurance';
 import __Layout from './Layout.jsx';
 
 
@@ -155,6 +155,8 @@ export const PAGES = {
     "AdminVisas": AdminVisas,
     "BestPriceGuarantee": BestPriceGuarantee,
     "BookingConfirmation": BookingConfirmation,
+    "BusSearch": BusSearch,
+    "CarRentalSearch": CarRentalSearch,
     "Contact": Contact,
     "CorporateBooking": CorporateBooking,
     "CruiseSearch": CruiseSearch,
@@ -197,12 +199,10 @@ export const PAGES = {
     "TransactionHistory": TransactionHistory,
     "TravelAlerts": TravelAlerts,
     "TravelAssistant": TravelAssistant,
+    "TravelInsurance": TravelInsurance,
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "CarRentalSearch": CarRentalSearch,
-    "BusSearch": BusSearch,
-    "TravelInsurance": TravelInsurance,
 }
 
 export const pagesConfig = {

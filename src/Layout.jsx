@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
@@ -13,6 +13,7 @@ import FloatingContactWidget from "@/components/support/FloatingContactWidget";
 import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import CookieConsent from "@/components/gdpr/CookieConsent";
+import BottomNavigation from "@/components/mobile/BottomNavigation";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -56,6 +57,7 @@ export default function Layout({ children, currentPageName }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   const isHome = currentPageName === "Home";
 
   React.useEffect(() => {
@@ -99,9 +101,20 @@ export default function Layout({ children, currentPageName }) {
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Back Button (Mobile Only, not on Home) */}
+            {!isHome && (
+              <button
+                onClick={() => navigate(-1)}
+                className={`md:hidden p-2 rounded-xl ${textColor}`}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
+            
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center">
               <img 
@@ -185,9 +198,22 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Page Content */}
-      <main className={isHome ? "" : "pt-16 md:pt-20"}>
-        {children}
+      <main className={isHome ? "pb-16 md:pb-0" : "pt-16 md:pt-20 pb-16 md:pb-0"}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPageName}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
+      
+      {/* Bottom Navigation (Mobile Only) */}
+      <BottomNavigation currentPageName={currentPageName} />
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white">
