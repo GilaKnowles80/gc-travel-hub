@@ -118,6 +118,7 @@ import utils from './pages/utils';
 import SupplierOnboarding from './pages/SupplierOnboarding';
 import AdminCodeBackup from './pages/AdminCodeBackup';
 import TravelAlerts from './pages/TravelAlerts';
+import AIItineraryPlanner from './pages/AIItineraryPlanner';
 import __Layout from './Layout.jsx';
 
 
@@ -193,6 +194,7 @@ export const PAGES = {
     "SupplierOnboarding": SupplierOnboarding,
     "AdminCodeBackup": AdminCodeBackup,
     "TravelAlerts": TravelAlerts,
+    "AIItineraryPlanner": AIItineraryPlanner,
 }
 
 export const pagesConfig = {
