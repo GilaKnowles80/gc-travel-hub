@@ -9,7 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, Tag } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import AIPricingSettings from './AIPricingSettings';
+import AIPricingSuggestions from './AIPricingSuggestions';
 
 export default function SupplierPricingManager({ supplierId }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -68,17 +71,32 @@ export default function SupplierPricingManager({ supplierId }) {
   };
 
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Pricing & Promotions</CardTitle>
-            <Button onClick={() => setShowDialog(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Promotion
-            </Button>
-          </div>
-        </CardHeader>
+    <Tabs defaultValue="ai-pricing" className="w-full">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="ai-pricing">AI Pricing</TabsTrigger>
+        <TabsTrigger value="suggestions">Suggestions</TabsTrigger>
+        <TabsTrigger value="promotions">Promotions</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="ai-pricing" className="mt-6">
+        <AIPricingSettings supplierId={supplierId} />
+      </TabsContent>
+
+      <TabsContent value="suggestions" className="mt-6">
+        <AIPricingSuggestions supplierId={supplierId} />
+      </TabsContent>
+
+      <TabsContent value="promotions" className="mt-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Pricing & Promotions</CardTitle>
+              <Button onClick={() => setShowDialog(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Promotion
+              </Button>
+            </div>
+          </CardHeader>
         <CardContent>
           {promotions.length === 0 ? (
             <p className="text-center text-slate-500 py-8">No promotions yet</p>
@@ -188,6 +206,7 @@ export default function SupplierPricingManager({ supplierId }) {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+      </TabsContent>
+    </Tabs>
   );
 }
