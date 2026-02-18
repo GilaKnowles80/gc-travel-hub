@@ -24,23 +24,87 @@ Deno.serve(async (req) => {
         const bookingId = session.metadata.booking_id;
         const bookingType = session.metadata.booking_type;
 
-        // Update payment record
-        await base44.asServiceRole.entities.Payment.update(paymentId, {
-          status: 'completed',
-          stripe_payment_intent: session.payment_intent,
-          payment_date: new Date().toISOString(),
-          receipt_url: session.url
-        });
+        // Update payment record if exists
+        if (paymentId) {
+          await base44.asServiceRole.entities.Payment.update(paymentId, {
+            status: 'completed',
+            stripe_payment_intent: session.payment_intent,
+            payment_date: new Date().toISOString(),
+            receipt_url: session.url
+          });
+        }
 
-        // Update booking payment status
-        const bookingEntity = bookingType === 'tour' ? 'Booking' : 
-                             bookingType === 'bulk' ? 'BulkBooking' :
-                             `${bookingType.charAt(0).toUpperCase() + bookingType.slice(1)}Booking`;
-        
-        await base44.asServiceRole.entities[bookingEntity].update(bookingId, {
-          payment_status: 'paid',
-          status: 'confirmed'
-        });
+        // Update booking payment status based on type
+        if (bookingId && bookingType) {
+          switch (bookingType) {
+            case 'flight':
+              await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'hotel':
+              await base44.asServiceRole.entities.HotelBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'ferry':
+              await base44.asServiceRole.entities.FerryBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'cruise':
+              await base44.asServiceRole.entities.CruiseBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'train':
+              await base44.asServiceRole.entities.TrainBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'tour':
+              await base44.asServiceRole.entities.Booking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'car':
+              await base44.asServiceRole.entities.CarRentalBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'bus':
+              await base44.asServiceRole.entities.BusBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'visa':
+              await base44.asServiceRole.entities.VisaAppointment.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+            case 'insurance':
+              await base44.asServiceRole.entities.InsurancePolicy.update(bookingId, {
+                payment_status: 'paid',
+                status: 'active'
+              });
+              break;
+            case 'bulk':
+              await base44.asServiceRole.entities.BulkBooking.update(bookingId, {
+                payment_status: 'paid',
+                status: 'confirmed'
+              });
+              break;
+          }
+        }
 
         // Send confirmation email
         await base44.asServiceRole.integrations.Core.SendEmail({
