@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Ship, Clock, MapPin, Search } from 'lucide-react';
+import FerryBookingDialog from '@/components/ferries/FerryBookingDialog';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({
@@ -14,6 +15,8 @@ export default function FerrySearch() {
     origin: '',
     destination: ''
   });
+  const [selectedFerry, setSelectedFerry] = useState(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
 
   const { data: ferries = [] } = useQuery({
     queryKey: ['ferries', filters],
@@ -103,7 +106,15 @@ export default function FerrySearch() {
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
                     <p className="text-2xl font-bold text-blue-600">₱{ferry.cabin_types?.[0]?.price || 'N/A'}</p>
-                    <Button className="mt-2">Book Now</Button>
+                    <Button 
+                      className="mt-2"
+                      onClick={() => {
+                        setSelectedFerry(ferry);
+                        setShowBookingDialog(true);
+                      }}
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -118,6 +129,17 @@ export default function FerrySearch() {
               <p className="text-slate-500">No ferries found. Try adjusting your search.</p>
             </CardContent>
           </Card>
+        )}
+
+        {selectedFerry && (
+          <FerryBookingDialog
+            ferry={selectedFerry}
+            open={showBookingDialog}
+            onOpenChange={(open) => {
+              setShowBookingDialog(open);
+              if (!open) setSelectedFerry(null);
+            }}
+          />
         )}
       </div>
     </div>

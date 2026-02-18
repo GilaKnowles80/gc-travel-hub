@@ -7,12 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Ship, Calendar, MapPin, Search } from 'lucide-react';
+import CruiseBookingDialog from '@/components/cruises/CruiseBookingDialog';
 
 export default function CruiseSearch() {
   const [filters, setFilters] = useState({
     cruise_line: 'all',
     departure_port: ''
   });
+  const [selectedCruise, setSelectedCruise] = useState(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
 
   const { data: cruises = [] } = useQuery({
     queryKey: ['cruises', filters],
@@ -105,7 +108,14 @@ export default function CruiseSearch() {
                     <p className="text-2xl font-bold text-cyan-600">${cruise.cabin_categories?.[0]?.price_per_person || 'N/A'}</p>
                     <p className="text-xs text-slate-500">per person</p>
                   </div>
-                  <Button>View Details</Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedCruise(cruise);
+                      setShowBookingDialog(true);
+                    }}
+                  >
+                    Book Now
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -119,6 +129,17 @@ export default function CruiseSearch() {
               <p className="text-slate-500">No cruises found. Try adjusting your search.</p>
             </CardContent>
           </Card>
+        )}
+
+        {selectedCruise && (
+          <CruiseBookingDialog
+            cruise={selectedCruise}
+            open={showBookingDialog}
+            onOpenChange={(open) => {
+              setShowBookingDialog(open);
+              if (!open) setSelectedCruise(null);
+            }}
+          />
         )}
       </div>
     </div>

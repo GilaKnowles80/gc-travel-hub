@@ -11,7 +11,15 @@ export default function StripeCheckout({ bookingType, bookingId, amount, currenc
   const handlePayment = async () => {
     setLoading(true);
     try {
-      const { data } = await base44.functions.invoke('createStripeCheckout', {
+      const functionName = bookingType === 'flight' ? 'createFlightCheckout' :
+                          bookingType === 'hotel' ? 'createHotelCheckout' :
+                          bookingType === 'train' ? 'createTrainCheckout' :
+                          bookingType === 'ferry' ? 'createFerryCheckout' :
+                          bookingType === 'cruise' ? 'createCruiseCheckout' :
+                          bookingType === 'tour' ? 'createTourCheckout' :
+                          'createStripeCheckout';
+                          
+      const { data } = await base44.functions.invoke(functionName, {
         bookingType,
         bookingId,
         amount,

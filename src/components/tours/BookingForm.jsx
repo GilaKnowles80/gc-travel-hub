@@ -6,13 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, Loader2, Users, Calendar, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import StripeCheckout from "@/components/payment/StripeCheckout";
+import PayMongoPayment from "@/components/payment/PayMongoPayment";
 
 export default function BookingForm({ tour, onClose }) {
   const [step, setStep] = useState(1);
   const [booked, setBooked] = useState(false);
+  const [bookingId, setBookingId] = useState(null);
   const [form, setForm] = useState({
     trip_type: "roundtrip",
     title: "MR",
@@ -37,9 +41,10 @@ export default function BookingForm({ tour, onClose }) {
 
   const mutation = useMutation({
     mutationFn: (data) => base44.entities.Booking.create(data),
-    onSuccess: () => {
-      setBooked(true);
-      toast.success("Booking submitted successfully!");
+    onSuccess: (booking) => {
+      setBookingId(booking.id);
+      setStep(4);
+      toast.success("Booking created! Please proceed to payment.");
     },
   });
 
@@ -84,7 +89,7 @@ export default function BookingForm({ tour, onClose }) {
     <div>
       {/* Progress */}
       <div className="flex items-center gap-2 mb-8">
-        {[1, 2, 3].map((s) => (
+        {[1, 2, 3, 4].map((s) => (
           <React.Fragment key={s}>
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
@@ -93,7 +98,7 @@ export default function BookingForm({ tour, onClose }) {
             >
               {s}
             </div>
-            {s < 3 && (
+            {s < 4 && (
               <div
                 className={`flex-1 h-0.5 ${step > s ? "bg-amber-500" : "bg-slate-200"}`}
               />
@@ -263,7 +268,7 @@ export default function BookingForm({ tour, onClose }) {
         {step === 3 && (
           <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
             <div className="flex items-center gap-2 mb-4 text-slate-700">
-              <CreditCard className="w-5 h-5 text-amber-500" />
+              <Users className="w-5 h-5 text-amber-500" />
               <h3 className="font-semibold">Review & Confirm</h3>
             </div>
             
@@ -317,6 +322,45 @@ export default function BookingForm({ tour, onClose }) {
                 Confirm Booking
               </Button>
             </div>
+          </motion.div>
+        )}
+
+        {step === 4 && (
+          <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+            <div className="flex items-center gap-2 mb-4 text-slate-700">
+              <CreditCard className="w-5 h-5 text-amber-500" />
+              <h3 className="font-semibold">Payment</h3>
+            </div>
+
+            <div className="bg-amber-50 rounded-lg p-4 text-center mb-6">
+              <p className="text-sm text-slate-600">Total Amount</p>
+              <p className="text-3xl font-bold text-amber-600">${totalPrice.toLocaleString()}</p>
+            </div>
+
+            <Tabs defaultValue="stripe" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="stripe">Credit/Debit Card</TabsTrigger>
+                <TabsTrigger value="paymongo">E-Wallets</TabsTrigger>
+              </TabsList>
+              <TabsContent value="stripe" className="mt-6">
+                <StripeCheckout
+                  bookingType="tour"
+                  bookingId={bookingId}
+                  amount={totalPrice}
+                  currency="USD"
+                  onSuccess={() => setBooked(true)}
+                />
+              </TabsContent>
+              <TabsContent value="paymongo" className="mt-6">
+                <PayMongoPayment
+                  amount={totalPrice * 56}
+                  description={`Tour Booking - ${tour.title}`}
+                  bookingId={bookingId}
+                  bookingType="tour"
+                  onSuccess={() => setBooked(true)}
+                />
+              </TabsContent>
+            </Tabs>
           </motion.div>
         )}
       </AnimatePresence>

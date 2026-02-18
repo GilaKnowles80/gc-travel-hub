@@ -47,10 +47,12 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AIItineraryPlanner from './pages/AIItineraryPlanner';
 import AdminAuditLogs from './pages/AdminAuditLogs';
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
 import AdminCarRentals from './pages/AdminCarRentals';
+import AdminCodeBackup from './pages/AdminCodeBackup';
 import AdminCorporateClients from './pages/AdminCorporateClients';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDataManager from './pages/AdminDataManager';
@@ -60,6 +62,7 @@ import AdminFlights from './pages/AdminFlights';
 import AdminHelpdesk from './pages/AdminHelpdesk';
 import AdminHotels from './pages/AdminHotels';
 import AdminInsurance from './pages/AdminInsurance';
+import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminPricing from './pages/AdminPricing';
 import AdminPromotions from './pages/AdminPromotions';
@@ -104,6 +107,7 @@ import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
 import SupplierDashboard from './pages/SupplierDashboard';
 import SupplierLogin from './pages/SupplierLogin';
+import SupplierOnboarding from './pages/SupplierOnboarding';
 import Support247 from './pages/Support247';
 import TermsOfService from './pages/TermsOfService';
 import TourDetail from './pages/TourDetail';
@@ -111,23 +115,21 @@ import Tours from './pages/Tours';
 import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
 import TrainSearch from './pages/TrainSearch';
 import TransactionHistory from './pages/TransactionHistory';
+import TravelAlerts from './pages/TravelAlerts';
 import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import SupplierOnboarding from './pages/SupplierOnboarding';
-import AdminCodeBackup from './pages/AdminCodeBackup';
-import TravelAlerts from './pages/TravelAlerts';
-import AIItineraryPlanner from './pages/AIItineraryPlanner';
-import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIItineraryPlanner": AIItineraryPlanner,
     "AdminAuditLogs": AdminAuditLogs,
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
     "AdminCarRentals": AdminCarRentals,
+    "AdminCodeBackup": AdminCodeBackup,
     "AdminCorporateClients": AdminCorporateClients,
     "AdminDashboard": AdminDashboard,
     "AdminDataManager": AdminDataManager,
@@ -137,6 +139,7 @@ export const PAGES = {
     "AdminHelpdesk": AdminHelpdesk,
     "AdminHotels": AdminHotels,
     "AdminInsurance": AdminInsurance,
+    "AdminInsuranceProviders": AdminInsuranceProviders,
     "AdminLoyalty": AdminLoyalty,
     "AdminPricing": AdminPricing,
     "AdminPromotions": AdminPromotions,
@@ -181,6 +184,7 @@ export const PAGES = {
     "SharedItinerary": SharedItinerary,
     "SupplierDashboard": SupplierDashboard,
     "SupplierLogin": SupplierLogin,
+    "SupplierOnboarding": SupplierOnboarding,
     "Support247": Support247,
     "TermsOfService": TermsOfService,
     "TourDetail": TourDetail,
@@ -188,15 +192,11 @@ export const PAGES = {
     "TrainBookingConfirmation": TrainBookingConfirmation,
     "TrainSearch": TrainSearch,
     "TransactionHistory": TransactionHistory,
+    "TravelAlerts": TravelAlerts,
     "TravelAssistant": TravelAssistant,
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "SupplierOnboarding": SupplierOnboarding,
-    "AdminCodeBackup": AdminCodeBackup,
-    "TravelAlerts": TravelAlerts,
-    "AIItineraryPlanner": AIItineraryPlanner,
-    "AdminInsuranceProviders": AdminInsuranceProviders,
 }
 
 export const pagesConfig = {
