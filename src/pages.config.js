@@ -122,6 +122,7 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import CarRentalSearch from './pages/CarRentalSearch';
 import BusSearch from './pages/BusSearch';
+import TravelInsurance from './pages/TravelInsurance';
 import __Layout from './Layout.jsx';
 
 
@@ -201,6 +202,7 @@ export const PAGES = {
     "utils": utils,
     "CarRentalSearch": CarRentalSearch,
     "BusSearch": BusSearch,
+    "TravelInsurance": TravelInsurance,
 }
 
 export const pagesConfig = {

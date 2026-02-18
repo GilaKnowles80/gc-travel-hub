@@ -26,6 +26,7 @@ const navLinks = [
   { name: "Car Rentals", page: "CarRentalSearch", icon: MapPin },
   { name: "Buses", page: "BusSearch", icon: MapPin },
   { name: "Visas", page: "Visas", icon: MapPin },
+  { name: "Insurance", page: "TravelInsurance", icon: Shield },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
   { name: "Travel Alerts", page: "TravelAlerts", icon: Bell },
