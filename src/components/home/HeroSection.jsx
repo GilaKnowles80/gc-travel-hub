@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap, Car } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Zap, Car, Train } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import TravelersSelector from "./TravelersSelector";
@@ -109,12 +109,13 @@ export default function HeroSection() {
         >
 
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
-            <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mb-6">
+            <div className="grid grid-cols-3 md:grid-cols-9 gap-2 mb-6">
               {[
                 { type: "flights", label: "Flights", icon: Plane },
                 { type: "tours", label: "Tours", icon: Compass },
                 { type: "hotels", label: "Hotels", icon: Hotel },
                 { type: "ferry", label: "Ferry", icon: Ship },
+                { type: "trains", label: "Trains", icon: Train },
                 { type: "bus", label: "Bus", icon: Bus },
                 { type: "insurance", label: "Insurance", icon: Umbrella },
                 { type: "visa", label: "Visa", icon: Zap },
@@ -472,37 +473,71 @@ export default function HeroSection() {
                 </div>
               )}
 
-            {searchType === "carRental" && (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
+            {searchType === "trains" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    From
+                  </label>
+                  <Input placeholder="Departure station" className="rounded-xl" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    To
+                  </label>
+                  <Input placeholder="Destination station" className="rounded-xl" />
+                </div>
+                <div>
                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     Pickup Location
+                     <Calendar className="w-3 h-3" />
+                     Date
                    </label>
-                   <Input placeholder="City or airport" className="rounded-xl" />
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
                  </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Pickup Date
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Dropoff Date
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                  <div className="md:col-span-2">
+                <div className="md:col-span-3">
+                  <Link to={createPageUrl("TrainSearch")}>
                     <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
                       <Search className="w-4 h-4 mr-2" />
-                      Search Car Rentals
+                      Search Trains
                     </Button>
-                  </div>
+                  </Link>
                 </div>
-              )}
+              </div>
+            )}
+
+            {searchType === "carRental" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    Pickup Location
+                  </label>
+                  <Input placeholder="City or airport" className="rounded-xl" />
+                </div>
+                <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     Pickup Date
+                   </label>
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                 </div>
+                 <div>
+                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     Dropoff Date
+                   </label>
+                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
+                 </div>
+                 <div className="md:col-span-2">
+                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                     <Search className="w-4 h-4 mr-2" />
+                     Search Car Rentals
+                   </Button>
+                 </div>
+               </div>
+             )}
             </div>
           </div>
         </motion.div>
