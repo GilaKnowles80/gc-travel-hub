@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Loader2, Mail, MessageSquare, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import MobileSelect from "@/components/ui/mobile-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CATEGORIES = {
   general: { label: "General Inquiries", email: "info@gctravelandtours.com", color: "bg-blue-100 text-blue-700" },
@@ -180,35 +180,32 @@ export default function AdminHelpdesk() {
               </div>
               <div>
                 <Label className="text-sm">Status</Label>
-                <MobileSelect
-                  value={filterStatus}
-                  onValueChange={setFilterStatus}
-                  options={[
-                    { value: "all", label: "All Status" },
-                    { value: "open", label: "Open" },
-                    { value: "in_progress", label: "In Progress" },
-                    { value: "resolved", label: "Resolved" },
-                    { value: "closed", label: "Closed" }
-                  ]}
-                  placeholder="Select status"
-                  className="mt-2"
-                />
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
+                  <SelectTrigger className="mt-2">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="resolved">Resolved</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label className="text-sm">Category</Label>
-                <MobileSelect
-                  value={filterCategory}
-                  onValueChange={setFilterCategory}
-                  options={[
-                    { value: "all", label: "All Categories" },
-                    ...Object.entries(CATEGORIES).map(([key, cat]) => ({
-                      value: key,
-                      label: cat.label
-                    }))
-                  ]}
-                  placeholder="Select category"
-                  className="mt-2"
-                />
+                <Select value={filterCategory} onValueChange={setFilterCategory}>
+                  <SelectTrigger className="mt-2">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {Object.entries(CATEGORIES).map(([key, cat]) => (
+                      <SelectItem key={key} value={key}>{cat.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardContent>
@@ -314,33 +311,31 @@ export default function AdminHelpdesk() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-xs text-slate-500">Status</Label>
-                  <MobileSelect
-                    value={selectedTicket.status}
-                    onValueChange={handleStatusChange}
-                    options={[
-                      { value: "open", label: "Open" },
-                      { value: "in_progress", label: "In Progress" },
-                      { value: "resolved", label: "Resolved" },
-                      { value: "closed", label: "Closed" }
-                    ]}
-                    placeholder="Select status"
-                    className="mt-1"
-                  />
+                  <Select value={selectedTicket.status} onValueChange={handleStatusChange}>
+                    <SelectTrigger className="mt-1 h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">Open</SelectItem>
+                      <SelectItem value="in_progress">In Progress</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label className="text-xs text-slate-500">Priority</Label>
-                  <MobileSelect
-                    value={selectedTicket.priority}
-                    onValueChange={handlePriorityChange}
-                    options={[
-                      { value: "low", label: "Low" },
-                      { value: "medium", label: "Medium" },
-                      { value: "high", label: "High" },
-                      { value: "urgent", label: "Urgent" }
-                    ]}
-                    placeholder="Select priority"
-                    className="mt-1"
-                  />
+                  <Select value={selectedTicket.priority} onValueChange={handlePriorityChange}>
+                    <SelectTrigger className="mt-1 h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="urgent">Urgent</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
