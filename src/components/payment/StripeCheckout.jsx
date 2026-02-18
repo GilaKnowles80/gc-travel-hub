@@ -17,6 +17,8 @@ export default function StripeCheckout({ bookingType, bookingId, amount, currenc
                           bookingType === 'ferry' ? 'createFerryCheckout' :
                           bookingType === 'cruise' ? 'createCruiseCheckout' :
                           bookingType === 'tour' ? 'createTourCheckout' :
+                          bookingType === 'car' ? 'createCarCheckout' :
+                          bookingType === 'bus' ? 'createBusCheckout' :
                           'createStripeCheckout';
                           
       const { data } = await base44.functions.invoke(functionName, {

@@ -120,6 +120,8 @@ import TravelAssistant from './pages/TravelAssistant';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import CarRentalSearch from './pages/CarRentalSearch';
+import BusSearch from './pages/BusSearch';
 import __Layout from './Layout.jsx';
 
 
@@ -197,6 +199,8 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
+    "CarRentalSearch": CarRentalSearch,
+    "BusSearch": BusSearch,
 }
 
 export const pagesConfig = {

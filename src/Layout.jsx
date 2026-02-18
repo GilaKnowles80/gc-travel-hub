@@ -23,6 +23,8 @@ const navLinks = [
   { name: "Ferries", page: "FerrySearch", icon: MapPin },
   { name: "Cruises", page: "CruiseSearch", icon: MapPin },
   { name: "Trains", page: "TrainSearch", icon: MapPin },
+  { name: "Car Rentals", page: "CarRentalSearch", icon: MapPin },
+  { name: "Buses", page: "BusSearch", icon: MapPin },
   { name: "Visas", page: "Visas", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
