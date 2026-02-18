@@ -8,11 +8,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Train, User, CreditCard, Check } from 'lucide-react';
+import { Train, User, CreditCard, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import PaymentMethodSelector from '@/components/flights/PaymentMethodSelector';
 
 export default function TrainBookingDialog({ train, open, onClose }) {
   const [step, setStep] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState('stripe');
   const [bookingData, setBookingData] = useState({
     passenger_name: '',
     passenger_email: '',
@@ -50,9 +52,36 @@ export default function TrainBookingDialog({ train, open, onClose }) {
     },
     onSuccess: (booking) => {
       setStep(3);
-      toast.success('Booking created');
+      toast.success('Booking created successfully');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to create booking');
     }
   });
+
+  const checkoutMutation = useMutation({
+    mutationFn: async (bookingId) => {
+      const { data } = await base44.functions.invoke('createTrainCheckout', {
+        bookingId,
+        paymentMethod
+      });
+      return data;
+    },
+    onSuccess: (data) => {
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Payment initialization failed');
+    }
+  });
+
+  const handleProceedToPayment = () => {
+    if (createBookingMutation.data?.id) {
+      checkoutMutation.mutate(createBookingMutation.data.id);
+    }
+  };
 
   const handleSubmit = () => {
     if (!bookingData.passenger_name || !bookingData.passenger_email || !bookingData.passenger_phone) {
@@ -252,14 +281,43 @@ export default function TrainBookingDialog({ train, open, onClose }) {
         )}
 
         {step === 3 && createBookingMutation.data && (
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-green-600" />
+          <div className="space-y-6">
+            <div className="text-center py-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Booking Created!</h3>
+              <p className="text-slate-600">Complete payment to confirm your train ticket</p>
             </div>
-            <h3 className="text-xl font-bold mb-2">Booking Created!</h3>
-            <p className="text-slate-600 mb-6">Proceed to payment to confirm your train ticket</p>
-            <Button onClick={() => window.location.href = `/train-booking-confirmation?id=${createBookingMutation.data.id}`}>
-              Proceed to Payment
+
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-medium">Total Amount:</span>
+                <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <PaymentMethodSelector 
+              selectedMethod={paymentMethod}
+              onSelectMethod={setPaymentMethod}
+            />
+
+            <Button 
+              onClick={handleProceedToPayment} 
+              disabled={checkoutMutation.isPending}
+              className="w-full"
+            >
+              {checkoutMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Proceed to Payment
+                </>
+              )}
             </Button>
           </div>
         )}
