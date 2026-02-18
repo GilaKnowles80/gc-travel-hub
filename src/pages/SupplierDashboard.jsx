@@ -8,12 +8,13 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { 
   Building2, Package, DollarSign, Calendar, TrendingUp, 
-  LogOut, Settings, FileText, Tag
+  LogOut, Settings, FileText, Tag, MessageSquare
 } from 'lucide-react';
 import SupplierInventoryManager from '@/components/supplier/SupplierInventoryManager';
 import SupplierPricingManager from '@/components/supplier/SupplierPricingManager';
 import SupplierBookingsView from '@/components/supplier/SupplierBookingsView';
 import SupplierRevenueReports from '@/components/supplier/SupplierRevenueReports';
+import SupplierMessagesHub from '@/components/supplier/SupplierMessagesHub';
 
 export default function SupplierDashboard() {
   const [supplier, setSupplier] = useState(null);
@@ -127,7 +128,7 @@ export default function SupplierDashboard() {
 
         {/* Tabs */}
         <Tabs defaultValue="inventory" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="inventory">
               <Package className="w-4 h-4 mr-2" />
               Inventory
@@ -143,6 +144,10 @@ export default function SupplierDashboard() {
             <TabsTrigger value="reports">
               <FileText className="w-4 h-4 mr-2" />
               Reports
+            </TabsTrigger>
+            <TabsTrigger value="messages">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Messages
             </TabsTrigger>
           </TabsList>
 
@@ -160,6 +165,10 @@ export default function SupplierDashboard() {
 
           <TabsContent value="reports" className="mt-6">
             <SupplierRevenueReports supplierId={supplier.id} />
+          </TabsContent>
+
+          <TabsContent value="messages" className="mt-6">
+            <SupplierMessagesHub supplierId={supplier.id} />
           </TabsContent>
         </Tabs>
       </div>

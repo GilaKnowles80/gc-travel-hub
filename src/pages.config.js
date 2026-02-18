@@ -110,6 +110,7 @@ import GDPRSettings from './pages/GDPRSettings';
 import AdminAuditLogs from './pages/AdminAuditLogs';
 import SupplierLogin from './pages/SupplierLogin';
 import SupplierDashboard from './pages/SupplierDashboard';
+import AdminSupplierComms from './pages/AdminSupplierComms';
 import __Layout from './Layout.jsx';
 
 
@@ -177,6 +178,7 @@ export const PAGES = {
     "AdminAuditLogs": AdminAuditLogs,
     "SupplierLogin": SupplierLogin,
     "SupplierDashboard": SupplierDashboard,
+    "AdminSupplierComms": AdminSupplierComms,
 }
 
 export const pagesConfig = {
