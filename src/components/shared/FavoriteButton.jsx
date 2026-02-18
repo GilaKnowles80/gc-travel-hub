@@ -35,9 +35,38 @@ export default function FavoriteButton({ itemType, itemId, itemTitle, itemData, 
         item_title: itemTitle,
         item_data: itemData,
       }),
+    onMutate: async () => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["user-favorites"] });
+      
+      // Snapshot previous value
+      const previousFavorites = queryClient.getQueryData(["user-favorites"]);
+      
+      // Optimistically update
+      queryClient.setQueryData(["user-favorites"], (old = []) => [
+        ...old,
+        {
+          id: `temp-${Date.now()}`,
+          user_email: user.email,
+          item_type: itemType,
+          item_id: itemId,
+          item_title: itemTitle,
+          item_data: itemData,
+        },
+      ]);
+      
+      return { previousFavorites };
+    },
+    onError: (err, newFavorite, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["user-favorites"], context.previousFavorites);
+      toast.error("Failed to add to favorites");
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-favorites"] });
       toast.success("Added to favorites");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-favorites"] });
     },
   });
 
@@ -48,9 +77,30 @@ export default function FavoriteButton({ itemType, itemId, itemTitle, itemData, 
       );
       if (fav) await base44.entities.Favorite.delete(fav.id);
     },
+    onMutate: async () => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["user-favorites"] });
+      
+      // Snapshot previous value
+      const previousFavorites = queryClient.getQueryData(["user-favorites"]);
+      
+      // Optimistically remove
+      queryClient.setQueryData(["user-favorites"], (old = []) =>
+        old.filter(f => !(f.item_id === itemId && f.item_type === itemType))
+      );
+      
+      return { previousFavorites };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["user-favorites"], context.previousFavorites);
+      toast.error("Failed to remove from favorites");
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-favorites"] });
       toast.success("Removed from favorites");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-favorites"] });
     },
   });
 

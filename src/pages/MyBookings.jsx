@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { Button } from "@/components/ui/button";
 import { PackageOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,8 +11,21 @@ import BookingCard from "@/components/bookings/BookingCard";
 const BOOKINGS_PER_PAGE = 8;
 
 export default function MyBookings() {
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
+
+  const handleRefresh = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["my-flight-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-tour-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-hotel-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-ferry-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-bus-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-car-rental-bookings"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-visa-bookings"] }),
+    ]);
+  };
 
   // Fetch all booking types
   const { data: flightBookings = [], isLoading: flightLoading } = useQuery({
@@ -77,8 +91,9 @@ export default function MyBookings() {
   const isLoading = flightLoading || tourLoading || hotelLoading || ferryLoading || busLoading || carRentalLoading || visaLoading;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="bg-slate-900 py-16 px-4">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50">
+        <div className="bg-slate-900 py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white">My Bookings</h1>
           <p className="mt-3 text-slate-400">Track and manage all your travel reservations</p>
@@ -178,6 +193,7 @@ export default function MyBookings() {
           </>
         )}
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

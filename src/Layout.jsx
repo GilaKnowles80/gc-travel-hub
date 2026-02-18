@@ -57,8 +57,34 @@ export default function Layout({ children, currentPageName }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [navigationStack, setNavigationStack] = useState({
+    Home: ["/"],
+    Tours: [createPageUrl("Tours")],
+    Flights: [createPageUrl("Flights")],
+    MyBookings: [createPageUrl("MyBookings")],
+    Profile: [createPageUrl("Profile")],
+  });
   const navigate = useNavigate();
   const isHome = currentPageName === "Home";
+
+  const handleTabPress = (pageName, isCurrentTab) => {
+    if (isCurrentTab) {
+      // Reset stack to root
+      const rootPath = navigationStack[pageName]?.[0];
+      if (rootPath) {
+        navigate(rootPath);
+        setNavigationStack(prev => ({
+          ...prev,
+          [pageName]: [rootPath]
+        }));
+      }
+    } else {
+      // Navigate to tab
+      const stack = navigationStack[pageName] || [createPageUrl(pageName)];
+      const lastPath = stack[stack.length - 1];
+      navigate(lastPath);
+    }
+  };
 
   React.useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -213,7 +239,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
       
       {/* Bottom Navigation (Mobile Only) */}
-      <BottomNavigation currentPageName={currentPageName} />
+      <BottomNavigation currentPageName={currentPageName} onTabPress={handleTabPress} />
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white">

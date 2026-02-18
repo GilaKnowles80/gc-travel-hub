@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import { createPageUrl } from "@/pages/utils";
 import TourFilters from "../components/tours/TourFilters";
 
 export default function Tours() {
+  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const initialCategory = urlParams.get("category") || "all";
   const initialSearch = urlParams.get("search") || "";
@@ -20,6 +22,10 @@ export default function Tours() {
     price: "all",
     duration: "all",
   });
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["all-tours"] });
+  };
 
   const { data: tours = [], isLoading } = useQuery({
     queryKey: ["all-tours"],
@@ -59,8 +65,9 @@ export default function Tours() {
   }, [tours, filters]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50">
+        {/* Header */}
       <div className="bg-slate-900 py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white">
@@ -180,6 +187,7 @@ export default function Tours() {
           </>
         )}
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }
