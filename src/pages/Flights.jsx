@@ -4,14 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plane, Clock, Calendar, PackageOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Plane, Clock, Calendar, PackageOpen, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
 import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
+import DiscoverFlights from "../components/flights/DiscoverFlights";
 import moment from "moment";
 
 export default function Flights() {
+  const [showAIDiscovery, setShowAIDiscovery] = useState(false);
   const [filters, setFilters] = useState({
     search: "",
     cabin_class: "all",
@@ -86,6 +89,10 @@ export default function Flights() {
     });
   }, [flights, filters]);
 
+  const handleSelectFlight = (flightId) => {
+    window.location.href = createPageUrl("FlightDetail") + `?id=${flightId}`;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="bg-slate-900 py-16 px-4">
@@ -94,10 +101,23 @@ export default function Flights() {
           <p className="mt-3 text-slate-400 max-w-xl mx-auto">
             Find the best flights to your destination
           </p>
+          <Button
+            onClick={() => setShowAIDiscovery(!showAIDiscovery)}
+            className="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            {showAIDiscovery ? "Hide AI Discovery" : "Discover with AI"}
+          </Button>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+        {showAIDiscovery && (
+          <div className="mb-6">
+            <DiscoverFlights onSelectFlight={handleSelectFlight} />
+          </div>
+        )}
+
         <FlightFilters 
           filters={filters} 
           onFilterChange={handleFilterChange} 
