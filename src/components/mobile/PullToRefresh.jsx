@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function PullToRefresh({ onRefresh, children }) {
   const [pulling, setPulling] = useState(false);

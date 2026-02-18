@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useRecaptcha } from "@/components/security/RecaptchaProvider";
 import { HoneypotField } from "@/components/security/HoneypotField";
 import EmailVerificationDialog from "@/components/security/EmailVerificationDialog";
+import MobileSelect from "@/components/ui/mobile-select";
 
 const CATEGORIES = [
   { value: "general", label: "General Inquiries", email: "info@gctravelandtours.com" },
@@ -133,16 +134,13 @@ export default function HelpdeskForm() {
           <HoneypotField value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           <div>
             <Label htmlFor="category">Category *</Label>
-            <select
-              id="category"
+            <MobileSelect
               value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full h-9 rounded-lg border border-input px-3 mt-1.5 text-sm"
-            >
-              {CATEGORIES.map(cat => (
-                <option key={cat.value} value={cat.value}>{cat.label}</option>
-              ))}
-            </select>
+              onValueChange={(value) => setFormData({ ...formData, category: value })}
+              options={CATEGORIES.map(cat => ({ value: cat.value, label: cat.label }))}
+              placeholder="Select category"
+              className="mt-1.5"
+            />
             {selectedCategory && (
               <p className="text-xs text-slate-500 mt-1">
                 📧 This will be routed to: {selectedCategory.email}

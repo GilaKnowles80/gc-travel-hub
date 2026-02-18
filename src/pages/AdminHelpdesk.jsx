@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Loader2, Mail, MessageSquare, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import MobileSelect from "@/components/ui/mobile-select";
 
 const CATEGORIES = {
   general: { label: "General Inquiries", email: "info@gctravelandtours.com", color: "bg-blue-100 text-blue-700" },
@@ -179,30 +180,35 @@ export default function AdminHelpdesk() {
               </div>
               <div>
                 <Label className="text-sm">Status</Label>
-                <select
+                <MobileSelect
                   value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full h-9 rounded-lg border border-input px-3 mt-2 text-sm"
-                >
-                  <option value="all">All Status</option>
-                  <option value="open">Open</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="closed">Closed</option>
-                </select>
+                  onValueChange={setFilterStatus}
+                  options={[
+                    { value: "all", label: "All Status" },
+                    { value: "open", label: "Open" },
+                    { value: "in_progress", label: "In Progress" },
+                    { value: "resolved", label: "Resolved" },
+                    { value: "closed", label: "Closed" }
+                  ]}
+                  placeholder="Select status"
+                  className="mt-2"
+                />
               </div>
               <div>
                 <Label className="text-sm">Category</Label>
-                <select
+                <MobileSelect
                   value={filterCategory}
-                  onChange={(e) => setFilterCategory(e.target.value)}
-                  className="w-full h-9 rounded-lg border border-input px-3 mt-2 text-sm"
-                >
-                  <option value="all">All Categories</option>
-                  {Object.entries(CATEGORIES).map(([key, cat]) => (
-                    <option key={key} value={key}>{cat.label}</option>
-                  ))}
-                </select>
+                  onValueChange={setFilterCategory}
+                  options={[
+                    { value: "all", label: "All Categories" },
+                    ...Object.entries(CATEGORIES).map(([key, cat]) => ({
+                      value: key,
+                      label: cat.label
+                    }))
+                  ]}
+                  placeholder="Select category"
+                  className="mt-2"
+                />
               </div>
             </div>
           </CardContent>
@@ -308,29 +314,33 @@ export default function AdminHelpdesk() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-xs text-slate-500">Status</Label>
-                  <select
+                  <MobileSelect
                     value={selectedTicket.status}
-                    onChange={(e) => handleStatusChange(e.target.value)}
-                    className="w-full h-8 rounded-lg border border-input px-2 mt-1 text-sm"
-                  >
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="closed">Closed</option>
-                  </select>
+                    onValueChange={handleStatusChange}
+                    options={[
+                      { value: "open", label: "Open" },
+                      { value: "in_progress", label: "In Progress" },
+                      { value: "resolved", label: "Resolved" },
+                      { value: "closed", label: "Closed" }
+                    ]}
+                    placeholder="Select status"
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label className="text-xs text-slate-500">Priority</Label>
-                  <select
+                  <MobileSelect
                     value={selectedTicket.priority}
-                    onChange={(e) => handlePriorityChange(e.target.value)}
-                    className="w-full h-8 rounded-lg border border-input px-2 mt-1 text-sm"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
-                  </select>
+                    onValueChange={handlePriorityChange}
+                    options={[
+                      { value: "low", label: "Low" },
+                      { value: "medium", label: "Medium" },
+                      { value: "high", label: "High" },
+                      { value: "urgent", label: "Urgent" }
+                    ]}
+                    placeholder="Select priority"
+                    className="mt-1"
+                  />
                 </div>
               </div>
 
