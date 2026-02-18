@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Hotel, Loader2, MapPin, Star, Users, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
@@ -100,9 +101,10 @@ export default function HotelSearch() {
                             </div>
                             <div>
                                 <Label>Rooms</Label>
-                                <Select
+                                <MobileSelect
                                     value={searchParams.rooms.toString()}
                                     onValueChange={(value) => setSearchParams({...searchParams, rooms: parseInt(value)})}
+                                    placeholder="Select rooms"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -114,16 +116,17 @@ export default function HotelSearch() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </Select>
+                                </MobileSelect>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <Label>Adults per Room</Label>
-                                <Select
+                                <MobileSelect
                                     value={searchParams.adults.toString()}
                                     onValueChange={(value) => setSearchParams({...searchParams, adults: parseInt(value)})}
+                                    placeholder="Select adults"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -135,7 +138,7 @@ export default function HotelSearch() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </Select>
+                                </MobileSelect>
                             </div>
                             <div className="flex items-end">
                                 <Button 
