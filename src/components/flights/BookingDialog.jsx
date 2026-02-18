@@ -8,18 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, User, CheckCircle2, Copy } from "lucide-react";
+import { Loader2, User, CheckCircle2, Copy, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import BookingConfirmationStep from "./BookingConfirmationStep";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import ItineraryReceipt from "./ItineraryReceipt";
 import StripeCheckout from "@/components/payment/StripeCheckout";
+import { useUserLocation, LocationPrompt } from "@/components/location/LocationCapture";
 
 export default function BookingDialog({ isOpen, onClose, flightOffer, passengers }) {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState(null);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+    const [userLocation, setUserLocation] = useState(null);
+    const [adjustedPrice, setAdjustedPrice] = useState(null);
     const [travelers, setTravelers] = useState(
         Array.from({ length: passengers }, (_, i) => ({
             id: `${i + 1}`,
@@ -80,7 +83,8 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                 passengerDetails: {
                     travelers,
                     phone: travelers[0]?.contact?.phones[0]?.number
-                }
+                },
+                userLocation
             });
             return response.data;
         },
@@ -93,6 +97,34 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
             toast.error(error.message || 'Failed to book flight');
         }
     });
+
+    const handleLocationCaptured = async (location) => {
+        setUserLocation(location);
+        
+        // Calculate adjusted price based on location
+        const basePrice = parseFloat(flightOffer?.price?.total || 0);
+        if (basePrice > 0) {
+            try {
+                const { data } = await base44.functions.invoke('calculateLocationPrice', {
+                    basePrice,
+                    countryCode: location.country_code,
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                });
+                setAdjustedPrice(data);
+                
+                if (data.price_multiplier !== 1.0) {
+                    if (data.price_multiplier < 1.0) {
+                        toast.success(`Great news! Special pricing for ${location.country_name}: Save $${data.savings}`);
+                    } else {
+                        toast.info(`Pricing adjusted for ${location.country_name}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Price calculation error:', error);
+            }
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -209,6 +241,37 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
 
                 {currentStep === 1 && (
                     <form onSubmit={handleSubmit} className="space-y-6">
+                    <LocationPrompt onLocationCaptured={handleLocationCaptured} />
+                    
+                    {adjustedPrice && adjustedPrice.price_multiplier !== 1.0 && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex items-start gap-2">
+                                <MapPin className="w-5 h-5 text-blue-600 mt-0.5" />
+                                <div className="flex-1">
+                                    <h4 className="font-medium text-blue-900 mb-1">
+                                        Location-Based Pricing Active
+                                    </h4>
+                                    <div className="text-sm text-blue-700 space-y-1">
+                                        <p>Region: {adjustedPrice.location.country_name} ({adjustedPrice.location.country_code})</p>
+                                        <p className="flex items-center gap-2">
+                                            <span>Price: </span>
+                                            {adjustedPrice.price_multiplier < 1.0 ? (
+                                                <span className="font-semibold text-green-600">
+                                                    ${adjustedPrice.adjusted_price} (Save ${adjustedPrice.savings})
+                                                </span>
+                                            ) : (
+                                                <span className="font-semibold">
+                                                    ${adjustedPrice.adjusted_price} 
+                                                    <span className="text-xs ml-1">(+${adjustedPrice.extra_cost})</span>
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
                     {travelers.map((traveler, idx) => (
                         <div key={idx} className="p-4 border rounded-lg space-y-4">
                             <div className="flex items-center justify-between mb-3">
@@ -416,11 +479,26 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                     <div className="space-y-6">
                         <h3 className="font-semibold text-lg">Choose Payment Method</h3>
                         
+                        {adjustedPrice && (
+                            <div className="bg-slate-50 rounded-lg p-4 mb-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-slate-600">Base Price</p>
+                                        <p className="text-lg line-through text-slate-400">${adjustedPrice.base_price}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm text-slate-600">Your Price ({userLocation?.country_code})</p>
+                                        <p className="text-2xl font-bold text-amber-600">${adjustedPrice.adjusted_price}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Stripe Payment Option */}
                         <StripeCheckout
                             bookingType="flight"
                             bookingId={bookingData?.id}
-                            amount={bookingData?.total_price || 0}
+                            amount={adjustedPrice?.adjusted_price || bookingData?.total_price || 0}
                             currency="PHP"
                         />
 
