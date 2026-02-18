@@ -78,6 +78,15 @@ export default function Layout({ children, currentPageName }) {
           <FloatingContactWidget />
           {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />
+          {user && user.role !== 'admin' && (
+            <style>{`
+              [data-base44-edit-button],
+              .base44-edit-button,
+              iframe[src*="base44"] {
+                display: none !important;
+              }
+            `}</style>
+          )}
           <div className="min-h-screen">
       {/* Header */}
       <header
