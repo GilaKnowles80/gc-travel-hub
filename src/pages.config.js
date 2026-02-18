@@ -119,6 +119,7 @@ import SupplierOnboarding from './pages/SupplierOnboarding';
 import AdminCodeBackup from './pages/AdminCodeBackup';
 import TravelAlerts from './pages/TravelAlerts';
 import AIItineraryPlanner from './pages/AIItineraryPlanner';
+import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
 import __Layout from './Layout.jsx';
 
 
@@ -195,6 +196,7 @@ export const PAGES = {
     "AdminCodeBackup": AdminCodeBackup,
     "TravelAlerts": TravelAlerts,
     "AIItineraryPlanner": AIItineraryPlanner,
+    "AdminInsuranceProviders": AdminInsuranceProviders,
 }
 
 export const pagesConfig = {
