@@ -14,11 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import VisaAppointmentDialog from "@/components/visas/VisaAppointmentDialog";
 
 export default function Visas() {
   const [searchTerm, setSearchTerm] = useState("");
   const [visaTypeFilter, setVisaTypeFilter] = useState("all");
   const [expandedVisa, setExpandedVisa] = useState(null);
+  const [selectedVisa, setSelectedVisa] = useState(null);
+  const [showAppointmentDialog, setShowAppointmentDialog] = useState(false);
 
   const { data: visas = [], isLoading } = useQuery({
     queryKey: ["visas"],
@@ -206,8 +209,15 @@ export default function Visas() {
                           </div>
                         )}
 
-                        <Button className="w-full bg-amber-600 hover:bg-amber-700 mt-4">
-                          Apply Now
+                        <Button 
+                          className="w-full bg-amber-600 hover:bg-amber-700 mt-4"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedVisa(visa);
+                            setShowAppointmentDialog(true);
+                          }}
+                        >
+                          Book Appointment
                         </Button>
                       </motion.div>
                     )}
@@ -222,6 +232,17 @@ export default function Visas() {
               </motion.div>
             ))}
           </div>
+        )}
+
+        {selectedVisa && (
+          <VisaAppointmentDialog
+            visa={selectedVisa}
+            open={showAppointmentDialog}
+            onOpenChange={(open) => {
+              setShowAppointmentDialog(open);
+              if (!open) setSelectedVisa(null);
+            }}
+          />
         )}
       </div>
     </div>
