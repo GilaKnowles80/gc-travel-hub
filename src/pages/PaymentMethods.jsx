@@ -1,225 +1,238 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/pages/utils";
-import { QrCode, Building2, Wallet, CreditCard, Shield, ArrowLeft, CheckCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { CreditCard, Smartphone, Building2, Shield, Check, Globe } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function PaymentMethods() {
+  const paymentMethods = [
+    {
+      category: 'Credit & Debit Cards',
+      icon: CreditCard,
+      color: 'bg-blue-50 border-blue-200',
+      badge: 'bg-blue-100 text-blue-800',
+      description: 'Secure card payments powered by Stripe',
+      methods: [
+        { name: 'Visa', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png' },
+        { name: 'Mastercard', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg' },
+        { name: 'American Express', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg' },
+        { name: 'Discover', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Discover_Card_logo.svg' }
+      ],
+      features: [
+        '3D Secure authentication',
+        'Instant payment confirmation',
+        'Worldwide acceptance',
+        'Refund protection'
+      ]
+    },
+    {
+      category: 'E-Wallets (Philippines)',
+      icon: Smartphone,
+      color: 'bg-green-50 border-green-200',
+      badge: 'bg-green-100 text-green-800',
+      description: 'Convenient digital wallet payments via PayMongo',
+      methods: [
+        { name: 'GCash', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Gcash_logo.svg' },
+        { name: 'PayMaya', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/PayMaya_logo.svg' },
+        { name: 'GrabPay', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Grabpay_logo.svg' }
+      ],
+      features: [
+        'Instant payment',
+        'No card required',
+        'Mobile-first experience',
+        'Popular in Philippines'
+      ]
+    },
+    {
+      category: 'Bank Transfer',
+      icon: Building2,
+      color: 'bg-purple-50 border-purple-200',
+      badge: 'bg-purple-100 text-purple-800',
+      description: 'Direct bank transfers for large bookings',
+      methods: [
+        { name: 'BPI', logo: null },
+        { name: 'BDO', logo: null },
+        { name: 'Metrobank', logo: null },
+        { name: 'UnionBank', logo: null }
+      ],
+      features: [
+        'No transaction fees',
+        'Ideal for large amounts',
+        'Manual verification (1-2 business days)',
+        'Available for corporate clients'
+      ]
+    }
+  ];
+
+  const securityFeatures = [
+    {
+      icon: Shield,
+      title: 'PCI DSS Compliant',
+      description: 'Industry-standard security protocols'
+    },
+    {
+      icon: Globe,
+      title: 'SSL Encryption',
+      description: 'All transactions are encrypted'
+    },
+    {
+      icon: Check,
+      title: 'Fraud Protection',
+      description: 'Advanced fraud detection systems'
+    }
+  ];
+
+  const acceptedServices = [
+    { name: 'Flights', available: true },
+    { name: 'Hotels', available: true },
+    { name: 'Tours', available: true },
+    { name: 'Ferries', available: true },
+    { name: 'Cruises', available: true },
+    { name: 'Trains', available: true },
+    { name: 'Car Rentals', available: true },
+    { name: 'Bus Tickets', available: true },
+    { name: 'Visa Applications', available: true },
+    { name: 'Travel Insurance', available: true }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-16">
-      <div className="max-w-4xl mx-auto px-4 md:px-8">
-        <Link to={createPageUrl("Home")} className="inline-flex items-center text-amber-600 hover:text-amber-700 mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-4xl font-bold mb-2">Payment Methods</h1>
+          <p className="text-slate-600">Safe, secure, and convenient payment options for your travel bookings</p>
+        </motion.div>
 
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 mb-4">
-            <Wallet className="w-8 h-8 text-amber-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Payment Methods</h1>
-          <p className="text-lg text-slate-600">Fast, secure, and convenient ways to pay</p>
+        {/* Payment Methods */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {paymentMethods.map((method, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+            >
+              <Card className={`h-full border-2 ${method.color}`}>
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <method.icon className="w-6 h-6" />
+                    <CardTitle className="text-xl">{method.category}</CardTitle>
+                  </div>
+                  <Badge className={method.badge}>Available Now</Badge>
+                  <p className="text-sm text-slate-600 mt-2">{method.description}</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Logos */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {method.methods.map((m, i) => (
+                      <div key={i} className="bg-white rounded-lg p-3 flex items-center justify-center h-16">
+                        {m.logo ? (
+                          <img src={m.logo} alt={m.name} className="max-h-8 max-w-full object-contain" />
+                        ) : (
+                          <span className="font-semibold text-sm">{m.name}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Features */}
+                  <div className="space-y-2">
+                    {method.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2 text-sm">
+                        <Check className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
-            <CardContent className="pt-6">
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">Instant QR Code Payments</h2>
-              <p className="text-slate-700 text-lg leading-relaxed mb-4">
-                Pay instantly using your favorite e-wallet by scanning a QR code. Fast, secure, and directly connected 
-                to our verified bank account through PayMongo - the Philippines' trusted payment gateway.
-              </p>
-              <div className="flex items-center gap-2 text-green-700 bg-green-50 px-4 py-2 rounded-lg">
-                <Shield className="w-5 h-5" />
-                <span className="font-semibold">BSP-Registered & PCI DSS Certified</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-blue-50 border-blue-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center">
-                    <QrCode className="w-6 h-6 text-white" />
-                  </div>
-                  GCash Payment
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-slate-700">
-                  Scan QR code with your GCash app for instant payment confirmation.
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Instant confirmation</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>No processing fees for customers</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>24/7 availability</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-green-50 border-green-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-green-600 flex items-center justify-center">
-                    <QrCode className="w-6 h-6 text-white" />
-                  </div>
-                  PayMaya Payment
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-slate-700">
-                  Quick and secure payments using PayMaya QR code scanning.
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Real-time payment tracking</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Secure encryption</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Automatic receipt</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-purple-50 border-purple-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-purple-600 flex items-center justify-center">
-                    <Building2 className="w-6 h-6 text-white" />
-                  </div>
-                  Bank Transfer
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-slate-700">
-                  Direct bank transfers via InstaPay or PESONet to our verified account.
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>All major banks supported</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>InstaPay: Real-time transfer</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>PESONet: Next-day processing</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-emerald-50 border-emerald-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-600 flex items-center justify-center">
-                    <CreditCard className="w-6 h-6 text-white" />
-                  </div>
-                  Credit/Debit Card
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-slate-700">
-                  Pay with Visa, Mastercard, or other major credit/debit cards via Stripe.
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>International cards accepted</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>3D Secure authentication</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>PCI compliant processing</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <Shield className="w-6 h-6 text-green-600" />
-                Security & Compliance
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-slate-700 space-y-3">
-              <p>
-                All payments are processed through <strong>PayMongo</strong> and <strong>Stripe</strong>, 
-                both BSP-registered and internationally certified payment gateways.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 mt-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-slate-900 mb-2">PayMongo Security</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• BSP-registered PSO (E-Money Issuer)</li>
-                    <li>• PCI DSS Level 1 compliant</li>
-                    <li>• 256-bit SSL encryption</li>
-                    <li>• Real-time fraud detection</li>
-                  </ul>
+        {/* Security Features */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-xl p-6 mb-8"
+        >
+          <h2 className="text-2xl font-bold mb-6 text-center">Your Security is Our Priority</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {securityFeatures.map((feature, idx) => (
+              <div key={idx} className="text-center">
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <feature.icon className="w-6 h-6 text-blue-600" />
                 </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-slate-900 mb-2">Stripe Security</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• PCI DSS Level 1 certified</li>
-                    <li>• 3D Secure 2.0 authentication</li>
-                    <li>• Bank-level encryption</li>
-                    <li>• Fraud prevention tools</li>
-                  </ul>
+                <h3 className="font-semibold mb-1">{feature.title}</h3>
+                <p className="text-sm text-slate-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Accepted Services */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-center">Payment Accepted For All Services</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {acceptedServices.map((service, idx) => (
+              <div key={idx} className="bg-white rounded-lg p-3 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <Check className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium">{service.name}</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="pt-6">
-              <h3 className="font-semibold text-slate-900 mb-3">Bank Account Information</h3>
-              <p className="text-slate-700 mb-3">
-                All payments are deposited directly to our verified business bank account:
-              </p>
-              <div className="bg-white p-4 rounded-lg space-y-1 text-sm">
-                <p><strong>Account Name:</strong> GC Travel and Tours Agency</p>
-                <p><strong>Owner:</strong> Gila Cain Knowles</p>
-                <p><strong>Business Registration:</strong> DTI No. 3956850</p>
-                <p><strong>TIN:</strong> 940-103-656-0000</p>
-                <p className="text-xs text-slate-600 pt-2">
-                  Connected through PayMongo's verified merchant program. All transactions are traceable and regulated.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="text-center pt-8">
-            <p className="text-slate-600 mb-4">Questions about payment methods?</p>
-            <Link to={createPageUrl("Contact")}>
-              <button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors">
-                Contact Support
-              </button>
-            </Link>
+            ))}
           </div>
-        </div>
+        </motion.div>
+
+        {/* FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-white rounded-xl p-6 mt-8"
+        >
+          <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Are my payment details secure?</h3>
+              <p className="text-sm text-slate-600">
+                Yes. We use industry-leading payment processors (Stripe and PayMongo) with bank-level encryption. 
+                We never store your full card details on our servers.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">When will my payment be processed?</h3>
+              <p className="text-sm text-slate-600">
+                Card and e-wallet payments are processed instantly. Bank transfers may take 1-2 business days for verification.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Can I get a refund?</h3>
+              <p className="text-sm text-slate-600">
+                Refund eligibility depends on the service provider's cancellation policy. Most bookings are refundable 
+                if cancelled within the specified timeframe. See our Refund Policy for details.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Do you accept international payments?</h3>
+              <p className="text-sm text-slate-600">
+                Yes. Credit/debit cards are accepted globally. E-wallets (GCash, PayMaya) are available for Philippine customers.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
