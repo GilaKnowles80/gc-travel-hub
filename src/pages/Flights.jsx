@@ -15,6 +15,7 @@ import DiscoverFlights from "../components/flights/DiscoverFlights";
 import moment from "moment";
 
 export default function Flights() {
+  const queryClient = useQueryClient();
   const [showAIDiscovery, setShowAIDiscovery] = useState(false);
   const [filters, setFilters] = useState({
     search: "",
@@ -24,6 +25,10 @@ export default function Flights() {
     departure_time: "all",
     price_max: 5000,
   });
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["flights"] });
+  };
 
   const { data: flights = [], isLoading } = useQuery({
     queryKey: ["flights"],
@@ -95,8 +100,9 @@ export default function Flights() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="bg-slate-900 py-16 px-4">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-slate-50">
+        <div className="bg-slate-900 py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white">Book Your Flight</h1>
           <p className="mt-3 text-slate-400 max-w-xl mx-auto">
