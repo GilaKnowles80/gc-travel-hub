@@ -25,6 +25,7 @@ const navLinks = [
   { name: "Visas", page: "Visas", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
+  { name: "Travel Alerts", page: "TravelAlerts", icon: Bell },
   { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Profile", page: "Profile", icon: User },

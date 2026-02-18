@@ -117,6 +117,7 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import SupplierOnboarding from './pages/SupplierOnboarding';
 import AdminCodeBackup from './pages/AdminCodeBackup';
+import TravelAlerts from './pages/TravelAlerts';
 import __Layout from './Layout.jsx';
 
 
@@ -191,6 +192,7 @@ export const PAGES = {
     "utils": utils,
     "SupplierOnboarding": SupplierOnboarding,
     "AdminCodeBackup": AdminCodeBackup,
+    "TravelAlerts": TravelAlerts,
 }
 
 export const pagesConfig = {
