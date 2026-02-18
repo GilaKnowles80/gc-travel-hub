@@ -108,6 +108,8 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import GDPRSettings from './pages/GDPRSettings';
 import AdminAuditLogs from './pages/AdminAuditLogs';
+import SupplierLogin from './pages/SupplierLogin';
+import SupplierDashboard from './pages/SupplierDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -173,6 +175,8 @@ export const PAGES = {
     "utils": utils,
     "GDPRSettings": GDPRSettings,
     "AdminAuditLogs": AdminAuditLogs,
+    "SupplierLogin": SupplierLogin,
+    "SupplierDashboard": SupplierDashboard,
 }
 
 export const pagesConfig = {
