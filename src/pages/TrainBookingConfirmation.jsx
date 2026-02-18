@@ -29,7 +29,8 @@ export default function TrainBookingConfirmation() {
   const stripeCheckoutMutation = useMutation({
     mutationFn: async () => {
       const { data } = await base44.functions.invoke('createTrainCheckout', {
-        booking_id: bookingId
+        bookingId: bookingId,
+        paymentMethod: 'stripe'
       });
       return data;
     },
@@ -45,11 +46,9 @@ export default function TrainBookingConfirmation() {
 
   const paymongoCheckoutMutation = useMutation({
     mutationFn: async () => {
-      const { data } = await base44.functions.invoke('createPayMongoPayment', {
-        booking_type: 'train',
-        booking_id: bookingId,
-        amount: booking.total_price,
-        description: `Train Booking - ${booking.train_number}`
+      const { data } = await base44.functions.invoke('createTrainCheckout', {
+        bookingId: bookingId,
+        paymentMethod: 'paymongo'
       });
       return data;
     },
