@@ -14,6 +14,7 @@ import SupplierInventoryManager from '@/components/supplier/SupplierInventoryMan
 import SupplierPricingManager from '@/components/supplier/SupplierPricingManager';
 import SupplierBookingsView from '@/components/supplier/SupplierBookingsView';
 import SupplierRevenueReports from '@/components/supplier/SupplierRevenueReports';
+import AdvancedAnalyticsDashboard from '@/components/supplier/AdvancedAnalyticsDashboard';
 import SupplierMessagesHub from '@/components/supplier/SupplierMessagesHub';
 
 export default function SupplierDashboard() {
@@ -144,7 +145,7 @@ export default function SupplierDashboard() {
 
         {/* Tabs */}
         <Tabs defaultValue="inventory" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="inventory">
               <Package className="w-4 h-4 mr-2" />
               Inventory
@@ -156,6 +157,10 @@ export default function SupplierDashboard() {
             <TabsTrigger value="bookings">
               <Calendar className="w-4 h-4 mr-2" />
               Bookings
+            </TabsTrigger>
+            <TabsTrigger value="analytics">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Analytics
             </TabsTrigger>
             <TabsTrigger value="reports">
               <FileText className="w-4 h-4 mr-2" />
@@ -177,6 +182,10 @@ export default function SupplierDashboard() {
 
           <TabsContent value="bookings" className="mt-6">
             <SupplierBookingsView supplierId={supplier.id} bookings={bookings} />
+          </TabsContent>
+
+          <TabsContent value="analytics" className="mt-6">
+            <AdvancedAnalyticsDashboard supplierId={supplier.id} />
           </TabsContent>
 
           <TabsContent value="reports" className="mt-6">
