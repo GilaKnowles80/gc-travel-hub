@@ -4,8 +4,10 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Package, DollarSign, TrendingUp, ShoppingCart, Plane, Hotel, MapPin } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import moment from 'moment';
+
+const COLORS = ['#3b82f6', '#a855f7', '#22c55e', '#f59e0b', '#ef4444'];
 
 export default function AdminPackageSales() {
   const [period, setPeriod] = useState('30days');
@@ -72,6 +74,39 @@ export default function AdminPackageSales() {
     acc.tours += pkg.tours?.length || 0;
     return acc;
   }, { flights: 0, hotels: 0, tours: 0 });
+
+  const revenueByComponent = paidPackages.reduce((acc, pkg) => {
+    const flightRevenue = pkg.flights?.reduce((sum, f) => sum + (f.price * f.passengers), 0) || 0;
+    const hotelRevenue = pkg.hotels?.reduce((sum, h) => sum + (h.price * h.nights * h.rooms), 0) || 0;
+    const tourRevenue = pkg.tours?.reduce((sum, t) => sum + (t.price * t.participants), 0) || 0;
+    
+    acc.flights += flightRevenue;
+    acc.hotels += hotelRevenue;
+    acc.tours += tourRevenue;
+    return acc;
+  }, { flights: 0, hotels: 0, tours: 0 });
+
+  const pieData = [
+    { name: 'Flights', value: revenueByComponent.flights, color: '#3b82f6' },
+    { name: 'Hotels', value: revenueByComponent.hotels, color: '#a855f7' },
+    { name: 'Tours', value: revenueByComponent.tours, color: '#22c55e' }
+  ].filter(d => d.value > 0);
+
+  const monthlyData = paidPackages.reduce((acc, pkg) => {
+    const month = moment(pkg.created_date).format('MMM YYYY');
+    const existing = acc.find(d => d.month === month);
+    const revenue = pkg.final_price || pkg.total_price;
+    const profit = revenue * 0.12;
+    
+    if (existing) {
+      existing.revenue += revenue;
+      existing.profit += profit;
+      existing.packages += 1;
+    } else {
+      acc.push({ month, revenue, profit, packages: 1 });
+    }
+    return acc;
+  }, []).slice(-6);
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -149,20 +184,71 @@ export default function AdminPackageSales() {
           </Card>
         </div>
 
-        {/* Revenue Chart */}
+        {/* Revenue & Profit Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Revenue & Profit</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                  <Legend />
+                  <Area type="monotone" dataKey="revenue" stackId="1" stroke="#f59e0b" fill="#fbbf24" name="Revenue" />
+                  <Area type="monotone" dataKey="profit" stackId="2" stroke="#22c55e" fill="#86efac" name="Profit" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Revenue by Component</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
+            <CardTitle>Daily Sales Performance</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
+              <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
-                <YAxis />
+                <YAxis yAxisId="left" orientation="left" stroke="#f59e0b" />
+                <YAxis yAxisId="right" orientation="right" stroke="#3b82f6" />
                 <Tooltip />
-                <Line type="monotone" dataKey="revenue" stroke="#f59e0b" strokeWidth={2} />
-              </LineChart>
+                <Legend />
+                <Bar yAxisId="left" dataKey="revenue" fill="#fbbf24" name="Revenue ($)" />
+                <Bar yAxisId="right" dataKey="count" fill="#3b82f6" name="Packages Sold" />
+              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
