@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
       line_items: lineItems,
       discounts: discounts,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/PaymentSuccess?session_id={CHECKOUT_SESSION_ID}&package_id=${package_id}`,
+      success_url: `${req.headers.get('origin')}/PackageBookingSuccess?session_id={CHECKOUT_SESSION_ID}&package_id=${package_id}`,
       cancel_url: `${req.headers.get('origin')}/PaymentCancelled`,
       customer_email: user.email,
       metadata: {

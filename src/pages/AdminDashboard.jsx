@@ -11,6 +11,7 @@ import SalesReports from '@/components/admin/SalesReports';
 import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
 import BulkOperationsPanel from '@/components/admin/BulkOperationsPanel';
 import PerformanceMonitor from '@/components/admin/PerformanceMonitor';
+import RevenueAnalytics from '@/components/admin/RevenueAnalytics';
 
 export default function AdminDashboard() {
   return (
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
 
           <TabsContent value="overview" className="space-y-6">
             <DashboardStats />
+            <RevenueAnalytics />
             <div className="grid lg:grid-cols-2 gap-6">
               <BulkOperationsPanel />
               <PerformanceMonitor />

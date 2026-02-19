@@ -130,6 +130,7 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
 import AdminPackageSales from './pages/AdminPackageSales';
+import PackageBookingSuccess from './pages/PackageBookingSuccess';
 import __Layout from './Layout.jsx';
 
 
@@ -217,6 +218,7 @@ export const PAGES = {
     "utils": utils,
     "AdminPackagePromoCodes": AdminPackagePromoCodes,
     "AdminPackageSales": AdminPackageSales,
+    "PackageBookingSuccess": PackageBookingSuccess,
 }
 
 export const pagesConfig = {

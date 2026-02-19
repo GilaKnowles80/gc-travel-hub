@@ -8,24 +8,30 @@ export default function DashboardStats() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [flights, hotels, tours, bookings, payments] = await Promise.all([
+      const [flights, hotels, tours, bookings, payments, packages] = await Promise.all([
         base44.entities.Flight.list(),
         base44.entities.Hotel.list(),
         base44.entities.Tour.list(),
         base44.entities.FlightBooking.list(),
-        base44.entities.Payment.filter({ status: 'completed' })
+        base44.entities.Payment.filter({ status: 'completed' }),
+        base44.entities.PackageBooking.filter({ status: 'paid' })
       ]);
 
       const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+      const packageRevenue = packages.reduce((sum, p) => sum + (p.final_price || p.total_price || 0), 0);
       const pendingBookings = bookings.filter(b => b.status === 'pending').length;
       const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
+      const totalProfit = (totalRevenue + packageRevenue) * 0.12;
 
       return {
         totalFlights: flights.length,
         totalHotels: hotels.length,
         totalTours: tours.length,
         totalBookings: bookings.length,
-        totalRevenue,
+        totalPackages: packages.length,
+        totalRevenue: totalRevenue + packageRevenue,
+        packageRevenue,
+        totalProfit,
         pendingBookings,
         confirmedBookings,
         activeListings: flights.length + hotels.length + tours.length
@@ -46,13 +52,13 @@ export default function DashboardStats() {
   }
 
   const statCards = [
-    { title: 'Total Revenue', value: `₱${stats?.totalRevenue?.toLocaleString() || 0}`, icon: DollarSign, color: 'green', change: '+12.5%' },
+    { title: 'Total Revenue', value: `$${stats?.totalRevenue?.toLocaleString() || 0}`, icon: DollarSign, color: 'green', change: '+12.5%' },
+    { title: 'Total Profit', value: `$${stats?.totalProfit?.toLocaleString() || 0}`, icon: TrendingUp, color: 'emerald', change: '+15.3%' },
+    { title: 'Package Revenue', value: `$${stats?.packageRevenue?.toLocaleString() || 0}`, icon: MapPin, color: 'amber', change: '+24.1%' },
     { title: 'Total Bookings', value: stats?.totalBookings || 0, icon: CheckCircle, color: 'blue', change: '+8.2%' },
-    { title: 'Active Flights', value: stats?.totalFlights || 0, icon: Plane, color: 'amber' },
-    { title: 'Active Hotels', value: stats?.totalHotels || 0, icon: HotelIcon, color: 'purple' },
-    { title: 'Tour Packages', value: stats?.totalTours || 0, icon: MapPin, color: 'teal' },
+    { title: 'Custom Packages', value: stats?.totalPackages || 0, icon: MapPin, color: 'purple' },
+    { title: 'Active Flights', value: stats?.totalFlights || 0, icon: Plane, color: 'sky' },
     { title: 'Pending Bookings', value: stats?.pendingBookings || 0, icon: Clock, color: 'orange' },
-    { title: 'Confirmed Today', value: stats?.confirmedBookings || 0, icon: CheckCircle, color: 'green' },
     { title: 'Active Listings', value: stats?.activeListings || 0, icon: TrendingUp, color: 'indigo' }
   ];
 
