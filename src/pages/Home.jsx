@@ -6,6 +6,7 @@ import PopularFlightRoutes from "../components/home/PopularFlightRoutes";
 import LiveFlightDeals from "../components/home/LiveFlightDeals";
 import FlightTrustSignals from "../components/home/FlightTrustSignals";
 import FeaturedTours from "../components/home/FeaturedTours";
+import FeaturedPackages from "../components/home/FeaturedPackages";
 import CategorySection from "../components/home/CategorySection";
 import WhyChooseUs from "../components/home/WhyChooseUs";
 import TestimonialSection from "../components/home/TestimonialSection";
@@ -34,6 +35,7 @@ export default function Home() {
       <FlightTrustSignals />
       <CategorySection />
       <FeaturedTours tours={displayTours} isLoading={isLoading} />
+      <FeaturedPackages />
       <WhyChooseUs />
       <TestimonialSection />
       <CTASection />
