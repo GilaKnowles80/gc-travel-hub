@@ -32,9 +32,9 @@ export default function PaymentMethods() {
       badge: 'bg-green-100 text-green-800',
       description: 'Convenient digital wallet payments via PayMongo',
       methods: [
-        { name: 'GCash', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Gcash_logo.svg' },
-        { name: 'PayMaya', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/PayMaya_logo.svg' },
-        { name: 'GrabPay', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Grabpay_logo.svg' }
+        { name: 'GCash', logo: 'https://logos-world.net/wp-content/uploads/2023/09/GCash-Logo.png' },
+        { name: 'PayMaya', logo: 'https://logos-world.net/wp-content/uploads/2021/08/PayMaya-Logo.png' },
+        { name: 'GrabPay', logo: 'https://logos-world.net/wp-content/uploads/2020/11/Grab-Logo.png' }
       ],
       features: [
         'Instant payment',
@@ -50,10 +50,10 @@ export default function PaymentMethods() {
       badge: 'bg-purple-100 text-purple-800',
       description: 'Direct bank transfers for large bookings',
       methods: [
-        { name: 'BPI', logo: null },
-        { name: 'BDO', logo: null },
-        { name: 'Metrobank', logo: null },
-        { name: 'UnionBank', logo: null }
+        { name: 'BPI', logo: 'https://logos-world.net/wp-content/uploads/2023/02/BPI-Logo.png' },
+        { name: 'BDO', logo: 'https://logos-world.net/wp-content/uploads/2021/03/BDO-Unibank-Logo.png' },
+        { name: 'Metrobank', logo: 'https://logos-world.net/wp-content/uploads/2021/03/Metrobank-Logo.png' },
+        { name: 'UnionBank', logo: 'https://logos-world.net/wp-content/uploads/2021/09/UnionBank-Logo.png' }
       ],
       features: [
         'No transaction fees',
