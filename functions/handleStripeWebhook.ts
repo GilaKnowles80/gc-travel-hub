@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
             { status: 'paid' }
           );
           
-          await base44.asServiceRole.entities.Payment.create({
+          const paymentRecord = await base44.asServiceRole.entities.Payment.create({
             user_email: session.metadata.user_email,
             amount: session.amount_total / 100,
             currency: session.currency,
@@ -44,6 +44,20 @@ Deno.serve(async (req) => {
             }
           });
           
+          // Send confirmation notification
+          try {
+            await base44.asServiceRole.entities.Notification.create({
+              user_email: session.metadata.user_email,
+              title: 'Package Booking Confirmed',
+              message: 'Your custom travel package has been successfully booked and paid for!',
+              type: 'payment_confirmed',
+              booking_id: session.metadata.package_id,
+              link: `/PackageBookingSuccess?package_id=${session.metadata.package_id}&session_id=${session.id}`
+            });
+          } catch (notifError) {
+            console.error('Notification error:', notifError);
+          }
+          
           await base44.asServiceRole.integrations.Core.SendEmail({
             from_name: 'GC Travel & Tours',
             to: session.customer_email,
@@ -52,8 +66,9 @@ Deno.serve(async (req) => {
               <h2>Package Booking Confirmed!</h2>
               <p>Your custom travel package has been successfully booked.</p>
               <p><strong>Package ID:</strong> ${session.metadata.package_id}</p>
-              <p><strong>Amount:</strong> ${session.amount_total / 100} ${session.currency.toUpperCase()}</p>
+              <p><strong>Amount:</strong> $${session.amount_total / 100}</p>
               <p>View your booking details in My Packages section.</p>
+              <p><a href="${req.headers.get('origin')}/PackageBookingSuccess?package_id=${session.metadata.package_id}&session_id=${session.id}">View Booking Confirmation</a></p>
             `
           });
           
