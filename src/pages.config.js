@@ -94,6 +94,7 @@ import HotelSearch from './pages/HotelSearch';
 import Hotels from './pages/Hotels';
 import Itineraries from './pages/Itineraries';
 import ItineraryView from './pages/ItineraryView';
+import LogoGenerator from './pages/LogoGenerator';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
 import MyReviews from './pages/MyReviews';
@@ -123,7 +124,6 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import LogoGenerator from './pages/LogoGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -175,6 +175,7 @@ export const PAGES = {
     "Hotels": Hotels,
     "Itineraries": Itineraries,
     "ItineraryView": ItineraryView,
+    "LogoGenerator": LogoGenerator,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
     "MyReviews": MyReviews,
@@ -204,7 +205,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "LogoGenerator": LogoGenerator,
 }
 
 export const pagesConfig = {

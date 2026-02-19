@@ -10,6 +10,7 @@ import { Plane, Calendar, Users, Loader2, Edit, Mail, Smartphone, Printer, FileT
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingEditForm from "../components/flights/FlightBookingEditForm";
+import RealTimeFlightStatus from "../components/flights/RealTimeFlightStatus";
 import moment from "moment";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -32,11 +33,17 @@ const paymentColors = {
 export default function MyFlightBookings() {
   const [editingBooking, setEditingBooking] = useState(null);
   const [viewingDetails, setViewingDetails] = useState(null);
+  const [viewingLiveStatus, setViewingLiveStatus] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["flight-bookings"],
     queryFn: () => base44.entities.FlightBooking.list("-created_date", 50),
+  });
+
+  const { data: flights = [] } = useQuery({
+    queryKey: ["flights"],
+    queryFn: () => base44.entities.Flight.list(),
   });
 
   const handleRefresh = async () => {
@@ -234,10 +241,22 @@ export default function MyFlightBookings() {
                         </div>
                         <div className="flex flex-col gap-2">
                           <Button
-                            onClick={() => setViewingDetails(booking)}
+                            onClick={() => {
+                              const flight = flights.find(f => f.flight_number === booking.flight_number);
+                              setViewingLiveStatus({ booking, flight });
+                            }}
                             variant="default"
                             size="sm"
-                            className="rounded-xl bg-amber-500 hover:bg-amber-600"
+                            className="rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                          >
+                            <Radio className="w-4 h-4 mr-2" />
+                            Live Status
+                          </Button>
+                          <Button
+                            onClick={() => setViewingDetails(booking)}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl"
                           >
                             <FileText className="w-4 h-4 mr-2" />
                             View Details
@@ -273,6 +292,23 @@ export default function MyFlightBookings() {
             <FlightBookingEditForm
               booking={editingBooking}
               onClose={() => setEditingBooking(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!viewingLiveStatus} onOpenChange={() => setViewingLiveStatus(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Radio className="w-5 h-5 text-blue-600" />
+              Real-Time Flight Status
+            </DialogTitle>
+          </DialogHeader>
+          {viewingLiveStatus && (
+            <RealTimeFlightStatus 
+              flight={viewingLiveStatus.flight} 
+              booking={viewingLiveStatus.booking}
             />
           )}
         </DialogContent>
