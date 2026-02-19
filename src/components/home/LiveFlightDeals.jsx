@@ -36,12 +36,18 @@ export default function LiveFlightDeals() {
     return () => clearInterval(timer);
   }, []);
 
-  const featuredDeals = flights.slice(0, 3).map((flight, idx) => ({
-    ...flight,
-    discount: [25, 30, 20][idx],
-    originalPrice: flight.price * (1 + [0.25, 0.30, 0.20][idx]),
-    dealType: ['Flash Sale', 'Limited Offer', 'Hot Deal'][idx]
-  }));
+  const featuredDeals = flights.slice(0, 3).map((flight, idx) => {
+    const cabinClass = flight.cabin_classes?.[0];
+    const price = cabinClass?.price || 0;
+    return {
+      ...flight,
+      price: price,
+      discount: [25, 30, 20][idx],
+      originalPrice: price * (1 + [0.25, 0.30, 0.20][idx]),
+      dealType: ['Flash Sale', 'Limited Offer', 'Hot Deal'][idx],
+      available_seats: cabinClass?.seats_available || 0
+    };
+  });
 
   return (
     <div className="py-16 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
