@@ -92,6 +92,19 @@ export default function AdminPackageSales() {
     { name: 'Tours', value: revenueByComponent.tours, color: '#22c55e' }
   ].filter(d => d.value > 0);
 
+  // Geographic distribution
+  const customersByCountry = paidPackages.reduce((acc, pkg) => {
+    // Extract country from user_email domain or use a default
+    const country = pkg.user_country || 'Unknown';
+    acc[country] = (acc[country] || 0) + 1;
+    return acc;
+  }, {});
+
+  const countryData = Object.entries(customersByCountry)
+    .map(([country, count]) => ({ country, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
   const monthlyData = paidPackages.reduce((acc, pkg) => {
     const month = moment(pkg.created_date).format('MMM YYYY');
     const existing = acc.find(d => d.month === month);
@@ -253,31 +266,58 @@ export default function AdminPackageSales() {
           </CardContent>
         </Card>
 
-        {/* Component Breakdown */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Package Components Sold</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-blue-50 rounded-lg">
-                <Plane className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-blue-900">{componentBreakdown.flights}</p>
-                <p className="text-sm text-blue-700">Flights</p>
+        {/* Component Breakdown & Geography */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Package Components Sold</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <Plane className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-blue-900">{componentBreakdown.flights}</p>
+                  <p className="text-sm text-blue-700">Flights</p>
+                </div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg">
+                  <Hotel className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-purple-900">{componentBreakdown.hotels}</p>
+                  <p className="text-sm text-purple-700">Hotels</p>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <MapPin className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-green-900">{componentBreakdown.tours}</p>
+                  <p className="text-sm text-green-700">Tours</p>
+                </div>
               </div>
-              <div className="text-center p-6 bg-purple-50 rounded-lg">
-                <Hotel className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-purple-900">{componentBreakdown.hotels}</p>
-                <p className="text-sm text-purple-700">Hotels</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Customers by Country</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {countryData.length > 0 ? countryData.map((item, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                        idx === 0 ? 'bg-amber-500' : idx === 1 ? 'bg-slate-400' : idx === 2 ? 'bg-orange-500' : 'bg-slate-300'
+                      }`}>
+                        {idx + 1}
+                      </div>
+                      <span className="font-medium">{item.country}</span>
+                    </div>
+                    <Badge className="bg-blue-100 text-blue-700">{item.count} packages</Badge>
+                  </div>
+                )) : (
+                  <p className="text-slate-500 text-center py-4">No country data available yet</p>
+                )}
               </div>
-              <div className="text-center p-6 bg-green-50 rounded-lg">
-                <MapPin className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-green-900">{componentBreakdown.tours}</p>
-                <p className="text-sm text-green-700">Tours</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Recent Packages */}
         <Card>
