@@ -23,6 +23,43 @@ Deno.serve(async (req) => {
         const paymentId = session.metadata.payment_id;
         const bookingId = session.metadata.booking_id;
         const bookingType = session.metadata.booking_type;
+        
+        // Handle package booking payment
+        if (bookingType === 'package' && session.metadata.package_id) {
+          await base44.asServiceRole.entities.PackageBooking.update(
+            session.metadata.package_id,
+            { status: 'paid' }
+          );
+          
+          await base44.asServiceRole.entities.Payment.create({
+            user_email: session.metadata.user_email,
+            amount: session.amount_total / 100,
+            currency: session.currency,
+            status: 'completed',
+            payment_method: 'stripe',
+            stripe_session_id: session.id,
+            metadata: {
+              package_id: session.metadata.package_id,
+              booking_type: 'package'
+            }
+          });
+          
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            from_name: 'GC Travel & Tours',
+            to: session.customer_email,
+            subject: 'Package Booking Confirmed - GC Travel & Tours',
+            body: `
+              <h2>Package Booking Confirmed!</h2>
+              <p>Your custom travel package has been successfully booked.</p>
+              <p><strong>Package ID:</strong> ${session.metadata.package_id}</p>
+              <p><strong>Amount:</strong> ${session.amount_total / 100} ${session.currency.toUpperCase()}</p>
+              <p>View your booking details in My Packages section.</p>
+            `
+          });
+          
+          console.log(`Package booking completed: ${session.metadata.package_id}`);
+          break;
+        }
 
         // Update payment record if exists
         if (paymentId) {
