@@ -12,6 +12,7 @@ import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
 import BulkOperationsPanel from '@/components/admin/BulkOperationsPanel';
 import PerformanceMonitor from '@/components/admin/PerformanceMonitor';
 import RevenueAnalytics from '@/components/admin/RevenueAnalytics';
+import SalesAnalyticsBoard from '@/components/admin/SalesAnalyticsBoard';
 
 export default function AdminDashboard() {
   return (
@@ -39,10 +40,14 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="sales">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Sales Overview
             </TabsTrigger>
             <TabsTrigger value="bookings">
               <Receipt className="w-4 h-4 mr-2" />
@@ -66,6 +71,10 @@ export default function AdminDashboard() {
               <PerformanceMonitor />
             </div>
             <QuickActions />
+          </TabsContent>
+
+          <TabsContent value="sales" className="space-y-6">
+            <SalesAnalyticsBoard />
           </TabsContent>
 
           <TabsContent value="bookings">
