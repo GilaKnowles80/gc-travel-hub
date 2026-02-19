@@ -131,6 +131,8 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import SalesDashboard from './pages/SalesDashboard';
+import AdminSalesTeam from './pages/AdminSalesTeam';
 import __Layout from './Layout.jsx';
 
 
@@ -219,6 +221,8 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
+    "SalesDashboard": SalesDashboard,
+    "AdminSalesTeam": AdminSalesTeam,
 }
 
 export const pagesConfig = {
