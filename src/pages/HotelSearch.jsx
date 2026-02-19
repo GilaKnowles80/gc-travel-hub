@@ -11,6 +11,7 @@ import { Hotel, Loader2, MapPin, Star, Users, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
 import HotelBookingDialog from "@/components/hotels/HotelBookingDialog";
+import AdBanner from "@/components/ads/AdBanner";
 
 export default function HotelSearch() {
     const [searchParams, setSearchParams] = useState({
@@ -54,6 +55,7 @@ export default function HotelSearch() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+            <AdBanner placement="top_banner" pageName="Hotels" />
             {/* Hero Section */}
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-16">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">

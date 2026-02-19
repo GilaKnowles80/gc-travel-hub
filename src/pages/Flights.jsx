@@ -12,6 +12,7 @@ import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
 import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
 import DiscoverFlights from "../components/flights/DiscoverFlights";
+import AdBanner from "../components/ads/AdBanner";
 import moment from "moment";
 
 export default function Flights() {
@@ -101,6 +102,7 @@ export default function Flights() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
+      <AdBanner placement="top_banner" pageName="Flights" />
       <div className="min-h-screen bg-slate-50">
         <div className="bg-slate-900 py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
@@ -119,6 +121,10 @@ export default function Flights() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+        <div className="mb-6">
+          <AdBanner placement="in_content" pageName="Flights" />
+        </div>
+        
         {showAIDiscovery && (
           <div className="mb-6">
             <DiscoverFlights onSelectFlight={handleSelectFlight} />
@@ -150,6 +156,9 @@ export default function Flights() {
               {filteredFlights.length} flight{filteredFlights.length !== 1 ? "s" : ""} found
             </p>
             <div className="space-y-4 pb-16">
+              <div className="mb-6">
+                <AdBanner placement="sidebar" pageName="Flights" />
+              </div>
               <AnimatePresence>
                 {filteredFlights.map((flight, i) => {
                   const lowestPrice = Math.min(...(flight.cabin_classes?.map((c) => c.price) || [0]));

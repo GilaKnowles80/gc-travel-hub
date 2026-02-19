@@ -9,6 +9,7 @@ import { Star, MapPin, Clock, PackageOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import TourFilters from "../components/tours/TourFilters";
+import AdBanner from "../components/ads/AdBanner";
 
 export default function Tours() {
   const queryClient = useQueryClient();
@@ -66,6 +67,7 @@ export default function Tours() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
+      <AdBanner placement="top_banner" pageName="Tours" />
       <div className="min-h-screen bg-slate-50">
         {/* Header */}
       <div className="bg-slate-900 py-16 px-4">

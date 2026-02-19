@@ -125,7 +125,6 @@ import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
 import AdminAds from './pages/AdminAds';
-import AdminAdvertisements from './pages/AdminAdvertisements';
 import __Layout from './Layout.jsx';
 
 
@@ -208,7 +207,6 @@ export const PAGES = {
     "Visas": Visas,
     "utils": utils,
     "AdminAds": AdminAds,
-    "AdminAdvertisements": AdminAdvertisements,
 }
 
 export const pagesConfig = {
