@@ -13,6 +13,7 @@ import FlightSelector from '../components/package/FlightSelector';
 import HotelSelector from '../components/package/HotelSelector';
 import TourSelector from '../components/package/TourSelector';
 import PackageSummary from '../components/package/PackageSummary';
+import LocationTracker from '../components/location/LocationTracker';
 import toast from 'react-hot-toast';
 
 export default function PackageBuilder() {
@@ -23,6 +24,7 @@ export default function PackageBuilder() {
   const [activeSection, setActiveSection] = useState('flights');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoDiscount, setPromoDiscount] = useState(0);
+  const [userLocation, setUserLocation] = useState(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -85,7 +87,9 @@ export default function PackageBuilder() {
       discount_percentage: calculateDiscount,
       final_price: finalPriceWithPromo,
       status: 'draft',
-      promo_code: appliedPromo?.code || null
+      promo_code: appliedPromo?.code || null,
+      user_country: userLocation?.country || 'Unknown',
+      user_ip: userLocation?.ip || 'Unknown'
     });
 
     // Update promo code usage
@@ -109,6 +113,7 @@ export default function PackageBuilder() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <LocationTracker onLocationDetected={setUserLocation} />
       <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-3 mb-4">
