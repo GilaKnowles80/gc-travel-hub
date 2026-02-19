@@ -127,6 +127,7 @@ import utils from './pages/utils';
 import AdminAds from './pages/AdminAds';
 import AdminAdvertisements from './pages/AdminAdvertisements';
 import PackageBuilder from './pages/PackageBuilder';
+import MyPackages from './pages/MyPackages';
 import __Layout from './Layout.jsx';
 
 
@@ -211,6 +212,7 @@ export const PAGES = {
     "AdminAds": AdminAds,
     "AdminAdvertisements": AdminAdvertisements,
     "PackageBuilder": PackageBuilder,
+    "MyPackages": MyPackages,
 }
 
 export const pagesConfig = {

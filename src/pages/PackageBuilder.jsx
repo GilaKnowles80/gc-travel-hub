@@ -74,6 +74,11 @@ export default function PackageBuilder() {
       final_price: finalPrice,
       status: 'draft'
     });
+
+    // Navigate to My Packages
+    setTimeout(() => {
+      navigate(createPageUrl('MyPackages'));
+    }, 1000);
   };
 
   const sections = [

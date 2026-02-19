@@ -122,30 +122,32 @@ export default function PackageSummary({
           </div>
         )}
 
-        {/* Action Button */}
-        <Button
-          onClick={onSave}
-          disabled={itemCount === 0 || isSaving}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-6"
-        >
-          {isSaving ? (
-            <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              Save Package
-            </>
-          )}
-        </Button>
+        {/* Action Buttons */}
+        <div className="space-y-2">
+          <Button
+            onClick={onSave}
+            disabled={itemCount === 0 || isSaving}
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-6"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Save & Continue
+              </>
+            )}
+          </Button>
 
-        {itemCount > 0 && (
-          <p className="text-xs text-slate-500 text-center">
-            Your package will be saved and you can book it later
-          </p>
-        )}
+          {itemCount > 0 && (
+            <p className="text-xs text-slate-500 text-center">
+              Save your package and proceed to checkout from My Packages
+            </p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

@@ -32,6 +32,7 @@ const navLinks = [
   { name: "Insurance", page: "TravelInsurance", icon: Shield },
   { name: "Payment Methods", page: "PaymentMethods", icon: Receipt },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
+  { name: "My Packages", page: "MyPackages", icon: BookOpen },
   { name: "My Reviews", page: "MyReviews", icon: MapPin },
   { name: "Travel Alerts", page: "TravelAlerts", icon: Bell },
   { name: "Price Alerts", page: "PriceAlerts", icon: Bell },
