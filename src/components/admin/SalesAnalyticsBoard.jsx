@@ -4,10 +4,13 @@ import { base44 } from '@/api/base44Client';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TrendingUp, DollarSign, Users, Plane, Hotel, Calendar, Target, Activity } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/pages/utils';
 import moment from 'moment';
 
 export default function SalesAnalyticsBoard() {
   const [period, setPeriod] = useState('current_month');
+  const navigate = useNavigate();
 
   const { data: payments = [] } = useQuery({
     queryKey: ['analytics-payments', period],
@@ -178,7 +181,11 @@ export default function SalesAnalyticsBoard() {
           const showGrowth = !isNaN(growthValue) && metric.growth;
           
           return (
-            <Card key={idx} className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-900 to-slate-800">
+            <Card 
+              key={idx} 
+              className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-900 to-slate-800 cursor-pointer hover:shadow-2xl transition-shadow"
+              onClick={() => navigate(createPageUrl('AdminDashboard') + '?tab=reports')}
+            >
               {/* Background decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
                 <Icon className="w-full h-full" />
