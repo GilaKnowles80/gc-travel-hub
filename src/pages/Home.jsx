@@ -2,6 +2,9 @@ import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import HeroSection from "../components/home/HeroSection";
+import PopularFlightRoutes from "../components/home/PopularFlightRoutes";
+import LiveFlightDeals from "../components/home/LiveFlightDeals";
+import FlightTrustSignals from "../components/home/FlightTrustSignals";
 import FeaturedTours from "../components/home/FeaturedTours";
 import CategorySection from "../components/home/CategorySection";
 import WhyChooseUs from "../components/home/WhyChooseUs";
@@ -26,6 +29,9 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <PopularFlightRoutes />
+      <LiveFlightDeals />
+      <FlightTrustSignals />
       <CategorySection />
       <FeaturedTours tours={displayTours} isLoading={isLoading} />
       <WhyChooseUs />
