@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plane, Hotel, MapPin, ShoppingCart, Tag, Sparkles, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PromoCodeInput from './PromoCodeInput';
 
 export default function PackageSummary({ 
   packageName, 
@@ -14,9 +15,20 @@ export default function PackageSummary({
   discount, 
   finalPrice,
   onSave,
-  isSaving
+  isSaving,
+  onPromoApplied
 }) {
   const itemCount = flights.length + hotels.length + tours.length;
+  const [promoDiscount, setPromoDiscount] = useState(0);
+
+  const handlePromoApplied = (code, discountAmount) => {
+    setPromoDiscount(discountAmount);
+    if (onPromoApplied) {
+      onPromoApplied(code, discountAmount);
+    }
+  };
+
+  const finalPriceWithPromo = finalPrice - promoDiscount;
 
   return (
     <Card className="border-2 border-amber-200 shadow-xl">
@@ -84,7 +96,7 @@ export default function PackageSummary({
             >
               <div className="flex items-center gap-1">
                 <Tag className="w-3 h-3 text-green-600" />
-                <span className="text-green-700 font-medium">Package Discount ({discount}%)</span>
+                <span className="text-green-700 font-medium">Bundle Discount ({discount}%)</span>
               </div>
               <span className="text-green-700 font-bold">
                 -${((totalPrice * discount) / 100).toLocaleString()}
@@ -92,9 +104,27 @@ export default function PackageSummary({
             </motion.div>
           )}
           
+          {itemCount > 0 && (
+            <>
+              <div className="pt-2 border-t">
+                <PromoCodeInput 
+                  packageValue={finalPrice} 
+                  onCodeApplied={handlePromoApplied}
+                />
+              </div>
+            </>
+          )}
+
+          {promoDiscount > 0 && (
+            <div className="flex justify-between text-sm text-green-600">
+              <span>Promo Code Discount</span>
+              <span className="font-bold">-${promoDiscount.toLocaleString()}</span>
+            </div>
+          )}
+          
           <div className="flex justify-between text-lg font-bold pt-2 border-t-2">
             <span>Total</span>
-            <span className="text-amber-600">${finalPrice.toLocaleString()}</span>
+            <span className="text-amber-600">${finalPriceWithPromo.toLocaleString()}</span>
           </div>
         </div>
 

@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Plane, Hotel as HotelIcon, MapPin, Plus, Trash2, ShoppingCart, Sparkles, Tag, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from './utils';
 import FlightSelector from '../components/package/FlightSelector';
 import HotelSelector from '../components/package/HotelSelector';
 import TourSelector from '../components/package/TourSelector';
@@ -19,7 +21,10 @@ export default function PackageBuilder() {
   const [selectedHotels, setSelectedHotels] = useState([]);
   const [selectedTours, setSelectedTours] = useState([]);
   const [activeSection, setActiveSection] = useState('flights');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -44,6 +49,11 @@ export default function PackageBuilder() {
     return totalPrice * (1 - calculateDiscount / 100);
   }, [totalPrice, calculateDiscount]);
 
+  const handlePromoApplied = (code, discount) => {
+    setAppliedPromo(code);
+    setPromoDiscount(discount);
+  };
+
   const saveMutation = useMutation({
     mutationFn: (data) => base44.entities.PackageBooking.create(data),
     onSuccess: () => {
@@ -63,6 +73,8 @@ export default function PackageBuilder() {
       return;
     }
 
+    const finalPriceWithPromo = finalPrice - promoDiscount;
+
     await saveMutation.mutateAsync({
       user_email: user.email,
       package_name: packageName,
@@ -71,9 +83,17 @@ export default function PackageBuilder() {
       tours: selectedTours,
       total_price: totalPrice,
       discount_percentage: calculateDiscount,
-      final_price: finalPrice,
-      status: 'draft'
+      final_price: finalPriceWithPromo,
+      status: 'draft',
+      promo_code: appliedPromo?.code || null
     });
+
+    // Update promo code usage
+    if (appliedPromo) {
+      await base44.entities.PackagePromoCode.update(appliedPromo.id, {
+        usage_count: (appliedPromo.usage_count || 0) + 1
+      });
+    }
 
     // Navigate to My Packages
     setTimeout(() => {
@@ -196,6 +216,7 @@ export default function PackageBuilder() {
                 finalPrice={finalPrice}
                 onSave={handleSavePackage}
                 isSaving={saveMutation.isPending}
+                onPromoApplied={handlePromoApplied}
               />
             </div>
           </div>

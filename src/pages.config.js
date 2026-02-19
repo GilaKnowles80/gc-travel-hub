@@ -48,6 +48,8 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AIItineraryPlanner from './pages/AIItineraryPlanner';
+import AdminAds from './pages/AdminAds';
+import AdminAdvertisements from './pages/AdminAdvertisements';
 import AdminAuditLogs from './pages/AdminAuditLogs';
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
@@ -97,7 +99,9 @@ import ItineraryView from './pages/ItineraryView';
 import LogoGenerator from './pages/LogoGenerator';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
+import MyPackages from './pages/MyPackages';
 import MyReviews from './pages/MyReviews';
+import PackageBuilder from './pages/PackageBuilder';
 import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentMethods from './pages/PaymentMethods';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -124,15 +128,15 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminAds from './pages/AdminAds';
-import AdminAdvertisements from './pages/AdminAdvertisements';
-import PackageBuilder from './pages/PackageBuilder';
-import MyPackages from './pages/MyPackages';
+import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
+import AdminPackageSales from './pages/AdminPackageSales';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AIItineraryPlanner": AIItineraryPlanner,
+    "AdminAds": AdminAds,
+    "AdminAdvertisements": AdminAdvertisements,
     "AdminAuditLogs": AdminAuditLogs,
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
@@ -182,7 +186,9 @@ export const PAGES = {
     "LogoGenerator": LogoGenerator,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
+    "MyPackages": MyPackages,
     "MyReviews": MyReviews,
+    "PackageBuilder": PackageBuilder,
     "PaymentCancelled": PaymentCancelled,
     "PaymentMethods": PaymentMethods,
     "PaymentSuccess": PaymentSuccess,
@@ -209,10 +215,8 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "AdminAds": AdminAds,
-    "AdminAdvertisements": AdminAdvertisements,
-    "PackageBuilder": PackageBuilder,
-    "MyPackages": MyPackages,
+    "AdminPackagePromoCodes": AdminPackagePromoCodes,
+    "AdminPackageSales": AdminPackageSales,
 }
 
 export const pagesConfig = {
