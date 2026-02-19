@@ -14,6 +14,7 @@ import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import CookieConsent from "@/components/gdpr/CookieConsent";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
+import AdBanner from "@/components/ads/AdBanner";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -226,6 +227,9 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Page Content */}
       <main className={isHome ? "pb-16 md:pb-0" : "pt-16 md:pt-20 pb-16 md:pb-0"}>
+        {/* Top Ad Banner */}
+        {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPageName}
@@ -237,6 +241,9 @@ export default function Layout({ children, currentPageName }) {
             {children}
           </motion.div>
         </AnimatePresence>
+        
+        {/* Bottom Ad Banner */}
+        {!isHome && <AdBanner placement="banner_bottom" currentPage={currentPageName.toLowerCase()} />}
       </main>
       
       {/* Bottom Navigation (Mobile Only) */}

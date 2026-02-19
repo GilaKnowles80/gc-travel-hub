@@ -1,106 +1,167 @@
 import React, { useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import moment from 'moment';
 
-export default function AdBanner({ placement = 'sidebar', pageName }) {
-  const [dismissed, setDismissed] = React.useState([]);
+export default function AdBanner({ placement = 'banner_top', currentPage = 'all' }) {
+  const [dismissedAds, setDismissedAds] = React.useState(() => {
+    const stored = localStorage.getItem('dismissedAds');
+    return stored ? JSON.parse(stored) : [];
+  });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: ads = [] } = useQuery({
-    queryKey: ['advertisements', placement, pageName],
-    queryFn: () => base44.entities.Advertisement.filter({ 
-      is_active: true,
-      placement 
-    }, '-priority'),
+    queryKey: ['ads', placement, currentPage],
+    queryFn: async () => {
+      const allAds = await base44.entities.Advertisement.filter({ 
+        is_active: true,
+        placement 
+      }, '-priority');
+      
+      // Filter by target pages and date range
+      const now = moment();
+      return allAds.filter(ad => {
+        const startValid = !ad.start_date || moment(ad.start_date).isBefore(now);
+        const endValid = !ad.end_date || moment(ad.end_date).isAfter(now);
+        const pageValid = ad.target_pages.includes('all') || ad.target_pages.includes(currentPage);
+        const notDismissed = !dismissedAds.includes(ad.id);
+        
+        return startValid && endValid && pageValid && notDismissed;
+      });
+    },
+    refetchInterval: 60000
   });
 
   const trackImpressionMutation = useMutation({
     mutationFn: (adId) => base44.entities.Advertisement.update(adId, {
-      impression_count: (ads.find(a => a.id === adId)?.impression_count || 0) + 1
-    }),
+      impressions: (ads.find(a => a.id === adId)?.impressions || 0) + 1
+    })
   });
 
   const trackClickMutation = useMutation({
     mutationFn: (adId) => base44.entities.Advertisement.update(adId, {
-      click_count: (ads.find(a => a.id === adId)?.click_count || 0) + 1
-    }),
+      clicks: (ads.find(a => a.id === adId)?.clicks || 0) + 1
+    })
   });
 
-  // Filter ads by date range and target pages
-  const activeAds = ads.filter(ad => {
-    const now = moment();
-    const isInDateRange = (!ad.start_date || moment(ad.start_date).isBefore(now)) &&
-                          (!ad.end_date || moment(ad.end_date).isAfter(now));
-    const isTargetPage = !ad.target_pages?.length || ad.target_pages.includes(pageName) || ad.target_pages.includes('all');
-    const notDismissed = !dismissed.includes(ad.id);
-    
-    return isInDateRange && isTargetPage && notDismissed;
-  });
+  const activeAd = ads[0];
 
-  // Track impressions
   useEffect(() => {
-    activeAds.forEach(ad => {
-      trackImpressionMutation.mutate(ad.id);
-    });
-  }, [activeAds.map(a => a.id).join(',')]);
+    if (activeAd && !dismissedAds.includes(activeAd.id)) {
+      trackImpressionMutation.mutate(activeAd.id);
+    }
+  }, [activeAd?.id]);
 
-  if (activeAds.length === 0) return null;
-
-  const ad = activeAds[0]; // Show highest priority ad
-
-  const handleClick = () => {
+  const handleClick = (ad) => {
     trackClickMutation.mutate(ad.id);
+    if (ad.link_url) {
+      if (ad.link_url.startsWith('http')) {
+        window.open(ad.link_url, '_blank');
+      } else {
+        navigate(ad.link_url);
+      }
+    }
   };
 
-  const handleDismiss = (e) => {
-    e.stopPropagation();
-    setDismissed([...dismissed, ad.id]);
+  const handleDismiss = (adId) => {
+    const newDismissed = [...dismissedAds, adId];
+    setDismissedAds(newDismissed);
+    localStorage.setItem('dismissedAds', JSON.stringify(newDismissed));
   };
 
-  // Internal Banner
-  if (ad.ad_type === 'internal_banner') {
+  if (!activeAd) return null;
+
+  // External ad code
+  if (activeAd.ad_type === 'external_ad' && activeAd.external_code) {
     return (
-      <div className="relative group">
-        <a
-          href={ad.banner_link}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClick}
-          className="block rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
-        >
-          {ad.banner_image_url && (
-            <img 
-              src={ad.banner_image_url} 
-              alt={ad.title}
-              className="w-full h-auto"
-            />
-          )}
-          {ad.banner_text && (
-            <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 text-center font-bold">
-              {ad.banner_text}
-            </div>
-          )}
-        </a>
-        <button
-          onClick={handleDismiss}
-          className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <X className="w-4 h-4" />
-        </button>
+      <div className="relative">
+        <div dangerouslySetInnerHTML={{ __html: activeAd.external_code }} />
       </div>
     );
   }
 
-  // External Script (Google AdSense, etc.)
-  if (ad.ad_type === 'external_script' || ad.ad_type === 'google_adsense') {
-    return (
-      <div 
-        className="relative rounded-2xl overflow-hidden bg-slate-50 p-4 min-h-[100px] flex items-center justify-center"
-        dangerouslySetInnerHTML={{ __html: ad.external_script }}
-      />
-    );
-  }
+  // Internal promotion banner
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: placement === 'banner_top' ? -20 : 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: placement === 'banner_top' ? -20 : 20 }}
+        className="relative overflow-hidden"
+      >
+        {activeAd.image_url ? (
+          // Image-based ad
+          <div 
+            className="relative cursor-pointer group"
+            onClick={() => handleClick(activeAd)}
+          >
+            <img 
+              src={activeAd.image_url} 
+              alt={activeAd.title}
+              className="w-full h-auto max-h-48 object-cover"
+            />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+            
+            {activeAd.link_text && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button className="bg-white hover:bg-amber-50 text-slate-900 px-6 py-3 rounded-xl font-bold shadow-lg transform group-hover:scale-105 transition-all">
+                  {activeAd.link_text}
+                  <ExternalLink className="w-4 h-4 inline ml-2" />
+                </button>
+              </div>
+            )}
 
-  return null;
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDismiss(activeAd.id);
+              }}
+              className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          // Text-based ad
+          <div 
+            style={{ 
+              backgroundColor: activeAd.background_color,
+              color: activeAd.text_color 
+            }}
+            className="px-4 py-3 cursor-pointer group hover:opacity-90 transition-opacity"
+            onClick={() => handleClick(activeAd)}
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-sm md:text-base">{activeAd.title}</p>
+                {activeAd.description && (
+                  <p className="text-xs md:text-sm opacity-90">{activeAd.description}</p>
+                )}
+              </div>
+              
+              {activeAd.link_text && (
+                <button className="bg-white text-slate-900 px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap hover:bg-slate-100 transition-colors">
+                  {activeAd.link_text}
+                </button>
+              )}
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDismiss(activeAd.id);
+                }}
+                className="p-1 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </AnimatePresence>
+  );
 }
