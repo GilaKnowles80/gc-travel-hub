@@ -20,6 +20,7 @@ const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
   { name: "Tours", page: "Tours", icon: MapPin },
   { name: "AI Planner", page: "AIItineraryPlanner", icon: Plane },
+  { name: "Build Package", page: "PackageBuilder", icon: Plane },
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
   { name: "Ferries", page: "FerrySearch", icon: MapPin },
