@@ -130,21 +130,120 @@ export default function Flights() {
     <PullToRefresh onRefresh={handleRefresh}>
       <AdBanner placement="top_banner" pageName="Flights" />
       <div className="min-h-screen bg-slate-50">
-        <div className="bg-slate-900 py-16 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Book Your Flight</h1>
-          <p className="mt-3 text-slate-400 max-w-xl mx-auto">
-            Find the best flights to your destination
-          </p>
-          <Button
-            onClick={() => setShowAIDiscovery(!showAIDiscovery)}
-            className="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            {showAIDiscovery ? "Hide AI Discovery" : "Discover with AI"}
-          </Button>
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Book Your Flight</h1>
+                <p className="text-slate-300">Real-time flight search powered by Amadeus</p>
+              </div>
+              <Button
+                onClick={() => setShowAIDiscovery(!showAIDiscovery)}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                {showAIDiscovery ? "Hide" : "Discover with AI"}
+              </Button>
+            </div>
+
+            {/* Search Form */}
+            <Card className="p-6 bg-white/95 backdrop-blur">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="space-y-2">
+                  <Label>From</Label>
+                  <Input
+                    value={searchParams.origin}
+                    onChange={(e) => setSearchParams({...searchParams, origin: e.target.value.toUpperCase()})}
+                    placeholder="MNL"
+                    maxLength={3}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>To</Label>
+                  <Input
+                    value={searchParams.destination}
+                    onChange={(e) => setSearchParams({...searchParams, destination: e.target.value.toUpperCase()})}
+                    placeholder="SIN"
+                    maxLength={3}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Departure</Label>
+                  <Input
+                    type="date"
+                    value={searchParams.departureDate}
+                    onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
+                    min={moment().format('YYYY-MM-DD')}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Return (Optional)</Label>
+                  <Input
+                    type="date"
+                    value={searchParams.returnDate}
+                    onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
+                    min={searchParams.departureDate}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="space-y-2">
+                  <Label>Adults</Label>
+                  <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Children</Label>
+                  <Select value={String(searchParams.children)} onValueChange={(v) => setSearchParams({...searchParams, children: Number(v)})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Infants</Label>
+                  <Select value={String(searchParams.infants)} onValueChange={(v) => setSearchParams({...searchParams, infants: Number(v)})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[0,1,2].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Class</Label>
+                  <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="economy">Economy</SelectItem>
+                      <SelectItem value="premium_economy">Premium Economy</SelectItem>
+                      <SelectItem value="business">Business</SelectItem>
+                      <SelectItem value="first">First Class</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-end">
+                  <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })} className="w-full">
+                    <Search className="w-4 h-4 mr-2" />
+                    Search
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
         <div className="mb-6">
@@ -166,15 +265,24 @@ export default function Flights() {
 
         {isLoading ? (
           <div className="grid grid-cols-1 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-white rounded-2xl h-40 animate-pulse" />
-            ))}
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-slate-600 mt-4">Searching real-time flights...</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-semibold text-red-700 mb-2">Search Error</h3>
+            <p className="text-red-600 text-sm">{error.message || "Failed to search flights. Please try again."}</p>
+            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })} variant="outline" className="mt-4 rounded-xl">
+              Retry Search
+            </Button>
           </div>
         ) : filteredFlights.length === 0 ? (
           <div className="text-center py-20">
             <PackageOpen className="w-16 h-16 mx-auto text-slate-300 mb-4" />
             <h3 className="text-xl font-semibold text-slate-600">No flights found</h3>
-            <p className="text-slate-400 mt-2">Try adjusting your filters</p>
+            <p className="text-slate-400 mt-2">Try different dates or destinations, or adjust your filters</p>
           </div>
         ) : (
           <>
