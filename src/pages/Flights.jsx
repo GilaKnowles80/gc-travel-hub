@@ -369,7 +369,7 @@ export default function Flights() {
 
                               <div className="md:border-l md:pl-6 md:ml-6 text-center md:text-right">
                                 <p className="text-xs text-slate-400 mb-1">from</p>
-                                <p className="text-3xl font-bold text-slate-900">${lowestPrice.toLocaleString()}</p>
+                                <p className="text-3xl font-bold text-slate-900"><PriceDisplay amount={lowestPrice} /></p>
                                 <p className="text-xs text-slate-400 mt-1">per person</p>
                                 <div className="text-xs text-slate-500 mt-2">
                                   {flight.cabin_classes?.length || 0} cabin options
