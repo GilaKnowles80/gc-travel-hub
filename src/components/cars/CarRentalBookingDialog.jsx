@@ -173,10 +173,10 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Amount:</span>
-                <span className="text-2xl font-bold text-orange-600">${totalPrice.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-orange-600"><PriceDisplay amount={totalPrice} /></span>
               </div>
               <p className="text-sm text-slate-600 mt-1">
-                {form.rental_days} day(s) × ${car.price_per_day} per day
+                {form.rental_days} day(s) × <PriceDisplay amount={car.price_per_day} /> per day
               </p>
             </div>
 
@@ -195,7 +195,7 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
           <div className="space-y-6">
             <div className="bg-orange-50 rounded-lg p-4 text-center">
               <p className="text-sm text-slate-600">Total Amount</p>
-              <p className="text-3xl font-bold text-orange-600">${totalPrice.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-orange-600"><PriceDisplay amount={totalPrice} /></p>
             </div>
 
             <Tabs defaultValue="stripe" className="w-full">
