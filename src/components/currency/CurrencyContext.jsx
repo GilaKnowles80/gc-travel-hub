@@ -39,18 +39,25 @@ export function CurrencyProvider({ children }) {
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
         
+        console.log('Detected location:', data);
+        
         if (data.country_code && !autoDetected) {
           const detectedCurrency = countryCurrencyMap[data.country_code] || 'PHP';
+          console.log('Auto-detected currency:', detectedCurrency, 'for country:', data.country_code);
           setSelectedCurrency(detectedCurrency);
           setAutoDetected(true);
         }
       } catch (error) {
-        console.log('Auto currency detection failed, using default PHP');
+        console.log('Auto currency detection failed, using default PHP', error);
+        setSelectedCurrency('PHP');
+        setAutoDetected(true);
       }
     };
 
-    detectCurrencyFromLocation();
-  }, [autoDetected]);
+    if (!autoDetected) {
+      detectCurrencyFromLocation();
+    }
+  }, []);
 
   // Load user preference (overrides auto-detection)
   useEffect(() => {
