@@ -136,6 +136,8 @@ import utils from './pages/utils';
 import AdminPackages from './pages/AdminPackages';
 import Packages from './pages/Packages';
 import Messages from './pages/Messages';
+import AffiliateDashboard from './pages/AffiliateDashboard';
+import AdminAffiliates from './pages/AdminAffiliates';
 import __Layout from './Layout.jsx';
 
 
@@ -229,6 +231,8 @@ export const PAGES = {
     "AdminPackages": AdminPackages,
     "Packages": Packages,
     "Messages": Messages,
+    "AffiliateDashboard": AffiliateDashboard,
+    "AdminAffiliates": AdminAffiliates,
 }
 
 export const pagesConfig = {
