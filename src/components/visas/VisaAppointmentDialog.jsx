@@ -244,15 +244,15 @@ export default function VisaAppointmentDialog({ visa, open, onOpenChange }) {
             <div className="bg-slate-50 rounded-lg p-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-600">Visa Fee:</span>
-                <span className="font-medium">₱{visa.price.toLocaleString()}</span>
+                <span className="font-medium"><PriceDisplay amount={visa.price} /></span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-600">Service Fee:</span>
-                <span className="font-medium">₱{serviceFee.toLocaleString()}</span>
+                <span className="font-medium"><PriceDisplay amount={serviceFee} /></span>
               </div>
               <div className="border-t pt-2 flex justify-between">
                 <span className="text-lg font-semibold">Total Amount:</span>
-                <span className="text-2xl font-bold text-amber-600">₱{totalPrice.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-amber-600"><PriceDisplay amount={totalPrice} /></span>
               </div>
             </div>
 
