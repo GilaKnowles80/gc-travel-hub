@@ -178,10 +178,10 @@ export default function CruiseBookingDialog({ cruise, open, onOpenChange }) {
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Amount:</span>
-                <span className="text-2xl font-bold text-cyan-600">${totalPrice.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-cyan-600"><PriceDisplay amount={totalPrice} /></span>
               </div>
               <p className="text-sm text-slate-600 mt-1">
-                {form.number_of_guests} guest(s) × ${cabinPrice.toLocaleString()} per person
+                {form.number_of_guests} guest(s) × <PriceDisplay amount={cabinPrice} /> per person
               </p>
             </div>
 
