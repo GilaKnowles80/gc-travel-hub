@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import StripeCheckout from "@/components/payment/StripeCheckout";
 import PayMongoPayment from "@/components/payment/PayMongoPayment";
+import PriceDisplay from "@/components/currency/PriceDisplay";
 
 export default function BookingForm({ tour, onClose }) {
   const [step, setStep] = useState(1);
@@ -301,11 +302,11 @@ export default function BookingForm({ tour, onClose }) {
               )}
               <div className="border-t border-slate-200 pt-3 flex justify-between">
                 <span className="text-slate-500 text-sm">Price per person</span>
-                <span className="font-medium">${tour.price_per_person?.toLocaleString()}</span>
+                <span className="font-medium"><PriceDisplay amount={tour.price_per_person} /></span>
               </div>
               <div className="flex justify-between text-lg">
                 <span className="font-bold text-slate-900">Total</span>
-                <span className="font-bold text-amber-600">${totalPrice.toLocaleString()}</span>
+                <span className="font-bold text-amber-600"><PriceDisplay amount={totalPrice} /></span>
               </div>
             </div>
 
