@@ -50,6 +50,8 @@
 import AIItineraryPlanner from './pages/AIItineraryPlanner';
 import AdminAds from './pages/AdminAds';
 import AdminAdvertisements from './pages/AdminAdvertisements';
+import AdminAffiliates from './pages/AdminAffiliates';
+import AdminAnalytics from './pages/AdminAnalytics';
 import AdminAuditLogs from './pages/AdminAuditLogs';
 import AdminBankAccounts from './pages/AdminBankAccounts';
 import AdminBuses from './pages/AdminBuses';
@@ -66,8 +68,10 @@ import AdminHotels from './pages/AdminHotels';
 import AdminInsurance from './pages/AdminInsurance';
 import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
 import AdminLoyalty from './pages/AdminLoyalty';
+import AdminMonetization from './pages/AdminMonetization';
 import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
 import AdminPackageSales from './pages/AdminPackageSales';
+import AdminPackages from './pages/AdminPackages';
 import AdminPricing from './pages/AdminPricing';
 import AdminPromotions from './pages/AdminPromotions';
 import AdminReviews from './pages/AdminReviews';
@@ -78,6 +82,7 @@ import AdminSupplierComms from './pages/AdminSupplierComms';
 import AdminSupplierPayments from './pages/AdminSupplierPayments';
 import AdminTours from './pages/AdminTours';
 import AdminVisas from './pages/AdminVisas';
+import AffiliateDashboard from './pages/AffiliateDashboard';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BookingConfirmation from './pages/BookingConfirmation';
 import BusSearch from './pages/BusSearch';
@@ -100,15 +105,18 @@ import Hotels from './pages/Hotels';
 import Itineraries from './pages/Itineraries';
 import ItineraryView from './pages/ItineraryView';
 import LogoGenerator from './pages/LogoGenerator';
+import Messages from './pages/Messages';
 import MyBookings from './pages/MyBookings';
 import MyFlightBookings from './pages/MyFlightBookings';
 import MyPackages from './pages/MyPackages';
 import MyReviews from './pages/MyReviews';
 import PackageBookingSuccess from './pages/PackageBookingSuccess';
 import PackageBuilder from './pages/PackageBuilder';
+import Packages from './pages/Packages';
 import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentMethods from './pages/PaymentMethods';
 import PaymentSuccess from './pages/PaymentSuccess';
+import PremiumMembership from './pages/PremiumMembership';
 import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
@@ -133,14 +141,6 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminPackages from './pages/AdminPackages';
-import Packages from './pages/Packages';
-import Messages from './pages/Messages';
-import AffiliateDashboard from './pages/AffiliateDashboard';
-import AdminAffiliates from './pages/AdminAffiliates';
-import PremiumMembership from './pages/PremiumMembership';
-import AdminMonetization from './pages/AdminMonetization';
-import AdminAnalytics from './pages/AdminAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -148,6 +148,8 @@ export const PAGES = {
     "AIItineraryPlanner": AIItineraryPlanner,
     "AdminAds": AdminAds,
     "AdminAdvertisements": AdminAdvertisements,
+    "AdminAffiliates": AdminAffiliates,
+    "AdminAnalytics": AdminAnalytics,
     "AdminAuditLogs": AdminAuditLogs,
     "AdminBankAccounts": AdminBankAccounts,
     "AdminBuses": AdminBuses,
@@ -164,8 +166,10 @@ export const PAGES = {
     "AdminInsurance": AdminInsurance,
     "AdminInsuranceProviders": AdminInsuranceProviders,
     "AdminLoyalty": AdminLoyalty,
+    "AdminMonetization": AdminMonetization,
     "AdminPackagePromoCodes": AdminPackagePromoCodes,
     "AdminPackageSales": AdminPackageSales,
+    "AdminPackages": AdminPackages,
     "AdminPricing": AdminPricing,
     "AdminPromotions": AdminPromotions,
     "AdminReviews": AdminReviews,
@@ -176,6 +180,7 @@ export const PAGES = {
     "AdminSupplierPayments": AdminSupplierPayments,
     "AdminTours": AdminTours,
     "AdminVisas": AdminVisas,
+    "AffiliateDashboard": AffiliateDashboard,
     "BestPriceGuarantee": BestPriceGuarantee,
     "BookingConfirmation": BookingConfirmation,
     "BusSearch": BusSearch,
@@ -198,15 +203,18 @@ export const PAGES = {
     "Itineraries": Itineraries,
     "ItineraryView": ItineraryView,
     "LogoGenerator": LogoGenerator,
+    "Messages": Messages,
     "MyBookings": MyBookings,
     "MyFlightBookings": MyFlightBookings,
     "MyPackages": MyPackages,
     "MyReviews": MyReviews,
     "PackageBookingSuccess": PackageBookingSuccess,
     "PackageBuilder": PackageBuilder,
+    "Packages": Packages,
     "PaymentCancelled": PaymentCancelled,
     "PaymentMethods": PaymentMethods,
     "PaymentSuccess": PaymentSuccess,
+    "PremiumMembership": PremiumMembership,
     "PriceAlerts": PriceAlerts,
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
@@ -231,14 +239,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "AdminPackages": AdminPackages,
-    "Packages": Packages,
-    "Messages": Messages,
-    "AffiliateDashboard": AffiliateDashboard,
-    "AdminAffiliates": AdminAffiliates,
-    "PremiumMembership": PremiumMembership,
-    "AdminMonetization": AdminMonetization,
-    "AdminAnalytics": AdminAnalytics,
 }
 
 export const pagesConfig = {

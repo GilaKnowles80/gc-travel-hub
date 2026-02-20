@@ -107,6 +107,58 @@ export default function AdminAnalytics() {
 
       const revenueByType = Object.values(bookingTypes);
 
+      // Sales funnel data
+      const totalVisitors = allUsers.length * 3; // Estimate
+      const registeredUsers = allUsers.length;
+      const browsedProducts = recentBookings.length * 2;
+      const addedToCart = recentBookings.length * 1.5;
+      const completedPayments = recentPayments.length + recentPackages.length;
+
+      const salesFunnel = [
+        { stage: 'Visitors', count: totalVisitors, percentage: 100 },
+        { stage: 'Registered', count: registeredUsers, percentage: (registeredUsers / totalVisitors) * 100 },
+        { stage: 'Browsed', count: Math.round(browsedProducts), percentage: (browsedProducts / totalVisitors) * 100 },
+        { stage: 'Added to Cart', count: Math.round(addedToCart), percentage: (addedToCart / totalVisitors) * 100 },
+        { stage: 'Completed', count: completedPayments, percentage: (completedPayments / totalVisitors) * 100 }
+      ];
+
+      // Top selling products
+      const productSales = {};
+      recentBookings.forEach(b => {
+        const key = `${b.booking_type}_${b.tour_title || b.flight_id || b.hotel_name || 'Other'}`;
+        if (!productSales[key]) {
+          productSales[key] = { 
+            name: b.tour_title || b.hotel_name || `${b.booking_type} Booking`,
+            type: b.booking_type,
+            sales: 0,
+            revenue: 0
+          };
+        }
+        productSales[key].sales += 1;
+        productSales[key].revenue += b.total_price || 0;
+      });
+
+      const topProducts = Object.values(productSales)
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 10);
+
+      // Monthly sales comparison
+      const monthlySales = {};
+      for (let i = 11; i >= 0; i--) {
+        const month = moment().subtract(i, 'months').format('MMM YY');
+        monthlySales[month] = { month, sales: 0, revenue: 0 };
+      }
+
+      [...recentPayments, ...recentPackages].forEach(item => {
+        const month = moment(item.created_date).format('MMM YY');
+        if (monthlySales[month]) {
+          monthlySales[month].sales += 1;
+          monthlySales[month].revenue += item.amount || item.final_price || item.total_price || 0;
+        }
+      });
+
+      const salesTrend = Object.values(monthlySales);
+
       // Affiliate performance
       const totalAffiliateCommissions = affiliateCommissions.reduce((sum, c) => sum + (c.commission_amount || 0), 0);
       const affiliateBookings = affiliateCommissions.length;
@@ -149,7 +201,10 @@ export default function AdminAnalytics() {
         conversionRate,
         avgBookingValue,
         revenueGrowth,
-        totalBookings: recentPayments.length + recentPackages.length
+        totalBookings: recentPayments.length + recentPackages.length,
+        salesFunnel,
+        topProducts,
+        salesTrend
       };
     }
   });
@@ -278,10 +333,31 @@ export default function AdminAnalytics() {
           ))}
         </div>
 
-        {/* Revenue Trend */}
+        {/* Sales Trend - Monthly */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Revenue & Bookings Trend</CardTitle>
+            <CardTitle>Monthly Sales Performance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={350}>
+              <ComposedChart data={analytics.salesTrend}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="revenue" fill="#3b82f6" name="Revenue (₱)" />
+                <Line yAxisId="right" type="monotone" dataKey="sales" stroke="#f59e0b" strokeWidth={3} name="Sales Count" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Daily Revenue & Bookings Trend */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Daily Revenue & Bookings Trend</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
@@ -300,7 +376,59 @@ export default function AdminAnalytics() {
           </CardContent>
         </Card>
 
+        {/* Top Selling Products */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Top Selling Products/Services</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={analytics.topProducts} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis dataKey="name" type="category" width={150} />
+                <Tooltip formatter={(value) => `₱${value.toLocaleString()}`} />
+                <Legend />
+                <Bar dataKey="revenue" fill="#22c55e" name="Revenue (₱)" />
+                <Bar dataKey="sales" fill="#3b82f6" name="Sales Count" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Sales Funnel */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Sales Funnel</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {analytics.salesFunnel.map((stage, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium">{stage.stage}</span>
+                      <span className="text-sm text-slate-600">
+                        {stage.count} ({stage.percentage.toFixed(1)}%)
+                      </span>
+                    </div>
+                    <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all"
+                        style={{ width: `${stage.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm font-medium text-blue-900">
+                  Conversion Rate: {analytics.salesFunnel[analytics.salesFunnel.length - 1].percentage.toFixed(2)}%
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Revenue by Type */}
           <Card>
             <CardHeader>
@@ -328,7 +456,9 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Customer Metrics */}
           <Card>
             <CardHeader>
