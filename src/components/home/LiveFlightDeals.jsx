@@ -8,6 +8,7 @@ import { Plane, Clock, Zap, TrendingDown, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/pages/utils';
 import moment from 'moment';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function LiveFlightDeals() {
   const navigate = useNavigate();
