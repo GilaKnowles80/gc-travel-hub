@@ -265,7 +265,7 @@ export default function TrainBookingDialog({ train, open, onClose }) {
                 </div>
                 <div className="flex justify-between pt-2 border-t">
                   <span className="font-medium">Total Price:</span>
-                  <span className="font-bold text-lg">${totalPrice}</span>
+                  <span className="font-bold text-lg"><PriceDisplay amount={totalPrice} /></span>
                 </div>
               </div>
             </div>
