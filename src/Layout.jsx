@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
@@ -52,6 +52,7 @@ const navLinks = [
   { name: "Promotions", page: "AdminPromotions", icon: Plane, adminOnly: true },
   { name: "Manage Packages", page: "AdminPackages", icon: Plane, adminOnly: true },
   { name: "Affiliates", page: "AdminAffiliates", icon: Users, adminOnly: true },
+  { name: "Monetization", page: "AdminMonetization", icon: DollarSign, adminOnly: true },
   { name: "Bulk Booking", page: "CorporateBooking", icon: Users, adminOnly: true },
   { name: "Email Clients", page: "AdminEmailClients", icon: Mail, adminOnly: true },
   { name: "Helpdesk", page: "AdminHelpdesk", icon: Mail, adminOnly: true },

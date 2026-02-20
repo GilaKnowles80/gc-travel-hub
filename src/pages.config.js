@@ -138,6 +138,8 @@ import Packages from './pages/Packages';
 import Messages from './pages/Messages';
 import AffiliateDashboard from './pages/AffiliateDashboard';
 import AdminAffiliates from './pages/AdminAffiliates';
+import PremiumMembership from './pages/PremiumMembership';
+import AdminMonetization from './pages/AdminMonetization';
 import __Layout from './Layout.jsx';
 
 
@@ -233,6 +235,8 @@ export const PAGES = {
     "Messages": Messages,
     "AffiliateDashboard": AffiliateDashboard,
     "AdminAffiliates": AdminAffiliates,
+    "PremiumMembership": PremiumMembership,
+    "AdminMonetization": AdminMonetization,
 }
 
 export const pagesConfig = {
