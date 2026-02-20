@@ -15,10 +15,25 @@ export default function PaymentSuccess() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const paymentId = urlParams.get('payment_id');
+    const sessionId = urlParams.get('session_id');
     
     if (paymentId) {
-      base44.entities.Payment.get(paymentId)
-        .then(setPayment)
+      base44.entities.Payment.filter({ id: paymentId })
+        .then(payments => {
+          if (payments.length > 0) {
+            setPayment(payments[0]);
+          }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    } else if (sessionId) {
+      // Try to find payment by session ID
+      base44.entities.Payment.filter({ stripe_session_id: sessionId })
+        .then(payments => {
+          if (payments.length > 0) {
+            setPayment(payments[0]);
+          }
+        })
         .catch(console.error)
         .finally(() => setLoading(false));
     } else {
@@ -74,7 +89,7 @@ export default function PaymentSuccess() {
                     <span className="font-semibold text-green-600">
                       {new Intl.NumberFormat('en-US', { 
                         style: 'currency', 
-                        currency: payment.currency 
+                        currency: payment.currency || 'USD'
                       }).format(payment.amount)}
                     </span>
                   </div>

@@ -84,6 +84,18 @@ Deno.serve(async (req) => {
             payment_date: new Date().toISOString(),
             receipt_url: session.url
           });
+          
+          // Calculate and track affiliate commission
+          try {
+            await base44.asServiceRole.functions.invoke('calculateAffiliateCommission', {
+              bookingId: bookingId,
+              bookingType: bookingType,
+              bookingAmount: session.amount_total / 100,
+              customerEmail: session.metadata.user_email
+            });
+          } catch (commError) {
+            console.error('Affiliate commission error:', commError);
+          }
         }
 
         // Update booking payment status based on type
