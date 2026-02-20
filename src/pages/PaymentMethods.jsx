@@ -44,22 +44,40 @@ export default function PaymentMethods() {
       ]
     },
     {
-      category: 'Bank Transfer',
+      category: 'PayPal',
+      icon: Globe,
+      color: 'bg-indigo-50 border-indigo-200',
+      badge: 'bg-indigo-100 text-indigo-800',
+      description: 'Global payment platform with buyer protection',
+      methods: [
+        { name: 'PayPal', logo: 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_74x46.jpg' }
+      ],
+      features: [
+        'Instant payment confirmation',
+        'Buyer protection included',
+        'Pay with balance, bank, or card',
+        'International payments supported'
+      ]
+    },
+    {
+      category: 'Bank Transfer (Philippines)',
       icon: Building2,
       color: 'bg-purple-50 border-purple-200',
       badge: 'bg-purple-100 text-purple-800',
-      description: 'Direct bank transfers for large bookings',
+      description: 'Direct bank transfers to Philippine banks',
       methods: [
         { name: 'BPI', logo: 'https://logos-world.net/wp-content/uploads/2023/02/BPI-Logo.png' },
         { name: 'BDO', logo: 'https://logos-world.net/wp-content/uploads/2021/03/BDO-Unibank-Logo.png' },
         { name: 'Metrobank', logo: 'https://logos-world.net/wp-content/uploads/2021/03/Metrobank-Logo.png' },
-        { name: 'UnionBank', logo: 'https://logos-world.net/wp-content/uploads/2021/09/UnionBank-Logo.png' }
+        { name: 'UnionBank', logo: 'https://logos-world.net/wp-content/uploads/2021/09/UnionBank-Logo.png' },
+        { name: 'PNB', logo: 'https://logos-world.net/wp-content/uploads/2023/02/PNB-Logo.png' },
+        { name: 'Security Bank', logo: 'https://logos-world.net/wp-content/uploads/2023/02/Security-Bank-Logo.png' }
       ],
       features: [
         'No transaction fees',
         'Ideal for large amounts',
         'Manual verification (1-2 business days)',
-        'Available for corporate clients'
+        'InstaPay & PESONet supported'
       ]
     }
   ];
