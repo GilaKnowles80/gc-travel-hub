@@ -257,7 +257,7 @@ export default function InsurancePurchaseDialog({ provider, coverage, open, onOp
           <div className="space-y-6">
             <div className="bg-blue-50 rounded-lg p-4 text-center">
               <p className="text-sm text-slate-600">Premium Amount</p>
-              <p className="text-3xl font-bold text-blue-600">${coverage.base_price}</p>
+              <p className="text-3xl font-bold text-blue-600"><PriceDisplay amount={coverage.base_price} /></p>
             </div>
 
             <Tabs defaultValue="stripe" className="w-full">
