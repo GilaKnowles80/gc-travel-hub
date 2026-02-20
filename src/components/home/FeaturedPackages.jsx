@@ -8,6 +8,7 @@ import { Package, Plane, Hotel, MapPin, ArrowRight, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/pages/utils';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function FeaturedPackages() {
   const { data: packages = [] } = useQuery({

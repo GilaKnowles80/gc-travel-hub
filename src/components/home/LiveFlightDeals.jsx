@@ -165,13 +165,13 @@ export default function LiveFlightDeals() {
                   <div className="flex items-end justify-between mb-4">
                     <div>
                       <div className="text-xs text-slate-500 line-through">
-                        ₱{deal.originalPrice.toLocaleString()}
+                        <PriceDisplay amount={deal.originalPrice} />
                       </div>
                       <div className="text-3xl font-bold text-amber-600">
-                        ₱{deal.price.toLocaleString()}
+                        <PriceDisplay amount={deal.price} />
                       </div>
                       <div className="text-xs text-green-600 font-medium">
-                        Save ₱{(deal.originalPrice - deal.price).toLocaleString()}
+                        Save <PriceDisplay amount={deal.originalPrice - deal.price} />
                       </div>
                     </div>
                     <div className="text-right">
