@@ -17,21 +17,25 @@ Deno.serve(async (req) => {
         // Typically, you'd store this or get it from the OAuth response
         const instanceUrl = 'https://login.salesforce.com'; // Will be redirected to correct instance
 
-        // Prepare lead data
+        // Prepare lead data for GC Travel leads
+        const names = data.full_name?.split(' ') || ['', ''];
         const leadData = {
-            FirstName: data.applicant_name?.split(' ')[0] || data.user_email?.split('@')[0] || 'Customer',
-            LastName: data.applicant_name?.split(' ').slice(1).join(' ') || 'Lead',
-            Email: data.applicant_email || data.user_email,
-            Phone: data.applicant_phone || '',
-            Company: 'GC Travel Customer',
-            LeadSource: 'Website',
-            Status: 'New',
-            Description: `Booking Type: ${event.entity_name}
-Package: ${data.package_name || 'N/A'}
-Total Price: $${data.total_price || data.final_price || 0}
-Status: ${data.status}
-Booking ID: ${event.entity_id}`,
-            Country: data.user_country || data.nationality || ''
+            FirstName: names[0] || 'Customer',
+            LastName: names.slice(1).join(' ') || 'Lead',
+            Email: data.email || '',
+            Phone: data.phone || '',
+            Company: 'GC Travel Prospect',
+            LeadSource: data.lead_source || 'website',
+            Status: 'Open - Not Contacted',
+            Description: `Interested In: ${data.interested_in?.join(', ') || 'N/A'}
+Destination: ${data.destination || 'N/A'}
+Travel Dates: ${data.travel_dates || 'N/A'}
+Budget: ${data.budget ? `PHP ${data.budget}` : 'N/A'}
+Group Size: ${data.group_size || 1}
+Priority: ${data.priority || 'medium'}
+Notes: ${data.notes || ''}
+Lead ID: ${event.entity_id}`,
+            Country: data.country || ''
         };
 
         // Create lead in Salesforce
