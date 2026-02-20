@@ -4,11 +4,55 @@ import { base44 } from '@/api/base44Client';
 
 const CurrencyContext = createContext();
 
+// Map country codes to currencies
+const countryCurrencyMap = {
+  'PH': 'PHP',
+  'US': 'USD',
+  'BE': 'EUR', // Belgium
+  'FR': 'EUR',
+  'DE': 'EUR',
+  'ES': 'EUR',
+  'IT': 'EUR',
+  'NL': 'EUR',
+  'AT': 'EUR',
+  'PT': 'EUR',
+  'IE': 'EUR',
+  'GR': 'EUR',
+  'FI': 'EUR',
+  'JP': 'JPY',
+  'SG': 'SGD',
+  'AU': 'AUD',
+  'GB': 'EUR', // Use EUR for UK as fallback
+  'CA': 'USD', // Use USD for Canada
+  'CN': 'USD', // Fallback to USD
+};
+
 export function CurrencyProvider({ children }) {
   const [selectedCurrency, setSelectedCurrency] = useState('PHP');
   const [user, setUser] = useState(null);
+  const [autoDetected, setAutoDetected] = useState(false);
 
-  // Load user preference
+  // Auto-detect currency from location
+  useEffect(() => {
+    const detectCurrencyFromLocation = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        
+        if (data.country_code && !autoDetected) {
+          const detectedCurrency = countryCurrencyMap[data.country_code] || 'PHP';
+          setSelectedCurrency(detectedCurrency);
+          setAutoDetected(true);
+        }
+      } catch (error) {
+        console.log('Auto currency detection failed, using default PHP');
+      }
+    };
+
+    detectCurrencyFromLocation();
+  }, [autoDetected]);
+
+  // Load user preference (overrides auto-detection)
   useEffect(() => {
     base44.auth.me().then(u => {
       setUser(u);
