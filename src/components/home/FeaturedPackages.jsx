@@ -79,14 +79,14 @@ export default function FeaturedPackages() {
                   <div className="border-t pt-4 mb-4">
                     {pkg.discount_percentage > 0 && (
                       <p className="text-sm text-slate-500 line-through mb-1">
-                        ${pkg.total_price?.toLocaleString()}
+                        <PriceDisplay amount={pkg.total_price} />
                       </p>
                     )}
                     <div className="flex items-end justify-between">
                       <div>
                         <p className="text-xs text-slate-500">Starting from</p>
                         <p className="text-3xl font-bold text-amber-600">
-                          ${pkg.final_price?.toLocaleString()}
+                          <PriceDisplay amount={pkg.final_price} />
                         </p>
                       </div>
                     </div>
