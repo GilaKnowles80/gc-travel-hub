@@ -486,11 +486,11 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-slate-600">Base Price</p>
-                                        <p className="text-lg line-through text-slate-400">${adjustedPrice.base_price}</p>
+                                        <p className="text-lg line-through text-slate-400"><PriceDisplay amount={adjustedPrice.base_price} /></p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm text-slate-600">Your Price ({userLocation?.country_code})</p>
-                                        <p className="text-2xl font-bold text-amber-600">${adjustedPrice.adjusted_price}</p>
+                                        <p className="text-2xl font-bold text-amber-600"><PriceDisplay amount={adjustedPrice.adjusted_price} /></p>
                                     </div>
                                 </div>
                             </div>
