@@ -11,9 +11,11 @@ export default function RevenueAnalytics() {
   const { data: analytics, isLoading } = useQuery({
     queryKey: ['revenue-analytics'],
     queryFn: async () => {
-      const [payments, packages] = await Promise.all([
+      const [payments, packages, supplierPayments, commissions] = await Promise.all([
         base44.entities.Payment.filter({ status: 'completed' }),
-        base44.entities.PackageBooking.filter({ status: 'paid' })
+        base44.entities.PackageBooking.filter({ status: 'paid' }),
+        base44.entities.SupplierPayment.list(),
+        base44.entities.SalesCommission.filter({ status: 'paid' })
       ]);
 
       // Daily revenue for last 30 days
@@ -68,10 +70,47 @@ export default function RevenueAnalytics() {
 
       const monthlyGrowth = Object.values(monthlyData).slice(-6);
 
+      // Cash Flow (last 30 days)
+      const cashFlowData = {};
+      last30Days.forEach(date => {
+        cashFlowData[date] = { date, inflow: 0, outflow: 0, net: 0 };
+      });
+
+      // Inflows (payments received)
+      [...payments, ...packages.map(p => ({ ...p, amount: p.final_price || p.total_price, created_date: p.created_date }))].forEach(item => {
+        const date = moment(item.created_date).format('MMM DD');
+        if (cashFlowData[date]) {
+          cashFlowData[date].inflow += item.amount || 0;
+        }
+      });
+
+      // Outflows (supplier payments + commissions)
+      supplierPayments.forEach(sp => {
+        const date = moment(sp.payment_date || sp.created_date).format('MMM DD');
+        if (cashFlowData[date]) {
+          cashFlowData[date].outflow += sp.amount || 0;
+        }
+      });
+
+      commissions.forEach(comm => {
+        const date = moment(comm.paid_date || comm.created_date).format('MMM DD');
+        if (cashFlowData[date]) {
+          cashFlowData[date].outflow += comm.commission_amount || 0;
+        }
+      });
+
+      // Calculate net
+      Object.values(cashFlowData).forEach(day => {
+        day.net = day.inflow - day.outflow;
+      });
+
+      const cashFlow = Object.values(cashFlowData);
+
       return {
         dailyRevenue,
         revenueByType: revenueByType.filter(r => r.value > 0),
         monthlyGrowth,
+        cashFlow,
         totalRevenue: totalPayments + totalPackages,
         totalProfit: (totalPayments + totalPackages) * 0.12
       };
@@ -205,6 +244,26 @@ export default function RevenueAnalytics() {
                 <Bar dataKey="payments" stackId="a" fill="#3b82f6" name="Individual Bookings" />
                 <Bar dataKey="packages" stackId="a" fill="#a855f7" name="Custom Packages" />
               </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Cash Flow (Last 30 Days)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={analytics?.cashFlow}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                <Legend />
+                <Line type="monotone" dataKey="inflow" stroke="#22c55e" strokeWidth={2} name="Cash Inflow" />
+                <Line type="monotone" dataKey="outflow" stroke="#ef4444" strokeWidth={2} name="Cash Outflow" />
+                <Line type="monotone" dataKey="net" stroke="#3b82f6" strokeWidth={3} name="Net Cash Flow" />
+              </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
