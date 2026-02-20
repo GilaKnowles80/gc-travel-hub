@@ -18,6 +18,7 @@ import AdBanner from "@/components/ads/AdBanner";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
+  { name: "Packages", page: "Packages", icon: MapPin },
   { name: "Tours", page: "Tours", icon: MapPin },
   { name: "AI Planner", page: "AIItineraryPlanner", icon: Plane },
   { name: "Build Package", page: "PackageBuilder", icon: Plane },
@@ -47,6 +48,7 @@ const navLinks = [
   { name: "Pricing", page: "AdminPricing", icon: Plane, adminOnly: true },
   { name: "Corporate Clients", page: "AdminCorporateClients", icon: Building2, adminOnly: true },
   { name: "Promotions", page: "AdminPromotions", icon: Plane, adminOnly: true },
+  { name: "Manage Packages", page: "AdminPackages", icon: Plane, adminOnly: true },
   { name: "Bulk Booking", page: "CorporateBooking", icon: Users, adminOnly: true },
   { name: "Email Clients", page: "AdminEmailClients", icon: Mail, adminOnly: true },
   { name: "Helpdesk", page: "AdminHelpdesk", icon: Mail, adminOnly: true },

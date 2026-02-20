@@ -71,6 +71,7 @@ import AdminPackageSales from './pages/AdminPackageSales';
 import AdminPricing from './pages/AdminPricing';
 import AdminPromotions from './pages/AdminPromotions';
 import AdminReviews from './pages/AdminReviews';
+import AdminSalesTeam from './pages/AdminSalesTeam';
 import AdminSecurityCenter from './pages/AdminSecurityCenter';
 import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
 import AdminSupplierComms from './pages/AdminSupplierComms';
@@ -113,6 +114,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import RefundPolicy from './pages/RefundPolicy';
 import SafeAndSecure from './pages/SafeAndSecure';
+import SalesDashboard from './pages/SalesDashboard';
 import Settings from './pages/Settings';
 import SharedItinerary from './pages/SharedItinerary';
 import SupplierDashboard from './pages/SupplierDashboard';
@@ -131,8 +133,8 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import SalesDashboard from './pages/SalesDashboard';
-import AdminSalesTeam from './pages/AdminSalesTeam';
+import AdminPackages from './pages/AdminPackages';
+import Packages from './pages/Packages';
 import __Layout from './Layout.jsx';
 
 
@@ -161,6 +163,7 @@ export const PAGES = {
     "AdminPricing": AdminPricing,
     "AdminPromotions": AdminPromotions,
     "AdminReviews": AdminReviews,
+    "AdminSalesTeam": AdminSalesTeam,
     "AdminSecurityCenter": AdminSecurityCenter,
     "AdminSupplierBankAccounts": AdminSupplierBankAccounts,
     "AdminSupplierComms": AdminSupplierComms,
@@ -203,6 +206,7 @@ export const PAGES = {
     "Profile": Profile,
     "RefundPolicy": RefundPolicy,
     "SafeAndSecure": SafeAndSecure,
+    "SalesDashboard": SalesDashboard,
     "Settings": Settings,
     "SharedItinerary": SharedItinerary,
     "SupplierDashboard": SupplierDashboard,
@@ -221,8 +225,8 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "SalesDashboard": SalesDashboard,
-    "AdminSalesTeam": AdminSalesTeam,
+    "AdminPackages": AdminPackages,
+    "Packages": Packages,
 }
 
 export const pagesConfig = {
