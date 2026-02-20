@@ -6,18 +6,32 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plane, Clock, Calendar, PackageOpen, Sparkles } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plane, Clock, Calendar, PackageOpen, Sparkles, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
 import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
 import DiscoverFlights from "../components/flights/DiscoverFlights";
 import AdBanner from "../components/ads/AdBanner";
+import PriceDisplay from "../components/currency/PriceDisplay";
 import moment from "moment";
 
 export default function Flights() {
   const queryClient = useQueryClient();
   const [showAIDiscovery, setShowAIDiscovery] = useState(false);
+  const [searchParams, setSearchParams] = useState({
+    origin: "MNL",
+    destination: "SIN",
+    departureDate: moment().add(7, 'days').format('YYYY-MM-DD'),
+    returnDate: "",
+    adults: 1,
+    children: 0,
+    infants: 0,
+    cabin: "economy"
+  });
   const [filters, setFilters] = useState({
     search: "",
     cabin_class: "all",
@@ -28,13 +42,25 @@ export default function Flights() {
   });
 
   const handleRefresh = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["flights"] });
+    await queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
   };
 
-  const { data: flights = [], isLoading } = useQuery({
-    queryKey: ["flights"],
-    queryFn: () => base44.entities.Flight.filter({ status: "active" }, "-departure_time", 100),
+  // Fetch real-time flights from Amadeus
+  const { data: flightData, isLoading, error } = useQuery({
+    queryKey: ["realtime-flights", searchParams],
+    queryFn: async () => {
+      try {
+        const response = await base44.functions.invoke('searchFlightsAMADEUS', searchParams);
+        return response.data;
+      } catch (err) {
+        console.error("Amadeus search failed:", err);
+        throw err;
+      }
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
+
+  const flights = flightData?.flights || [];
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
