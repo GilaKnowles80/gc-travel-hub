@@ -164,10 +164,10 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Amount:</span>
-                <span className="text-2xl font-bold text-blue-600">₱{totalPrice.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-blue-600"><PriceDisplay amount={totalPrice} /></span>
               </div>
               <p className="text-sm text-slate-600 mt-1">
-                {form.number_of_passengers} passenger(s) × ₱{cabinPrice.toLocaleString()}
+                {form.number_of_passengers} passenger(s) × <PriceDisplay amount={cabinPrice} />
               </p>
             </div>
 

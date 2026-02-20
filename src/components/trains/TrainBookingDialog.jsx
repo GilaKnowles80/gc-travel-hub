@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Train, User, CreditCard, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import PaymentMethodSelector from '@/components/flights/PaymentMethodSelector';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function TrainBookingDialog({ train, open, onClose }) {
   const [step, setStep] = useState(1);
