@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Plane, Hotel, MapPin, ShoppingCart, Tag, Sparkles, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PromoCodeInput from './PromoCodeInput';
+import PriceDisplay from '@/components/currency/PriceDisplay';
+import { useCurrency } from '@/components/currency/CurrencyContext';
 
 export default function PackageSummary({ 
   packageName, 
@@ -20,6 +22,7 @@ export default function PackageSummary({
 }) {
   const itemCount = flights.length + hotels.length + tours.length;
   const [promoDiscount, setPromoDiscount] = useState(0);
+  const { formatPrice } = useCurrency();
 
   const handlePromoApplied = (code, discountAmount) => {
     setPromoDiscount(discountAmount);
@@ -85,7 +88,7 @@ export default function PackageSummary({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-slate-600">Subtotal</span>
-            <span className="font-medium">${totalPrice.toLocaleString()}</span>
+            <span className="font-medium"><PriceDisplay amount={totalPrice} /></span>
           </div>
           
           {discount > 0 && (
@@ -99,7 +102,7 @@ export default function PackageSummary({
                 <span className="text-green-700 font-medium">Bundle Discount ({discount}%)</span>
               </div>
               <span className="text-green-700 font-bold">
-                -${((totalPrice * discount) / 100).toLocaleString()}
+                -<PriceDisplay amount={(totalPrice * discount) / 100} />
               </span>
             </motion.div>
           )}
@@ -118,13 +121,13 @@ export default function PackageSummary({
           {promoDiscount > 0 && (
             <div className="flex justify-between text-sm text-green-600">
               <span>Promo Code Discount</span>
-              <span className="font-bold">-${promoDiscount.toLocaleString()}</span>
+              <span className="font-bold">-<PriceDisplay amount={promoDiscount} /></span>
             </div>
           )}
           
           <div className="flex justify-between text-lg font-bold pt-2 border-t-2">
             <span>Total</span>
-            <span className="text-amber-600">${finalPriceWithPromo.toLocaleString()}</span>
+            <span className="text-amber-600"><PriceDisplay amount={finalPriceWithPromo} /></span>
           </div>
         </div>
 
