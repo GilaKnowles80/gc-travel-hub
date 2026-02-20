@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
@@ -44,6 +44,7 @@ const navLinks = [
   { name: "Affiliate", page: "AffiliateDashboard", icon: Users },
   { name: "Messages", page: "Messages", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
   { name: "Audit Logs", page: "AdminAuditLogs", icon: Shield, adminOnly: true },
   { name: "Code Backup", page: "AdminCodeBackup", icon: Shield, adminOnly: true },

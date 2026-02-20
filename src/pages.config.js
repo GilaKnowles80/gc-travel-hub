@@ -140,6 +140,7 @@ import AffiliateDashboard from './pages/AffiliateDashboard';
 import AdminAffiliates from './pages/AdminAffiliates';
 import PremiumMembership from './pages/PremiumMembership';
 import AdminMonetization from './pages/AdminMonetization';
+import AdminAnalytics from './pages/AdminAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -237,6 +238,7 @@ export const PAGES = {
     "AdminAffiliates": AdminAffiliates,
     "PremiumMembership": PremiumMembership,
     "AdminMonetization": AdminMonetization,
+    "AdminAnalytics": AdminAnalytics,
 }
 
 export const pagesConfig = {
