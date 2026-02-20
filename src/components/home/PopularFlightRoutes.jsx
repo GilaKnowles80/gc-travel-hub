@@ -4,13 +4,14 @@ import { Card } from '@/components/ui/card';
 import { Plane, TrendingUp, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/pages/utils';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 const popularRoutes = [
   {
     route: "Manila → Cebu",
     from: "MNL",
     to: "CEB",
-    price: "₱2,499",
+    price: 2499,
     image: "https://images.unsplash.com/photo-1583470790878-4c88c92a6f18?w=800&auto=format&fit=crop",
     tag: "Most Popular"
   },
@@ -18,7 +19,7 @@ const popularRoutes = [
     route: "Manila → Davao",
     from: "MNL",
     to: "DVO",
-    price: "₱3,299",
+    price: 3299,
     image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop",
     tag: "Best Value"
   },
@@ -26,7 +27,7 @@ const popularRoutes = [
     route: "Cebu → Manila",
     from: "CEB",
     to: "MNL",
-    price: "₱2,599",
+    price: 2599,
     image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&auto=format&fit=crop",
     tag: "Hot Deal"
   },
@@ -34,7 +35,7 @@ const popularRoutes = [
     route: "Manila → Boracay",
     from: "MNL",
     to: "MPH",
-    price: "₱3,999",
+    price: 3999,
     image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop",
     tag: "Beach Paradise"
   },
@@ -42,7 +43,7 @@ const popularRoutes = [
     route: "Manila → Palawan",
     from: "MNL",
     to: "PPS",
-    price: "₱4,299",
+    price: 4299,
     image: "https://images.unsplash.com/photo-1583440914964-68f9fa5c5f1e?w=800&auto=format&fit=crop",
     tag: "Top Rated"
   },
@@ -50,7 +51,7 @@ const popularRoutes = [
     route: "Cebu → Davao",
     from: "CEB",
     to: "DVO",
-    price: "₱2,899",
+    price: 2899,
     image: "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800&auto=format&fit=crop",
     tag: "Quick Connect"
   }
@@ -119,7 +120,7 @@ export default function PopularFlightRoutes() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-500 mb-1">Starting from</p>
-                      <p className="text-2xl font-bold text-amber-600">{route.price}</p>
+                      <p className="text-2xl font-bold text-amber-600"><PriceDisplay amount={route.price} /></p>
                     </div>
                     <button className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 group-hover:gap-3">
                       Book Now

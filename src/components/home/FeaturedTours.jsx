@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
+import PriceDisplay from "@/components/currency/PriceDisplay";
 
 function TourCard({ tour, index }) {
   return (
@@ -70,7 +71,7 @@ function TourCard({ tour, index }) {
               <div className="text-right">
                 <p className="text-xs text-slate-400">from</p>
                 <p className="text-xl font-bold text-slate-900">
-                  ${tour.price_per_person?.toLocaleString()}
+                  <PriceDisplay amount={tour.price_per_person} />
                 </p>
               </div>
             </div>
