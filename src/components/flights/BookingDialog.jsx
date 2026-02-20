@@ -16,6 +16,7 @@ import PaymentMethodSelector from "./PaymentMethodSelector";
 import ItineraryReceipt from "./ItineraryReceipt";
 import StripeCheckout from "@/components/payment/StripeCheckout";
 import { useUserLocation, LocationPrompt } from "@/components/location/LocationCapture";
+import PriceDisplay from "@/components/currency/PriceDisplay";
 
 export default function BookingDialog({ isOpen, onClose, flightOffer, passengers }) {
     const navigate = useNavigate();

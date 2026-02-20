@@ -11,6 +11,7 @@ import { Ship, Users, CreditCard, CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import StripeCheckout from "@/components/payment/StripeCheckout";
 import PayMongoPayment from "@/components/payment/PayMongoPayment";
+import PriceDisplay from "@/components/currency/PriceDisplay";
 
 export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
   const [step, setStep] = useState(1);

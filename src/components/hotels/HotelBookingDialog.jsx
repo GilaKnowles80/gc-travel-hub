@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, User, CreditCard, Copy } from "lucide-react";
 import { toast } from "sonner";
+import PriceDisplay from "@/components/currency/PriceDisplay";
 
 export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, guests }) {
     const [guestDetails, setGuestDetails] = useState(
