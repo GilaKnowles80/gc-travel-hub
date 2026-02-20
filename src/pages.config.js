@@ -135,6 +135,7 @@ import Visas from './pages/Visas';
 import utils from './pages/utils';
 import AdminPackages from './pages/AdminPackages';
 import Packages from './pages/Packages';
+import Messages from './pages/Messages';
 import __Layout from './Layout.jsx';
 
 
@@ -227,6 +228,7 @@ export const PAGES = {
     "utils": utils,
     "AdminPackages": AdminPackages,
     "Packages": Packages,
+    "Messages": Messages,
 }
 
 export const pagesConfig = {

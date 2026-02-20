@@ -40,6 +40,7 @@ const navLinks = [
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Transactions", page: "TransactionHistory", icon: Receipt },
+  { name: "Messages", page: "Messages", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
   { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
   { name: "Audit Logs", page: "AdminAuditLogs", icon: Shield, adminOnly: true },
