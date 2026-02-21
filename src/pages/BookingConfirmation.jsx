@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import moment from "moment";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import CurrencySelector from "@/components/currency/CurrencySelector";
+import { trackPurchase } from "@/components/analytics/GoogleAdsTracking";
 
 export default function BookingConfirmation() {
     const [bookingData, setBookingData] = useState(null);
@@ -15,8 +16,18 @@ export default function BookingConfirmation() {
     useEffect(() => {
         const data = sessionStorage.getItem('bookingConfirmation');
         if (data) {
-            setBookingData(JSON.parse(data));
+            const parsedData = JSON.parse(data);
+            setBookingData(parsedData);
             sessionStorage.removeItem('bookingConfirmation');
+            
+            // Track Google Ads conversion
+            if (parsedData.totalPrice && parsedData.amadeusPNR) {
+                trackPurchase(
+                    parsedData.totalPrice,
+                    parsedData.amadeusPNR,
+                    'PHP'
+                );
+            }
         }
     }, []);
 
