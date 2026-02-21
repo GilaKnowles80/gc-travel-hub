@@ -7,7 +7,11 @@ import { base44 } from "@/api/base44Client";
 
 export default function AssistantChat({ context = {} }) {
   const [messages, setMessages] = useState([
-    { id: 1, role: "assistant", text: "👋 Hi! I'm your travel assistant. I can help you find perfect destinations, plan itineraries, answer travel questions, and provide real-time updates. What would you like to explore?" }
+    { 
+      id: 1, 
+      role: "assistant", 
+      text: "👋 Hi! I'm your AI travel assistant. I can help you with:\n\n🌍 Destination recommendations based on your budget and interests\n✈️ Flight and hotel suggestions for your itinerary\n📋 Travel FAQs (visas, packing, best times to visit)\n\nTell me about your dream trip, or ask me anything about travel!" 
+    }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);

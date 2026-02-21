@@ -40,7 +40,7 @@ export default function TravelAssistant() {
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900">AI Travel Assistant</h1>
           </div>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Get personalized travel recommendations, plan your itinerary, and discover your next adventure with our intelligent travel companion.
+            Get AI-powered destination recommendations, flight & hotel suggestions, and expert answers to all your travel questions - personalized just for you.
           </p>
         </motion.div>
 
@@ -158,9 +158,9 @@ export default function TravelAssistant() {
           className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {[
-            { icon: "🎯", title: "Get Recommendations", desc: "Tell us your budget and interests for personalized suggestions" },
-            { icon: "📅", title: "Plan Itineraries", desc: "Create detailed day-by-day plans for your perfect trip" },
-            { icon: "❓", title: "Ask Questions", desc: "Get answers about visas, packing, best times to visit, and more" }
+            { icon: "🎯", title: "Smart Recommendations", desc: "AI analyzes your budget, interests & dates to suggest perfect destinations" },
+            { icon: "✈️", title: "Flight & Hotel Matching", desc: "Get real-time suggestions from our inventory with prices and availability" },
+            { icon: "❓", title: "Travel Expert", desc: "Instant answers about visas, weather, packing, insurance, and booking policies" }
           ].map((tip, i) => (
             <Card key={i} className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow">
               <div className="text-4xl mb-4">{tip.icon}</div>
