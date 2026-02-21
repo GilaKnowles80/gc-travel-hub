@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2 } from 'lucide-react';
 import PackageBookingConfirmation from '@/components/package/PackageBookingConfirmation';
+import { trackPurchase } from '@/components/analytics/GoogleAdsTracking';
 
 export default function PackageBookingSuccess() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -23,6 +24,17 @@ export default function PackageBookingSuccess() {
     },
     enabled: !!sessionId
   });
+
+  // Track conversion when payment data is loaded
+  useEffect(() => {
+    if (payment && packageBooking) {
+      trackPurchase(
+        payment.amount || packageBooking.final_price,
+        payment.id,
+        payment.currency || 'PHP'
+      );
+    }
+  }, [payment, packageBooking]);
 
   if (loadingPackage || loadingPayment) {
     return (
