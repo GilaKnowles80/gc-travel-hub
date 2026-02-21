@@ -9,14 +9,28 @@ import { motion } from 'framer-motion';
 import { createPageUrl } from '@/pages/utils';
 import moment from 'moment';
 import PriceDisplay from '@/components/currency/PriceDisplay';
+import { useCurrency } from '@/components/currency/CurrencyContext';
 
 export default function LiveFlightDeals() {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState({});
+  const { countryCode } = useCurrency();
+
+  // Map country codes to origin cities
+  const originsByCountry = {
+    'BE': 'BRU', 'NL': 'AMS', 'IT': 'FCO', 'SG': 'SIN', 'CN': 'PEK',
+    'US': 'JFK', 'GB': 'LHR', 'FR': 'CDG', 'DE': 'FRA', 'ES': 'MAD',
+    'AU': 'SYD', 'JP': 'NRT', 'KR': 'ICN', 'PH': 'MNL'
+  };
+  
+  const userOrigin = originsByCountry[countryCode] || 'MNL';
 
   const { data: flights = [] } = useQuery({
-    queryKey: ['featured-flights'],
-    queryFn: () => base44.entities.Flight.filter({ status: 'active' }, '-created_date', 6),
+    queryKey: ['featured-flights', userOrigin],
+    queryFn: () => base44.entities.Flight.filter({ 
+      status: 'active',
+      origin: userOrigin 
+    }, '-created_date', 6),
     refetchInterval: 60000
   });
 
