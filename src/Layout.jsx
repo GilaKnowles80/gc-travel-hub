@@ -15,6 +15,7 @@ import SessionTimeout from "@/components/security/SessionTimeout";
 import CookieConsent from "@/components/gdpr/CookieConsent";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
 import AdBanner from "@/components/ads/AdBanner";
+import GoogleAdsTracking from "@/components/tracking/GoogleAdsTracking";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -125,6 +126,7 @@ export default function Layout({ children, currentPageName }) {
     <RecaptchaProvider>
       <LanguageProvider>
         <CurrencyProvider>
+          <GoogleAdsTracking />
           <FloatingContactWidget />
           {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />
