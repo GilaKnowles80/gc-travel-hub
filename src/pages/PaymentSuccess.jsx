@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Download, Home, Receipt } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trackPurchase } from '@/components/analytics/GoogleAdsTracking';
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
@@ -21,7 +22,15 @@ export default function PaymentSuccess() {
       base44.entities.Payment.filter({ id: paymentId })
         .then(payments => {
           if (payments.length > 0) {
-            setPayment(payments[0]);
+            const paymentData = payments[0];
+            setPayment(paymentData);
+            
+            // Track Google Ads conversion
+            trackPurchase(
+              paymentData.amount,
+              paymentData.id,
+              paymentData.currency || 'PHP'
+            );
           }
         })
         .catch(console.error)
@@ -31,7 +40,15 @@ export default function PaymentSuccess() {
       base44.entities.Payment.filter({ stripe_session_id: sessionId })
         .then(payments => {
           if (payments.length > 0) {
-            setPayment(payments[0]);
+            const paymentData = payments[0];
+            setPayment(paymentData);
+            
+            // Track Google Ads conversion
+            trackPurchase(
+              paymentData.amount,
+              paymentData.id,
+              paymentData.currency || 'PHP'
+            );
           }
         })
         .catch(console.error)
