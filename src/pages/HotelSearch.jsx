@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MobileSelect } from "@/components/ui/mobile-select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Hotel, Loader2, MapPin, Star, Users, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import moment from "moment";
 import HotelBookingDialog from "@/components/hotels/HotelBookingDialog";
+import LocationHotelSearch from "@/components/hotels/LocationHotelSearch";
 import AdBanner from "@/components/ads/AdBanner";
 
 export default function HotelSearch() {
@@ -24,6 +26,7 @@ export default function HotelSearch() {
     const [hasSearched, setHasSearched] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState(null);
     const [showBookingDialog, setShowBookingDialog] = useState(false);
+    const [locationResults, setLocationResults] = useState([]);
 
     const { data: hotelResults, isLoading, error, refetch } = useQuery({
         queryKey: ['hotel-search', searchParams],
@@ -66,14 +69,21 @@ export default function HotelSearch() {
 
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
                 {/* Search Form */}
-                <Card className="mb-8">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Hotel className="w-5 h-5" />
-                            Hotel Search
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <Tabs defaultValue="city" className="mb-8">
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                        <TabsTrigger value="city">Search by City</TabsTrigger>
+                        <TabsTrigger value="location">Search by Location</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="city">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Hotel className="w-5 h-5" />
+                                    Hotel Search
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                             <div>
                                 <Label>City Code (IATA)</Label>
@@ -161,15 +171,78 @@ export default function HotelSearch() {
                                     )}
                                 </Button>
                             </div>
-                            </div>
-                            </CardContent>
-                            </Card>
-                            </TabsContent>
+                        </div>
+                    </CardContent>
+                </Card>
+            </TabsContent>
 
-                            <TabsContent value="location">
-                            <LocationHotelSearch onResults={setLocationResults} />
-                            </TabsContent>
-                            </Tabs>
+            <TabsContent value="location">
+                <LocationHotelSearch onResults={setLocationResults} />
+            </TabsContent>
+        </Tabs>
+
+                {/* Location Results */}
+                {locationResults.length > 0 && (
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-bold mb-4">
+                            {locationResults.length} Hotels Found Nearby
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {locationResults.map((hotel, index) => (
+                                <motion.div
+                                    key={hotel.hotelId}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <Card className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full">
+                                        <CardContent className="p-6">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <h3 className="font-bold text-lg text-slate-900 line-clamp-2">{hotel.name}</h3>
+                                                {hotel.rating && (
+                                                    <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded-lg flex-shrink-0 ml-2">
+                                                        <Star className="w-4 h-4 text-amber-600 fill-amber-600" />
+                                                        <span className="text-sm font-semibold text-amber-900">{hotel.rating}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-slate-600 mb-4">
+                                                <MapPin className="w-4 h-4" />
+                                                <span className="line-clamp-1">{hotel.address || hotel.cityCode}</span>
+                                            </div>
+                                            {hotel.amenities && hotel.amenities.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 mb-4">
+                                                    {hotel.amenities.slice(0, 3).map((amenity, i) => (
+                                                        <span key={i} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                                                            {amenity}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            <div className="flex items-end justify-between mt-4">
+                                                <div>
+                                                    <p className="text-sm text-slate-500">Price per night</p>
+                                                    <p className="text-2xl font-bold text-slate-900">
+                                                        {hotel.currency} {hotel.price}
+                                                    </p>
+                                                </div>
+                                                <Button
+                                                    onClick={() => {
+                                                        setSelectedHotel({ hotel: { hotelId: hotel.hotelId, name: hotel.name }, offer: { price: { total: hotel.price, currency: hotel.currency }, id: hotel.offerId } });
+                                                        setShowBookingDialog(true);
+                                                    }}
+                                                    className="bg-amber-600 hover:bg-amber-700"
+                                                >
+                                                    Book Now
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Results */}
                 {isLoading && (
