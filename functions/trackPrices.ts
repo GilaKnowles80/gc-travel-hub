@@ -19,40 +19,33 @@ Deno.serve(async (req) => {
 
     console.log('Starting price tracking...');
 
-    // Fetch all active listings with limits to avoid timeout
+    // Only check 2 items per run to avoid timeout (supplier scraping is slow)
     const [flights, hotels, tours] = await Promise.all([
-      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 10),
-      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 10),
-      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 10)
+      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 1),
+      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 1),
+      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 0)
     ]);
 
     const alerts = [];
     const now = new Date().toISOString();
     const startTime = Date.now();
-    const MAX_RUNTIME = 50000; // 50 seconds max (before 60s timeout)
 
-    // Track items with timeout protection
+    // Only track 2 items total (supplier scraping takes 5-10s per item × 3 suppliers)
     const allItems = [
       ...flights.map(f => ({ type: 'flight', entity: 'Flight', item: f })),
-      ...hotels.map(h => ({ type: 'hotel', entity: 'Hotel', item: h })),
-      ...tours.map(t => ({ type: 'tour', entity: 'Tour', item: t }))
-    ];
+      ...hotels.map(h => ({ type: 'hotel', entity: 'Hotel', item: h }))
+    ].slice(0, 2);
 
-    let checked = 0;
+    console.log(`Checking ${allItems.length} items...`);
+
     for (const { type, entity, item } of allItems) {
-      // Stop if approaching timeout
-      if (Date.now() - startTime > MAX_RUNTIME) {
-        console.log(`Timeout protection: Stopped after ${checked} items`);
-        break;
-      }
-
-      const priceChecks = await checkSupplierPrices(base44, type, item);
-      const alert = await updatePriceTracking(base44, entity, item, priceChecks, now);
-      if (alert) alerts.push(alert);
-      checked++;
-      
-      if (checked % 5 === 0) {
-        console.log(`Progress: ${checked}/${allItems.length} items checked`);
+      try {
+        const priceChecks = await checkSupplierPrices(base44, type, item);
+        const alert = await updatePriceTracking(base44, entity, item, priceChecks, now);
+        if (alert) alerts.push(alert);
+        console.log(`✓ Checked ${type}: ${item.id}`);
+      } catch (error) {
+        console.error(`✗ Failed to check ${type} ${item.id}:`, error.message);
       }
     }
 
