@@ -23,11 +23,11 @@ Deno.serve(async (req) => {
     const now = new Date().toISOString();
     const startTime = Date.now();
 
-    // Update last_checked timestamp for active items (limit to 5 each to avoid timeout)
+    // Update last_checked timestamp for active items (limit to 2 each to avoid timeout)
     const [flights, hotels, tours] = await Promise.all([
-      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 5),
-      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 5),
-      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 5)
+      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 2),
+      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 2),
+      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 2)
     ]);
 
     // Batch updates in parallel for better performance
