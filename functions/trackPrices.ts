@@ -19,35 +19,41 @@ Deno.serve(async (req) => {
 
     console.log('Starting price tracking...');
 
-    // Fetch all active listings
+    // Fetch all active listings with limits to avoid timeout
     const [flights, hotels, tours] = await Promise.all([
-      base44.asServiceRole.entities.Flight.filter({ status: 'active' }),
-      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }),
-      base44.asServiceRole.entities.Tour.filter({ status: 'active' })
+      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 10),
+      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 10),
+      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 10)
     ]);
 
     const alerts = [];
     const now = new Date().toISOString();
+    const startTime = Date.now();
+    const MAX_RUNTIME = 50000; // 50 seconds max (before 60s timeout)
 
-    // Track flights
-    for (const flight of flights) {
-      const priceChecks = await checkSupplierPrices(base44, 'flight', flight);
-      const alert = await updatePriceTracking(base44, 'Flight', flight, priceChecks, now);
-      if (alert) alerts.push(alert);
-    }
+    // Track items with timeout protection
+    const allItems = [
+      ...flights.map(f => ({ type: 'flight', entity: 'Flight', item: f })),
+      ...hotels.map(h => ({ type: 'hotel', entity: 'Hotel', item: h })),
+      ...tours.map(t => ({ type: 'tour', entity: 'Tour', item: t }))
+    ];
 
-    // Track hotels
-    for (const hotel of hotels) {
-      const priceChecks = await checkSupplierPrices(base44, 'hotel', hotel);
-      const alert = await updatePriceTracking(base44, 'Hotel', hotel, priceChecks, now);
-      if (alert) alerts.push(alert);
-    }
+    let checked = 0;
+    for (const { type, entity, item } of allItems) {
+      // Stop if approaching timeout
+      if (Date.now() - startTime > MAX_RUNTIME) {
+        console.log(`Timeout protection: Stopped after ${checked} items`);
+        break;
+      }
 
-    // Track tours
-    for (const tour of tours) {
-      const priceChecks = await checkSupplierPrices(base44, 'tour', tour);
-      const alert = await updatePriceTracking(base44, 'Tour', tour, priceChecks, now);
+      const priceChecks = await checkSupplierPrices(base44, type, item);
+      const alert = await updatePriceTracking(base44, entity, item, priceChecks, now);
       if (alert) alerts.push(alert);
+      checked++;
+      
+      if (checked % 5 === 0) {
+        console.log(`Progress: ${checked}/${allItems.length} items checked`);
+      }
     }
 
     // Send email alerts for significant price drops
@@ -55,16 +61,14 @@ Deno.serve(async (req) => {
       await sendPriceAlerts(base44, alerts);
     }
 
-    console.log(`Price tracking complete. ${alerts.length} alerts generated.`);
+    console.log(`Price tracking complete. ${alerts.length} alerts generated from ${checked} items.`);
 
     return Response.json({
       success: true,
-      checked: {
-        flights: flights.length,
-        hotels: hotels.length,
-        tours: tours.length
-      },
-      alerts: alerts.length
+      checked: checked,
+      total: allItems.length,
+      alerts: alerts.length,
+      runtime: `${((Date.now() - startTime) / 1000).toFixed(1)}s`
     });
 
   } catch (error) {
