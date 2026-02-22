@@ -55,16 +55,16 @@ Deno.serve(async (req) => {
         amount = booking.total_price || 0;
         break;
 
-      case 'TourBooking':
-        subject = `New Tour Booking: ${booking.tour_name || 'Tour'}`;
+      case 'Booking':
+        subject = `New Tour Booking: ${booking.tour_title || 'Tour'}`;
         details = `
           <strong>Tour Booking</strong><br>
-          Tour: ${booking.tour_name || 'N/A'}<br>
-          Guest: ${booking.guest_name}<br>
-          Email: ${booking.guest_email}<br>
-          Phone: ${booking.guest_phone || 'N/A'}<br>
-          Participants: ${booking.number_of_participants}<br>
-          Tour Date: ${booking.tour_date || 'N/A'}<br>
+          Tour: ${booking.tour_title || 'N/A'}<br>
+          Customer: ${booking.customer_name}<br>
+          Email: ${booking.customer_email}<br>
+          Phone: ${booking.customer_phone || 'N/A'}<br>
+          Travelers: ${booking.number_of_travelers}<br>
+          Departure Date: ${booking.departure_date || 'N/A'}<br>
           Status: ${booking.status}<br>
           Payment Status: ${booking.payment_status}<br>
           Total: $${booking.total_price?.toFixed(2) || '0.00'}
