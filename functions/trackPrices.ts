@@ -23,45 +23,52 @@ Deno.serve(async (req) => {
     const now = new Date().toISOString();
     const startTime = Date.now();
 
-    // Update last_checked timestamp for active items
+    // Update last_checked timestamp for active items (limit to 5 each to avoid timeout)
     const [flights, hotels, tours] = await Promise.all([
-      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 10),
-      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 10),
-      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 10)
+      base44.asServiceRole.entities.Flight.filter({ status: 'active' }, '-created_date', 5),
+      base44.asServiceRole.entities.Hotel.filter({ status: 'active' }, '-created_date', 5),
+      base44.asServiceRole.entities.Tour.filter({ status: 'active' }, '-created_date', 5)
     ]);
 
-    let checked = 0;
+    // Batch updates in parallel for better performance
+    const updates = [];
     
-    // Update tracking timestamp for all items
     for (const flight of flights) {
-      await base44.asServiceRole.entities.Flight.update(flight.id, {
-        price_tracking: {
-          ...flight.price_tracking,
-          last_checked: now
-        }
-      });
-      checked++;
+      updates.push(
+        base44.asServiceRole.entities.Flight.update(flight.id, {
+          price_tracking: {
+            ...flight.price_tracking,
+            last_checked: now
+          }
+        })
+      );
     }
 
     for (const hotel of hotels) {
-      await base44.asServiceRole.entities.Hotel.update(hotel.id, {
-        price_tracking: {
-          ...hotel.price_tracking,
-          last_checked: now
-        }
-      });
-      checked++;
+      updates.push(
+        base44.asServiceRole.entities.Hotel.update(hotel.id, {
+          price_tracking: {
+            ...hotel.price_tracking,
+            last_checked: now
+          }
+        })
+      );
     }
 
     for (const tour of tours) {
-      await base44.asServiceRole.entities.Tour.update(tour.id, {
-        price_tracking: {
-          ...tour.price_tracking,
-          last_checked: now
-        }
-      });
-      checked++;
+      updates.push(
+        base44.asServiceRole.entities.Tour.update(tour.id, {
+          price_tracking: {
+            ...tour.price_tracking,
+            last_checked: now
+          }
+        })
+      );
     }
+
+    // Execute all updates in parallel
+    await Promise.all(updates);
+    const checked = updates.length;
 
     console.log(`Price tracking complete. Updated ${checked} items.`);
 
