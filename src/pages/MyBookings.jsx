@@ -28,7 +28,7 @@ export default function MyBookings() {
   };
 
   // Fetch all booking types
-  const { data: flightBookings = [], isLoading: flightLoading } = useQuery({
+  const { data: flightBookings = [], isLoading: flightLoading, refetch: refetchFlights } = useQuery({
     queryKey: ["my-flight-bookings"],
     queryFn: () => base44.entities.FlightBooking.list("-created_date", 100),
   });
@@ -38,7 +38,7 @@ export default function MyBookings() {
     queryFn: () => base44.entities.Booking.list("-created_date", 100),
   });
 
-  const { data: hotelBookings = [], isLoading: hotelLoading } = useQuery({
+  const { data: hotelBookings = [], isLoading: hotelLoading, refetch: refetchHotels } = useQuery({
     queryKey: ["my-hotel-bookings"],
     queryFn: () => base44.entities.HotelBooking.list("-created_date", 100),
   });
@@ -147,7 +147,16 @@ export default function MyBookings() {
           <>
             <div className="grid grid-cols-1 gap-4 mb-8">
               {paginatedBookings.map((booking, i) => (
-                <BookingCard key={booking.id} booking={booking} index={i} type={booking.type} />
+                <BookingCard 
+                  key={booking.id} 
+                  booking={booking} 
+                  index={i} 
+                  type={booking.type}
+                  onCancelled={() => {
+                    refetchFlights();
+                    refetchHotels();
+                  }}
+                />
               ))}
             </div>
 
