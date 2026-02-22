@@ -36,7 +36,7 @@ export default function AirportSelector({ value, onChange, placeholder, userLoca
       airport.city?.toLowerCase().includes(searchLower) ||
       airport.country?.toLowerCase().includes(searchLower)
     );
-  }).slice(0, 8);
+  }).slice(0, 20);
 
   const selectedAirport = airports.find(a => a.iata_code === value);
 
