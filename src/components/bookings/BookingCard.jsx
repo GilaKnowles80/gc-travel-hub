@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Calendar, MapPin, Users, CreditCard, Plane, Compass, Hotel, Ship, Bus, Umbrella, Zap, Car } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar, MapPin, Users, CreditCard, Plane, Compass, Hotel, Ship, Bus, Umbrella, Zap, Car, XCircle } from "lucide-react";
+import CancellationDialog from "./CancellationDialog";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -29,7 +31,8 @@ const bookingIcons = {
   car_rental: Car,
 };
 
-export default function BookingCard({ booking, index, type }) {
+export default function BookingCard({ booking, index, type, onCancelled }) {
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const Icon = bookingIcons[type] || Compass;
   let title = "";
   let details = [];
@@ -139,21 +142,45 @@ export default function BookingCard({ booking, index, type }) {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 mt-4">
-            <Badge className={`${statusColors[booking.status] || statusColors.pending} border capitalize text-xs`}>
-              {booking.status || "pending"}
-            </Badge>
-            {booking.payment_status && (
-              <Badge className={`${paymentColors[booking.payment_status] || paymentColors.unpaid} border capitalize text-xs`}>
-                {booking.payment_status}
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex gap-2">
+              <Badge className={`${statusColors[booking.status] || statusColors.pending} border capitalize text-xs`}>
+                {booking.status || "pending"}
               </Badge>
+              {booking.payment_status && (
+                <Badge className={`${paymentColors[booking.payment_status] || paymentColors.unpaid} border capitalize text-xs`}>
+                  {booking.payment_status}
+                </Badge>
+              )}
+              <Badge className="bg-slate-100 text-slate-700 border-slate-200 border capitalize text-xs">
+                {type.replace("_", " ")}
+              </Badge>
+            </div>
+            
+            {(type === 'flight' || type === 'hotel') && booking.status !== 'cancelled' && booking.status !== 'completed' && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={() => setShowCancelDialog(true)}
+              >
+                <XCircle className="w-4 h-4 mr-1" />
+                Cancel
+              </Button>
             )}
-            <Badge className="bg-slate-100 text-slate-700 border-slate-200 border capitalize text-xs">
-              {type.replace("_", " ")}
-            </Badge>
           </div>
         </div>
       </Card>
+
+      {(type === 'flight' || type === 'hotel') && (
+        <CancellationDialog
+          booking={booking}
+          bookingType={type}
+          open={showCancelDialog}
+          onClose={() => setShowCancelDialog(false)}
+          onSuccess={onCancelled}
+        />
+      )}
     </motion.div>
   );
 }

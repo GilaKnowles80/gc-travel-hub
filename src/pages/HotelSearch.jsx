@@ -161,9 +161,15 @@ export default function HotelSearch() {
                                     )}
                                 </Button>
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                            </div>
+                            </CardContent>
+                            </Card>
+                            </TabsContent>
+
+                            <TabsContent value="location">
+                            <LocationHotelSearch onResults={setLocationResults} />
+                            </TabsContent>
+                            </Tabs>
 
                 {/* Results */}
                 {isLoading && (
