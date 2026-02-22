@@ -16,7 +16,7 @@ import CookieConsent from "@/components/gdpr/CookieConsent";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
 import AdBanner from "@/components/ads/AdBanner";
 import GoogleAdsTracking from "@/components/tracking/GoogleAdsTracking";
-import GTMTracking from "@/components/tracking/GTMTracking";
+import GoogleTagManager from "@/components/tracking/GoogleTagManager";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
@@ -127,8 +127,8 @@ export default function Layout({ children, currentPageName }) {
     <RecaptchaProvider>
       <LanguageProvider>
         <CurrencyProvider>
+          <GoogleTagManager />
           <GoogleAdsTracking />
-          <GTMTracking />
           <FloatingContactWidget />
           {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />
