@@ -46,6 +46,7 @@ const navLinks = [
   { name: "Affiliate", page: "AffiliateDashboard", icon: Users },
   { name: "Messages", page: "Messages", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Reservations", page: "ManageReservations", icon: BookOpen, adminOnly: true },
   { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Security", page: "AdminSecurityCenter", icon: Shield, adminOnly: true },
   { name: "Audit Logs", page: "AdminAuditLogs", icon: Shield, adminOnly: true },

@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
 
         const { access_token } = await tokenResponse.json();
 
-        // Search hotels by city
+        // Search hotels by city using Amadeus API
         const searchParams = new URLSearchParams({
             cityCode: cityCode,
             checkInDate: checkInDate,
@@ -43,16 +43,21 @@ Deno.serve(async (req) => {
             roomQuantity: rooms.toString(),
             radius: '50',
             radiusUnit: 'KM',
-            ratings: '3,4,5',
-            amenities: 'WIFI,PARKING',
-            bestRateOnly: 'true'
+            ratings: '1,2,3,4,5',
+            currency: 'PHP',
+            paymentPolicy: 'NONE',
+            includeClosed: 'false',
+            bestRateOnly: 'false',
+            view: 'FULL',
+            sort: 'PRICE'
         });
 
         const hotelResponse = await fetch(
             `https://test.api.amadeus.com/v3/shopping/hotel-offers?${searchParams}`,
             {
                 headers: {
-                    'Authorization': `Bearer ${access_token}`
+                    'Authorization': `Bearer ${access_token}`,
+                    'Accept': 'application/vnd.amadeus+json'
                 }
             }
         );
