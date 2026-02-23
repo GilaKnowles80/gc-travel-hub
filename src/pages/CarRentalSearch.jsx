@@ -13,7 +13,7 @@ export default function CarRentalSearch() {
   const [filters, setFilters] = useState({
     company: 'all',
     car_type: 'all',
-    location: ''
+    location: 'Manila, Philippines'
   });
   const [selectedCar, setSelectedCar] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
