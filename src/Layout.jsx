@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import LiveVisitorCounter from "@/components/analytics/LiveVisitorCounter";
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import { LanguageProvider } from "@/components/language/LanguageContext";
 import LanguageSelector from "@/components/language/LanguageSelector";
@@ -172,7 +173,8 @@ export default function Layout({ children, currentPageName }) {
 
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-2">
+              <LiveVisitorCounter />
               <LanguageSelector showLabel />
               {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
                 <Link key={link.page} to={createPageUrl(link.page)}>
