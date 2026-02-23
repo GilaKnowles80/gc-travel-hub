@@ -9,6 +9,7 @@ import moment from "moment";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import CurrencySelector from "@/components/currency/CurrencySelector";
 import { trackPurchase } from "@/components/analytics/GoogleAdsTracking";
+import { base44 } from "@/api/base44Client";
 
 export default function BookingConfirmation() {
     const [bookingData, setBookingData] = useState(null);
@@ -28,6 +29,20 @@ export default function BookingConfirmation() {
                     'PHP'
                 );
             }
+            
+            // Track booking confirmation view
+            base44.analytics.track({
+                eventName: 'booking_confirmation_viewed',
+                properties: {
+                    booking_type: 'flight',
+                    pnr: parsedData.amadeusPNR,
+                    total_price: parsedData.totalPrice,
+                    currency: 'PHP',
+                    passengers: parsedData.travelers?.length || 1,
+                    origin: parsedData.flightDetails?.itineraries[0]?.segments[0]?.departure?.iataCode,
+                    destination: parsedData.flightDetails?.itineraries[0]?.segments[parsedData.flightDetails.itineraries[0].segments.length - 1]?.arrival?.iataCode
+                }
+            });
         }
     }, []);
 
