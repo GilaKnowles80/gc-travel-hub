@@ -45,19 +45,41 @@ export default function Flights() {
     await queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
   };
 
-  // Fetch real-time flights from Amadeus
+  // Fetch real-time flights from Duffel
   const { data: flightData, isLoading, error } = useQuery({
     queryKey: ["realtime-flights", searchParams],
     queryFn: async () => {
       try {
-        const response = await base44.functions.invoke('searchFlightsAMADEUS', searchParams);
-        return response.data;
+        const response = await base44.functions.invoke('searchFlightsDuffel', searchParams);
+        
+        // Transform Duffel offers to app format
+        const flights = response.data.offers?.map((offer, idx) => ({
+          id: `duffel_${idx}`,
+          duffel_id: offer.id,
+          airline_name: offer.owner.name,
+          flight_number: offer.slices[0]?.segments[0]?.operating_carrier_flight_number || 'N/A',
+          origin: offer.slices[0]?.origin.iata_code,
+          destination: offer.slices[0]?.destination.iata_code,
+          departure_time: offer.slices[0]?.segments[0]?.departing_at,
+          arrival_time: offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at,
+          duration_hours: (new Date(offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at) - new Date(offer.slices[0]?.segments[0]?.departing_at)) / (1000 * 60 * 60),
+          is_direct: offer.slices[0]?.segments?.length === 1,
+          stops: offer.slices[0]?.segments?.length - 1 || 0,
+          price: parseFloat(offer.total_amount),
+          currency: offer.total_currency,
+          cabin_classes: [{ class: searchParams.cabin, price: parseFloat(offer.total_amount), seats_available: 9 }],
+          baggage_allowance: '1 checked bag, 1 carry-on',
+          amenities: ['Seat selection', 'Online check-in'],
+          status: 'active'
+        })) || [];
+
+        return { flights };
       } catch (err) {
-        console.error("Amadeus search failed:", err);
+        console.error("Duffel search failed:", err);
         throw err;
       }
     },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   const flights = flightData?.flights || [];
@@ -135,7 +157,7 @@ export default function Flights() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Book Your Flight</h1>
-                <p className="text-slate-300">Real-time flight search powered by Amadeus</p>
+                <p className="text-slate-300">Real-time flight search powered by Duffel - 300+ airlines</p>
               </div>
               <Button
                 onClick={() => setShowAIDiscovery(!showAIDiscovery)}
