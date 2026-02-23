@@ -113,14 +113,7 @@ export default function HeroSection() {
               <div className="flex gap-2 min-w-max">
                 {[
                   { type: "flights", label: "Flights", icon: Plane },
-                  { type: "tours", label: "Tours", icon: Compass },
                   { type: "hotels", label: "Hotels", icon: Hotel },
-                  { type: "ferry", label: "Ferry", icon: Ship },
-                  { type: "trains", label: "Trains", icon: Train },
-                  { type: "bus", label: "Bus", icon: Bus },
-                  { type: "insurance", label: "Insurance", icon: Umbrella },
-                  { type: "visa", label: "Visa", icon: Zap },
-                  { type: "carRental", label: "Car Rental", icon: Car },
                 ].map(({ type, label, icon: Icon }) => (
                   <motion.div
                     key={type}
@@ -271,44 +264,6 @@ export default function HeroSection() {
               </div>
             )}
 
-            {searchType === "tours" && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2">
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    Destination
-                  </label>
-                  <Input 
-                    placeholder="Where do you want to go?" 
-                    className="rounded-xl"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                  />
-                </div>
-                <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     When
-                   </label>
-                   <Input 
-                     type="date" 
-                     placeholder="mm/dd/yyyy" 
-                     className="rounded-xl cursor-pointer"
-                     value={onwardDate}
-                     onChange={(e) => setOnwardDate(e.target.value)}
-                   />
-                 </div>
-                <div className="md:col-span-3">
-                  <Link to={`${createPageUrl("Tours")}?destination=${destination}&date=${onwardDate}`}>
-                    <Button type="button" className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                      <Search className="w-4 h-4 mr-2" />
-                      Explore Tours
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
             {searchType === "hotels" && (
                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                  <div>
@@ -361,185 +316,7 @@ export default function HeroSection() {
                </div>
              )}
 
-            {searchType === "ferry" && (
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     From
-                   </label>
-                   <Input placeholder="Departure port" className="rounded-xl" />
-                 </div>
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     To
-                   </label>
-                   <Input placeholder="Destination port" className="rounded-xl" />
-                 </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Date
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                 <div className="md:col-span-3">
-                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                     <Search className="w-4 h-4 mr-2" />
-                     Search Ferries
-                   </Button>
-                 </div>
-               </div>
-             )}
 
-            {searchType === "bus" && (
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     From
-                   </label>
-                   <Input placeholder="Departure city" className="rounded-xl" />
-                 </div>
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     To
-                   </label>
-                   <Input placeholder="Destination city" className="rounded-xl" />
-                 </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Date
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                 <div className="md:col-span-3">
-                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                     <Search className="w-4 h-4 mr-2" />
-                     Search Buses
-                   </Button>
-                 </div>
-               </div>
-             )}
-
-            {searchType === "insurance" && (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Trip Start
-                   </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                 </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Trip End
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                 <div className="md:col-span-2">
-                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                     <Search className="w-4 h-4 mr-2" />
-                     Get Insurance Quotes
-                   </Button>
-                 </div>
-               </div>
-             )}
-
-            {searchType === "visa" && (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <MapPin className="w-3 h-3" />
-                     Destination Country
-                   </label>
-                   <Input placeholder="Which country?" className="rounded-xl" />
-                 </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Travel Date
-                    </label>
-                    <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                  </div>
-                  <div className="md:col-span-2">
-                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                      <Search className="w-4 h-4 mr-2" />
-                      Check Visa Requirements
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-            {searchType === "trains" && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    From
-                  </label>
-                  <Input placeholder="Departure station" className="rounded-xl" />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    To
-                  </label>
-                  <Input placeholder="Destination station" className="rounded-xl" />
-                </div>
-                <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Date
-                   </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                 </div>
-                <div className="md:col-span-3">
-                  <Link to={createPageUrl("TrainSearch")}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                      <Search className="w-4 h-4 mr-2" />
-                      Search Trains
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {searchType === "carRental" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    Pickup Location
-                  </label>
-                  <Input placeholder="City or airport" className="rounded-xl" />
-                </div>
-                <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Pickup Date
-                   </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                 </div>
-                 <div>
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Dropoff Date
-                   </label>
-                   <Input type="date" placeholder="mm/dd/yyyy" className="rounded-xl cursor-pointer" />
-                 </div>
-                 <div className="md:col-span-2">
-                   <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                     <Search className="w-4 h-4 mr-2" />
-                     Search Car Rentals
-                   </Button>
-                 </div>
-               </div>
-             )}
             </div>
           </div>
         </motion.div>
@@ -552,15 +329,15 @@ export default function HeroSection() {
         >
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-400" />
-            500+ Tours
+            Real-time Flight Prices
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-amber-400" />
-            50+ Countries
+            300+ Airlines
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-blue-400" />
-            10K+ Happy Travelers
+            Verified Hotels
           </div>
         </motion.div>
       </div>
