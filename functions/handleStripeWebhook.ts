@@ -160,15 +160,81 @@ Deno.serve(async (req) => {
               }
               break;
             case 'car':
+            case 'car_rental':
+              const carBooking = await base44.asServiceRole.entities.CarRentalBooking.get(bookingId);
               await base44.asServiceRole.entities.CarRentalBooking.update(bookingId, {
                 payment_status: 'paid',
                 status: 'confirmed'
               });
+              
+              // Track successful car rental booking
+              await base44.analytics.track({
+                eventName: 'car_rental_booking_completed',
+                properties: {
+                  booking_id: bookingId,
+                  car_model: carBooking.car_model,
+                  rental_company: carBooking.rental_company,
+                  total_price: carBooking.total_price
+                }
+              });
+              
+              // Send confirmation email
+              await base44.asServiceRole.integrations.Core.SendEmail({
+                from_name: 'GC Travel & Tours',
+                to: carBooking.renter_email,
+                subject: 'Car Rental Confirmed - GC Travel & Tours',
+                body: `
+                  <h2>Car Rental Confirmed!</h2>
+                  <p>Your car rental for <strong>${carBooking.car_model}</strong> has been confirmed.</p>
+                  <p><strong>Booking ID:</strong> ${bookingId}</p>
+                  <p><strong>Pickup:</strong> ${carBooking.pickup_date}</p>
+                  <p><strong>Return:</strong> ${carBooking.return_date}</p>
+                  <p><strong>Total:</strong> ₱${carBooking.total_price}</p>
+                `
+              });
               break;
             case 'bus':
+              const busBooking = await base44.asServiceRole.entities.BusBooking.get(bookingId);
               await base44.asServiceRole.entities.BusBooking.update(bookingId, {
                 payment_status: 'paid',
                 status: 'confirmed'
+              });
+              
+              // Update bus seat availability
+              const bus = await base44.asServiceRole.entities.Bus.get(busBooking.bus_id);
+              if (bus) {
+                await base44.asServiceRole.entities.Bus.update(bus.id, {
+                  seats_available: bus.seats_available - busBooking.number_of_passengers
+                });
+              }
+              
+              // Track successful bus booking
+              await base44.analytics.track({
+                eventName: 'bus_booking_completed',
+                properties: {
+                  booking_id: bookingId,
+                  operator: busBooking.operator,
+                  route: busBooking.route || `${busBooking.origin_terminal} - ${busBooking.destination_terminal}`,
+                  passengers: busBooking.number_of_passengers,
+                  total_price: busBooking.total_price
+                }
+              });
+              
+              // Send confirmation email
+              await base44.asServiceRole.integrations.Core.SendEmail({
+                from_name: 'GC Travel & Tours',
+                to: busBooking.passenger_email,
+                subject: 'Bus Ticket Confirmed - GC Travel & Tours',
+                body: `
+                  <h2>Bus Ticket Confirmed!</h2>
+                  <p>Your bus ticket has been confirmed.</p>
+                  <p><strong>Booking ID:</strong> ${bookingId}</p>
+                  <p><strong>Operator:</strong> ${busBooking.operator}</p>
+                  <p><strong>Route:</strong> ${busBooking.origin_terminal} → ${busBooking.destination_terminal}</p>
+                  <p><strong>Departure:</strong> ${busBooking.departure_time}</p>
+                  <p><strong>Passengers:</strong> ${busBooking.number_of_passengers}</p>
+                  <p><strong>Total:</strong> ₱${busBooking.total_price}</p>
+                `
               });
               break;
             case 'visa':
