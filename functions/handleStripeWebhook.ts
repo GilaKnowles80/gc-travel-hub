@@ -132,10 +132,32 @@ Deno.serve(async (req) => {
               });
               break;
             case 'tour':
+              const tourBooking = await base44.asServiceRole.entities.Booking.get(bookingId);
               await base44.asServiceRole.entities.Booking.update(bookingId, {
                 payment_status: 'paid',
                 status: 'confirmed'
               });
+              
+              // Track tour booking completion
+              if (tourBooking) {
+                try {
+                  await base44.asServiceRole.analytics.track({
+                    eventName: 'tour_booking_completed',
+                    properties: {
+                      booking_id: bookingId,
+                      tour_id: tourBooking.tour_id,
+                      tour_title: tourBooking.tour_title,
+                      destination: tourBooking.destination,
+                      travelers: tourBooking.number_of_travelers,
+                      total_price: session.amount_total / 100,
+                      currency: session.currency.toUpperCase(),
+                      trip_type: tourBooking.trip_type
+                    }
+                  });
+                } catch (trackError) {
+                  console.error('Analytics tracking error:', trackError);
+                }
+              }
               break;
             case 'car':
               await base44.asServiceRole.entities.CarRentalBooking.update(bookingId, {
