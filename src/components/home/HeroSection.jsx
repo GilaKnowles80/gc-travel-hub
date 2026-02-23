@@ -109,35 +109,37 @@ export default function HeroSection() {
         >
 
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
-            <div className="flex overflow-x-auto gap-2 mb-6 pb-2 scrollbar-thin scrollbar-thumb-orange-300 scrollbar-track-transparent">
-              {[
-                { type: "flights", label: "Flights", icon: Plane },
-                { type: "tours", label: "Tours", icon: Compass },
-                { type: "hotels", label: "Hotels", icon: Hotel },
-                { type: "ferry", label: "Ferry", icon: Ship },
-                { type: "trains", label: "Trains", icon: Train },
-                { type: "bus", label: "Bus", icon: Bus },
-                { type: "insurance", label: "Insurance", icon: Umbrella },
-                { type: "visa", label: "Visa", icon: Zap },
-                { type: "carRental", label: "Car Rental", icon: Car },
-              ].map(({ type, label, icon: Icon }) => (
-                <motion.div
-                  key={type}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    onClick={() => setSearchType(type)}
-                    variant={searchType === type ? "default" : "ghost"}
-                    className={`rounded-xl whitespace-nowrap transition-all font-semibold flex-shrink-0 ${
-                      searchType === type ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg text-white" : "text-slate-700 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100"
-                    }`}
+            <div className="overflow-x-auto mb-6 -mx-6 px-6">
+              <div className="flex gap-2 min-w-max">
+                {[
+                  { type: "flights", label: "Flights", icon: Plane },
+                  { type: "tours", label: "Tours", icon: Compass },
+                  { type: "hotels", label: "Hotels", icon: Hotel },
+                  { type: "ferry", label: "Ferry", icon: Ship },
+                  { type: "trains", label: "Trains", icon: Train },
+                  { type: "bus", label: "Bus", icon: Bus },
+                  { type: "insurance", label: "Insurance", icon: Umbrella },
+                  { type: "visa", label: "Visa", icon: Zap },
+                  { type: "carRental", label: "Car Rental", icon: Car },
+                ].map(({ type, label, icon: Icon }) => (
+                  <motion.div
+                    key={type}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {label}
-                  </Button>
-                </motion.div>
-              ))}
+                    <Button
+                      onClick={() => setSearchType(type)}
+                      variant={searchType === type ? "default" : "ghost"}
+                      className={`rounded-xl whitespace-nowrap transition-all font-semibold ${
+                        searchType === type ? "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg text-white" : "text-slate-700 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 mr-2" />
+                      {label}
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             <div className="bg-slate-50 rounded-2xl p-4">
