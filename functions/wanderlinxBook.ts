@@ -55,6 +55,17 @@ Deno.serve(async (req) => {
         total_bookings: (supplier.total_bookings || 0) + 1
       });
     }
+    
+    // Track successful integration
+    await base44.analytics.track({
+      eventName: 'supplier_integration_success',
+      properties: {
+        supplier: 'wanderlinx',
+        operation: 'booking',
+        booking_type,
+        reference: booking.confirmation_code
+      }
+    });
 
     return Response.json({ 
       success: true, 

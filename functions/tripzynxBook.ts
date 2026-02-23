@@ -55,6 +55,17 @@ Deno.serve(async (req) => {
         total_bookings: (supplier.total_bookings || 0) + 1
       });
     }
+    
+    // Track successful integration
+    await base44.analytics.track({
+      eventName: 'supplier_integration_success',
+      properties: {
+        supplier: 'tripzynx',
+        operation: 'booking',
+        tour_id,
+        reference: booking.booking_id
+      }
+    });
 
     return Response.json({ 
       success: true, 

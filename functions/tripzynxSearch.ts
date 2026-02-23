@@ -48,6 +48,18 @@ Deno.serve(async (req) => {
 
     const results = await response.json();
     
+    // Track successful integration
+    await base44.analytics.track({
+      eventName: 'supplier_integration_success',
+      properties: {
+        supplier: 'tripzynx',
+        operation: 'search',
+        search_type,
+        destination,
+        tour_type
+      }
+    });
+    
     return Response.json({ 
       success: true, 
       supplier: 'tripzynx',
