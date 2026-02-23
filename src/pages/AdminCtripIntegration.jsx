@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building2, Calendar, DollarSign, Loader2, Package } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Building2, Calendar, DollarSign, Loader2, Package, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminCtripIntegration() {
+  const [apiMode, setApiMode] = useState('vendor'); // 'vendor' or 'supply'
+  
   const [inventoryForm, setInventoryForm] = useState({
     hotel_id: '',
     room_type: '',
@@ -34,7 +37,14 @@ export default function AdminCtripIntegration() {
 
   const syncInventoryMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await base44.functions.invoke('syncCtripInventory', {
+      const functionName = apiMode === 'supply' ? 'ctripSupplyUpdateInventory' : 'syncCtripInventory';
+      const payload = apiMode === 'supply' ? {
+        hotel_id: data.hotel_id,
+        room_type_code: data.room_type,
+        date_from: data.start_date,
+        date_to: data.end_date,
+        inventory: parseInt(data.availability)
+      } : {
         hotel_id: data.hotel_id,
         room_type: data.room_type,
         date_range: {
@@ -42,7 +52,8 @@ export default function AdminCtripIntegration() {
           end_date: data.end_date
         },
         availability: parseInt(data.availability)
-      });
+      };
+      const response = await base44.functions.invoke(functionName, payload);
       return response.data;
     },
     onSuccess: (data) => {
@@ -60,7 +71,15 @@ export default function AdminCtripIntegration() {
 
   const syncRatesMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await base44.functions.invoke('syncCtripRates', {
+      const functionName = apiMode === 'supply' ? 'ctripSupplyUpdateRates' : 'syncCtripRates';
+      const payload = apiMode === 'supply' ? {
+        hotel_id: data.hotel_id,
+        room_type_code: data.room_type,
+        rate_plan_code: data.rate_plan,
+        date_from: data.start_date,
+        date_to: data.end_date,
+        rate: parseFloat(data.base_rate)
+      } : {
         hotel_id: data.hotel_id,
         room_type: data.room_type,
         date_range: {
@@ -69,7 +88,8 @@ export default function AdminCtripIntegration() {
         },
         rate_plan: data.rate_plan,
         base_rate: parseFloat(data.base_rate)
-      });
+      };
+      const response = await base44.functions.invoke(functionName, payload);
       return response.data;
     },
     onSuccess: (data) => {
@@ -98,32 +118,57 @@ export default function AdminCtripIntegration() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-            <Building2 className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+              <Building2 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">Ctrip Integration</h1>
+              <p className="text-slate-600">Dual integration: Vendor OTA + Supply Channel Manager</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Ctrip Integration</h1>
-            <p className="text-slate-600">Sync inventory and rates with Ctrip vendor platform</p>
-          </div>
+          <Tabs value={apiMode} onValueChange={setApiMode}>
+            <TabsList>
+              <TabsTrigger value="vendor">Vendor API</TabsTrigger>
+              <TabsTrigger value="supply">Supply API (cm/v4)</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
-        {/* Webhook Info */}
+        {/* API Info */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5 text-orange-600" />
-              Webhook Endpoint
+              <Zap className="w-5 h-5 text-orange-600" />
+              {apiMode === 'vendor' ? 'Vendor API - OTA Webhook' : 'Supply API - Channel Manager v4'}
             </CardTitle>
-            <CardDescription>Ctrip will send booking notifications to this endpoint</CardDescription>
+            <CardDescription>
+              {apiMode === 'vendor' 
+                ? 'Receive booking notifications via OTA XML protocol' 
+                : 'Modern JSON API for inventory and rate management'}
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="bg-slate-100 p-4 rounded-lg font-mono text-sm break-all">
-              {window.location.origin}/api/functions/ctripWebhook
-            </div>
-            <p className="text-sm text-slate-600 mt-3">
-              Configure this URL in your Ctrip vendor dashboard to receive booking notifications.
-            </p>
+          <CardContent className="space-y-3">
+            {apiMode === 'vendor' ? (
+              <>
+                <div className="bg-slate-100 p-4 rounded-lg font-mono text-sm break-all">
+                  {window.location.origin}/api/functions/ctripWebhook
+                </div>
+                <p className="text-sm text-slate-600">
+                  Configure this webhook URL in your Ctrip vendor dashboard to receive booking notifications.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="bg-slate-100 p-4 rounded-lg font-mono text-sm break-all">
+                  https://supply.ctrip.com/cm/v4
+                </div>
+                <p className="text-sm text-slate-600">
+                  Using Ctrip Supply Channel Manager v4 API for real-time inventory and rate updates.
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 

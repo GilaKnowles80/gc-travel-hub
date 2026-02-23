@@ -58,6 +58,7 @@ import AdminBuses from './pages/AdminBuses';
 import AdminCarRentals from './pages/AdminCarRentals';
 import AdminCodeBackup from './pages/AdminCodeBackup';
 import AdminCorporateClients from './pages/AdminCorporateClients';
+import AdminCtripIntegration from './pages/AdminCtripIntegration';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDataManager from './pages/AdminDataManager';
 import AdminEmailClients from './pages/AdminEmailClients';
@@ -142,7 +143,6 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import AdminCtripIntegration from './pages/AdminCtripIntegration';
 import __Layout from './Layout.jsx';
 
 
@@ -158,6 +158,7 @@ export const PAGES = {
     "AdminCarRentals": AdminCarRentals,
     "AdminCodeBackup": AdminCodeBackup,
     "AdminCorporateClients": AdminCorporateClients,
+    "AdminCtripIntegration": AdminCtripIntegration,
     "AdminDashboard": AdminDashboard,
     "AdminDataManager": AdminDataManager,
     "AdminEmailClients": AdminEmailClients,
@@ -242,7 +243,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "AdminCtripIntegration": AdminCtripIntegration,
 }
 
 export const pagesConfig = {
