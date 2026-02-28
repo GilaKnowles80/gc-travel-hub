@@ -17,6 +17,7 @@ import DuffelTopupGuide from '@/components/admin/DuffelTopupGuide';
 import LiveInteractionEmails from '@/components/admin/LiveInteractionEmails';
 import DetailedPerformanceAnalytics from '@/components/admin/DetailedPerformanceAnalytics';
 import TourAnalyticsByRegion from '@/components/admin/TourAnalyticsByRegion';
+import GoogleDriveSync from '@/components/admin/GoogleDriveSync';
 
 export default function AdminDashboard() {
   return (
