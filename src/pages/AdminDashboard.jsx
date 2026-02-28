@@ -115,6 +115,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="manage" className="space-y-6">
+            <GoogleDriveSync />
             <DuffelTopupGuide />
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
