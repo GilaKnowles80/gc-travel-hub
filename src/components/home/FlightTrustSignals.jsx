@@ -92,25 +92,34 @@ export default function FlightTrustSignals() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, idx) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:border-amber-200 hover:shadow-lg transition-all"
-              >
-                <Icon className="w-10 h-10 text-amber-600 mb-4" />
-                <h3 className="font-bold text-slate-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-600">{feature.description}</p>
-              </motion.div>
-            );
-          })}
-        </div>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+           {features.map((feature, idx) => {
+             const Icon = feature.icon;
+             const isSupport = feature.title === '24/7 Support';
+             const content = (
+               <motion.div
+                 key={idx}
+                 initial={{ opacity: 0, y: 20 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: idx * 0.1 }}
+                 className={`bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:border-amber-200 hover:shadow-lg transition-all ${isSupport ? 'cursor-pointer' : ''}`}
+               >
+                 <Icon className="w-10 h-10 text-amber-600 mb-4" />
+                 <h3 className="font-bold text-slate-900 mb-2">{feature.title}</h3>
+                 <p className="text-sm text-slate-600">{feature.description}</p>
+               </motion.div>
+             );
+
+             return isSupport ? (
+               <Link key={idx} to={createPageUrl('Helpdesk')} className="no-underline">
+                 {content}
+               </Link>
+             ) : (
+               content
+             );
+           })}
+         </div>
 
         {/* Stats Bar */}
         <div className="mt-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl p-8">
