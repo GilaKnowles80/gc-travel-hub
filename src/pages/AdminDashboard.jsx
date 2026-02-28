@@ -44,7 +44,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-6 w-full max-w-4xl">
+          <TabsList className="grid grid-cols-7 w-full max-w-5xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
@@ -56,6 +56,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="analytics">
               <TrendingUp className="w-4 h-4 mr-2" />
               Analytics
+            </TabsTrigger>
+            <TabsTrigger value="tours">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Tours
             </TabsTrigger>
             <TabsTrigger value="bookings">
               <Receipt className="w-4 h-4 mr-2" />
