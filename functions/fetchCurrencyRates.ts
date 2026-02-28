@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-const SUPPORTED_CURRENCIES = ['USD', 'EUR', 'JPY', 'SGD', 'AUD'];
+const SUPPORTED_CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'SGD', 'AUD'];
 const BASE_CURRENCY = 'PHP';
 
 Deno.serve(async (req) => {
