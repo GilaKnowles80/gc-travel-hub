@@ -31,7 +31,7 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
     queryFn: () => base44.auth.me()
   });
 
-  const totalPrice = car.price_per_day * form.rental_days;
+  const totalPrice = car.price_per_day * form.rental_days + (selectedInsurance ? selectedInsurance.premium : 0);
 
   const createBookingMutation = useMutation({
     mutationFn: (data) => base44.entities.CarRentalBooking.create(data),

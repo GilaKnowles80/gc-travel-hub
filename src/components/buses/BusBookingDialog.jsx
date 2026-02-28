@@ -30,7 +30,7 @@ export default function BusBookingDialog({ bus, open, onOpenChange }) {
     queryFn: () => base44.auth.me()
   });
 
-  const totalPrice = bus.price * form.number_of_passengers;
+  const totalPrice = bus.price * form.number_of_passengers + (selectedInsurance ? selectedInsurance.premium * form.number_of_passengers : 0);
 
   const createBookingMutation = useMutation({
     mutationFn: (data) => base44.entities.BusBooking.create(data),

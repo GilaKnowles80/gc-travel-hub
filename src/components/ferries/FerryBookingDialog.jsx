@@ -32,7 +32,7 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
   });
 
   const cabinPrice = ferry.cabin_types?.find(c => c.type === form.cabin_type)?.price || 0;
-  const totalPrice = cabinPrice * form.number_of_passengers;
+  const totalPrice = cabinPrice * form.number_of_passengers + (selectedInsurance ? selectedInsurance.premium * form.number_of_passengers : 0);
 
   const createBookingMutation = useMutation({
     mutationFn: (data) => base44.entities.FerryBooking.create(data),
