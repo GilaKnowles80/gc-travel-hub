@@ -184,6 +184,19 @@ export default function FlightSearch() {
                     </CardContent>
                 </Card>
 
+                {/* AI Recommendations */}
+                {hasSearched && !isLoading && searchParams.destination && (
+                    <AIRecommendationsPanel 
+                        searchType="flights"
+                        destination={searchParams.destination}
+                        onSelectProduct={(productId, product) => {
+                            if (product) {
+                                handleSelectFlight(product);
+                            }
+                        }}
+                    />
+                )}
+
                 {/* Results */}
                 {isLoading && (
                     <div className="flex items-center justify-center py-12">
