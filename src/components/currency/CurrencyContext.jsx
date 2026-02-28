@@ -123,8 +123,10 @@ export function CurrencyProvider({ children }) {
     selectedCurrency,
     setSelectedCurrency,
     convertPrice,
+    convertFromPHP,
     formatPrice,
-    rates
+    rates,
+    symbols
   };
 
   return (
