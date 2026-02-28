@@ -69,7 +69,7 @@ export default function FloatingContactWidget() {
 
       {/* Support Modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md rounded-2xl max-h-[80vh] flex flex-col">
+        <DialogContent className="sm:max-w-md rounded-2xl max-h-[80vh] flex flex-col z-50" style={{ pointerEvents: 'auto' }}>
           <DialogHeader className="border-b pb-3">
             <DialogTitle>Contact Support</DialogTitle>
           </DialogHeader>
