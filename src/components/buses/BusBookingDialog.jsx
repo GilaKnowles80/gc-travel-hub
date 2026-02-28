@@ -144,6 +144,16 @@ export default function BusBookingDialog({ bus, open, onOpenChange }) {
               </div>
             </div>
 
+            <InsuranceSelector
+              destination={bus.destination_terminal}
+              startDate={bus.departure_time?.split('T')[0]}
+              endDate={bus.arrival_time?.split('T')[0]}
+              tripCost={bus.price * form.number_of_passengers}
+              travelers={form.number_of_passengers}
+              onSelect={setSelectedInsurance}
+              selectedInsurance={selectedInsurance}
+            />
+
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Amount:</span>
@@ -151,6 +161,7 @@ export default function BusBookingDialog({ bus, open, onOpenChange }) {
               </div>
               <p className="text-sm text-slate-600 mt-1">
                 {form.number_of_passengers} passenger(s) × <PriceDisplay amount={bus.price} />
+                {selectedInsurance && <span className="ml-2 text-blue-600">+ Insurance: <PriceDisplay amount={selectedInsurance.premium * form.number_of_passengers} /></span>}
               </p>
             </div>
 

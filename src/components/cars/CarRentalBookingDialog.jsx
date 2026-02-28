@@ -172,6 +172,16 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
               </div>
             </div>
 
+            <InsuranceSelector
+              destination={car.location}
+              startDate={form.pickup_date}
+              endDate={form.return_date}
+              tripCost={car.price_per_day * form.rental_days}
+              travelers={1}
+              onSelect={setSelectedInsurance}
+              selectedInsurance={selectedInsurance}
+            />
+
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Amount:</span>
@@ -179,6 +189,7 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
               </div>
               <p className="text-sm text-slate-600 mt-1">
                 {form.rental_days} day(s) × <PriceDisplay amount={car.price_per_day} /> per day
+                {selectedInsurance && <span className="ml-2 text-blue-600">+ Insurance: <PriceDisplay amount={selectedInsurance.premium} /></span>}
               </p>
             </div>
 
