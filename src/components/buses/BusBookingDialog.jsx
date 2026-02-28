@@ -17,6 +17,7 @@ import InsuranceSelector from "@/components/insurance/InsuranceSelector";
 export default function BusBookingDialog({ bus, open, onOpenChange }) {
   const [step, setStep] = useState(1);
   const [bookingId, setBookingId] = useState(null);
+  const [selectedInsurance, setSelectedInsurance] = useState(null);
   const [form, setForm] = useState({
     passenger_name: "",
     passenger_email: "",

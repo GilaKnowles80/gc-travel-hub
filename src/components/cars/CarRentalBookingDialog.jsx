@@ -16,6 +16,7 @@ import InsuranceSelector from "@/components/insurance/InsuranceSelector";
 export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
   const [step, setStep] = useState(1);
   const [bookingId, setBookingId] = useState(null);
+  const [selectedInsurance, setSelectedInsurance] = useState(null);
   const [form, setForm] = useState({
     renter_name: "",
     renter_email: "",
