@@ -101,12 +101,36 @@ Deno.serve(async (req) => {
         // Update booking payment status based on type
         if (bookingId && bookingType) {
           switch (bookingType) {
-            case 'flight':
+            case 'flight': {
+              const flightBooking = await base44.asServiceRole.entities.FlightBooking.get(bookingId);
               await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
                 payment_status: 'paid',
                 status: 'confirmed'
               });
+              
+              // Auto-trigger Duffel payment processing if booking is via Duffel
+              if (flightBooking && flightBooking.supplier === 'duffel') {
+                try {
+                  const totalAmount = session.amount_total / 100;
+                  // Assume supplier cost is 85% of total, markup is 15%
+                  const supplierCost = parseFloat((totalAmount * 0.85).toFixed(2));
+                  const markupAmount = parseFloat((totalAmount * 0.15).toFixed(2));
+                  
+                  console.log(`Auto-processing Duffel payment: ${supplierCost} USD supplier cost, ${markupAmount} PHP markup`);
+                  
+                  await base44.asServiceRole.functions.invoke('processDuffelPayment', {
+                    booking_id: bookingId,
+                    booking_type: 'flight',
+                    supplier_cost: supplierCost,
+                    markup_amount: markupAmount,
+                    total_amount: totalAmount
+                  });
+                } catch (duffelErr) {
+                  console.error('Duffel payment auto-processing failed:', duffelErr);
+                }
+              }
               break;
+            }
             case 'hotel':
               await base44.asServiceRole.entities.HotelBooking.update(bookingId, {
                 payment_status: 'paid',
