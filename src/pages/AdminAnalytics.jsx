@@ -312,6 +312,18 @@ export default function AdminAnalytics() {
           </Select>
         </div>
 
+        <Tabs defaultValue="overview" className="mb-8">
+          <TabsList className="mb-6">
+            <TabsTrigger value="overview" className="flex items-center gap-2"><TrendingUp className="w-4 h-4" />Overview</TabsTrigger>
+            <TabsTrigger value="customers" className="flex items-center gap-2"><Database className="w-4 h-4" />Customer Records</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="customers">
+            <CustomerTransactionRecords />
+          </TabsContent>
+
+          <TabsContent value="overview">
+
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {kpis.map((kpi, idx) => (
