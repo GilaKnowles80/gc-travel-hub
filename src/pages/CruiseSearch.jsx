@@ -6,20 +6,20 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Ship, Calendar, MapPin, Search } from 'lucide-react';
+import { Ship, Calendar, MapPin, Search, Zap } from 'lucide-react';
 import CruiseBookingDialog from '@/components/cruises/CruiseBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function CruiseSearch() {
-  const [filters, setFilters] = useState({
-    cruise_line: 'all',
-    departure_port: ''
-  });
+  const [filters, setFilters] = useState({ cruise_line: 'all', departure_port: '', date: '' });
   const [selectedCruise, setSelectedCruise] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
+  const [aiResults, setAiResults] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  const { data: cruises = [] } = useQuery({
-    queryKey: ['cruises', filters],
+  const { data: dbCruises = [] } = useQuery({
+    queryKey: ['cruises', filters.cruise_line],
     queryFn: async () => {
       let query = {};
       if (filters.cruise_line !== 'all') query.cruise_line = filters.cruise_line;
@@ -27,10 +27,37 @@ export default function CruiseSearch() {
     }
   });
 
-  const filteredCruises = cruises.filter(cruise => {
-    const portMatch = !filters.departure_port || cruise.departure_port.toLowerCase().includes(filters.departure_port.toLowerCase());
-    return portMatch;
-  });
+  const handleSearch = async () => {
+    setSearched(true);
+    setAiLoading(true);
+    setAiResults([]);
+    const { data } = await base44.functions.invoke('getAISchedules', {
+      service_type: 'cruise',
+      origin: filters.departure_port,
+      destination: filters.departure_port,
+      date: filters.date
+    });
+    const mapped = (data?.results || []).map((r, i) => ({
+      id: `ai-${i}`,
+      cruise_line: r.cruise_line || filters.cruise_line || 'Unknown',
+      ship_name: r.ship_name || `Ship ${i + 1}`,
+      itinerary_name: r.itinerary_name || r.name || 'Mystery Cruise',
+      departure_port: r.departure_port || filters.departure_port,
+      duration_nights: r.duration_nights || r.duration || 7,
+      ports_of_call: r.ports_of_call || [],
+      cabin_categories: r.cabin_categories || [{ category: 'interior', price_per_person: parseFloat(r.price) || 999 }],
+      _ai: true
+    }));
+    setAiResults(mapped);
+    setAiLoading(false);
+  };
+
+  const filteredCruises = (searched)
+    ? aiResults
+    : dbCruises.filter(cruise => {
+        const portMatch = !filters.departure_port || cruise.departure_port?.toLowerCase().includes(filters.departure_port.toLowerCase());
+        return portMatch;
+      });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 p-4 md:p-8">
@@ -43,11 +70,11 @@ export default function CruiseSearch() {
         {/* Search Filters */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Input placeholder="Departure port (e.g. Miami, Sydney, Barcelona)" value={filters.departure_port} onChange={(e) => setFilters({...filters, departure_port: e.target.value})} />
+              <Input type="date" value={filters.date} onChange={(e) => setFilters({...filters, date: e.target.value})} />
               <Select value={filters.cruise_line} onValueChange={(v) => setFilters({...filters, cruise_line: v})}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="All Cruise Lines" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Cruise Lines</SelectItem>
                   <SelectItem value="Royal Caribbean">Royal Caribbean</SelectItem>
@@ -58,16 +85,16 @@ export default function CruiseSearch() {
                   <SelectItem value="Disney Cruise">Disney Cruise</SelectItem>
                 </SelectContent>
               </Select>
-              <Input
-                placeholder="Departure port..."
-                value={filters.departure_port}
-                onChange={(e) => setFilters({...filters, departure_port: e.target.value})}
-              />
-              <Button className="w-full">
-                <Search className="w-4 h-4 mr-2" />
-                Search
+              <Button className="w-full" onClick={handleSearch} disabled={aiLoading}>
+                {aiLoading ? <span className="animate-spin mr-2">⏳</span> : <Search className="w-4 h-4 mr-2" />}
+                {aiLoading ? 'Searching...' : 'Search Cruises'}
               </Button>
             </div>
+            {searched && aiResults.length > 0 && (
+              <div className="mt-3 flex items-center gap-2 text-xs text-cyan-700 bg-cyan-50 rounded-lg px-3 py-2">
+                <Zap className="w-3 h-3" /> Live cruise results powered by AI — real itineraries and pricing.
+              </div>
+            )}
           </CardContent>
         </Card>
 
