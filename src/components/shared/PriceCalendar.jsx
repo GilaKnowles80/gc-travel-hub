@@ -1,158 +1,206 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfDay } from "date-fns";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 /**
- * PriceCalendar - shows cheapest prices on each date cell
+ * PriceCalendar - shows cheapest/expensive dates with color indicators
  * Props:
- *  - type: "flight" | "hotel"
- *  - origin, destination (for flights)
- *  - onSelectDate: (dateString) => void
- *  - selectedDate: string (yyyy-MM-dd)
- *  - minDate: string (yyyy-MM-dd)
+ *   origin, destination - for flights (IATA codes)
+ *   location - for hotels
+ *   type - "flight" | "hotel"
+ *   selectedDate - currently selected date (YYYY-MM-DD)
+ *   onSelectDate - callback(dateString)
  */
-export default function PriceCalendar({ type = "flight", origin, destination, onSelectDate, selectedDate, minDate }) {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate }) {
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(
+    selectedDate ? new Date(selectedDate + "T00:00:00") : new Date(today.getFullYear(), today.getMonth(), 1)
+  );
   const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const today = startOfDay(new Date());
-  const minDateObj = minDate ? startOfDay(new Date(minDate)) : today;
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
 
   useEffect(() => {
-    fetchPrices();
-  }, [currentMonth, origin, destination, type]);
+    if (type === "flight" && (!origin || !destination)) return;
+    if (type === "hotel" && !location) return;
 
-  const fetchPrices = async () => {
+    fetchPricesForMonth(year, month);
+  }, [year, month, origin, destination, location, type]);
+
+  const fetchPricesForMonth = async (y, m) => {
     setLoading(true);
-    try {
-      const monthStart = format(startOfMonth(currentMonth), "yyyy-MM-dd");
-      const monthEnd = format(endOfMonth(currentMonth), "yyyy-MM-dd");
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const priceMap = {};
 
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate realistic sample price data for a ${type === "flight" ? "flight" : "hotel"} price calendar.
-${type === "flight" ? `Route: ${origin || "MNL"} to ${destination || "SIN"}` : `Hotel stay`}
-Month: ${format(currentMonth, "MMMM yyyy")}
-Return a JSON object where keys are dates in format "yyyy-MM-dd" from ${monthStart} to ${monthEnd}, 
-and values are the cheapest available price in USD for that date.
-Vary prices naturally: some dates cheap (weekdays), some expensive (weekends/holidays).
-Make some dates null (no availability).
-Use realistic prices: flights $80-$600, hotels $30-$300.`,
-        response_json_schema: {
-          type: "object",
-          additionalProperties: { type: "number" }
+    if (type === "flight" && origin && destination) {
+      // Sample a few dates to get price range indication
+      const sampleDates = [1, 8, 15, 22].filter(d => d <= daysInMonth);
+      const results = await Promise.allSettled(
+        sampleDates.map(async d => {
+          const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          try {
+            const res = await base44.functions.invoke('searchFlightsDuffel', {
+              origin, destination, departureDate: date, adults: 1, cabin: "economy"
+            });
+            const offers = res.data?.offers || [];
+            if (offers.length > 0) {
+              const minPrice = Math.min(...offers.map(o => parseFloat(o.total_amount)));
+              return { date, price: minPrice };
+            }
+          } catch { return null; }
+          return null;
+        })
+      );
+
+      const validResults = results.filter(r => r.status === 'fulfilled' && r.value).map(r => r.value);
+      
+      // Interpolate prices for all days based on sampled data
+      if (validResults.length > 0) {
+        const prices = validResults.map(r => r.price);
+        const minP = Math.min(...prices);
+        const maxP = Math.max(...prices);
+
+        // Assign interpolated prices with slight variation per day
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const sample = validResults.find(r => r.date === date);
+          if (sample) {
+            priceMap[date] = sample.price;
+          } else {
+            // Interpolate with slight daily variation
+            const dayOfWeek = new Date(date + 'T00:00:00').getDay();
+            const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) ? 1.15 : 1.0;
+            const basePrice = minP + (maxP - minP) * 0.4;
+            priceMap[date] = Math.round(basePrice * weekendMultiplier);
+          }
         }
-      });
-      setPrices(result || {});
-    } catch (e) {
-      setPrices({});
+      }
+    } else if (type === "hotel" && location) {
+      // For hotels, generate indicative pricing based on day of week
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dayOfWeek = new Date(date + 'T00:00:00').getDay();
+        const base = 80;
+        const weekend = (dayOfWeek === 5 || dayOfWeek === 6) ? 1.3 : 1.0;
+        priceMap[date] = Math.round(base * weekend + (d % 7) * 3);
+      }
     }
+
+    setPrices(priceMap);
     setLoading(false);
   };
 
-  const days = eachDayOfInterval({ start: startOfMonth(currentMonth), end: endOfMonth(currentMonth) });
-  const startDayOfWeek = startOfMonth(currentMonth).getDay(); // 0=Sun
+  const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
+  const nextMonth = () => setCurrentMonth(new Date(year, month + 1, 1));
 
-  const allPrices = Object.values(prices).filter(Boolean);
-  const minPrice = allPrices.length ? Math.min(...allPrices) : null;
-  const maxPrice = allPrices.length ? Math.max(...allPrices) : null;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const priceValues = Object.values(prices).filter(p => p > 0);
+  const minPrice = priceValues.length > 0 ? Math.min(...priceValues) : 0;
+  const maxPrice = priceValues.length > 0 ? Math.max(...priceValues) : 0;
+  const midPrice = (minPrice + maxPrice) / 2;
 
   const getPriceColor = (price) => {
-    if (!price || minPrice === null) return "";
-    const range = maxPrice - minPrice;
-    if (range === 0) return "text-green-600 bg-green-50";
-    const ratio = (price - minPrice) / range;
-    if (ratio < 0.33) return "text-green-600 bg-green-50 font-semibold";
-    if (ratio < 0.66) return "text-amber-600 bg-amber-50";
-    return "text-red-500 bg-red-50";
+    if (!price || priceValues.length < 2) return "text-slate-600";
+    if (price <= minPrice * 1.05) return "text-green-600 font-bold";
+    if (price >= maxPrice * 0.95) return "text-red-500 font-bold";
+    if (price < midPrice) return "text-green-500";
+    return "text-orange-500";
   };
 
+  const getPriceBg = (date, price) => {
+    if (selectedDate === date) return "bg-amber-500 text-white";
+    if (!price) return "";
+    if (price <= minPrice * 1.05) return "hover:bg-green-50";
+    if (price >= maxPrice * 0.95) return "hover:bg-red-50";
+    return "hover:bg-slate-50";
+  };
+
+  const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  const cells = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 w-full min-w-[280px]">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-lg w-full max-w-sm">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <button
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-          className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-        >
+      <div className="flex items-center justify-between mb-3">
+        <button onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
           <ChevronLeft className="w-4 h-4 text-slate-600" />
         </button>
-        <div className="text-sm font-semibold text-slate-800">
-          {format(currentMonth, "MMMM yyyy")}
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-slate-800 text-sm">{monthName}</span>
+          {loading && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
         </div>
-        <button
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-        >
+        <button onClick={nextMonth} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
           <ChevronRight className="w-4 h-4 text-slate-600" />
         </button>
       </div>
 
-      {/* Day names */}
+      {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
-        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
+        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
           <div key={d} className="text-center text-[10px] font-medium text-slate-400 py-1">{d}</div>
         ))}
       </div>
 
-      {/* Days grid */}
-      {loading ? (
-        <div className="flex items-center justify-center h-32 text-slate-400 text-sm">
-          Loading prices...
-        </div>
-      ) : (
-        <div className="grid grid-cols-7 gap-0.5">
-          {/* Empty cells for offset */}
-          {Array.from({ length: startDayOfWeek }).map((_, i) => (
-            <div key={`empty-${i}`} />
-          ))}
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-0.5">
+        {cells.map((day, idx) => {
+          if (!day) return <div key={`empty-${idx}`} />;
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const price = prices[dateStr];
+          const isPast = dateStr < todayStr;
+          const isSelected = selectedDate === dateStr;
 
-          {days.map(day => {
-            const dateStr = format(day, "yyyy-MM-dd");
-            const price = prices[dateStr];
-            const isPast = isBefore(day, minDateObj);
-            const isSelected = selectedDate === dateStr;
-            const isToday = isSameDay(day, today);
-            const isCheapest = price && minPrice !== null && price === minPrice;
-
-            return (
-              <button
-                key={dateStr}
-                disabled={isPast || !price}
-                onClick={() => !isPast && price && onSelectDate(dateStr)}
-                className={`
-                  flex flex-col items-center py-1 px-0.5 rounded-lg transition-all text-center
-                  ${isSelected ? "bg-amber-500 text-white shadow-md scale-105" : ""}
-                  ${!isSelected && !isPast && price ? `hover:scale-105 cursor-pointer ${getPriceColor(price)}` : ""}
-                  ${isPast ? "opacity-30 cursor-not-allowed" : ""}
-                  ${!price && !isPast ? "opacity-40 cursor-not-allowed" : ""}
-                  ${isToday && !isSelected ? "ring-1 ring-amber-400" : ""}
-                `}
-              >
-                <span className={`text-[11px] font-medium ${isSelected ? "text-white" : ""}`}>
-                  {format(day, "d")}
+          return (
+            <button
+              key={dateStr}
+              disabled={isPast}
+              onClick={() => !isPast && onSelectDate && onSelectDate(dateStr)}
+              className={`flex flex-col items-center justify-center rounded-lg py-1.5 px-0.5 transition-all text-center
+                ${isPast ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
+                ${isSelected ? "bg-amber-500 shadow-md" : getPriceBg(dateStr, price)}
+              `}
+            >
+              <span className={`text-xs font-medium leading-none ${isSelected ? "text-white" : "text-slate-700"}`}>
+                {day}
+              </span>
+              {price && !isPast && (
+                <span className={`text-[9px] leading-none mt-0.5 ${isSelected ? "text-white/90" : getPriceColor(price)}`}>
+                  ${Math.round(price)}
                 </span>
-                {price ? (
-                  <span className={`text-[9px] leading-tight ${isSelected ? "text-white/90" : ""}`}>
-                    ${Math.round(price)}
-                    {isCheapest && !isSelected && <span className="block text-[8px] text-green-600 font-bold">LOW</span>}
-                  </span>
-                ) : (
-                  <span className="text-[9px] text-slate-300">—</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              )}
+              {!price && !isPast && loading && (
+                <span className="text-[9px] text-slate-300 leading-none mt-0.5">...</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
 
       {/* Legend */}
-      <div className="flex gap-3 mt-3 pt-3 border-t border-slate-100 justify-center text-[10px]">
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-400 inline-block" />Cheap</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />Regular</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 inline-block" />Expensive</span>
-      </div>
+      {priceValues.length > 0 && (
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-[10px] text-slate-500">Cheapest</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-orange-400" />
+            <span className="text-[10px] text-slate-500">Regular</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-red-500" />
+            <span className="text-[10px] text-slate-500">Expensive</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
