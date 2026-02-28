@@ -126,7 +126,7 @@ export default function FeaturedTours({ tours, isLoading }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {tours.map((tour, i) => (
-              <TourCard key={tour.id} tour={tour} index={i} />
+              <TourCard key={tour.id} tour={tour} index={i} applyMarkup={applyMarkup} markupPct={markupPct} />
             ))}
           </div>
         )}
