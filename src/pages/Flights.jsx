@@ -446,10 +446,7 @@ export default function Flights() {
                                   </div>
 
                                   <div className="flex-1 flex flex-col items-center">
-                                    <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
-                                      <Clock className="w-3 h-3" />
-                                      {flight.duration_hours}h
-                                    </div>
+                                    <FlightDurationDisplay durationHours={flight.duration_hours} />
                                     <div className="w-full h-px bg-slate-200 relative">
                                       <Plane className="w-4 h-4 text-slate-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90" />
                                     </div>
