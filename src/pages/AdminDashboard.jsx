@@ -15,6 +15,7 @@ import RevenueAnalytics from '@/components/admin/RevenueAnalytics';
 import SalesAnalyticsBoard from '@/components/admin/SalesAnalyticsBoard';
 import DuffelTopupGuide from '@/components/admin/DuffelTopupGuide';
 import LiveInteractionEmails from '@/components/admin/LiveInteractionEmails';
+import DetailedPerformanceAnalytics from '@/components/admin/DetailedPerformanceAnalytics';
 
 export default function AdminDashboard() {
   return (
