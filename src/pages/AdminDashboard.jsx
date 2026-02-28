@@ -18,6 +18,7 @@ import LiveInteractionEmails from '@/components/admin/LiveInteractionEmails';
 import DetailedPerformanceAnalytics from '@/components/admin/DetailedPerformanceAnalytics';
 import TourAnalyticsByRegion from '@/components/admin/TourAnalyticsByRegion';
 import GoogleDriveSync from '@/components/admin/GoogleDriveSync';
+import GoogleSheetsSync from '@/components/admin/GoogleSheetsSync';
 
 export default function AdminDashboard() {
   return (
@@ -116,6 +117,7 @@ export default function AdminDashboard() {
 
           <TabsContent value="manage" className="space-y-6">
             <GoogleDriveSync />
+            <GoogleSheetsSync />
             <DuffelTopupGuide />
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
