@@ -10,6 +10,7 @@ import { createPageUrl } from '@/pages/utils';
 import moment from 'moment';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useCurrency } from '@/components/currency/CurrencyContext';
+import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function LiveFlightDeals() {
   const navigate = useNavigate();
