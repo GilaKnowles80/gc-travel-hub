@@ -347,6 +347,200 @@ export default function HeroSection() {
                </div>
              )}
 
+            {searchType === "tours" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />Destination</label>
+                  <Input placeholder="e.g. Palawan, Bali, Paris" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Travel Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Compass className="w-3 h-3" />Category</label>
+                  <Select value={tripType} onValueChange={setTripType}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Any category" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="beach">Beach</SelectItem>
+                      <SelectItem value="adventure">Adventure</SelectItem>
+                      <SelectItem value="cultural">Cultural</SelectItem>
+                      <SelectItem value="wildlife">Wildlife</SelectItem>
+                      <SelectItem value="city_tour">City Tour</SelectItem>
+                      <SelectItem value="honeymoon">Honeymoon</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-3">
+                  <Link to={`${createPageUrl("Tours")}?destination=${destination}&category=${tripType}&date=${onwardDate}`}>
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Search Tour Packages
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "bus" && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />From</label>
+                  <Input placeholder="e.g. Manila, New York" className="rounded-xl" value={origin} onChange={(e) => setOrigin(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />To</label>
+                  <Input placeholder="e.g. Baguio, Boston" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div className="flex items-end">
+                  <Link to={`${createPageUrl("BusSearch")}?origin=${origin}&destination=${destination}&date=${onwardDate}`} className="w-full">
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Search Buses
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "ferry" && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />From Port</label>
+                  <Input placeholder="e.g. Manila, Batangas" className="rounded-xl" value={origin} onChange={(e) => setOrigin(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />To Port</label>
+                  <Input placeholder="e.g. Cebu, Coron" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div className="flex items-end">
+                  <Link to={`${createPageUrl("FerrySearch")}?origin=${origin}&destination=${destination}&date=${onwardDate}`} className="w-full">
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Search Ferries
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "cruise" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />Destination</label>
+                  <Input placeholder="e.g. Caribbean, Mediterranean" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Departure Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Ship className="w-3 h-3" />Duration</label>
+                  <Select value={tripType} onValueChange={setTripType}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Any duration" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="short">Short (2-5 nights)</SelectItem>
+                      <SelectItem value="medium">Medium (6-9 nights)</SelectItem>
+                      <SelectItem value="long">Long (10+ nights)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-3">
+                  <Link to={`${createPageUrl("CruiseSearch")}?destination=${destination}&date=${onwardDate}&duration=${tripType}`}>
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Search Cruises
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "visa" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />Destination Country</label>
+                  <Input placeholder="e.g. Japan, USA, Schengen" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Umbrella className="w-3 h-3" />Visa Type</label>
+                  <Select value={tripType} onValueChange={setTripType}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Select type" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tourism">Tourist Visa</SelectItem>
+                      <SelectItem value="business">Business Visa</SelectItem>
+                      <SelectItem value="study">Student Visa</SelectItem>
+                      <SelectItem value="work">Work Visa</SelectItem>
+                      <SelectItem value="transit">Transit Visa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Travel Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div className="md:col-span-3">
+                  <Link to={`${createPageUrl("Visas")}?country=${destination}&type=${tripType}&date=${onwardDate}`}>
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Apply for Visa
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "car" && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />Pick-up Location</label>
+                  <Input placeholder="e.g. Manila, New York, London" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Pick-up Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Return Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} min={onwardDate} />
+                </div>
+                <div className="flex items-end">
+                  <Link to={`${createPageUrl("CarRentalSearch")}?location=${destination}&pickupDate=${onwardDate}&returnDate=${returnDate}`} className="w-full">
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Find Cars
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {searchType === "train" && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />From Station</label>
+                  <Input placeholder="e.g. Paris Gare du Nord, Tokyo" className="rounded-xl" value={origin} onChange={(e) => setOrigin(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />To Station</label>
+                  <Input placeholder="e.g. London St Pancras, Osaka" className="rounded-xl" value={destination} onChange={(e) => setDestination(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1"><Calendar className="w-3 h-3" />Date</label>
+                  <Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={(e) => setOnwardDate(e.target.value)} />
+                </div>
+                <div className="flex items-end">
+                  <Link to={`${createPageUrl("TrainSearch")}?origin=${origin}&destination=${destination}&date=${onwardDate}`} className="w-full">
+                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
+                      <Search className="w-4 h-4 mr-2" />Search Trains
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
 
             </div>
           </div>
