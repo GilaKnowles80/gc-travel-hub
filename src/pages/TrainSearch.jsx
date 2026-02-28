@@ -20,6 +20,7 @@ export default function TrainSearch() {
     destination: '',
     date: ''
   });
+  const { applyMarkup, markupPct } = useMarkup();
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [aiResults, setAiResults] = useState([]);
