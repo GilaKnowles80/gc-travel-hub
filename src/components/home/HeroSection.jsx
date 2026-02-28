@@ -279,27 +279,55 @@ export default function HeroSection() {
                      Dates
                    </label>
                    <div className="grid grid-cols-2 gap-2">
-                     <Input
-                       type="date"
-                       value={onwardDate}
-                       onChange={(e) => {
-                         setOnwardDate(e.target.value);
-                         if (returnDate && e.target.value > returnDate) {
-                          setReturnDate(e.target.value);
-                        }
-                       }}
-                       placeholder="mm/dd/yyyy"
-                       className="rounded-xl cursor-pointer"
-                     />
+                     {/* Depart date with price calendar */}
+                     <div className="relative" ref={flightCalRef}>
+                       <button
+                         type="button"
+                         onClick={() => { setShowFlightCalendar(!showFlightCalendar); setShowReturnCalendar(false); }}
+                         className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
+                       >
+                         <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                         <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>
+                           {onwardDate || "Depart"}
+                         </span>
+                       </button>
+                       {showFlightCalendar && (
+                         <div className="absolute top-full left-0 mt-1 z-[100]">
+                           <PriceCalendar
+                             type="flight"
+                             origin={origin}
+                             destination={destination}
+                             selectedDate={onwardDate}
+                             onSelectDate={(d) => { setOnwardDate(d); setShowFlightCalendar(false); if (returnDate && d > returnDate) setReturnDate(d); }}
+                           />
+                         </div>
+                       )}
+                     </div>
                      {tripType === "round_trip" && (
-                       <Input
-                         type="date"
-                         value={returnDate}
-                         onChange={(e) => setReturnDate(e.target.value)}
-                         min={onwardDate}
-                         placeholder="mm/dd/yyyy"
-                         className="rounded-xl cursor-pointer"
-                       />
+                       <div className="relative" ref={returnCalRef}>
+                         <button
+                           type="button"
+                           onClick={() => { setShowReturnCalendar(!showReturnCalendar); setShowFlightCalendar(false); }}
+                           className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
+                         >
+                           <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                           <span className={returnDate ? "text-slate-800" : "text-slate-400"}>
+                             {returnDate || "Return"}
+                           </span>
+                         </button>
+                         {showReturnCalendar && (
+                           <div className="absolute top-full right-0 mt-1 z-[100]">
+                             <PriceCalendar
+                               type="flight"
+                               origin={destination}
+                               destination={origin}
+                               selectedDate={returnDate}
+                               minDate={onwardDate}
+                               onSelectDate={(d) => { setReturnDate(d); setShowReturnCalendar(false); }}
+                             />
+                           </div>
+                         )}
+                       </div>
                      )}
                    </div>
                  </div>
