@@ -153,6 +153,7 @@ import FerryCheckout from './pages/FerryCheckout';
 import CruiseCheckout from './pages/CruiseCheckout';
 import VisaCheckout from './pages/VisaCheckout';
 import CarRentalCheckout from './pages/CarRentalCheckout';
+import TrainCheckout from './pages/TrainCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -263,6 +264,7 @@ export const PAGES = {
     "CruiseCheckout": CruiseCheckout,
     "VisaCheckout": VisaCheckout,
     "CarRentalCheckout": CarRentalCheckout,
+    "TrainCheckout": TrainCheckout,
 }
 
 export const pagesConfig = {
