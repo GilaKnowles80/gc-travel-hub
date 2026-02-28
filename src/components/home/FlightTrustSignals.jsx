@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Award, Users, Clock, CheckCircle, Star, Headphones, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createPageUrl } from '@/pages/utils';
 
 const trustSignals = [
   {
