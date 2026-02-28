@@ -3,9 +3,11 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from "recharts";
-import { TrendingUp, TrendingDown, DollarSign, Users, ShoppingCart, Percent, Crown, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Users, ShoppingCart, Crown, Target, Database } from "lucide-react";
 import moment from "moment";
+import CustomerTransactionRecords from "@/components/analytics/CustomerTransactionRecords";
 
 const COLORS = ['#3b82f6', '#a855f7', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
 
