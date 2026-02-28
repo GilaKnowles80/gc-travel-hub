@@ -36,6 +36,7 @@ export default function Flights() {
     cabin: urlParams.get('cabin') || "economy"
   });
   const [geoDetecting, setGeoDetecting] = useState(false);
+  const [showPriceCalendar, setShowPriceCalendar] = useState(false);
 
   // Auto-detect user's nearest airport from geo-location
   React.useEffect(() => {
