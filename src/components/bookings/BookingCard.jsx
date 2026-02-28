@@ -158,17 +158,20 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
               </Badge>
             </div>
             
-            {(type === 'flight' || type === 'hotel') && booking.status !== 'cancelled' && booking.status !== 'completed' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                onClick={() => setShowCancelDialog(true)}
-              >
-                <XCircle className="w-4 h-4 mr-1" />
-                Cancel
-              </Button>
-            )}
+            <div className="flex gap-2">
+              <CalendarEventButton booking={booking} type={type} />
+              {(type === 'flight' || type === 'hotel') && booking.status !== 'cancelled' && booking.status !== 'completed' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => setShowCancelDialog(true)}
+                >
+                  <XCircle className="w-4 h-4 mr-1" />
+                  Cancel
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </Card>
