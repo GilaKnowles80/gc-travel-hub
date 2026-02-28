@@ -55,7 +55,8 @@ export default function LiveFlightDeals() {
 
   const featuredDeals = flights.slice(0, 3).map((flight, idx) => {
     const cabinClass = flight.cabin_classes?.[0];
-    const price = cabinClass?.price || 0;
+    const basePrice = cabinClass?.price || 0;
+    const price = applyMarkup(basePrice, 'flight');
     return {
       ...flight,
       price: price,
