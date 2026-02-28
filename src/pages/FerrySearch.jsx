@@ -106,7 +106,7 @@ export default function FerrySearch() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
-                    <p className="text-2xl font-bold text-blue-600">₱{ferry.cabin_types?.[0]?.price || 'N/A'}</p>
+                    <div className="text-2xl font-bold text-blue-600"><PriceDisplay amount={ferry.cabin_types?.[0]?.price} fromCurrency="PHP" /></div>
                     <Button 
                       className="mt-2"
                       onClick={() => {

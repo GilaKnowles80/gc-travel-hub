@@ -139,7 +139,7 @@ export default function TrainSearch() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
-                    <p className="text-2xl font-bold text-green-600">${train.class_types?.[0]?.price || 'N/A'}</p>
+                    <div className="text-2xl font-bold text-green-600"><PriceDisplay amount={train.class_types?.[0]?.price} fromCurrency="USD" /></div>
                     <Button 
                       className="mt-2"
                       onClick={() => {

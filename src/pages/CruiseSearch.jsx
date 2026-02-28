@@ -106,7 +106,7 @@ export default function CruiseSearch() {
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div>
                     <p className="text-sm text-slate-600">From</p>
-                    <p className="text-2xl font-bold text-cyan-600">${cruise.cabin_categories?.[0]?.price_per_person || 'N/A'}</p>
+                    <div className="text-2xl font-bold text-cyan-600"><PriceDisplay amount={cruise.cabin_categories?.[0]?.price_per_person} fromCurrency="USD" /></div>
                     <p className="text-xs text-slate-500">per person</p>
                   </div>
                   <Button
