@@ -323,7 +323,7 @@ export default function AdminAnalytics() {
           </TabsContent>
 
           <TabsContent value="overview">
-
+            <div>
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {kpis.map((kpi, idx) => (
