@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import LiveVisitorCounter from "@/components/analytics/LiveVisitorCounter";
@@ -27,11 +27,11 @@ const navLinks = [
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
   { name: "Reservations", page: "ManageReservations", icon: BookOpen, adminOnly: true },
   { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Data Manager", page: "AdminDataManager", icon: Receipt, adminOnly: true },
   { name: "Advertisements", page: "AdminAdvertisements", icon: Receipt, adminOnly: true },
-  { name: "Biyaheko Portal", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
 ];
 
 export default function Layout({ children, currentPageName }) {
