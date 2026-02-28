@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+// Tripzynx is a tour management platform - we search our own Tour entity
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -9,61 +10,33 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { search_type, destination, tour_type, departure_date, travelers } = await req.json();
+    const { destination, category, departure_date, travelers } = await req.json();
 
-    // Get credentials
-    const credentials = await base44.asServiceRole.entities.SupplierCredentials.filter({}, '-created_date', 1);
-    if (!credentials.length || !credentials[0].tripzynx_username) {
-      return Response.json({ error: 'Tripzynx credentials not configured' }, { status: 400 });
+    console.log('Tripzynx tour search:', { destination, category, departure_date, travelers });
+
+    // Build filter for Tour entity
+    const filter = { status: 'active' };
+    if (destination) filter.destination = destination;
+    if (category) filter.category = category;
+
+    const tours = await base44.asServiceRole.entities.Tour.filter(filter, '-rating', 50);
+
+    // Filter by departure date if provided
+    let filtered = tours;
+    if (departure_date) {
+      filtered = tours.filter(tour => 
+        !tour.departure_dates?.length || 
+        tour.departure_dates.some(d => d >= departure_date)
+      );
     }
 
-    const { tripzynx_username, tripzynx_password } = credentials[0];
+    console.log(`Found ${filtered.length} tours for destination: ${destination || 'any'}`);
 
-    // Tripzynx API endpoint (placeholder - replace with actual API)
-    const apiUrl = 'https://api.tripzynx.com/search';
-
-    const payload = {
-      username: tripzynx_username,
-      password: tripzynx_password,
-      search_type,
-      destination,
-      tour_type,
-      departure_date,
-      travelers
-    };
-
-    console.log('Tripzynx search request:', { search_type, destination, tour_type });
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Tripzynx API error:', error);
-      return Response.json({ error: 'Tripzynx search failed', details: error }, { status: response.status });
-    }
-
-    const results = await response.json();
-    
-    // Track successful integration
-    await base44.analytics.track({
-      eventName: 'supplier_integration_success',
-      properties: {
-        supplier: 'tripzynx',
-        operation: 'search',
-        search_type,
-        destination,
-        tour_type
-      }
-    });
-    
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       supplier: 'tripzynx',
-      results 
+      results: filtered,
+      total: filtered.length
     });
 
   } catch (error) {

@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+// Tripzynx is a tour management platform - bookings are stored in our own entity
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -9,69 +10,59 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { tour_id, travelers_list, departure_date, addons } = await req.json();
+    const { tour_id, travelers_list, departure_date, addons, contact_name, contact_email, contact_phone, special_requests } = await req.json();
 
-    // Get credentials
-    const credentials = await base44.asServiceRole.entities.SupplierCredentials.filter({}, '-created_date', 1);
-    if (!credentials.length || !credentials[0].tripzynx_username) {
-      return Response.json({ error: 'Tripzynx credentials not configured' }, { status: 400 });
+    if (!tour_id || !contact_name || !contact_email) {
+      return Response.json({ error: 'tour_id, contact_name, and contact_email are required' }, { status: 400 });
     }
 
-    const { tripzynx_username, tripzynx_password } = credentials[0];
+    console.log('Tripzynx booking request:', { tour_id, departure_date, contact_name });
 
-    // Tripzynx booking API endpoint
-    const apiUrl = 'https://api.tripzynx.com/book';
+    // Fetch tour details
+    const tours = await base44.asServiceRole.entities.Tour.filter({ id: tour_id });
+    if (!tours.length) {
+      return Response.json({ error: 'Tour not found' }, { status: 404 });
+    }
+    const tour = tours[0];
 
-    const payload = {
-      username: tripzynx_username,
-      password: tripzynx_password,
+    const travelers_count = travelers_list?.length || 1;
+    const total_price = tour.price_per_person * travelers_count;
+
+    // Create a booking record
+    const booking = await base44.asServiceRole.entities.Booking.create({
+      booking_type: 'tour',
       tour_id,
-      travelers_list,
+      tour_name: tour.title,
+      destination: tour.destination,
+      contact_name,
+      contact_email,
+      contact_phone: contact_phone || '',
+      travelers_count,
+      travelers_list: travelers_list || [],
       departure_date,
-      addons
-    };
-
-    console.log('Tripzynx booking request:', { tour_id, departure_date });
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      total_price,
+      addons: addons || [],
+      special_requests: special_requests || '',
+      status: 'pending',
+      payment_status: 'unpaid',
+      supplier: 'tripzynx'
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Tripzynx booking error:', error);
-      return Response.json({ error: 'Tripzynx booking failed', details: error }, { status: response.status });
-    }
+    const booking_reference = `TZX-${Date.now().toString(36).toUpperCase()}`;
 
-    const booking = await response.json();
-    
-    // Update supplier stats
-    const suppliers = await base44.asServiceRole.entities.Supplier.filter({ company_name: 'Tripzynx' });
-    if (suppliers.length > 0) {
-      const supplier = suppliers[0];
-      await base44.asServiceRole.entities.Supplier.update(supplier.id, {
-        total_bookings: (supplier.total_bookings || 0) + 1
-      });
-    }
-    
-    // Track successful integration
-    await base44.analytics.track({
-      eventName: 'supplier_integration_success',
-      properties: {
-        supplier: 'tripzynx',
-        operation: 'booking',
-        tour_id,
-        reference: booking.booking_id
-      }
-    });
+    console.log('Tripzynx booking created:', booking.id, booking_reference);
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       supplier: 'tripzynx',
-      booking,
-      reference: booking.booking_id
+      booking_id: booking.id,
+      reference: booking_reference,
+      tour_name: tour.title,
+      destination: tour.destination,
+      departure_date,
+      travelers_count,
+      total_price,
+      status: 'pending'
     });
 
   } catch (error) {
