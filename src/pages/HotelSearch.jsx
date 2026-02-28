@@ -14,6 +14,7 @@ import moment from "moment";
 import HotelBookingDialog from "@/components/hotels/HotelBookingDialog";
 import LocationHotelSearch from "@/components/hotels/LocationHotelSearch";
 import AdBanner from "@/components/ads/AdBanner";
+import PriceCalendar from "@/components/shared/PriceCalendar";
 
 export default function HotelSearch() {
     const [searchParams, setSearchParams] = useState({
