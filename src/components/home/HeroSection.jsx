@@ -30,17 +30,39 @@ export default function HeroSection() {
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
   const [showDestSuggestions, setShowDestSuggestions] = useState(false);
 
-  const cities = [
-    "Manila", "Cebu", "Davao", "Singapore", "Hong Kong", "Tokyo", "Seoul", 
-    "Bangkok", "Kuala Lumpur", "Dubai", "Sydney", "Los Angeles", "New York"
+  const airports = [
+    { city: "Manila", iata: "MNL" },
+    { city: "Cebu", iata: "CEB" },
+    { city: "Davao", iata: "DVO" },
+    { city: "Singapore", iata: "SIN" },
+    { city: "Hong Kong", iata: "HKG" },
+    { city: "Tokyo", iata: "NRT" },
+    { city: "Seoul", iata: "ICN" },
+    { city: "Bangkok", iata: "BKK" },
+    { city: "Kuala Lumpur", iata: "KUL" },
+    { city: "Dubai", iata: "DXB" },
+    { city: "Sydney", iata: "SYD" },
+    { city: "Los Angeles", iata: "LAX" },
+    { city: "New York", iata: "JFK" },
+    { city: "Amsterdam", iata: "AMS" },
+    { city: "London Heathrow", iata: "LHR" },
+    { city: "London Gatwick", iata: "LGW" },
+    { city: "Paris", iata: "CDG" },
+    { city: "Frankfurt", iata: "FRA" },
+    { city: "Doha", iata: "DOH" },
+    { city: "Taipei", iata: "TPE" },
+    { city: "Osaka", iata: "KIX" },
+    { city: "Melbourne", iata: "MEL" },
   ];
 
-  const filteredOriginCities = cities.filter(city => 
-    city.toLowerCase().includes(originSearch.toLowerCase())
+  const filteredOriginCities = airports.filter(a =>
+    a.city.toLowerCase().includes(originSearch.toLowerCase()) ||
+    a.iata.toLowerCase().includes(originSearch.toLowerCase())
   );
 
-  const filteredDestCities = cities.filter(city => 
-    city.toLowerCase().includes(destinationSearch.toLowerCase())
+  const filteredDestCities = airports.filter(a =>
+    a.city.toLowerCase().includes(destinationSearch.toLowerCase()) ||
+    a.iata.toLowerCase().includes(destinationSearch.toLowerCase())
   );
 
   useEffect(() => {

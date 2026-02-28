@@ -22,15 +22,17 @@ import moment from "moment";
 export default function Flights() {
   const queryClient = useQueryClient();
   const [showAIDiscovery, setShowAIDiscovery] = useState(false);
+
+  const urlParams = new URLSearchParams(window.location.search);
   const [searchParams, setSearchParams] = useState({
-    origin: "MNL",
-    destination: "SIN",
-    departureDate: moment().add(7, 'days').format('YYYY-MM-DD'),
-    returnDate: "",
-    adults: 1,
+    origin: urlParams.get('origin') || "MNL",
+    destination: urlParams.get('destination') || "SIN",
+    departureDate: urlParams.get('departDate') || moment().add(7, 'days').format('YYYY-MM-DD'),
+    returnDate: urlParams.get('returnDate') || "",
+    adults: Number(urlParams.get('adults')) || 1,
     children: 0,
     infants: 0,
-    cabin: "economy"
+    cabin: urlParams.get('cabin') || "economy"
   });
   const [filters, setFilters] = useState({
     search: "",
