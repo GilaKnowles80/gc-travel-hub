@@ -67,6 +67,7 @@ export default function AdminDashboard() {
 
           <TabsContent value="overview" className="space-y-6">
             <DashboardStats />
+            <LiveInteractionEmails />
             <RevenueAnalytics />
             <div className="grid lg:grid-cols-2 gap-6">
               <BulkOperationsPanel />
