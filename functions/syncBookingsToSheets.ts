@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
     }
 
     // Prepare data for sheets
-    const headers = ['Type', 'Booking ID', 'Customer/Passenger', 'Email', 'Phone', 'Total Price', 'Status', 'Payment Status', 'Date Created'];
+    const headers = ['Type', 'Booking ID', 'Customer/Passenger', 'Email', 'Phone', 'Total Price', 'Status', 'Payment Status', 'Stripe Link', 'Date Created'];
     const rows = allBookings.map(booking => [
       booking.type,
       booking.id,
@@ -61,6 +61,7 @@ Deno.serve(async (req) => {
       booking.total_price || 0,
       booking.status || 'unknown',
       booking.payment_status || 'unpaid',
+      `https://dashboard.stripe.com/search?query=${booking.id}`,
       booking.created_date || new Date().toISOString()
     ]);
 
