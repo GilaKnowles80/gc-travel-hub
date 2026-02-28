@@ -21,6 +21,9 @@ import GoogleDriveSync from '@/components/admin/GoogleDriveSync';
 import GoogleSheetsSync from '@/components/admin/GoogleSheetsSync';
 import PitchDeckBuilder from '@/components/admin/PitchDeckBuilder';
 import TravelItineraryDocBuilder from '@/components/admin/TravelItineraryDocBuilder';
+import SupportTicketsPanel from '@/components/admin/SupportTicketsPanel';
+import TikTokAnalyticsDashboard from '@/components/admin/TikTokAnalyticsDashboard';
+import WalletManagementPanel from '@/components/admin/WalletManagementPanel';
 
 export default function AdminDashboard() {
   return (
@@ -48,7 +51,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-7 w-full max-w-5xl">
+          <TabsList className="grid grid-cols-10 w-full max-w-6xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
@@ -72,6 +75,18 @@ export default function AdminDashboard() {
             <TabsTrigger value="reports">
               <TrendingUp className="w-4 h-4 mr-2" />
               Reports
+            </TabsTrigger>
+            <TabsTrigger value="support">
+              <Users className="w-4 h-4 mr-2" />
+              Support
+            </TabsTrigger>
+            <TabsTrigger value="wallet">
+              <Receipt className="w-4 h-4 mr-2" />
+              Wallet
+            </TabsTrigger>
+            <TabsTrigger value="tiktok">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              TikTok
             </TabsTrigger>
             <TabsTrigger value="manage">
               <Settings className="w-4 h-4 mr-2" />
@@ -115,6 +130,18 @@ export default function AdminDashboard() {
 
           <TabsContent value="reports">
             <SalesReports />
+          </TabsContent>
+
+          <TabsContent value="support" className="space-y-6">
+            <SupportTicketsPanel />
+          </TabsContent>
+
+          <TabsContent value="wallet" className="space-y-6">
+            <WalletManagementPanel />
+          </TabsContent>
+
+          <TabsContent value="tiktok" className="space-y-6">
+            <TikTokAnalyticsDashboard />
           </TabsContent>
 
           <TabsContent value="manage" className="space-y-6">
