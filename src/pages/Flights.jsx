@@ -25,8 +25,8 @@ export default function Flights() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const [searchParams, setSearchParams] = useState({
-    origin: urlParams.get('origin') || "MNL",
-    destination: urlParams.get('destination') || "SIN",
+    origin: urlParams.get('origin') || "",
+    destination: urlParams.get('destination') || "",
     departureDate: urlParams.get('departDate') || moment().add(7, 'days').format('YYYY-MM-DD'),
     returnDate: urlParams.get('returnDate') || "",
     adults: Number(urlParams.get('adults')) || 1,
@@ -34,6 +34,63 @@ export default function Flights() {
     infants: 0,
     cabin: urlParams.get('cabin') || "economy"
   });
+  const [geoDetecting, setGeoDetecting] = useState(false);
+
+  // Auto-detect user's nearest airport from geo-location
+  React.useEffect(() => {
+    const urlOrigin = urlParams.get('origin');
+    const urlDest = urlParams.get('destination');
+    if (urlOrigin && urlDest) return; // URL params take priority
+
+    setGeoDetecting(true);
+    fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(data => {
+        const countryAirportMap = {
+          // Europe
+          'BE': { origin: 'BRU', dest: 'MNL' }, // Belgium → Manila
+          'NL': { origin: 'AMS', dest: 'MNL' }, // Netherlands → Manila
+          'GB': { origin: 'LHR', dest: 'MNL' }, // UK → Manila
+          'DE': { origin: 'FRA', dest: 'MNL' }, // Germany → Manila
+          'FR': { origin: 'CDG', dest: 'MNL' }, // France → Manila
+          'ES': { origin: 'MAD', dest: 'MNL' }, // Spain → Manila
+          'IT': { origin: 'FCO', dest: 'MNL' }, // Italy → Manila
+          'PT': { origin: 'LIS', dest: 'MNL' }, // Portugal → Manila
+          'AT': { origin: 'VIE', dest: 'MNL' }, // Austria → Manila
+          'CH': { origin: 'ZUR', dest: 'MNL' }, // Switzerland → Manila
+          // Americas
+          'US': { origin: 'LAX', dest: 'MNL' },
+          'CA': { origin: 'YVR', dest: 'MNL' },
+          // Middle East
+          'AE': { origin: 'DXB', dest: 'MNL' },
+          'SA': { origin: 'RUH', dest: 'MNL' },
+          'QA': { origin: 'DOH', dest: 'MNL' },
+          'KW': { origin: 'KWI', dest: 'MNL' },
+          // Asia
+          'SG': { origin: 'SIN', dest: 'MNL' },
+          'JP': { origin: 'NRT', dest: 'MNL' },
+          'KR': { origin: 'ICN', dest: 'MNL' },
+          'HK': { origin: 'HKG', dest: 'MNL' },
+          'AU': { origin: 'SYD', dest: 'MNL' },
+          // Philippines
+          'PH': { origin: 'MNL', dest: 'SIN' },
+        };
+        const mapped = countryAirportMap[data.country_code];
+        setSearchParams(prev => ({
+          ...prev,
+          origin: prev.origin || mapped?.origin || 'MNL',
+          destination: prev.destination || mapped?.dest || 'SIN',
+        }));
+      })
+      .catch(() => {
+        setSearchParams(prev => ({
+          ...prev,
+          origin: prev.origin || 'MNL',
+          destination: prev.destination || 'SIN',
+        }));
+      })
+      .finally(() => setGeoDetecting(false));
+  }, []);
   const [filters, setFilters] = useState({
     search: "",
     cabin_class: "all",
