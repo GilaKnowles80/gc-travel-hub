@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { createPageUrl } from "@/pages/utils";
 import TravelersSelector from "./TravelersSelector";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import PriceCalendar from "@/components/shared/PriceCalendar";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
