@@ -144,6 +144,7 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import FlightCheckout from './pages/FlightCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -245,6 +246,7 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
+    "FlightCheckout": FlightCheckout,
 }
 
 export const pagesConfig = {
