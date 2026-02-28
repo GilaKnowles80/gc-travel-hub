@@ -13,6 +13,8 @@ import moment from "moment";
 import BookingDialog from "@/components/flights/BookingDialog";
 import AirportSelector from "@/components/flights/AirportSelector";
 import { useUserLocation } from "@/components/location/LocationCapture";
+import AIRecommendationsPanel from "@/components/recommendations/AIRecommendationsPanel";
+import PricingComparisonPanel from "@/components/recommendations/PricingComparisonPanel";
 
 export default function FlightSearch() {
     const { location: userLocation, getLocation } = useUserLocation();
