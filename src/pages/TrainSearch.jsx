@@ -169,7 +169,8 @@ export default function TrainSearch() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
-                    <div className="text-2xl font-bold text-green-600"><PriceDisplay amount={train.class_types?.[0]?.price} fromCurrency="USD" /></div>
+                    <div className="text-2xl font-bold text-green-600"><PriceDisplay amount={applyMarkup(train.class_types?.[0]?.price, 'train')} fromCurrency="USD" /></div>
+                    {markupPct > 0 && <p className="text-xs text-slate-400 line-through"><PriceDisplay amount={train.class_types?.[0]?.price} fromCurrency="USD" /></p>}
                     <Button 
                       className="mt-2"
                       onClick={() => {
