@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import StripeCheckout from "@/components/payment/StripeCheckout";
 import PayMongoPayment from "@/components/payment/PayMongoPayment";
 import PriceDisplay from "@/components/currency/PriceDisplay";
+import InsuranceSelector from "@/components/insurance/InsuranceSelector";
 
 export default function BusBookingDialog({ bus, open, onOpenChange }) {
   const [step, setStep] = useState(1);
