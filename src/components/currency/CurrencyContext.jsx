@@ -6,25 +6,24 @@ const CurrencyContext = createContext();
 
 // Map country codes to currencies
 const countryCurrencyMap = {
+  // Philippines
   'PH': 'PHP',
-  'US': 'USD',
-  'BE': 'EUR', // Belgium
-  'FR': 'EUR',
-  'DE': 'EUR',
-  'ES': 'EUR',
-  'IT': 'EUR',
-  'NL': 'EUR',
-  'AT': 'EUR',
-  'PT': 'EUR',
-  'IE': 'EUR',
-  'GR': 'EUR',
-  'FI': 'EUR',
-  'JP': 'JPY',
-  'SG': 'SGD',
-  'AU': 'AUD',
-  'GB': 'EUR', // Use EUR for UK as fallback
-  'CA': 'USD', // Use USD for Canada
-  'CN': 'USD', // Fallback to USD
+  // Europe (EUR)
+  'BE': 'EUR', 'FR': 'EUR', 'DE': 'EUR', 'ES': 'EUR', 'IT': 'EUR',
+  'NL': 'EUR', 'AT': 'EUR', 'PT': 'EUR', 'IE': 'EUR', 'GR': 'EUR',
+  'FI': 'EUR', 'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
+  'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR', 'HR': 'EUR',
+  // UK
+  'GB': 'GBP',
+  // North, Central & South America (USD)
+  'US': 'USD', 'CA': 'USD', 'MX': 'USD',
+  'GT': 'USD', 'BZ': 'USD', 'HN': 'USD', 'SV': 'USD', 'NI': 'USD',
+  'CR': 'USD', 'PA': 'USD', 'CU': 'USD', 'JM': 'USD', 'HT': 'USD',
+  'DO': 'USD', 'PR': 'USD', 'CO': 'USD', 'VE': 'USD', 'GY': 'USD',
+  'SR': 'USD', 'EC': 'USD', 'PE': 'USD', 'BO': 'USD', 'BR': 'USD',
+  'PY': 'USD', 'UY': 'USD', 'AR': 'USD', 'CL': 'USD',
+  // Asia Pacific
+  'JP': 'JPY', 'SG': 'SGD', 'AU': 'AUD', 'CN': 'USD', 'KR': 'USD',
 };
 
 export function CurrencyProvider({ children }) {
@@ -79,28 +78,45 @@ export function CurrencyProvider({ children }) {
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 
-  const convertPrice = (priceInPHP, targetCurrency = selectedCurrency) => {
-    if (targetCurrency === 'PHP') return priceInPHP;
-    
-    const rate = rates.find(r => r.target_currency === targetCurrency);
-    if (!rate) return priceInPHP;
-    
-    return priceInPHP * rate.rate;
+  const symbols = {
+    PHP: '₱', USD: '$', EUR: '€', GBP: '£',
+    JPY: '¥', SGD: 'S$', AUD: 'A$'
   };
 
-  const formatPrice = (priceInPHP, targetCurrency = selectedCurrency) => {
-    const converted = convertPrice(priceInPHP, targetCurrency);
-    const symbols = {
-      PHP: '₱',
-      USD: '$',
-      EUR: '€',
-      JPY: '¥',
-      SGD: 'S$',
-      AUD: 'A$'
-    };
+  // Convert from PHP base to target currency
+  const convertFromPHP = (priceInPHP, targetCurrency = selectedCurrency) => {
+    if (targetCurrency === 'PHP') return priceInPHP;
+    const rate = rates.find(r => r.base_currency === 'PHP' && r.target_currency === targetCurrency);
+    if (rate) return priceInPHP * rate.rate;
+    // Fallback: try to find rate via USD
+    const phpToUsd = rates.find(r => r.base_currency === 'PHP' && r.target_currency === 'USD');
+    if (!phpToUsd) return priceInPHP;
+    const usdAmount = priceInPHP * phpToUsd.rate;
+    if (targetCurrency === 'USD') return usdAmount;
+    const usdToTarget = rates.find(r => r.base_currency === 'PHP' && r.target_currency === targetCurrency);
+    return usdToTarget ? priceInPHP * usdToTarget.rate : priceInPHP;
+  };
+
+  // Convert from any currency to target currency (via PHP as bridge)
+  const convertPrice = (amount, fromCurrency = 'PHP', targetCurrency = selectedCurrency) => {
+    if (fromCurrency === targetCurrency) return amount;
     
+    // Convert source to PHP first
+    let amountInPHP = amount;
+    if (fromCurrency !== 'PHP') {
+      const rate = rates.find(r => r.base_currency === 'PHP' && r.target_currency === fromCurrency);
+      if (rate && rate.rate > 0) {
+        amountInPHP = amount / rate.rate;
+      }
+    }
+    return convertFromPHP(amountInPHP, targetCurrency);
+  };
+
+  const formatPrice = (amount, fromCurrency = 'PHP', targetCurrency = selectedCurrency) => {
+    const converted = convertPrice(amount, fromCurrency, targetCurrency);
     const decimals = targetCurrency === 'JPY' ? 0 : 2;
-    return `${symbols[targetCurrency]}${converted.toFixed(decimals)}`;
+    const symbol = symbols[targetCurrency] || targetCurrency + ' ';
+    return `${symbol}${converted.toFixed(decimals)}`;
   };
 
   const value = {
