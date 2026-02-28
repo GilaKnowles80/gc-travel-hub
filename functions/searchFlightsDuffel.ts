@@ -79,9 +79,26 @@ Deno.serve(async (req) => {
 
     const offersData = await offersResponse.json();
 
+    // Apply markup to all offers (markup % stored in secret, default 15%)
+    const markupPct = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '15') / 100;
+
+    const offersWithMarkup = (offersData.data || []).map(offer => {
+      const baseAmount = parseFloat(offer.total_amount);
+      const markupAmount = baseAmount * markupPct;
+      const markedUpAmount = (baseAmount + markupAmount).toFixed(2);
+      return {
+        ...offer,
+        original_amount: offer.total_amount,       // Duffel's actual price (what you pay Duffel)
+        original_currency: offer.total_currency,
+        total_amount: markedUpAmount,               // Price shown to customer (your price)
+        markup_amount: markupAmount.toFixed(2),
+        markup_percentage: markupPct * 100
+      };
+    });
+
     return Response.json({
       success: true,
-      offers: offersData.data,
+      offers: offersWithMarkup,
       meta: offersData.meta
     });
 
