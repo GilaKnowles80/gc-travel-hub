@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${duffelApiKey}`,
         'Content-Type': 'application/json',
-        'Duffel-Version': 'v1'
+        'Duffel-Version': 'v2'
       },
       body: JSON.stringify(offerRequestBody)
     });
@@ -64,10 +64,10 @@ Deno.serve(async (req) => {
     const offerRequestId = offerRequest.data.id;
 
     // Fetch offers
-    const offersResponse = await fetch(`https://api.duffel.com/air/offers?offer_request_id=${offerRequestId}`, {
+    const offersResponse = await fetch(`https://api.duffel.com/air/offers?offer_request_id=${offerRequestId}&limit=50`, {
       headers: {
         'Authorization': `Bearer ${duffelApiKey}`,
-        'Duffel-Version': 'v1'
+        'Duffel-Version': 'v2'
       }
     });
 
