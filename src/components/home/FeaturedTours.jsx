@@ -6,6 +6,7 @@ import { Star, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import PriceDisplay from "@/components/currency/PriceDisplay";
+import { useMarkup } from "@/components/markup/useMarkup";
 
 function TourCard({ tour, index }) {
   return (
