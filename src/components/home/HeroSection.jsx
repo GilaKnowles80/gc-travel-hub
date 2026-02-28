@@ -357,32 +357,62 @@ export default function HeroSection() {
                      onChange={(e) => setDestination(e.target.value)}
                    />
                  </div>
-                 <div>
+                  <div>
                     <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       Check-in
                     </label>
-                    <Input 
-                      type="date" 
-                      placeholder="mm/dd/yyyy" 
-                      className="rounded-xl cursor-pointer"
-                      value={onwardDate}
-                      onChange={(e) => setOnwardDate(e.target.value)}
-                    />
+                    <div className="relative" ref={checkinCalRef}>
+                      <button
+                        type="button"
+                        onClick={() => { setShowHotelCheckin(!showHotelCheckin); setShowHotelCheckout(false); }}
+                        className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
+                      >
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>
+                          {onwardDate || "Check-in date"}
+                        </span>
+                      </button>
+                      {showHotelCheckin && (
+                        <div className="absolute top-full left-0 mt-1 z-[100]">
+                          <PriceCalendar
+                            type="hotel"
+                            destination={destination}
+                            selectedDate={onwardDate}
+                            onSelectDate={(d) => { setOnwardDate(d); setShowHotelCheckin(false); if (returnDate && d >= returnDate) setReturnDate(""); }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       Check-out
                     </label>
-                    <Input 
-                      type="date" 
-                      placeholder="mm/dd/yyyy" 
-                      className="rounded-xl cursor-pointer"
-                      value={returnDate}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      min={onwardDate}
-                    />
+                    <div className="relative" ref={checkoutCalRef}>
+                      <button
+                        type="button"
+                        onClick={() => { setShowHotelCheckout(!showHotelCheckout); setShowHotelCheckin(false); }}
+                        className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
+                      >
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={returnDate ? "text-slate-800" : "text-slate-400"}>
+                          {returnDate || "Check-out date"}
+                        </span>
+                      </button>
+                      {showHotelCheckout && (
+                        <div className="absolute top-full left-0 mt-1 z-[100]">
+                          <PriceCalendar
+                            type="hotel"
+                            destination={destination}
+                            selectedDate={returnDate}
+                            minDate={onwardDate || undefined}
+                            onSelectDate={(d) => { setReturnDate(d); setShowHotelCheckout(false); }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                  <div className="md:col-span-3">
                    <Link to={`${createPageUrl("HotelSearch")}?location=${destination}&checkIn=${onwardDate}&checkOut=${returnDate}`}>
