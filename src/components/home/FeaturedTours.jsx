@@ -89,6 +89,7 @@ function TourCard({ tour, index, applyMarkup, markupPct }) {
 }
 
 export default function FeaturedTours({ tours, isLoading }) {
+  const { applyMarkup, markupPct } = useMarkup();
   return (
     <section className="py-20 px-4 bg-slate-50">
       <div className="max-w-7xl mx-auto">
