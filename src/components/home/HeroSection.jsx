@@ -136,6 +136,13 @@ export default function HeroSection() {
                 {[
                   { type: "flights", label: "Flights", icon: Plane },
                   { type: "hotels", label: "Hotels", icon: Hotel },
+                  { type: "tours", label: "Tours", icon: Compass },
+                  { type: "bus", label: "Bus", icon: Bus },
+                  { type: "ferry", label: "Ferry", icon: Ship },
+                  { type: "cruise", label: "Cruise", icon: Ship },
+                  { type: "visa", label: "Visa", icon: Umbrella },
+                  { type: "car", label: "Car Rental", icon: Car },
+                  { type: "train", label: "Train", icon: Train },
                 ].map(({ type, label, icon: Icon }) => (
                   <motion.div
                     key={type}
