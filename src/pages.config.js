@@ -150,6 +150,7 @@ import UnifiedCheckout from './pages/UnifiedCheckout';
 import TourCheckout from './pages/TourCheckout';
 import BusCheckout from './pages/BusCheckout';
 import FerryCheckout from './pages/FerryCheckout';
+import CruiseCheckout from './pages/CruiseCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -257,6 +258,7 @@ export const PAGES = {
     "TourCheckout": TourCheckout,
     "BusCheckout": BusCheckout,
     "FerryCheckout": FerryCheckout,
+    "CruiseCheckout": CruiseCheckout,
 }
 
 export const pagesConfig = {
