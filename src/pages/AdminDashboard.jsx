@@ -13,6 +13,7 @@ import BulkOperationsPanel from '@/components/admin/BulkOperationsPanel';
 import PerformanceMonitor from '@/components/admin/PerformanceMonitor';
 import RevenueAnalytics from '@/components/admin/RevenueAnalytics';
 import SalesAnalyticsBoard from '@/components/admin/SalesAnalyticsBoard';
+import DuffelTopupGuide from '@/components/admin/DuffelTopupGuide';
 
 export default function AdminDashboard() {
   return (
@@ -93,6 +94,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="manage" className="space-y-6">
+            <DuffelTopupGuide />
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>

@@ -93,6 +93,7 @@ import Contact from './pages/Contact';
 import CorporateBooking from './pages/CorporateBooking';
 import CruiseSearch from './pages/CruiseSearch';
 import FerrySearch from './pages/FerrySearch';
+import FlightCheckout from './pages/FlightCheckout';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
@@ -101,6 +102,7 @@ import GDPRSettings from './pages/GDPRSettings';
 import Helpdesk from './pages/Helpdesk';
 import Home from './pages/Home';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
+import HotelCheckout from './pages/HotelCheckout';
 import HotelDetail from './pages/HotelDetail';
 import HotelSearch from './pages/HotelSearch';
 import Hotels from './pages/Hotels';
@@ -144,8 +146,6 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import FlightCheckout from './pages/FlightCheckout';
-import HotelCheckout from './pages/HotelCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -196,6 +196,7 @@ export const PAGES = {
     "CorporateBooking": CorporateBooking,
     "CruiseSearch": CruiseSearch,
     "FerrySearch": FerrySearch,
+    "FlightCheckout": FlightCheckout,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
@@ -204,6 +205,7 @@ export const PAGES = {
     "Helpdesk": Helpdesk,
     "Home": Home,
     "HotelBookingConfirmation": HotelBookingConfirmation,
+    "HotelCheckout": HotelCheckout,
     "HotelDetail": HotelDetail,
     "HotelSearch": HotelSearch,
     "Hotels": Hotels,
@@ -247,8 +249,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "FlightCheckout": FlightCheckout,
-    "HotelCheckout": HotelCheckout,
 }
 
 export const pagesConfig = {
