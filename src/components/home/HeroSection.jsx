@@ -30,6 +30,25 @@ export default function HeroSection() {
   const [travelers, setTravelers] = useState({ adults: 1, children: 0, infants: 0, seniors: 0, pwd: 0 });
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
   const [showDestSuggestions, setShowDestSuggestions] = useState(false);
+  const [showFlightCalendar, setShowFlightCalendar] = useState(false);
+  const [showReturnCalendar, setShowReturnCalendar] = useState(false);
+  const [showHotelCheckin, setShowHotelCheckin] = useState(false);
+  const [showHotelCheckout, setShowHotelCheckout] = useState(false);
+  const flightCalRef = useRef(null);
+  const returnCalRef = useRef(null);
+  const checkinCalRef = useRef(null);
+  const checkoutCalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (flightCalRef.current && !flightCalRef.current.contains(e.target)) setShowFlightCalendar(false);
+      if (returnCalRef.current && !returnCalRef.current.contains(e.target)) setShowReturnCalendar(false);
+      if (checkinCalRef.current && !checkinCalRef.current.contains(e.target)) setShowHotelCheckin(false);
+      if (checkoutCalRef.current && !checkoutCalRef.current.contains(e.target)) setShowHotelCheckout(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const airports = [
     { city: "Manila", iata: "MNL" },
