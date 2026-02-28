@@ -16,6 +16,7 @@ export default function LiveFlightDeals() {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState({});
   const { countryCode } = useCurrency();
+  const { applyMarkup, markupPct } = useMarkup();
 
   // Map country codes to origin cities
   const originsByCountry = {
