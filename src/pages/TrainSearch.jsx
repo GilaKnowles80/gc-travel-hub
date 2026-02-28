@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Train as TrainIcon, Clock, MapPin, Search } from 'lucide-react';
 import TrainBookingDialog from '@/components/trains/TrainBookingDialog';
 import StationSelector from '@/components/trains/StationSelector';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function TrainSearch() {
   const [filters, setFilters] = useState({

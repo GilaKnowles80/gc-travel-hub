@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Bus, Clock, MapPin, Search } from 'lucide-react';
 import BusBookingDialog from '@/components/buses/BusBookingDialog';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function BusSearch() {
   const [filters, setFilters] = useState({

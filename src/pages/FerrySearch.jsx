@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Ship, Clock, MapPin, Search } from 'lucide-react';
 import FerryBookingDialog from '@/components/ferries/FerryBookingDialog';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({

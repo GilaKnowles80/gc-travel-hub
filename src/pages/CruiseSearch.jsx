@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Ship, Calendar, MapPin, Search } from 'lucide-react';
 import CruiseBookingDialog from '@/components/cruises/CruiseBookingDialog';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function CruiseSearch() {
   const [filters, setFilters] = useState({

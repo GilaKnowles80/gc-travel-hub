@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Car, Users, Gauge, Fuel, Search } from 'lucide-react';
 import CarRentalBookingDialog from '@/components/cars/CarRentalBookingDialog';
+import PriceDisplay from '@/components/currency/PriceDisplay';
 
 export default function CarRentalSearch() {
   const [filters, setFilters] = useState({
