@@ -85,6 +85,10 @@ export default function AdminDashboard() {
             <SalesAnalyticsBoard />
           </TabsContent>
 
+          <TabsContent value="analytics" className="space-y-6">
+            <DetailedPerformanceAnalytics />
+          </TabsContent>
+
           <TabsContent value="bookings">
             <Card>
               <CardHeader>
