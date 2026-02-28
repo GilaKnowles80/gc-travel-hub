@@ -1,70 +1,122 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+const TERMINAL_ID = Deno.env.get("BIYAHEKO_TERMINAL_ID");
+const USER_ID = Deno.env.get("BIYAHEKO_USER_ID");
+const PASSWORD = Deno.env.get("BIYAHEKO_PASSWORD");
+const BASE_URL = "https://biyaheko.ph";
+
+async function getBiyahekoToken() {
+  const response = await fetch(`${BASE_URL}/Authentication/Index`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      TerminalID: TERMINAL_ID,
+      UserID: USER_ID,
+      Password: PASSWORD
+    })
+  });
+
+  const text = await response.text();
+  console.log('Auth response status:', response.status);
+  console.log('Auth response headers:', JSON.stringify([...response.headers.entries()]));
+
+  // Try to extract session/token from cookies or response
+  const cookies = response.headers.get('set-cookie');
+  console.log('Cookies:', cookies);
+
+  return { cookies, body: text, status: response.status };
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const body = await req.json();
+    const { search_type, origin, destination, date, passengers = 1, cabin_class = 'Economy', return_date } = body;
+
+    console.log('Biyaheko search:', { search_type, origin, destination, date, passengers });
+
+    // Attempt login
+    const auth = await getBiyahekoToken();
+    if (auth.status !== 200) {
+      console.error('Auth failed:', auth.body);
+      return Response.json({ error: 'Biyaheko authentication failed', details: auth.body }, { status: 401 });
     }
 
-    const { search_type, origin, destination, date, passengers } = await req.json();
+    // For flight search - use Biyaheko's flight search endpoint
+    let searchUrl, searchPayload;
 
-    // Get credentials
-    const credentials = await base44.asServiceRole.entities.SupplierCredentials.filter({}, '-created_date', 1);
-    if (!credentials.length || !credentials[0].biyaheko_terminal_id) {
-      return Response.json({ error: 'Biyaheko credentials not configured' }, { status: 400 });
+    if (search_type === 'flight') {
+      searchUrl = `${BASE_URL}/Airline/FlightSearch`;
+      searchPayload = {
+        Origin: origin,
+        Destination: destination,
+        DepartureDate: date,
+        ReturnDate: return_date || '',
+        Adults: passengers,
+        Children: 0,
+        Infant: 0,
+        CabinClass: cabin_class,
+        TripType: return_date ? 'R' : 'O', // O=oneway, R=roundtrip
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD
+      };
+    } else if (search_type === 'bus') {
+      searchUrl = `${BASE_URL}/Bus/Search`;
+      searchPayload = {
+        Origin: origin,
+        Destination: destination,
+        DepartureDate: date,
+        Adults: passengers,
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD
+      };
+    } else if (search_type === 'ferry') {
+      searchUrl = `${BASE_URL}/Ferry/Search`;
+      searchPayload = {
+        Origin: origin,
+        Destination: destination,
+        DepartureDate: date,
+        Adults: passengers,
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD
+      };
+    } else {
+      return Response.json({ error: 'Unsupported search_type. Use: flight, bus, ferry' }, { status: 400 });
     }
 
-    const { biyaheko_terminal_id, biyaheko_user_id, biyaheko_password } = credentials[0];
+    console.log('Searching:', searchUrl, searchPayload);
 
-    // Biyaheko API endpoint (placeholder - replace with actual API)
-    const apiUrl = 'https://api.biyaheko.ph/search';
-
-    const payload = {
-      terminal_id: biyaheko_terminal_id,
-      user_id: biyaheko_user_id,
-      password: biyaheko_password,
-      search_type,
-      origin,
-      destination,
-      date,
-      passengers
-    };
-
-    console.log('Biyaheko search request:', { search_type, origin, destination, date });
-
-    const response = await fetch(apiUrl, {
+    const searchResponse = await fetch(searchUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': auth.cookies || ''
+      },
+      body: JSON.stringify(searchPayload)
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Biyaheko API error:', error);
-      return Response.json({ error: 'Biyaheko search failed', details: error }, { status: response.status });
+    const resultText = await searchResponse.text();
+    console.log('Search response status:', searchResponse.status);
+    console.log('Search result (first 500 chars):', resultText.substring(0, 500));
+
+    let results;
+    try {
+      results = JSON.parse(resultText);
+    } catch {
+      results = { raw: resultText };
     }
 
-    const results = await response.json();
-    
-    // Track successful integration
-    await base44.analytics.track({
-      eventName: 'supplier_integration_success',
-      properties: {
-        supplier: 'biyaheko',
-        operation: 'search',
-        search_type,
-        origin,
-        destination
-      }
-    });
-    
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       supplier: 'biyaheko',
-      results 
+      search_type,
+      results
     });
 
   } catch (error) {
