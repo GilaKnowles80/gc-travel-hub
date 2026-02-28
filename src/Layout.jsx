@@ -81,6 +81,23 @@ export default function Layout({ children, currentPageName }) {
     setMobileOpen(false);
   }, [currentPageName]);
 
+  // Initialize Tawk.to chat widget
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://embed.tawk.to/69a329afb156831c340d08e3/default';
+    script.charset = 'UTF-8';
+    script.setAttribute('crossorigin', '*');
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup: Remove script on unmount if needed
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+
   const headerBg = isHome && !scrolled
     ? "bg-transparent"
     : "bg-white/95 backdrop-blur-md shadow-sm";
