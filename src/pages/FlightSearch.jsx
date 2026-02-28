@@ -279,19 +279,23 @@ export default function FlightSearch() {
                                                     </div>
 
                                                     <div className="text-right md:border-l md:pl-6">
-                                                        <div className="text-3xl font-bold text-amber-600">
-                                                            ₱{offer.price.toLocaleString()}
-                                                        </div>
-                                                        <div className="text-xs text-slate-500 mb-3">
-                                                            per person • includes markup
-                                                        </div>
-                                                        <Button 
-                                                            className="bg-amber-500 hover:bg-amber-600"
-                                                            onClick={() => handleSelectFlight(offer)}
-                                                        >
-                                                            Select Flight
-                                                        </Button>
-                                                    </div>
+                                                         <PricingComparisonPanel
+                                                             productType="flight"
+                                                             productId={offer.amadeus_id}
+                                                             basePrice={offer.price}
+                                                             date={searchParams.departureDate}
+                                                             destination={searchParams.destination}
+                                                         />
+                                                         <div className="text-xs text-slate-500 mb-3 mt-2">
+                                                             per person • includes markup
+                                                         </div>
+                                                         <Button 
+                                                             className="w-full bg-amber-500 hover:bg-amber-600"
+                                                             onClick={() => handleSelectFlight(offer)}
+                                                         >
+                                                             Select Flight
+                                                         </Button>
+                                                     </div>
                                                 </div>
                                             </CardContent>
                                         </Card>
