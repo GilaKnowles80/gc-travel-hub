@@ -19,6 +19,7 @@ import AdBanner from "../components/ads/AdBanner";
 import PriceDisplay from "../components/currency/PriceDisplay";
 import PriceCalendar from "../components/shared/PriceCalendar";
 import AirportInput from "../components/flights/AirportInput";
+import FlightDurationDisplay from "../components/flights/FlightDurationDisplay";
 import moment from "moment";
 
 export default function Flights() {
