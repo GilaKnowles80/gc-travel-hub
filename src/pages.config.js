@@ -87,11 +87,15 @@ import AffiliateDashboard from './pages/AffiliateDashboard';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BiyahekoPortal from './pages/BiyahekoPortal';
 import BookingConfirmation from './pages/BookingConfirmation';
+import BusCheckout from './pages/BusCheckout';
 import BusSearch from './pages/BusSearch';
+import CarRentalCheckout from './pages/CarRentalCheckout';
 import CarRentalSearch from './pages/CarRentalSearch';
 import Contact from './pages/Contact';
 import CorporateBooking from './pages/CorporateBooking';
+import CruiseCheckout from './pages/CruiseCheckout';
 import CruiseSearch from './pages/CruiseSearch';
+import FerryCheckout from './pages/FerryCheckout';
 import FerrySearch from './pages/FerrySearch';
 import FlightCheckout from './pages/FlightCheckout';
 import FlightDetail from './pages/FlightDetail';
@@ -135,25 +139,21 @@ import SupplierLogin from './pages/SupplierLogin';
 import SupplierOnboarding from './pages/SupplierOnboarding';
 import Support247 from './pages/Support247';
 import TermsOfService from './pages/TermsOfService';
+import TourCheckout from './pages/TourCheckout';
 import TourDetail from './pages/TourDetail';
 import Tours from './pages/Tours';
 import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
+import TrainCheckout from './pages/TrainCheckout';
 import TrainSearch from './pages/TrainSearch';
 import TransactionHistory from './pages/TransactionHistory';
 import TravelAlerts from './pages/TravelAlerts';
 import TravelAssistant from './pages/TravelAssistant';
 import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
+import UnifiedCheckout from './pages/UnifiedCheckout';
+import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import UnifiedCheckout from './pages/UnifiedCheckout';
-import TourCheckout from './pages/TourCheckout';
-import BusCheckout from './pages/BusCheckout';
-import FerryCheckout from './pages/FerryCheckout';
-import CruiseCheckout from './pages/CruiseCheckout';
-import VisaCheckout from './pages/VisaCheckout';
-import CarRentalCheckout from './pages/CarRentalCheckout';
-import TrainCheckout from './pages/TrainCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -198,11 +198,15 @@ export const PAGES = {
     "BestPriceGuarantee": BestPriceGuarantee,
     "BiyahekoPortal": BiyahekoPortal,
     "BookingConfirmation": BookingConfirmation,
+    "BusCheckout": BusCheckout,
     "BusSearch": BusSearch,
+    "CarRentalCheckout": CarRentalCheckout,
     "CarRentalSearch": CarRentalSearch,
     "Contact": Contact,
     "CorporateBooking": CorporateBooking,
+    "CruiseCheckout": CruiseCheckout,
     "CruiseSearch": CruiseSearch,
+    "FerryCheckout": FerryCheckout,
     "FerrySearch": FerrySearch,
     "FlightCheckout": FlightCheckout,
     "FlightDetail": FlightDetail,
@@ -246,25 +250,21 @@ export const PAGES = {
     "SupplierOnboarding": SupplierOnboarding,
     "Support247": Support247,
     "TermsOfService": TermsOfService,
+    "TourCheckout": TourCheckout,
     "TourDetail": TourDetail,
     "Tours": Tours,
     "TrainBookingConfirmation": TrainBookingConfirmation,
+    "TrainCheckout": TrainCheckout,
     "TrainSearch": TrainSearch,
     "TransactionHistory": TransactionHistory,
     "TravelAlerts": TravelAlerts,
     "TravelAssistant": TravelAssistant,
     "TravelInsurance": TravelInsurance,
     "TrustedAgency": TrustedAgency,
+    "UnifiedCheckout": UnifiedCheckout,
+    "VisaCheckout": VisaCheckout,
     "Visas": Visas,
     "utils": utils,
-    "UnifiedCheckout": UnifiedCheckout,
-    "TourCheckout": TourCheckout,
-    "BusCheckout": BusCheckout,
-    "FerryCheckout": FerryCheckout,
-    "CruiseCheckout": CruiseCheckout,
-    "VisaCheckout": VisaCheckout,
-    "CarRentalCheckout": CarRentalCheckout,
-    "TrainCheckout": TrainCheckout,
 }
 
 export const pagesConfig = {
