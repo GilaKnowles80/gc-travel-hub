@@ -1,109 +1,115 @@
 import { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
 import { ExternalLink, RefreshCw, AlertTriangle, Globe } from "lucide-react";
-
-const BIYAHEKO_URL = "https://biyaheko.ph";
-const TERMINAL_ID = "PHBXU029091100";
-const USER_ID = "GCTRVLTRRS";
+import { Button } from "@/components/ui/button";
 
 export default function BiyahekoPortal() {
   const [user, setUser] = useState(null);
-  const [frameError, setFrameError] = useState(false);
-  const [frameKey, setFrameKey] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [iframeError, setIframeError] = useState(false);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => setUser(null));
+    base44.auth.me().then(u => {
+      setUser(u);
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
   }, []);
 
-  if (!user || (user.role !== "admin" && user.role !== "staff")) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-800">Access Restricted</h2>
-          <p className="text-slate-500 mt-2">Admin or staff access required.</p>
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500" />
       </div>
     );
   }
 
-  const openInNewTab = () => {
-    window.open(BIYAHEKO_URL, "_blank");
-  };
-
-  const handleReload = () => {
-    setFrameError(false);
-    setFrameKey(k => k + 1);
-  };
+  if (!user || (user.role !== 'admin' && user.role !== 'staff')) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <AlertTriangle className="w-12 h-12 text-red-500" />
+        <h2 className="text-xl font-bold text-slate-800">Access Denied</h2>
+        <p className="text-slate-500">This page is for admin and staff only.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col h-screen bg-slate-900">
-      {/* Toolbar */}
-      <div className="bg-slate-800 px-4 py-2 flex items-center gap-3 border-b border-slate-700">
-        <img
-          src="https://biyaheko.ph/Content/Images/Biyaheko.png"
-          alt="Biyaheko"
-          className="h-7"
-          onError={e => e.target.style.display = 'none'}
-        />
-        <div className="flex-1">
-          <span className="text-white font-semibold text-sm">Biyaheko Portal</span>
-          <span className="text-slate-400 text-xs ml-3">
-            Terminal: <b className="text-amber-400">{TERMINAL_ID}</b> &nbsp;|&nbsp; User: <b className="text-amber-400">{USER_ID}</b>
-          </span>
+    <div className="flex flex-col h-screen bg-slate-100">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-white border-b border-slate-200 shadow-sm z-10">
+        <div className="flex items-center gap-3">
+          <Globe className="w-5 h-5 text-red-600" />
+          <span className="font-bold text-slate-800">Biyaheko Portal</span>
+          <span className="text-xs text-slate-400 hidden sm:inline">biyaheko.ph</span>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="text-slate-300 hover:text-white hover:bg-slate-700"
-          onClick={handleReload}
-        >
-          <RefreshCw className="w-4 h-4 mr-1" /> Reload
-        </Button>
-        <Button
-          size="sm"
-          className="bg-amber-500 hover:bg-amber-600 text-white"
-          onClick={openInNewTab}
-        >
-          <ExternalLink className="w-4 h-4 mr-1" /> Open in New Tab
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { setKey(k => k + 1); setIframeError(false); }}
+            className="gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Reload
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => window.open('https://biyaheko.ph', '_blank')}
+            className="gap-2 bg-red-600 hover:bg-red-700 text-white"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Open in New Tab
+          </Button>
+        </div>
       </div>
 
-      {/* Credentials hint bar */}
-      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center gap-2 text-sm text-amber-800">
-        <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
-        <span>
-          Use these credentials to log in: &nbsp;
-          <b>Terminal:</b> {TERMINAL_ID} &nbsp;|&nbsp;
-          <b>User ID:</b> {USER_ID} &nbsp;|&nbsp;
-          <b>Password:</b> ••••••••••
-          &nbsp;— If the portal doesn't load below, click <b>"Open in New Tab"</b>.
-        </span>
-      </div>
-
-      {/* iFrame or Error */}
+      {/* iframe or fallback */}
       <div className="flex-1 relative">
-        {frameError ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 gap-4">
-            <Globe className="w-16 h-16 text-slate-400" />
-            <h3 className="text-lg font-semibold text-slate-700">Biyaheko cannot be embedded</h3>
-            <p className="text-slate-500 text-sm text-center max-w-sm">
-              Biyaheko blocks embedding for security reasons (X-Frame-Options). 
-              Please use the button below to open it in a new tab.
-            </p>
-            <Button className="bg-amber-500 hover:bg-amber-600 text-white" onClick={openInNewTab}>
-              <ExternalLink className="w-4 h-4 mr-2" /> Open Biyaheko in New Tab
+        {iframeError ? (
+          <div className="flex flex-col items-center justify-center h-full gap-6 p-8 text-center">
+            <AlertTriangle className="w-16 h-16 text-amber-500" />
+            <div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">
+                Biyaheko blocked embedded display
+              </h3>
+              <p className="text-slate-500 max-w-md">
+                Biyaheko's website prevents being embedded in other sites for security reasons.
+                Use the button below to open it directly in a new tab.
+              </p>
+            </div>
+            <Button
+              size="lg"
+              onClick={() => window.open('https://biyaheko.ph', '_blank')}
+              className="gap-2 bg-red-600 hover:bg-red-700 text-white"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Open Biyaheko Portal
             </Button>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left max-w-sm w-full">
+              <p className="text-sm font-semibold text-slate-700 mb-2">Your credentials:</p>
+              <p className="text-sm text-slate-600">Terminal ID: <span className="font-mono font-bold">PHBXU029091100</span></p>
+              <p className="text-sm text-slate-600">User ID: <span className="font-mono font-bold">gctrvltrrs</span></p>
+            </div>
           </div>
         ) : (
           <iframe
-            key={frameKey}
-            src={BIYAHEKO_URL}
+            key={key}
+            src="https://biyaheko.ph"
             className="w-full h-full border-0"
             title="Biyaheko Portal"
-            onError={() => setFrameError(true)}
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+            onError={() => setIframeError(true)}
+            onLoad={(e) => {
+              // Detect if blocked (some browsers fire load but show error page)
+              try {
+                const doc = e.target.contentDocument;
+                if (!doc || doc.body.innerHTML === '') setIframeError(true);
+              } catch {
+                // Cross-origin - expected, iframe is likely loaded
+              }
+            }}
           />
         )}
       </div>
