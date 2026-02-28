@@ -163,7 +163,8 @@ export default function BusSearch() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
-                    <div className="text-2xl font-bold text-green-600"><PriceDisplay amount={bus.price} fromCurrency="PHP" /></div>
+                    <div className="text-2xl font-bold text-green-600"><PriceDisplay amount={applyMarkup(bus.price, 'bus')} fromCurrency="PHP" /></div>
+                    {markupPct > 0 && <p className="text-xs text-slate-400 line-through"><PriceDisplay amount={bus.price} fromCurrency="PHP" /></p>}
                     <p className="text-xs text-slate-500 mb-2">{bus.seats_available} seats left</p>
                     <Button
                       onClick={() => {

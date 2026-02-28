@@ -132,7 +132,8 @@ export default function FerrySearch() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-600">From</p>
-                    <div className="text-2xl font-bold text-blue-600"><PriceDisplay amount={ferry.cabin_types?.[0]?.price} fromCurrency="PHP" /></div>
+                    <div className="text-2xl font-bold text-blue-600"><PriceDisplay amount={applyMarkup(ferry.cabin_types?.[0]?.price, 'ferry')} fromCurrency="PHP" /></div>
+                    {markupPct > 0 && <p className="text-xs text-slate-400 line-through"><PriceDisplay amount={ferry.cabin_types?.[0]?.price} fromCurrency="PHP" /></p>}
                     <Button 
                       className="mt-2"
                       onClick={() => {

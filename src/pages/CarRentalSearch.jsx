@@ -152,7 +152,8 @@ export default function CarRentalSearch() {
 
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div>
-                    <div className="text-2xl font-bold text-orange-600"><PriceDisplay amount={car.price_per_day} fromCurrency="USD" /></div>
+                    <div className="text-2xl font-bold text-orange-600"><PriceDisplay amount={applyMarkup(car.price_per_day, 'car')} fromCurrency="USD" /></div>
+                    {markupPct > 0 && <p className="text-xs text-slate-400 line-through"><PriceDisplay amount={car.price_per_day} fromCurrency="USD" /></p>}
                     <p className="text-xs text-slate-500">per day</p>
                   </div>
                   <Button
