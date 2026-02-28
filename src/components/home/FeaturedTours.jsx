@@ -8,7 +8,7 @@ import { createPageUrl } from "@/pages/utils";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import { useMarkup } from "@/components/markup/useMarkup";
 
-function TourCard({ tour, index }) {
+function TourCard({ tour, index, applyMarkup, markupPct }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
