@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import BookingSummary from "@/components/checkout/BookingSummary";
 import PriceDisplay from "@/components/currency/PriceDisplay";
@@ -17,6 +17,7 @@ export default function HotelCheckout() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pnr, setPnr] = useState("");
 
   const hotelId = searchParams.get("hotelId");
   const checkIn = searchParams.get("checkIn");
@@ -145,6 +146,25 @@ export default function HotelCheckout() {
     </motion.div>
   );
 
+  const StepConfirmation = () => (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <Card className="border-green-200 bg-green-50">
+        <CardContent className="flex gap-4 pt-6">
+          <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-green-900">Booking Confirmed!</h3>
+            <p className="text-sm text-green-800 mt-1">
+              Your Confirmation Number: <span className="font-mono font-bold">{pnr}</span>
+            </p>
+            <p className="text-sm text-green-800 mt-2">
+              A confirmation email has been sent to {booking.guest_email}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+
   const handleNext = () => {
     setError("");
     if (step === 1 && (!booking.guest_name || !booking.guest_email)) {
@@ -158,21 +178,22 @@ export default function HotelCheckout() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await base44.functions.invoke("createHotelCheckout", {
-        hotel_id: booking.hotel_id,
-        room_type: booking.room_type,
-        check_in_date: booking.check_in_date,
-        check_out_date: booking.check_out_date,
-        number_of_rooms: booking.number_of_rooms,
-        guest_name: booking.guest_name,
-        guest_email: booking.guest_email,
-        guest_phone: booking.guest_phone,
+      const { data } = await base44.functions.invoke("processUnifiedCheckout", {
+        product_type: "hotel",
+        item_id: booking.hotel_id,
+        item_name: booking.room_type,
+        customer_name: booking.guest_name,
+        customer_email: booking.guest_email,
+        customer_phone: booking.guest_phone,
+        number_of_travelers: booking.number_of_rooms,
+        base_price: booking.total_price - selectedAddons.reduce((sum, a) => sum + a.price, 0),
+        total_price: booking.total_price,
         addons: selectedAddons,
+        payment_method: "stripe",
       });
 
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      }
+      setPnr(data.pnr);
+      setStep(4);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -191,7 +212,7 @@ export default function HotelCheckout() {
         </div>
 
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3, 4].map((s) => (
             <div
               key={s}
               className={`flex-1 h-2 rounded-full ${
@@ -215,6 +236,7 @@ export default function HotelCheckout() {
             {step === 1 && <StepGuestDetails />}
             {step === 2 && <StepAddons />}
             {step === 3 && <StepReview />}
+            {step === 4 && <StepConfirmation />}
           </div>
 
           <div className="lg:col-span-1">
@@ -223,7 +245,7 @@ export default function HotelCheckout() {
         </div>
 
         <div className="flex gap-4 mt-8 max-w-4xl mx-auto">
-          {step > 1 && (
+          {step > 1 && step < 4 && (
             <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">
               Back
             </Button>
@@ -245,8 +267,13 @@ export default function HotelCheckout() {
                   Processing...
                 </>
               ) : (
-                "Proceed to Payment"
+                "Complete Booking"
               )}
+            </Button>
+          )}
+          {step === 4 && (
+            <Button onClick={() => navigate('/my-bookings')} className="flex-1 bg-blue-600 hover:bg-blue-700">
+              View My Bookings
             </Button>
           )}
         </div>
