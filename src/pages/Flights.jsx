@@ -241,20 +241,18 @@ export default function Flights() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div className="space-y-2">
                   <Label>From</Label>
-                  <Input
+                  <AirportInput
                     value={searchParams.origin}
-                    onChange={(e) => setSearchParams({...searchParams, origin: e.target.value.toUpperCase()})}
-                    placeholder="e.g. AMS, BRU, MNL"
-                    maxLength={3}
+                    onChange={(code) => setSearchParams({...searchParams, origin: code})}
+                    placeholder="e.g. MNL, SIN, LHR"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>To</Label>
-                  <Input
+                  <AirportInput
                     value={searchParams.destination}
-                    onChange={(e) => setSearchParams({...searchParams, destination: e.target.value.toUpperCase()})}
+                    onChange={(code) => setSearchParams({...searchParams, destination: code})}
                     placeholder="e.g. MNL, SIN, DXB"
-                    maxLength={3}
                   />
                 </div>
                 <div className="space-y-2 relative">
