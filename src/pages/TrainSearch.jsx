@@ -79,15 +79,15 @@ export default function TrainSearch() {
                   <SelectItem value="Canada">Canada</SelectItem>
                 </SelectContent>
               </Select>
-              <Input
-                placeholder="Origin station..."
+              <StationSelector
                 value={filters.origin}
-                onChange={(e) => setFilters({...filters, origin: e.target.value})}
+                onChange={(v) => setFilters({...filters, origin: v})}
+                placeholder="From station..."
               />
-              <Input
-                placeholder="Destination..."
+              <StationSelector
                 value={filters.destination}
-                onChange={(e) => setFilters({...filters, destination: e.target.value})}
+                onChange={(v) => setFilters({...filters, destination: v})}
+                placeholder="To station..."
               />
               <Button className="w-full">
                 <Search className="w-4 h-4 mr-2" />
