@@ -200,7 +200,7 @@ export default function CruiseBookingDialog({ cruise, open, onOpenChange }) {
           <div className="space-y-6">
             <div className="bg-cyan-50 rounded-lg p-4 text-center">
               <p className="text-sm text-slate-600">Total Amount</p>
-              <p className="text-3xl font-bold text-cyan-600">${totalPrice.toLocaleString()}</p>
+              <div className="text-3xl font-bold text-cyan-600"><PriceDisplay amount={totalPrice} fromCurrency="USD" /></div>
             </div>
 
             <Tabs defaultValue="stripe" className="w-full">
