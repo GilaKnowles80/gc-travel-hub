@@ -96,23 +96,69 @@ export default function HotelSearch() {
                                     onChange={(e) => setSearchParams({...searchParams, cityCode: e.target.value.toUpperCase()})}
                                 />
                             </div>
-                            <div>
+                            <div className="relative">
                                 <Label>Check-in Date</Label>
-                                <Input
+                                <div className="flex gap-2">
+                                  <Input
                                     type="date"
                                     value={searchParams.checkInDate}
                                     min={moment().format('YYYY-MM-DD')}
                                     onChange={(e) => setSearchParams({...searchParams, checkInDate: e.target.value})}
-                                />
+                                    className="flex-1"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => { setShowCheckInCalendar(v => !v); setShowCheckOutCalendar(false); }}
+                                    className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-xs text-blue-600 font-medium whitespace-nowrap"
+                                  >
+                                    💰 Prices
+                                  </button>
+                                </div>
+                                {showCheckInCalendar && (
+                                  <div className="absolute top-full left-0 z-50 mt-2">
+                                    <PriceCalendar
+                                      type="hotel"
+                                      location={searchParams.cityCode}
+                                      selectedDate={searchParams.checkInDate}
+                                      onSelectDate={(date) => {
+                                        setSearchParams(p => ({...p, checkInDate: date}));
+                                        setShowCheckInCalendar(false);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                             </div>
-                            <div>
+                            <div className="relative">
                                 <Label>Check-out Date</Label>
-                                <Input
+                                <div className="flex gap-2">
+                                  <Input
                                     type="date"
                                     value={searchParams.checkOutDate}
                                     min={searchParams.checkInDate || moment().format('YYYY-MM-DD')}
                                     onChange={(e) => setSearchParams({...searchParams, checkOutDate: e.target.value})}
-                                />
+                                    className="flex-1"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => { setShowCheckOutCalendar(v => !v); setShowCheckInCalendar(false); }}
+                                    className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-xs text-blue-600 font-medium whitespace-nowrap"
+                                  >
+                                    💰 Prices
+                                  </button>
+                                </div>
+                                {showCheckOutCalendar && (
+                                  <div className="absolute top-full left-0 z-50 mt-2">
+                                    <PriceCalendar
+                                      type="hotel"
+                                      location={searchParams.cityCode}
+                                      selectedDate={searchParams.checkOutDate}
+                                      onSelectDate={(date) => {
+                                        setSearchParams(p => ({...p, checkOutDate: date}));
+                                        setShowCheckOutCalendar(false);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                             </div>
                             <div>
                                 <Label>Rooms</Label>
