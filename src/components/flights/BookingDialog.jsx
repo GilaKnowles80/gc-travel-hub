@@ -23,6 +23,7 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState(null);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+    const [selectedInsurance, setSelectedInsurance] = useState(null);
     const [userLocation, setUserLocation] = useState(null);
     const [adjustedPrice, setAdjustedPrice] = useState(null);
     const [travelers, setTravelers] = useState(
