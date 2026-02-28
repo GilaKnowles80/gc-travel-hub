@@ -13,6 +13,7 @@ import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function CarRentalSearch() {
   const [filters, setFilters] = useState({ company: 'all', car_type: 'all', location: '', date: '' });
+  const { applyMarkup, markupPct } = useMarkup();
   const [selectedCar, setSelectedCar] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [aiResults, setAiResults] = useState([]);

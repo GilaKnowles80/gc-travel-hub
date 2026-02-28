@@ -13,6 +13,7 @@ import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function CruiseSearch() {
   const [filters, setFilters] = useState({ cruise_line: 'all', departure_port: '', date: '' });
+  const { applyMarkup, markupPct } = useMarkup();
   const [selectedCruise, setSelectedCruise] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [aiResults, setAiResults] = useState([]);

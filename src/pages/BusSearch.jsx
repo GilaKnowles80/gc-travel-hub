@@ -18,6 +18,7 @@ export default function BusSearch() {
     destination: '',
     date: ''
   });
+  const { applyMarkup, markupPct } = useMarkup();
   const [selectedBus, setSelectedBus] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [aiResults, setAiResults] = useState([]);

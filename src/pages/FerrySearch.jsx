@@ -13,6 +13,7 @@ import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({ operator: 'all', origin: '', destination: '', date: '' });
+  const { applyMarkup, markupPct } = useMarkup();
   const [selectedFerry, setSelectedFerry] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [aiResults, setAiResults] = useState([]);
