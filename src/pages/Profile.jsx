@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, Heart, Settings, History, Loader2, MapPin, Route, Plane, Hotel, Shield } from "lucide-react";
+import { User, Heart, Settings, History, Loader2, MapPin, Route, Plane, Hotel, Shield, Wallet } from "lucide-react";
 import PersonalInfoTab from "../components/profile/PersonalInfoTab";
 import TravelPreferencesTab from "../components/profile/TravelPreferencesTab";
 import BookingHistoryTab from "../components/profile/BookingHistoryTab";
@@ -13,6 +13,7 @@ import SavedItinerariesTab from "../components/profile/SavedItinerariesTab";
 import SavedTravelersTab from "../components/profile/SavedTravelersTab";
 import SavedGuestsTab from "../components/profile/SavedGuestsTab";
 import PrivacySecurityTab from "../components/profile/PrivacySecurityTab";
+import WalletCard from "../components/wallet/WalletCard";
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("personal");
@@ -40,10 +41,14 @@ export default function Profile() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 gap-2 bg-white p-1 rounded-xl shadow-sm overflow-x-auto">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-9 gap-2 bg-white p-1 rounded-xl shadow-sm overflow-x-auto">
             <TabsTrigger value="personal" className="rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:text-white whitespace-nowrap">
               <User className="w-4 h-4 mr-2" />
               Personal Info
+            </TabsTrigger>
+            <TabsTrigger value="wallet" className="rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:text-white whitespace-nowrap">
+              <Wallet className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Wallet</span>
             </TabsTrigger>
             <TabsTrigger value="travelers" className="rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:text-white whitespace-nowrap">
               <Plane className="w-4 h-4 mr-2" />
@@ -81,6 +86,10 @@ export default function Profile() {
 
           <TabsContent value="personal">
             <PersonalInfoTab user={user} />
+          </TabsContent>
+
+          <TabsContent value="wallet">
+            <WalletCard userEmail={user?.email} />
           </TabsContent>
 
           <TabsContent value="travelers">
