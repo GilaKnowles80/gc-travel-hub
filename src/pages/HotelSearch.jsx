@@ -28,6 +28,8 @@ export default function HotelSearch() {
     const [selectedHotel, setSelectedHotel] = useState(null);
     const [showBookingDialog, setShowBookingDialog] = useState(false);
     const [locationResults, setLocationResults] = useState([]);
+    const [showCheckInCalendar, setShowCheckInCalendar] = useState(false);
+    const [showCheckOutCalendar, setShowCheckOutCalendar] = useState(false);
 
     const { data: hotelResults, isLoading, error, refetch } = useQuery({
         queryKey: ['hotel-search', searchParams],
