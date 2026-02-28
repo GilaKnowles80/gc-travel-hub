@@ -229,13 +229,19 @@ export default function Flights() {
 
             {/* Search Form */}
             <Card className="p-6 bg-white/95 backdrop-blur">
+              {geoDetecting && (
+                <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
+                  <div className="w-3 h-3 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                  Detecting your location to pre-fill airports...
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div className="space-y-2">
                   <Label>From</Label>
                   <Input
                     value={searchParams.origin}
                     onChange={(e) => setSearchParams({...searchParams, origin: e.target.value.toUpperCase()})}
-                    placeholder="MNL"
+                    placeholder="e.g. AMS, BRU, MNL"
                     maxLength={3}
                   />
                 </div>
@@ -244,7 +250,7 @@ export default function Flights() {
                   <Input
                     value={searchParams.destination}
                     onChange={(e) => setSearchParams({...searchParams, destination: e.target.value.toUpperCase()})}
-                    placeholder="SIN"
+                    placeholder="e.g. MNL, SIN, DXB"
                     maxLength={3}
                   />
                 </div>
