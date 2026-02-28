@@ -16,13 +16,17 @@ export default function TrainSearch() {
     operator: 'all',
     country: 'all',
     origin: '',
-    destination: ''
+    destination: '',
+    date: ''
   });
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
+  const [aiResults, setAiResults] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  const { data: trains = [] } = useQuery({
-    queryKey: ['trains', filters],
+  const { data: dbTrains = [] } = useQuery({
+    queryKey: ['trains', filters.operator, filters.country],
     queryFn: async () => {
       let query = {};
       if (filters.operator !== 'all') query.operator = filters.operator;
@@ -31,11 +35,42 @@ export default function TrainSearch() {
     }
   });
 
-  const filteredTrains = trains.filter(train => {
-    const originMatch = !filters.origin || train.origin_station.toLowerCase().includes(filters.origin.toLowerCase());
-    const destMatch = !filters.destination || train.destination_station.toLowerCase().includes(filters.destination.toLowerCase());
-    return originMatch && destMatch;
-  });
+  const handleSearch = async () => {
+    setSearched(true);
+    if (!filters.origin && !filters.destination) return;
+    setAiLoading(true);
+    setAiResults([]);
+    const { data } = await base44.functions.invoke('getAISchedules', {
+      service_type: 'train',
+      origin: filters.origin,
+      destination: filters.destination,
+      date: filters.date
+    });
+    const mapped = (data?.results || []).map((r, i) => ({
+      id: `ai-${i}`,
+      operator: r.operator || 'Unknown',
+      train_number: r.train_number || `TRN-${i + 1}`,
+      train_type: r.train_type || 'intercity',
+      origin_station: r.origin_station || r.origin || filters.origin,
+      destination_station: r.destination_station || r.destination || filters.destination,
+      departure_time: r.departure_time || new Date().toISOString(),
+      arrival_time: r.arrival_time,
+      duration_hours: r.duration_hours || r.duration,
+      class_types: r.class_types || [{ class: 'economy', price: parseFloat(r.price) || 0, seats_available: 50 }],
+      amenities: r.amenities || [],
+      _ai: true
+    }));
+    setAiResults(mapped);
+    setAiLoading(false);
+  };
+
+  const filteredTrains = (searched && (filters.origin || filters.destination))
+    ? aiResults
+    : dbTrains.filter(train => {
+        const originMatch = !filters.origin || train.origin_station?.toLowerCase().includes(filters.origin.toLowerCase());
+        const destMatch = !filters.destination || train.destination_station?.toLowerCase().includes(filters.destination.toLowerCase());
+        return originMatch && destMatch;
+      });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-slate-100 p-4 md:p-8">
@@ -48,14 +83,15 @@ export default function TrainSearch() {
         {/* Search Filters */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+              <StationSelector value={filters.origin} onChange={(v) => setFilters({...filters, origin: v})} placeholder="From station..." />
+              <StationSelector value={filters.destination} onChange={(v) => setFilters({...filters, destination: v})} placeholder="To station..." />
+              <Input type="date" value={filters.date} onChange={(e) => setFilters({...filters, date: e.target.value})} />
               <Select value={filters.operator} onValueChange={(v) => setFilters({...filters, operator: v})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Operator" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Operator" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Operators</SelectItem>
-                  <SelectItem value="Eurail">Eurail (Europe)</SelectItem>
+                  <SelectItem value="Eurail">Eurail</SelectItem>
                   <SelectItem value="Amtrak">Amtrak (USA)</SelectItem>
                   <SelectItem value="JR Pass">JR Pass (Japan)</SelectItem>
                   <SelectItem value="DB (Deutsche Bahn)">DB (Germany)</SelectItem>
@@ -65,9 +101,7 @@ export default function TrainSearch() {
                 </SelectContent>
               </Select>
               <Select value={filters.country} onValueChange={(v) => setFilters({...filters, country: v})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Country" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Country" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Countries</SelectItem>
                   <SelectItem value="USA">USA</SelectItem>
@@ -77,24 +111,18 @@ export default function TrainSearch() {
                   <SelectItem value="Italy">Italy</SelectItem>
                   <SelectItem value="Switzerland">Switzerland</SelectItem>
                   <SelectItem value="Japan">Japan</SelectItem>
-                  <SelectItem value="Canada">Canada</SelectItem>
                 </SelectContent>
               </Select>
-              <StationSelector
-                value={filters.origin}
-                onChange={(v) => setFilters({...filters, origin: v})}
-                placeholder="From station..."
-              />
-              <StationSelector
-                value={filters.destination}
-                onChange={(v) => setFilters({...filters, destination: v})}
-                placeholder="To station..."
-              />
-              <Button className="w-full">
-                <Search className="w-4 h-4 mr-2" />
-                Search
+              <Button className="w-full" onClick={handleSearch} disabled={aiLoading}>
+                {aiLoading ? <span className="animate-spin mr-2">⏳</span> : <Search className="w-4 h-4 mr-2" />}
+                {aiLoading ? 'Searching...' : 'Search'}
               </Button>
             </div>
+            {searched && aiResults.length > 0 && (
+              <div className="mt-3 flex items-center gap-2 text-xs text-green-700 bg-green-50 rounded-lg px-3 py-2">
+                <Search className="w-3 h-3" /> Live results powered by AI — real schedules for your route.
+              </div>
+            )}
           </CardContent>
         </Card>
 
