@@ -456,6 +456,16 @@ export default function BookingDialog({ isOpen, onClose, flightOffer, passengers
                         </div>
                     ))}
 
+                                    <InsuranceSelector
+                        destination={flightOffer?.itineraries?.[0]?.segments?.slice(-1)[0]?.arrival?.iataCode}
+                        startDate={flightOffer?.itineraries?.[0]?.segments?.[0]?.departure?.at?.split('T')[0]}
+                        endDate={flightOffer?.itineraries?.[flightOffer.itineraries.length-1]?.segments?.slice(-1)[0]?.arrival?.at?.split('T')[0]}
+                        tripCost={parseFloat(flightOffer?.price?.total || 0)}
+                        travelers={passengers}
+                        onSelect={setSelectedInsurance}
+                        selectedInsurance={selectedInsurance}
+                    />
+
                     <div className="flex gap-3 justify-end pt-4">
                         <Button type="button" variant="outline" onClick={onClose}>
                             Cancel
