@@ -304,7 +304,8 @@ export default function Layout({ children, currentPageName }) {
                         window.open('https://maps.google.com/?q=Block+12,+Lot+8,+Kapatiran+Village,+Pasong+Buaya+2,+Imus,+Cavite+4103,+Philippines', '_blank');
                       }
                     }}
-                    className="text-slate-400 hover:text-amber-400 text-sm transition-colors cursor-pointer"
+                    className="text-slate-400 hover:text-amber-400 text-sm transition-colors cursor-pointer py-1 px-2 rounded hover:bg-slate-700/20 active:scale-95"
+                    type="button"
                   >
                     Visit Our Office
                   </button>
