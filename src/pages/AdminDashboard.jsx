@@ -19,6 +19,7 @@ import DetailedPerformanceAnalytics from '@/components/admin/DetailedPerformance
 import TourAnalyticsByRegion from '@/components/admin/TourAnalyticsByRegion';
 import GoogleDriveSync from '@/components/admin/GoogleDriveSync';
 import GoogleSheetsSync from '@/components/admin/GoogleSheetsSync';
+import PitchDeckBuilder from '@/components/admin/PitchDeckBuilder';
 
 export default function AdminDashboard() {
   return (
@@ -118,6 +119,7 @@ export default function AdminDashboard() {
           <TabsContent value="manage" className="space-y-6">
             <GoogleDriveSync />
             <GoogleSheetsSync />
+            <PitchDeckBuilder />
             <DuffelTopupGuide />
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
