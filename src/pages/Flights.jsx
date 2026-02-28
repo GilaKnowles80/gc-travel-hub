@@ -17,6 +17,7 @@ import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
 import DiscoverFlights from "../components/flights/DiscoverFlights";
 import AdBanner from "../components/ads/AdBanner";
 import PriceDisplay from "../components/currency/PriceDisplay";
+import PriceCalendar from "../components/shared/PriceCalendar";
 import moment from "moment";
 
 export default function Flights() {
