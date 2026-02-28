@@ -256,14 +256,39 @@ export default function Flights() {
                     maxLength={3}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <Label>Departure</Label>
-                  <Input
-                    type="date"
-                    value={searchParams.departureDate}
-                    onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
-                    min={moment().format('YYYY-MM-DD')}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      type="date"
+                      value={searchParams.departureDate}
+                      onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
+                      min={moment().format('YYYY-MM-DD')}
+                      className="flex-1"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPriceCalendar(v => !v)}
+                      title="View price calendar"
+                      className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
+                    >
+                      💰 Prices
+                    </button>
+                  </div>
+                  {showPriceCalendar && (
+                    <div className="absolute top-full left-0 z-50 mt-2">
+                      <PriceCalendar
+                        type="flight"
+                        origin={searchParams.origin}
+                        destination={searchParams.destination}
+                        selectedDate={searchParams.departureDate}
+                        onSelectDate={(date) => {
+                          setSearchParams(p => ({...p, departureDate: date}));
+                          setShowPriceCalendar(false);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Return (Optional)</Label>
