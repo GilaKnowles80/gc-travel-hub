@@ -1,78 +1,110 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+const TERMINAL_ID = Deno.env.get("BIYAHEKO_TERMINAL_ID");
+const USER_ID = Deno.env.get("BIYAHEKO_USER_ID");
+const PASSWORD = Deno.env.get("BIYAHEKO_PASSWORD");
+const BASE_URL = "https://biyaheko.ph";
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { booking_type, item_id, passenger_details, payment_method } = await req.json();
-
-    // Get credentials
-    const credentials = await base44.asServiceRole.entities.SupplierCredentials.filter({}, '-created_date', 1);
-    if (!credentials.length || !credentials[0].biyaheko_terminal_id) {
-      return Response.json({ error: 'Biyaheko credentials not configured' }, { status: 400 });
-    }
-
-    const { biyaheko_terminal_id, biyaheko_user_id, biyaheko_password } = credentials[0];
-
-    // Biyaheko booking API endpoint
-    const apiUrl = 'https://api.biyaheko.ph/book';
-
-    const payload = {
-      terminal_id: biyaheko_terminal_id,
-      user_id: biyaheko_user_id,
-      password: biyaheko_password,
+    const {
       booking_type,
-      item_id,
-      passenger_details,
-      payment_method
-    };
+      flight_key,
+      fare_key,
+      passengers, // array of { title, first_name, last_name, gender, dob, nationality, passport_number, passport_expiry }
+      contact_email,
+      contact_phone,
+      add_insurance = false
+    } = await req.json();
 
-    console.log('Biyaheko booking request:', { booking_type, item_id });
+    console.log('Biyaheko book request:', { booking_type, flight_key, passengers: passengers?.length });
 
-    const response = await fetch(apiUrl, {
+    let bookUrl, bookPayload;
+
+    if (booking_type === 'flight') {
+      bookUrl = `${BASE_URL}/Airline/Book`;
+      bookPayload = {
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD,
+        FlightKey: flight_key,
+        FareKey: fare_key,
+        Passengers: passengers,
+        ContactEmail: contact_email,
+        ContactPhone: contact_phone,
+        AddInsurance: add_insurance
+      };
+    } else if (booking_type === 'bus') {
+      bookUrl = `${BASE_URL}/Bus/Book`;
+      bookPayload = {
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD,
+        TripKey: flight_key,
+        Passengers: passengers,
+        ContactEmail: contact_email,
+        ContactPhone: contact_phone
+      };
+    } else if (booking_type === 'ferry') {
+      bookUrl = `${BASE_URL}/Ferry/Book`;
+      bookPayload = {
+        TerminalID: TERMINAL_ID,
+        UserID: USER_ID,
+        Password: PASSWORD,
+        TripKey: flight_key,
+        Passengers: passengers,
+        ContactEmail: contact_email,
+        ContactPhone: contact_phone
+      };
+    } else {
+      return Response.json({ error: 'Unsupported booking_type. Use: flight, bus, ferry' }, { status: 400 });
+    }
+
+    console.log('Booking at:', bookUrl);
+
+    const response = await fetch(bookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(bookPayload)
     });
+
+    const resultText = await response.text();
+    console.log('Book response status:', response.status);
+    console.log('Book result (first 500 chars):', resultText.substring(0, 500));
+
+    let booking;
+    try {
+      booking = JSON.parse(resultText);
+    } catch {
+      booking = { raw: resultText };
+    }
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Biyaheko booking error:', error);
-      return Response.json({ error: 'Biyaheko booking failed', details: error }, { status: response.status });
+      console.error('Biyaheko booking failed:', resultText);
+      return Response.json({ error: 'Biyaheko booking failed', details: booking }, { status: response.status });
     }
 
-    const booking = await response.json();
-    
     // Update supplier stats
-    const suppliers = await base44.asServiceRole.entities.Supplier.filter({ company_name: 'Biyaheko' });
-    if (suppliers.length > 0) {
-      const supplier = suppliers[0];
-      await base44.asServiceRole.entities.Supplier.update(supplier.id, {
-        total_bookings: (supplier.total_bookings || 0) + 1
-      });
-    }
-    
-    // Track successful integration
-    await base44.analytics.track({
-      eventName: 'supplier_integration_success',
-      properties: {
-        supplier: 'biyaheko',
-        operation: 'booking',
-        booking_type,
-        reference: booking.reference_number
+    try {
+      const suppliers = await base44.asServiceRole.entities.Supplier.filter({ company_name: 'Biyaheko' });
+      if (suppliers.length > 0) {
+        await base44.asServiceRole.entities.Supplier.update(suppliers[0].id, {
+          total_bookings: (suppliers[0].total_bookings || 0) + 1
+        });
       }
-    });
+    } catch (e) {
+      console.warn('Could not update supplier stats:', e.message);
+    }
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       supplier: 'biyaheko',
       booking,
-      reference: booking.reference_number
+      reference: booking.PNR || booking.reference_number || booking.BookingReference
     });
 
   } catch (error) {
