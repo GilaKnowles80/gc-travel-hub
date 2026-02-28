@@ -20,6 +20,7 @@ import TourAnalyticsByRegion from '@/components/admin/TourAnalyticsByRegion';
 import GoogleDriveSync from '@/components/admin/GoogleDriveSync';
 import GoogleSheetsSync from '@/components/admin/GoogleSheetsSync';
 import PitchDeckBuilder from '@/components/admin/PitchDeckBuilder';
+import TravelItineraryDocBuilder from '@/components/admin/TravelItineraryDocBuilder';
 
 export default function AdminDashboard() {
   return (
@@ -120,6 +121,7 @@ export default function AdminDashboard() {
             <GoogleDriveSync />
             <GoogleSheetsSync />
             <PitchDeckBuilder />
+            <TravelItineraryDocBuilder />
             <DuffelTopupGuide />
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
