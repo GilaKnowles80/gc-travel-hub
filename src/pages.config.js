@@ -147,6 +147,7 @@ import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
 import UnifiedCheckout from './pages/UnifiedCheckout';
+import TourCheckout from './pages/TourCheckout';
 import __Layout from './Layout.jsx';
 
 
@@ -251,6 +252,7 @@ export const PAGES = {
     "Visas": Visas,
     "utils": utils,
     "UnifiedCheckout": UnifiedCheckout,
+    "TourCheckout": TourCheckout,
 }
 
 export const pagesConfig = {
