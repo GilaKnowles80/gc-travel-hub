@@ -90,6 +90,10 @@ export default function AdminDashboard() {
             <DetailedPerformanceAnalytics />
           </TabsContent>
 
+          <TabsContent value="tours" className="space-y-6">
+            <TourAnalyticsByRegion />
+          </TabsContent>
+
           <TabsContent value="bookings">
             <Card>
               <CardHeader>
