@@ -85,6 +85,7 @@ import AdminTours from './pages/AdminTours';
 import AdminVisas from './pages/AdminVisas';
 import AffiliateDashboard from './pages/AffiliateDashboard';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
+import BiyahekoPortal from './pages/BiyahekoPortal';
 import BookingConfirmation from './pages/BookingConfirmation';
 import BusSearch from './pages/BusSearch';
 import CarRentalSearch from './pages/CarRentalSearch';
@@ -143,7 +144,6 @@ import TravelInsurance from './pages/TravelInsurance';
 import TrustedAgency from './pages/TrustedAgency';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
-import BiyahekoPortal from './pages/BiyahekoPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -186,6 +186,7 @@ export const PAGES = {
     "AdminVisas": AdminVisas,
     "AffiliateDashboard": AffiliateDashboard,
     "BestPriceGuarantee": BestPriceGuarantee,
+    "BiyahekoPortal": BiyahekoPortal,
     "BookingConfirmation": BookingConfirmation,
     "BusSearch": BusSearch,
     "CarRentalSearch": CarRentalSearch,
@@ -244,7 +245,6 @@ export const PAGES = {
     "TrustedAgency": TrustedAgency,
     "Visas": Visas,
     "utils": utils,
-    "BiyahekoPortal": BiyahekoPortal,
 }
 
 export const pagesConfig = {

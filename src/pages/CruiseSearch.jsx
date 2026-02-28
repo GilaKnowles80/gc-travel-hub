@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Ship, Calendar, MapPin, Search, Zap } from 'lucide-react';
 import CruiseBookingDialog from '@/components/cruises/CruiseBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
+import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function CruiseSearch() {
   const [filters, setFilters] = useState({ cruise_line: 'all', departure_port: '', date: '' });

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Car, Users, Gauge, Fuel, Search, Zap } from 'lucide-react';
 import CarRentalBookingDialog from '@/components/cars/CarRentalBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
+import { useMarkup } from '@/components/markup/useMarkup';
 
 export default function CarRentalSearch() {
   const [filters, setFilters] = useState({ company: 'all', car_type: 'all', location: '', date: '' });
