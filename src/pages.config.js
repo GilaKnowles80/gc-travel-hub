@@ -156,6 +156,7 @@ import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
+import TawkSupport from './pages/TawkSupport';
 import __Layout from './Layout.jsx';
 
 
@@ -269,6 +270,7 @@ export const PAGES = {
     "Visas": Visas,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
+    "TawkSupport": TawkSupport,
 }
 
 export const pagesConfig = {
