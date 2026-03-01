@@ -51,7 +51,33 @@ Deno.serve(async (req) => {
 
     console.log(`[DUFFEL SEARCH] ${origin}→${destination} | ${departureDate} | Adults: ${adults} | Class: ${cabinClass}`);
 
-    const offerRequestResponse = await fetch('https://api.duffel.com/air/offer_requests', {
+    // Helper: Retry with exponential backoff
+    const fetchWithRetry = async (url, options, maxAttempts = 3) => {
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          const response = await fetch(url, options);
+          if (response.ok) return response;
+          if (response.status === 429) {
+            const waitMs = Math.min(1000 * Math.pow(2, attempt - 1), 8000);
+            console.log(`[DUFFEL] Rate limited (429). Retry ${attempt}/${maxAttempts} after ${waitMs}ms`);
+            await new Promise(resolve => setTimeout(resolve, waitMs));
+            continue;
+          }
+          return response;
+        } catch (err) {
+          if (attempt < maxAttempts) {
+            const waitMs = Math.min(1000 * Math.pow(2, attempt - 1), 8000);
+            console.log(`[DUFFEL] Request failed. Retry ${attempt}/${maxAttempts} after ${waitMs}ms`);
+            await new Promise(resolve => setTimeout(resolve, waitMs));
+            continue;
+          }
+          throw err;
+        }
+      }
+    };
+
+    // Create offer request
+    const offerRequestResponse = await fetchWithRetry('https://api.duffel.com/air/offer_requests', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${duffelApiKey}`,
@@ -70,21 +96,37 @@ Deno.serve(async (req) => {
     const offerRequest = await offerRequestResponse.json();
     const offerRequestId = offerRequest.data.id;
 
-    // Fetch offers
-    const offersResponse = await fetch(`https://api.duffel.com/air/offers?offer_request_id=${offerRequestId}&limit=50`, {
-      headers: {
-        'Authorization': `Bearer ${duffelApiKey}`,
-        'Duffel-Version': 'v2'
+    // Poll for offers with backoff
+    let offersData = null;
+    for (let attempt = 0; attempt < 30; attempt++) {
+      const offersResponse = await fetchWithRetry(`https://api.duffel.com/air/offers?offer_request_id=${offerRequestId}&limit=100`, {
+        headers: {
+          'Authorization': `Bearer ${duffelApiKey}`,
+          'Duffel-Version': 'v2'
+        }
+      });
+
+      if (!offersResponse.ok) {
+        const errorData = await offersResponse.json();
+        console.error('[DUFFEL] Offers fetch error:', JSON.stringify(errorData));
+        return Response.json({ error: 'Failed to fetch flight offers', details: errorData }, { status: offersResponse.status });
       }
-    });
 
-    if (!offersResponse.ok) {
-      const errorData = await offersResponse.json();
-      console.error('[DUFFEL] Offers fetch error:', JSON.stringify(errorData));
-      return Response.json({ error: 'Failed to fetch flight offers', details: errorData }, { status: offersResponse.status });
+      offersData = await offersResponse.json();
+      
+      // Check if search is complete
+      if (offersData.data && offersData.data.length > 0) {
+        console.log(`[DUFFEL] Got ${offersData.data.length} offers on attempt ${attempt + 1}`);
+        break;
+      }
+
+      // Wait before retrying (shorter waits, longer total timeout)
+      if (attempt < 29) {
+        const waitMs = Math.min(500 + (attempt * 200), 2000);
+        console.log(`[DUFFEL] No offers yet. Polling (${attempt + 1}/30) after ${waitMs}ms`);
+        await new Promise(resolve => setTimeout(resolve, waitMs));
+      }
     }
-
-    const offersData = await offersResponse.json();
 
     // ── Phase 2: Apply Dynamic Markup (default 20%, range 15–30%) ─────────
     const markupPct = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '20') / 100;
