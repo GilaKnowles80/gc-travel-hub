@@ -18,6 +18,7 @@ import BottomNavigation from "@/components/mobile/BottomNavigation";
 import AdBanner from "@/components/ads/AdBanner";
 import GoogleAdsTracking from "@/components/tracking/GoogleAdsTracking";
 import GoogleTagManager from "@/components/tracking/GoogleTagManager";
+import { AdminModeProvider, useAdminMode } from "@/components/admin/AdminModeContext";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Plane },
