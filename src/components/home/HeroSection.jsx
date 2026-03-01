@@ -93,6 +93,58 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
+  // Geo-detect nearest airport for the "From" field
+  useEffect(() => {
+    setGeoDetecting(true);
+    const countryAirportMap = {
+      'PH': { origin: 'MNL', label: 'Manila (MNL)' },
+      'SG': { origin: 'SIN', label: 'Singapore (SIN)' },
+      'JP': { origin: 'NRT', label: 'Tokyo (NRT)' },
+      'KR': { origin: 'ICN', label: 'Seoul (ICN)' },
+      'HK': { origin: 'HKG', label: 'Hong Kong (HKG)' },
+      'TW': { origin: 'TPE', label: 'Taipei (TPE)' },
+      'MY': { origin: 'KUL', label: 'Kuala Lumpur (KUL)' },
+      'TH': { origin: 'BKK', label: 'Bangkok (BKK)' },
+      'AU': { origin: 'SYD', label: 'Sydney (SYD)' },
+      'NZ': { origin: 'AKL', label: 'Auckland (AKL)' },
+      'US': { origin: 'LAX', label: 'Los Angeles (LAX)' },
+      'CA': { origin: 'YVR', label: 'Vancouver (YVR)' },
+      'GB': { origin: 'LHR', label: 'London Heathrow (LHR)' },
+      'DE': { origin: 'FRA', label: 'Frankfurt (FRA)' },
+      'FR': { origin: 'CDG', label: 'Paris (CDG)' },
+      'NL': { origin: 'AMS', label: 'Amsterdam (AMS)' },
+      'BE': { origin: 'BRU', label: 'Brussels (BRU)' },
+      'ES': { origin: 'MAD', label: 'Madrid (MAD)' },
+      'IT': { origin: 'FCO', label: 'Rome (FCO)' },
+      'PT': { origin: 'LIS', label: 'Lisbon (LIS)' },
+      'AT': { origin: 'VIE', label: 'Vienna (VIE)' },
+      'CH': { origin: 'ZRH', label: 'Zurich (ZRH)' },
+      'AE': { origin: 'DXB', label: 'Dubai (DXB)' },
+      'SA': { origin: 'RUH', label: 'Riyadh (RUH)' },
+      'QA': { origin: 'DOH', label: 'Doha (DOH)' },
+      'KW': { origin: 'KWI', label: 'Kuwait City (KWI)' },
+      'IN': { origin: 'BOM', label: 'Mumbai (BOM)' },
+      'CN': { origin: 'PEK', label: 'Beijing (PEK)' },
+    };
+    fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(data => {
+        const mapped = countryAirportMap[data.country_code];
+        if (mapped) {
+          setOrigin(mapped.origin);
+          setOriginSearch(mapped.label);
+        } else {
+          setOrigin('MNL');
+          setOriginSearch('Manila (MNL)');
+        }
+      })
+      .catch(() => {
+        setOrigin('MNL');
+        setOriginSearch('Manila (MNL)');
+      })
+      .finally(() => setGeoDetecting(false));
+  }, []);
+
   return (
     <div className="relative h-[85vh] min-h-[600px] overflow-hidden">
       <AnimatePresence mode="wait">
