@@ -28,6 +28,7 @@ import RevenueSplitFlowDiagram from '@/components/flows/RevenueSplitFlowDiagram'
 import FinancialControlDashboard from '@/components/admin/FinancialControlDashboard';
 import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDashboard';
 import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
+import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 
 export default function AdminDashboard() {
   return (
