@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plane, Clock, Calendar, PackageOpen, Sparkles, Search } from "lucide-react";
+import { Plane, Clock, Calendar, PackageOpen, Sparkles, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
@@ -42,9 +42,32 @@ export default function Flights() {
     cabin: urlParams.get('cabin') || "economy"
   });
   const [geoDetecting, setGeoDetecting] = useState(false);
-  const [showPriceCalendar, setShowPriceCalendar] = useState(false);
+  const [showDepartCalendar, setShowDepartCalendar] = useState(false);
   const [showReturnCalendar, setShowReturnCalendar] = useState(false);
   const [tripType, setTripType] = useState("roundtrip");
+  const [departMonth, setDepartMonth] = useState(moment(searchParams.departureDate));
+  const [returnMonth, setReturnMonth] = useState(moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate) : moment(searchParams.departureDate).add(1, 'day'));
+
+  const getDaysInMonth = (momentDate) => {
+    const daysInMonth = momentDate.daysInMonth();
+    const firstDay = moment(momentDate).startOf('month').day();
+    return { daysInMonth, firstDay };
+  };
+
+  const renderCalendarDays = (month, onSelectDate) => {
+    const { daysInMonth, firstDay } = getDaysInMonth(month);
+    const days = [];
+    
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(moment(month).date(day));
+    }
+    
+    return days;
+  };
 
   // Auto-detect user's nearest airport from geo-location
   React.useEffect(() => {
@@ -320,27 +343,45 @@ export default function Flights() {
                 </div>
                 <div className="space-y-2">
                   <Label className="font-semibold text-slate-700">Departure</Label>
-                  <input
-                    type="date"
-                    placeholder="Date"
-                    value={moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('YYYY-MM-DD') : searchParams.departureDate}
-                    onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
-                    style={{ colorScheme: 'light' }}
-                  />
-                  {showPriceCalendar && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                      <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
-                        <PriceCalendar
-                          type="flight"
-                          origin={searchParams.origin}
-                          destination={searchParams.destination}
-                          selectedDate={searchParams.departureDate}
-                          onSelectDate={(date) => {
-                            setSearchParams(p => ({...p, departureDate: date}));
-                            setShowPriceCalendar(false);
-                          }}
-                        />
+                  <button
+                    type="button"
+                    onClick={() => setShowDepartCalendar(!showDepartCalendar)}
+                    className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left"
+                  >
+                    {moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('MMM DD, YYYY') : 'Select date'}
+                  </button>
+                  {showDepartCalendar && (
+                    <div className="bg-white rounded-lg shadow-lg border border-slate-200 p-4 max-h-80 overflow-y-auto">
+                      <div className="flex items-center justify-between mb-4">
+                        <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-4 h-4" /></button>
+                        <h3 className="font-semibold text-slate-900">{departMonth.format('MMMM YYYY')}</h3>
+                        <button type="button" onClick={() => setDepartMonth(moment(departMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
+                      </div>
+                      <div className="grid grid-cols-7 gap-2 text-xs font-semibold text-slate-600 mb-2">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center">{d}</div>)}
+                      </div>
+                      <div className="grid grid-cols-7 gap-2">
+                        {renderCalendarDays(departMonth, (day) => {
+                          setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
+                          setShowDepartCalendar(false);
+                        }).map((day, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              if (day) {
+                                setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
+                                setShowDepartCalendar(false);
+                              }
+                            }}
+                            disabled={!day || day.isBefore(moment(), 'day')}
+                            className={`aspect-square rounded text-xs font-medium transition-colors ${
+                              day ? (day.format('YYYY-MM-DD') === searchParams.departureDate ? 'bg-amber-500 text-white' : day.isBefore(moment(), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900') : ''
+                            }`}
+                          >
+                            {day?.date()}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -348,27 +389,45 @@ export default function Flights() {
                 {tripType === "roundtrip" && (
                   <div className="space-y-2">
                      <Label className="font-semibold text-slate-700">Return</Label>
-                     <input
-                       type="date"
-                       placeholder="Date"
-                       value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
-                       onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                       className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
-                       style={{ colorScheme: 'light' }}
-                     />
-                     {showReturnCalendar && searchParams.departureDate && (
-                       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                         <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
-                           <PriceCalendar
-                             type="flight"
-                             origin={searchParams.destination}
-                             destination={searchParams.origin}
-                             selectedDate={searchParams.returnDate}
-                             onSelectDate={(date) => {
-                               setSearchParams(p => ({...p, returnDate: date}));
-                               setShowReturnCalendar(false);
-                             }}
-                           />
+                     <button
+                       type="button"
+                       onClick={() => setShowReturnCalendar(!showReturnCalendar)}
+                       className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left"
+                     >
+                       {searchParams.returnDate && moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('MMM DD, YYYY') : 'Select date'}
+                     </button>
+                     {showReturnCalendar && (
+                       <div className="bg-white rounded-lg shadow-lg border border-slate-200 p-4 max-h-80 overflow-y-auto">
+                         <div className="flex items-center justify-between mb-4">
+                           <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-4 h-4" /></button>
+                           <h3 className="font-semibold text-slate-900">{returnMonth.format('MMMM YYYY')}</h3>
+                           <button type="button" onClick={() => setReturnMonth(moment(returnMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
+                         </div>
+                         <div className="grid grid-cols-7 gap-2 text-xs font-semibold text-slate-600 mb-2">
+                           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center">{d}</div>)}
+                         </div>
+                         <div className="grid grid-cols-7 gap-2">
+                           {renderCalendarDays(returnMonth, (day) => {
+                             setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
+                             setShowReturnCalendar(false);
+                           }).map((day, idx) => (
+                             <button
+                               key={idx}
+                               type="button"
+                               onClick={() => {
+                                 if (day) {
+                                   setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
+                                   setShowReturnCalendar(false);
+                                 }
+                               }}
+                               disabled={!day || day.isBefore(moment(searchParams.departureDate), 'day')}
+                               className={`aspect-square rounded text-xs font-medium transition-colors ${
+                                 day ? (day.format('YYYY-MM-DD') === searchParams.returnDate ? 'bg-amber-500 text-white' : day.isBefore(moment(searchParams.departureDate), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900') : ''
+                               }`}
+                             >
+                               {day?.date()}
+                             </button>
+                           ))}
                          </div>
                        </div>
                      )}
