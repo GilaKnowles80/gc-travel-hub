@@ -130,10 +130,10 @@ function LayoutContent({ children, currentPageName }) {
   const logoColor = isHome && !scrolled ? "text-white" : "text-slate-900";
 
   return (
-    <RecaptchaProvider>
-      <LanguageProvider>
-        <CurrencyProvider>
-          <AdminModeProvider>
+    <AdminModeProvider>
+      <RecaptchaProvider>
+        <LanguageProvider>
+          <CurrencyProvider>
           <GoogleTagManager />
           <GoogleAdsTracking />
           <FloatingContactWidget />
