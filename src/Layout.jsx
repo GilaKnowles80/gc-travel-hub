@@ -405,9 +405,10 @@ function LayoutContent({ children, currentPageName }) {
         </div>
       </footer>
       </div>
-        </CurrencyProvider>
-      </LanguageProvider>
-    </RecaptchaProvider>
+          </CurrencyProvider>
+        </LanguageProvider>
+      </RecaptchaProvider>
+    </AdminModeProvider>
   );
 }
 
