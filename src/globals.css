@@ -174,6 +174,46 @@ html {
   font-family: inherit;
 }
 
+/* Search Container Styles */
+.search-container {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.flex-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.date-picker-group {
+  display: flex;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+input.scrollable-calendar {
+  background: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  width: 150px;
+  cursor: pointer;
+}
+
+.search-btn {
+  background: #f3a638;
+  color: white;
+  padding: 12px 40px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  flex-grow: 1;
+}
+
 /* Mobile-friendly touch targets */
 @media (max-width: 768px) {
   button, input, select, textarea {
