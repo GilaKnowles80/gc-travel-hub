@@ -3,13 +3,10 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 /**
- * PriceCalendar - shows cheapest/expensive dates with color indicators
- * Props:
- *   origin, destination - for flights (IATA codes)
- *   location - for hotels
- *   type - "flight" | "hotel"
- *   selectedDate - currently selected date (YYYY-MM-DD)
- *   onSelectDate - callback(dateString)
+ * PriceCalendar — cheapest/regular/expensive date color coding
+ *  🟢 Green  = cheapest fares
+ *  🔵 Blue   = regular / mid fares
+ *  🔴 Red    = highest fares
  */
 export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate }) {
   const today = new Date();
@@ -25,7 +22,6 @@ export default function PriceCalendar({ origin, destination, location, type = "f
   useEffect(() => {
     if (type === "flight" && (!origin || !destination)) return;
     if (type === "hotel" && !location) return;
-
     fetchPricesForMonth(year, month);
   }, [year, month, origin, destination, location, type]);
 
@@ -35,11 +31,12 @@ export default function PriceCalendar({ origin, destination, location, type = "f
     const priceMap = {};
 
     if (type === "flight" && origin && destination) {
-      // Sample a few dates to get price range indication
-      const sampleDates = [1, 8, 15, 22].filter(d => d <= daysInMonth);
+      // Sample strategic dates across the month
+      const sampleDates = [1, 5, 8, 12, 15, 19, 22, 26, 29].filter(d => d <= daysInMonth);
       const results = await Promise.allSettled(
         sampleDates.map(async d => {
           const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          if (date < today.toISOString().slice(0, 10)) return null;
           try {
             const res = await base44.functions.invoke('searchFlightsDuffel', {
               origin, destination, departureDate: date, adults: 1, cabin: "economy"
@@ -55,35 +52,32 @@ export default function PriceCalendar({ origin, destination, location, type = "f
       );
 
       const validResults = results.filter(r => r.status === 'fulfilled' && r.value).map(r => r.value);
-      
-      // Interpolate prices for all days based on sampled data
-      if (validResults.length > 0) {
-        const prices = validResults.map(r => r.price);
-        const minP = Math.min(...prices);
-        const maxP = Math.max(...prices);
 
-        // Assign interpolated prices with slight variation per day
+      if (validResults.length > 0) {
+        const allPrices = validResults.map(r => r.price);
+        const minP = Math.min(...allPrices);
+        const maxP = Math.max(...allPrices);
+
         for (let d = 1; d <= daysInMonth; d++) {
           const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           const sample = validResults.find(r => r.date === date);
           if (sample) {
             priceMap[date] = sample.price;
           } else {
-            // Interpolate with slight daily variation
             const dayOfWeek = new Date(date + 'T00:00:00').getDay();
-            const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) ? 1.15 : 1.0;
+            // Weekends (Fri/Sat/Sun) cost more
+            const weekendFactor = [0, 5, 6].includes(dayOfWeek) ? 1.18 : 1.0;
             const basePrice = minP + (maxP - minP) * 0.4;
-            priceMap[date] = Math.round(basePrice * weekendMultiplier);
+            priceMap[date] = Math.round(basePrice * weekendFactor);
           }
         }
       }
     } else if (type === "hotel" && location) {
-      // For hotels, generate indicative pricing based on day of week
       for (let d = 1; d <= daysInMonth; d++) {
         const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const dayOfWeek = new Date(date + 'T00:00:00').getDay();
         const base = 80;
-        const weekend = (dayOfWeek === 5 || dayOfWeek === 6) ? 1.3 : 1.0;
+        const weekend = [5, 6].includes(dayOfWeek) ? 1.35 : 1.0;
         priceMap[date] = Math.round(base * weekend + (d % 7) * 3);
       }
     }
@@ -101,51 +95,72 @@ export default function PriceCalendar({ origin, destination, location, type = "f
   const priceValues = Object.values(prices).filter(p => p > 0);
   const minPrice = priceValues.length > 0 ? Math.min(...priceValues) : 0;
   const maxPrice = priceValues.length > 0 ? Math.max(...priceValues) : 0;
-  const midPrice = (minPrice + maxPrice) / 2;
+  const range = maxPrice - minPrice;
+  const lowThreshold = minPrice + range * 0.33;
+  const highThreshold = minPrice + range * 0.67;
 
-  const getPriceColor = (price) => {
-    if (!price || priceValues.length < 2) return "text-slate-600";
-    if (price <= minPrice * 1.05) return "text-green-600 font-bold";
-    if (price >= maxPrice * 0.95) return "text-red-500 font-bold";
-    if (price < midPrice) return "text-green-500";
-    return "text-orange-500";
+  // 🟢 Green = cheap, 🔵 Blue = regular, 🔴 Red = expensive
+  const getPriceTier = (price) => {
+    if (!price || priceValues.length < 2) return null;
+    if (price <= lowThreshold) return 'cheap';
+    if (price <= highThreshold) return 'regular';
+    return 'expensive';
   };
 
-  const getPriceBg = (date, price) => {
-    if (selectedDate === date) return "bg-amber-500 text-white";
-    if (!price) return "";
-    if (price <= minPrice * 1.05) return "hover:bg-green-50";
-    if (price >= maxPrice * 0.95) return "hover:bg-red-50";
-    return "hover:bg-slate-50";
+  const tierStyles = {
+    cheap: {
+      text: 'text-green-600 font-bold',
+      bg: 'bg-green-50 border border-green-200 hover:bg-green-100',
+      dot: 'bg-green-500',
+      label: '🟢 Cheapest',
+    },
+    regular: {
+      text: 'text-blue-600 font-semibold',
+      bg: 'bg-blue-50 border border-blue-200 hover:bg-blue-100',
+      dot: 'bg-blue-500',
+      label: '🔵 Regular',
+    },
+    expensive: {
+      text: 'text-red-500 font-bold',
+      bg: 'bg-red-50 border border-red-200 hover:bg-red-100',
+      dot: 'bg-red-500',
+      label: '🔴 Highest',
+    },
   };
 
-  const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
 
   const cells = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-lg w-full max-w-sm">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xl w-full" style={{ minWidth: 320 }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
+        <button onClick={prevMonth} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
           <ChevronLeft className="w-4 h-4 text-slate-600" />
         </button>
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-800 text-sm">{monthName}</span>
+          <span className="font-bold text-slate-800 text-sm">{monthName}</span>
           {loading && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
         </div>
-        <button onClick={nextMonth} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
+        <button onClick={nextMonth} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
           <ChevronRight className="w-4 h-4 text-slate-600" />
         </button>
       </div>
 
+      {origin && destination && (
+        <div className="text-center text-[11px] text-slate-500 mb-2 font-medium">
+          {origin} → {destination} · Economy · 1 Adult
+        </div>
+      )}
+
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-          <div key={d} className="text-center text-[10px] font-medium text-slate-400 py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] font-semibold text-slate-400 py-1">{d}</div>
         ))}
       </div>
 
@@ -157,50 +172,57 @@ export default function PriceCalendar({ origin, destination, location, type = "f
           const price = prices[dateStr];
           const isPast = dateStr < todayStr;
           const isSelected = selectedDate === dateStr;
+          const isToday = dateStr === todayStr;
+          const tier = getPriceTier(price);
 
           return (
             <button
               key={dateStr}
               disabled={isPast}
               onClick={() => !isPast && onSelectDate && onSelectDate(dateStr)}
-              className={`flex flex-col items-center justify-center rounded-lg py-1.5 px-0.5 transition-all text-center
-                ${isPast ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
-                ${isSelected ? "bg-amber-500 shadow-md" : getPriceBg(dateStr, price)}
+              className={`flex flex-col items-center justify-center rounded-lg py-1 px-0.5 transition-all text-center min-h-[44px]
+                ${isPast ? "opacity-25 cursor-not-allowed" : "cursor-pointer"}
+                ${isSelected
+                  ? "bg-amber-500 shadow-md scale-105 z-10"
+                  : isPast
+                    ? ""
+                    : tier
+                      ? tierStyles[tier].bg
+                      : "hover:bg-slate-50"}
               `}
             >
-              <span className={`text-xs font-medium leading-none ${isSelected ? "text-white" : "text-slate-700"}`}>
-                {day}
+              <span className={`text-xs font-semibold leading-none
+                ${isSelected ? "text-white" : isToday ? "text-amber-600" : "text-slate-700"}
+              `}>
+                {isToday ? '•' : ''}{day}
               </span>
-              {price && !isPast && (
-                <span className={`text-[9px] leading-none mt-0.5 ${isSelected ? "text-white/90" : getPriceColor(price)}`}>
+              {price && !isPast ? (
+                <span className={`text-[9px] leading-none mt-0.5 ${isSelected ? "text-white/90" : tier ? tierStyles[tier].text : "text-slate-500"}`}>
                   ${Math.round(price)}
                 </span>
-              )}
-              {!price && !isPast && loading && (
-                <span className="text-[9px] text-slate-300 leading-none mt-0.5">...</span>
-              )}
+              ) : !price && !isPast && loading ? (
+                <span className="text-[9px] text-slate-300 leading-none mt-0.5">…</span>
+              ) : null}
             </button>
           );
         })}
       </div>
 
       {/* Legend */}
-      {priceValues.length > 0 && (
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-[10px] text-slate-500">Cheapest</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-orange-400" />
-            <span className="text-[10px] text-slate-500">Regular</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-[10px] text-slate-500">Expensive</span>
-          </div>
+      {priceValues.length > 0 ? (
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 gap-1">
+          {Object.entries(tierStyles).map(([tier, s]) => (
+            <div key={tier} className="flex items-center gap-1">
+              <div className={`w-2.5 h-2.5 rounded-full ${s.dot}`} />
+              <span className="text-[10px] text-slate-500">{s.label}</span>
+            </div>
+          ))}
         </div>
-      )}
+      ) : loading ? (
+        <div className="mt-3 pt-3 border-t border-slate-100 text-center text-[11px] text-slate-400">
+          Loading price data...
+        </div>
+      ) : null}
     </div>
   );
 }
