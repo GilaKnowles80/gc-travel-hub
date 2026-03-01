@@ -20,17 +20,23 @@ import PricingComparisonPanel from "@/components/recommendations/PricingComparis
 
 export default function FlightSearch() {
     const { location: userLocation, getLocation } = useUserLocation();
+    const [tripType, setTripType] = useState("one_way");
     const [searchParams, setSearchParams] = useState({
         origin: "",
         destination: "",
         departureDate: "",
         returnDate: "",
         adults: 1,
-        cabinClass: "ECONOMY"
+        children: 0,
+        infants: 0,
+        cabinClass: "ECONOMY",
+        specialFare: false,
+        seniorCitizen: false,
     });
     const [hasSearched, setHasSearched] = useState(false);
     const [selectedFlight, setSelectedFlight] = useState(null);
     const [showBookingDialog, setShowBookingDialog] = useState(false);
+    const [searchSource, setSearchSource] = useState("biyaheko"); // "biyaheko" or "amadeus"
 
     React.useEffect(() => {
         getLocation();
@@ -42,9 +48,14 @@ export default function FlightSearch() {
     };
 
     const { data: flightResults, isLoading, error, refetch } = useQuery({
-        queryKey: ['flight-search', searchParams],
+        queryKey: ['flight-search', searchParams, tripType, searchSource],
         queryFn: async () => {
-            const response = await base44.functions.invoke('searchFlightsAMADEUS', searchParams);
+            const payload = {
+                ...searchParams,
+                returnDate: tripType === "roundtrip" ? searchParams.returnDate : "",
+            };
+            const fnName = searchSource === "biyaheko" ? "searchFlightsBiyaheko" : "searchFlightsAMADEUS";
+            const response = await base44.functions.invoke(fnName, payload);
             return response.data;
         },
         enabled: false
@@ -53,6 +64,10 @@ export default function FlightSearch() {
     const handleSearch = () => {
         if (!searchParams.origin || !searchParams.destination || !searchParams.departureDate) {
             alert('Please fill in origin, destination, and departure date');
+            return;
+        }
+        if (tripType === "roundtrip" && !searchParams.returnDate) {
+            alert('Please fill in return date for round trip');
             return;
         }
         setHasSearched(true);
