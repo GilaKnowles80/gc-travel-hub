@@ -149,6 +149,10 @@ export default function AdminDashboard() {
             <TikTokAnalyticsDashboard />
           </TabsContent>
 
+          <TabsContent value="revenue" className="space-y-6">
+            <RevenueSplitFlowDiagram />
+          </TabsContent>
+
           <TabsContent value="manage" className="space-y-6">
             <GoogleDriveSync />
             <GoogleSheetsSync />
