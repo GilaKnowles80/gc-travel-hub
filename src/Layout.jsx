@@ -133,6 +133,7 @@ function LayoutContent({ children, currentPageName }) {
     <RecaptchaProvider>
       <LanguageProvider>
         <CurrencyProvider>
+          <AdminModeProvider>
           <GoogleTagManager />
           <GoogleAdsTracking />
           <FloatingContactWidget />
