@@ -111,6 +111,7 @@ Deno.serve(async (req) => {
     });
 
     const mergedFlights = Array.from(flightMap.values())
+      .filter(f => f.price && f.departure_time && f.arrival_time)
       .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
 
     console.log(`[MULTI-PROVIDER] Combined: ${mergedFlights.length} unique flights (Duffel: ${duffelFlights.length}, Aviation Edge: ${aviationEdgeFlights.length})`);
