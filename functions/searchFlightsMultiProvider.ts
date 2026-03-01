@@ -138,8 +138,8 @@ Deno.serve(async (req) => {
       console.warn('[MULTI-PROVIDER] Sabre search failed:', err.message);
     }
 
-    // 3. Combine & deduplicate
-    const combineFlights = [...duffelFlights, ...aviationEdgeFlights];
+    // 4. Combine & deduplicate
+    const combineFlights = [...duffelFlights, ...amadeusFlights, ...sabreFlights];
     combineFlights.forEach(flight => {
       const key = `${flight.airline_name}|${flight.flight_number}|${flight.departure_time}`;
       if (!flightMap.has(key)) {
@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
       .filter(f => f.price && f.departure_time && f.arrival_time)
       .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
 
-    console.log(`[MULTI-PROVIDER] Combined: ${mergedFlights.length} unique flights (Duffel: ${duffelFlights.length}, Aviation Edge: ${aviationEdgeFlights.length})`);
+    console.log(`[MULTI-PROVIDER] Combined: ${mergedFlights.length} unique flights (Duffel: ${duffelFlights.length}, Amadeus: ${amadeusFlights.length}, Sabre: ${sabreFlights.length})`);
 
     return Response.json({
       success: true,
@@ -159,7 +159,8 @@ Deno.serve(async (req) => {
       search_params: { origin, destination, departureDate, returnDate, adults, cabinClass },
       provider_breakdown: {
         duffel: duffelFlights.length,
-        aviation_edge: aviationEdgeFlights.length,
+        amadeus: amadeusFlights.length,
+        sabre: sabreFlights.length,
         total_unique: mergedFlights.length
       },
       markup_applied: `${(markupPct * 100).toFixed(0)}%`
