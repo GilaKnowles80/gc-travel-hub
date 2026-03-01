@@ -29,6 +29,7 @@ import FinancialControlDashboard from '@/components/admin/FinancialControlDashbo
 import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDashboard';
 import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
+import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
 
 export default function AdminDashboard() {
   return (
