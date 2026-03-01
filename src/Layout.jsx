@@ -96,26 +96,21 @@ export default function Layout({ children, currentPageName }) {
 
   // Initialize Tawk.to chat widget
   useEffect(() => {
-    // Set Tawk_API before loading the script
+    // Set Tawk_API before loading the script with i18n protection
     window.Tawk_API = window.Tawk_API || {};
     window.Tawk_LoadStart = new Date();
+    
+    // Prevent Tawk from trying to access missing i18next
+    if (!window.Tawk_API.i18next) {
+      window.Tawk_API.i18next = { language: 'en' };
+    }
 
     const script = document.createElement('script');
     script.async = true;
     script.src = 'https://embed.tawk.to/69a329afb156831c340d08e3/default';
     script.charset = 'UTF-8';
     script.setAttribute('crossorigin', '*');
-    script.onload = () => {
-      // Ensure widget is visible after loading
-      if (window.Tawk_API) {
-        window.Tawk_API.onLoad = function() {
-          const tawkFrame = document.querySelector('[data-tawk-iframe-id]');
-          if (tawkFrame) {
-            tawkFrame.style.zIndex = '999999';
-          }
-        };
-      }
-    };
+    script.onerror = () => console.warn('Tawk.to widget failed to load');
     document.body.appendChild(script);
 
     return () => {

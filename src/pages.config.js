@@ -138,6 +138,7 @@ import SupplierDashboard from './pages/SupplierDashboard';
 import SupplierLogin from './pages/SupplierLogin';
 import SupplierOnboarding from './pages/SupplierOnboarding';
 import Support247 from './pages/Support247';
+import TawkSupport from './pages/TawkSupport';
 import TermsOfService from './pages/TermsOfService';
 import TourCheckout from './pages/TourCheckout';
 import TourDetail from './pages/TourDetail';
@@ -156,7 +157,6 @@ import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import TawkSupport from './pages/TawkSupport';
 import __Layout from './Layout.jsx';
 
 
@@ -252,6 +252,7 @@ export const PAGES = {
     "SupplierLogin": SupplierLogin,
     "SupplierOnboarding": SupplierOnboarding,
     "Support247": Support247,
+    "TawkSupport": TawkSupport,
     "TermsOfService": TermsOfService,
     "TourCheckout": TourCheckout,
     "TourDetail": TourDetail,
@@ -270,7 +271,6 @@ export const PAGES = {
     "Visas": Visas,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "TawkSupport": TawkSupport,
 }
 
 export const pagesConfig = {
