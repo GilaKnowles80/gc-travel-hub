@@ -149,13 +149,13 @@ import TransactionHistory from './pages/TransactionHistory';
 import TravelAlerts from './pages/TravelAlerts';
 import TravelAssistant from './pages/TravelAssistant';
 import TravelInsurance from './pages/TravelInsurance';
+import TripzynxPortal from './pages/TripzynxPortal';
 import TrustedAgency from './pages/TrustedAgency';
 import UnifiedCheckout from './pages/UnifiedCheckout';
 import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
-import utils from './pages/utils';
-import TripzynxPortal from './pages/TripzynxPortal';
 import WanderlinxPortal from './pages/WanderlinxPortal';
+import utils from './pages/utils';
 import __Layout from './Layout.jsx';
 
 
@@ -262,13 +262,13 @@ export const PAGES = {
     "TravelAlerts": TravelAlerts,
     "TravelAssistant": TravelAssistant,
     "TravelInsurance": TravelInsurance,
+    "TripzynxPortal": TripzynxPortal,
     "TrustedAgency": TrustedAgency,
     "UnifiedCheckout": UnifiedCheckout,
     "VisaCheckout": VisaCheckout,
     "Visas": Visas,
-    "utils": utils,
-    "TripzynxPortal": TripzynxPortal,
     "WanderlinxPortal": WanderlinxPortal,
+    "utils": utils,
 }
 
 export const pagesConfig = {

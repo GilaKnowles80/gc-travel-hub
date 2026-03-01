@@ -36,6 +36,8 @@ export default function Flights() {
     adults: Number(urlParams.get('adults')) || 1,
     children: 0,
     infants: 0,
+    dswd: 0,
+    senior: 0,
     cabin: urlParams.get('cabin') || "economy"
   });
   const [geoDetecting, setGeoDetecting] = useState(false);
