@@ -169,13 +169,16 @@ export default function Layout({ children, currentPageName }) {
 
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-2">
-              <LiveVisitorCounter />
-              <LanguageSelector showLabel />
-              {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
-                <Link key={link.page} to={createPageUrl(link.page)}>
+            <nav className="hidden md:flex items-center gap-1 flex-1 justify-end overflow-hidden">
+              <div className="flex items-center gap-1 shrink-0">
+                <LiveVisitorCounter />
+                <LanguageSelector showLabel />
+              </div>
+              {/* Public links - always visible */}
+              {navLinks.filter(link => !link.adminOnly).map((link) => (
+                <Link key={link.page} to={createPageUrl(link.page)} className="shrink-0">
                   <button
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
                       currentPageName === link.page
                         ? isHome && !scrolled
                           ? "bg-white/20 text-white"
@@ -187,13 +190,32 @@ export default function Layout({ children, currentPageName }) {
                       <img 
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/0ebce75b4_LogoAgency.jpeg"
                         alt="GC Logo"
-                        className="h-6 w-auto"
+                        className="h-5 w-auto"
                       />
                     )}
                     {link.name}
                   </button>
                 </Link>
               ))}
+              {/* Admin links in a dropdown */}
+              {user?.role === "admin" && (
+                <div className="relative group shrink-0">
+                  <button className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${textColor} hover:bg-slate-100/50`}>
+                    <Shield className="w-3.5 h-3.5" />
+                    Admin ▾
+                  </button>
+                  <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-1 min-w-[160px] z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    {navLinks.filter(link => link.adminOnly).map((link) => (
+                      <Link key={link.page} to={createPageUrl(link.page)}>
+                        <button className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-50 text-amber-700" : "text-slate-600 hover:bg-slate-50"}`}>
+                          <link.icon className="w-3.5 h-3.5" />
+                          {link.name}
+                        </button>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
               {user && <NotificationBell />}
             </nav>
 
