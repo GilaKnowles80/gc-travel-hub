@@ -294,172 +294,133 @@ export default function HeroSection() {
 
             <div className="bg-slate-50 rounded-2xl p-4">
             {searchType === "flights" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
-                <div>
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <ArrowLeftRight className="w-3 h-3" />
-                    Trip Type
-                  </label>
-                  <Select value={tripType} onValueChange={setTripType}>
-                    <SelectTrigger className="rounded-xl">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="round_trip">Round Trip</SelectItem>
-                      <SelectItem value="one_way">One Way</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="relative">
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    From
-                    {geoDetecting && <span className="ml-1 text-amber-500 text-[10px] flex items-center gap-1"><span className="w-2 h-2 rounded-full border border-amber-500 border-t-transparent animate-spin inline-block" />detecting...</span>}
-                  </label>
-                  <Input
-                    value={originSearch}
-                    onChange={(e) => {
-                      setOriginSearch(e.target.value);
-                      setShowOriginSuggestions(true);
-                    }}
-                    onFocus={() => setShowOriginSuggestions(true)}
-                    placeholder="City or airport"
-                    className="rounded-xl"
-                  />
-                  {showOriginSuggestions && filteredOriginCities.length > 0 && (
-                   <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
-                     {filteredOriginCities.map((a) => (
-                       <button
-                         key={a.iata}
-                         onClick={() => {
-                           setOrigin(a.iata);
-                           setOriginSearch(`${a.city} (${a.iata})`);
-                           setShowOriginSuggestions(false);
-                         }}
-                         className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2"
-                       >
-                         <span className="font-mono font-bold text-amber-600 text-xs">{a.iata}</span>
-                         <span>{a.city}</span>
-                       </button>
-                     ))}
-                   </div>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    To
-                  </label>
-                  <Input
-                    value={destinationSearch}
-                    onChange={(e) => {
-                      setDestinationSearch(e.target.value);
-                      setShowDestSuggestions(true);
-                    }}
-                    onFocus={() => setShowDestSuggestions(true)}
-                    placeholder="City or airport"
-                    className="rounded-xl"
-                  />
-                  {showDestSuggestions && filteredDestCities.length > 0 && (
-                  <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-56 overflow-y-auto">
-                    {filteredDestCities.map((a, i) => {
-                      const prevA = filteredDestCities[i - 1];
-                      const showDomesticHeader = a.domestic && (!prevA || !prevA.domestic);
-                      const showIntlHeader = !a.domestic && (!prevA || prevA.domestic);
-                      return (
-                        <React.Fragment key={a.iata}>
-                          {showDomesticHeader && (
-                            <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">🇵🇭 Philippines Domestic</div>
-                          )}
-                          {showIntlHeader && (
-                            <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">✈️ International</div>
-                          )}
-                          <button
-                            onClick={() => {
-                              setDestination(a.iata);
-                              setDestinationSearch(`${a.city} (${a.iata})`);
-                              setShowDestSuggestions(false);
-                            }}
-                            className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2"
-                          >
+            <div className="space-y-3 overflow-visible">
+                {/* Row 1: Trip type toggle + From + To */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="relative">
+                    <label className="text-xs font-medium text-slate-600 mb-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      From
+                      {geoDetecting && <span className="ml-1 text-amber-500 text-[10px] flex items-center gap-1"><span className="w-2 h-2 rounded-full border border-amber-500 border-t-transparent animate-spin inline-block" />detecting...</span>}
+                    </label>
+                    <Input
+                      value={originSearch}
+                      onChange={(e) => { setOriginSearch(e.target.value); setShowOriginSuggestions(true); }}
+                      onFocus={() => setShowOriginSuggestions(true)}
+                      placeholder="City or airport"
+                      className="rounded-xl"
+                    />
+                    {showOriginSuggestions && filteredOriginCities.length > 0 && (
+                      <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
+                        {filteredOriginCities.map((a) => (
+                          <button key={a.iata} onClick={() => { setOrigin(a.iata); setOriginSearch(`${a.city} (${a.iata})`); setShowOriginSuggestions(false); }} className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2">
                             <span className="font-mono font-bold text-amber-600 text-xs">{a.iata}</span>
                             <span>{a.city}</span>
                           </button>
-                        </React.Fragment>
-                      );
-                    })}
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  )}
+
+                  <div className="relative">
+                    <label className="text-xs font-medium text-slate-600 mb-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      To
+                    </label>
+                    <Input
+                      value={destinationSearch}
+                      onChange={(e) => { setDestinationSearch(e.target.value); setShowDestSuggestions(true); }}
+                      onFocus={() => setShowDestSuggestions(true)}
+                      placeholder="City or airport"
+                      className="rounded-xl"
+                    />
+                    {showDestSuggestions && filteredDestCities.length > 0 && (
+                      <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-56 overflow-y-auto">
+                        {filteredDestCities.map((a, i) => {
+                          const prevA = filteredDestCities[i - 1];
+                          const showDomesticHeader = a.domestic && (!prevA || !prevA.domestic);
+                          const showIntlHeader = !a.domestic && (!prevA || prevA.domestic);
+                          return (
+                            <React.Fragment key={a.iata}>
+                              {showDomesticHeader && <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">🇵🇭 Philippines Domestic</div>}
+                              {showIntlHeader && <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">✈️ International</div>}
+                              <button onClick={() => { setDestination(a.iata); setDestinationSearch(`${a.city} (${a.iata})`); setShowDestSuggestions(false); }} className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2">
+                                <span className="font-mono font-bold text-amber-600 text-xs">{a.iata}</span>
+                                <span>{a.city}</span>
+                              </button>
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 flex items-center gap-1">
+                      <ArrowLeftRight className="w-3 h-3" />
+                      Trip Type
+                    </label>
+                    <Select value={tripType} onValueChange={setTripType}>
+                      <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="round_trip">Round Trip</SelectItem>
+                        <SelectItem value="one_way">One Way</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
-                <div className="overflow-visible">
-                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
-                     <Calendar className="w-3 h-3" />
-                     Dates
-                   </label>
-                   <div className="grid grid-cols-2 gap-2 overflow-visible">
-                     {/* Depart date with price calendar */}
-                     <div className="relative" ref={flightCalRef}>
-                       <button
-                         type="button"
-                         onClick={() => { setShowFlightCalendar(!showFlightCalendar); setShowReturnCalendar(false); }}
-                         className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
-                       >
-                         <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                         <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>
-                           {onwardDate || "Depart"}
-                         </span>
-                       </button>
-                       {showFlightCalendar && (
-                           <div className="absolute top-full left-0 mt-1 z-[200]">
-                           <PriceCalendar
-                             type="flight"
-                             origin={origin}
-                             destination={destination}
-                             selectedDate={onwardDate}
-                             onSelectDate={(d) => { setOnwardDate(d); setShowFlightCalendar(false); if (returnDate && d > returnDate) setReturnDate(d); }}
-                           />
-                         </div>
-                       )}
-                     </div>
-                     {tripType === "round_trip" && (
-                       <div className="relative" ref={returnCalRef}>
-                         <button
-                           type="button"
-                           onClick={() => { setShowReturnCalendar(!showReturnCalendar); setShowFlightCalendar(false); }}
-                           className="w-full h-11 md:h-9 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
-                         >
-                           <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                           <span className={returnDate ? "text-slate-800" : "text-slate-400"}>
-                             {returnDate || "Return"}
-                           </span>
-                         </button>
-                         {showReturnCalendar && (
-                           <div className="absolute top-full right-0 mt-1 z-[200]">
-                             <PriceCalendar
-                               type="flight"
-                               origin={destination}
-                               destination={origin}
-                               selectedDate={returnDate}
-                               minDate={onwardDate}
-                               onSelectDate={(d) => { setReturnDate(d); setShowReturnCalendar(false); }}
-                             />
-                           </div>
-                         )}
-                       </div>
-                     )}
-                   </div>
-                 </div>
+                {/* Row 2: Depart + Return + Search button */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 overflow-visible">
+                  <div className="relative" ref={flightCalRef}>
+                    <label className="text-xs font-medium text-slate-600 mb-1 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Depart
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => { setShowFlightCalendar(!showFlightCalendar); setShowReturnCalendar(false); }}
+                      className="w-full h-10 border border-input rounded-xl px-3 text-sm text-left bg-white hover:bg-slate-50 transition-colors flex items-center gap-2"
+                    >
+                      <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>{onwardDate || "Select date"}</span>
+                    </button>
+                    {showFlightCalendar && (
+                      <div className="absolute top-full left-0 mt-1 z-[200]">
+                        <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate} onSelectDate={(d) => { setOnwardDate(d); setShowFlightCalendar(false); if (returnDate && d > returnDate) setReturnDate(d); }} />
+                      </div>
+                    )}
+                  </div>
 
-                <div className="lg:col-span-4">
-                  <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-12 font-bold shadow-lg">
-                      <Search className="w-4 h-4 mr-2" />
-                      Search Flights
-                    </Button>
-                  </Link>
+                  <div className="relative" ref={returnCalRef}>
+                    <label className="text-xs font-medium text-slate-600 mb-1 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Return {tripType === "one_way" && <span className="text-slate-400">(disabled)</span>}
+                    </label>
+                    <button
+                      type="button"
+                      disabled={tripType === "one_way"}
+                      onClick={() => { if (tripType !== "one_way") { setShowReturnCalendar(!showReturnCalendar); setShowFlightCalendar(false); } }}
+                      className={`w-full h-10 border border-input rounded-xl px-3 text-sm text-left transition-colors flex items-center gap-2 ${tripType === "one_way" ? "bg-slate-50 opacity-50 cursor-not-allowed" : "bg-white hover:bg-slate-50"}`}
+                    >
+                      <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className={returnDate && tripType !== "one_way" ? "text-slate-800" : "text-slate-400"}>{tripType !== "one_way" && returnDate ? returnDate : "Select date"}</span>
+                    </button>
+                    {showReturnCalendar && tripType !== "one_way" && (
+                      <div className="absolute top-full left-0 mt-1 z-[200]">
+                        <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate} onSelectDate={(d) => { setReturnDate(d); setShowReturnCalendar(false); }} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-end">
+                    <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`} className="w-full">
+                      <Button className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-10 font-bold shadow-lg">
+                        <Search className="w-4 h-4 mr-2" />
+                        Search Flights
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}
