@@ -424,63 +424,74 @@ export default function Flights() {
 
                 </div>
 
-                {/* Bottom Row: From / To / Travelers & Class / Search */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
-                  {/* From Airport */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
-                    <Label className="text-xs font-semibold text-slate-700">From</Label>
-                    <AirportInput
-                      value={searchParams.origin}
-                      onChange={(code) => setSearchParams({...searchParams, origin: code})}
-                      placeholder="MNL"
-                    />
-                  </div>
-
-                  {/* To Airport */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
-                    <Label className="text-xs font-semibold text-slate-700">To</Label>
-                    <AirportInput
-                      value={searchParams.destination}
-                      onChange={(code) => setSearchParams({...searchParams, destination: code})}
-                      placeholder="SIN"
-                    />
-                  </div>
-
-                  {/* Travelers & Class */}
-                  <div className="flex gap-2 sm:col-span-2 md:col-span-2">
+                {/* Bottom Row: Location Inputs + Search */}
+                <div className="flex flex-col md:flex-row gap-3 items-end">
+                  {/* Location Inputs */}
+                  <div className="flex gap-2 flex-1">
+                    {/* From Airport */}
                     <div className="flex-1 space-y-1">
-                      <Label className="text-xs font-semibold text-slate-700">Travelers</Label>
-                      <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
-                        <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n} Adult{n > 1 ? 's' : ''}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
+                      <Label className="text-xs font-semibold text-slate-700 hidden md:block">From</Label>
+                      <AirportInput
+                        value={searchParams.origin}
+                        onChange={(code) => setSearchParams({...searchParams, origin: code})}
+                        placeholder="Manila (MNL)"
+                      />
                     </div>
+
+                    {/* Swap Button */}
+                    <button
+                      type="button"
+                      onClick={() => setSearchParams({...searchParams, origin: searchParams.destination, destination: searchParams.origin})}
+                      className="flex items-center justify-center h-10 px-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors self-end"
+                      title="Swap airports"
+                    >
+                      <span className="text-lg">⇄</span>
+                    </button>
+
+                    {/* To Airport */}
                     <div className="flex-1 space-y-1">
-                      <Label className="text-xs font-semibold text-slate-700">Class</Label>
-                      <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
-                        <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="economy">Economy</SelectItem>
-                          <SelectItem value="premium_economy">Premium</SelectItem>
-                          <SelectItem value="business">Business</SelectItem>
-                          <SelectItem value="first">First</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label className="text-xs font-semibold text-slate-700 hidden md:block">To</Label>
+                      <AirportInput
+                        value={searchParams.destination}
+                        onChange={(code) => setSearchParams({...searchParams, destination: code})}
+                        placeholder="Singapore (SIN)"
+                      />
                     </div>
                   </div>
 
                   {/* Search Button */}
-                  <div className="flex items-end sm:col-span-2 md:col-span-1">
-                    <Button
-                      onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                      disabled={isLoading || !searchParams.origin || !searchParams.destination}
-                      className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-4"
-                    >
-                      <Search className="w-4 h-4 mr-2" />
-                      Search
-                    </Button>
+                  <Button
+                    onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                    disabled={isLoading || !searchParams.origin || !searchParams.destination}
+                    className="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search Flights
+                  </Button>
+                </div>
+
+                {/* Travelers & Class Row */}
+                <div className="flex gap-2">
+                  <div className="flex-1 space-y-1">
+                    <Label className="text-xs font-semibold text-slate-700">Travelers</Label>
+                    <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
+                      <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n} Adult{n > 1 ? 's' : ''}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <Label className="text-xs font-semibold text-slate-700">Class</Label>
+                    <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
+                      <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="economy">Economy</SelectItem>
+                        <SelectItem value="premium_economy">Premium</SelectItem>
+                        <SelectItem value="business">Business</SelectItem>
+                        <SelectItem value="first">First</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
