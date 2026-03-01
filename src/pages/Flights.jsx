@@ -282,7 +282,7 @@ export default function Flights() {
                     </button>
                   </div>
                   {showPriceCalendar && (
-                    <div className="absolute top-full left-0 z-50 mt-2">
+                    <div className="absolute top-full right-0 z-50 mt-2">
                       <PriceCalendar
                         type="flight"
                         origin={searchParams.origin}
