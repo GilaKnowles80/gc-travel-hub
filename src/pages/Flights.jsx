@@ -112,37 +112,37 @@ export default function Flights() {
     await queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
   };
 
-  // Fetch real-time flights from Duffel
+  // Fetch real-time flights from multiple providers (Duffel + Aviation Edge)
   const { data: flightData, isLoading, error } = useQuery({
     queryKey: ["realtime-flights", searchParams],
     queryFn: async () => {
       try {
-        const response = await base44.functions.invoke('searchFlightsDuffel', searchParams);
+        const response = await base44.functions.invoke('searchFlightsMultiProvider', searchParams);
         
-        // Transform Duffel offers to app format
+        // Transform offers to app format
         const flights = response.data.offers?.map((offer, idx) => ({
-          id: `duffel_${idx}`,
-          duffel_id: offer.id,
-          airline_name: offer.owner.name,
-          flight_number: offer.slices[0]?.segments[0]?.operating_carrier_flight_number || 'N/A',
-          origin: offer.slices[0]?.origin.iata_code,
-          destination: offer.slices[0]?.destination.iata_code,
-          departure_time: offer.slices[0]?.segments[0]?.departing_at,
-          arrival_time: offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at,
-          duration_hours: (new Date(offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at) - new Date(offer.slices[0]?.segments[0]?.departing_at)) / (1000 * 60 * 60),
-          is_direct: offer.slices[0]?.segments?.length === 1,
-          stops: offer.slices[0]?.segments?.length - 1 || 0,
-          price: parseFloat(offer.total_amount),
-          currency: offer.total_currency,
-          cabin_classes: [{ class: searchParams.cabin, price: parseFloat(offer.total_amount), seats_available: 9 }],
+          id: `${offer.source}_${idx}`,
+          airline_name: offer.airline_name,
+          flight_number: offer.flight_number,
+          origin: offer.origin,
+          destination: offer.destination,
+          departure_time: offer.departure_time,
+          arrival_time: offer.arrival_time,
+          duration_hours: offer.duration_hours,
+          is_direct: offer.is_direct,
+          stops: offer.stops || 0,
+          price: offer.price,
+          currency: offer.currency,
+          cabin_classes: [{ class: searchParams.cabin, price: offer.price, seats_available: 9 }],
           baggage_allowance: '1 checked bag, 1 carry-on',
           amenities: ['Seat selection', 'Online check-in'],
-          status: 'active'
+          status: 'active',
+          source: offer.source
         })) || [];
 
         return { flights };
       } catch (err) {
-        console.error("Duffel search failed:", err);
+        console.error("Flight search failed:", err);
         throw err;
       }
     },
