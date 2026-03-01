@@ -293,7 +293,7 @@ export default function Flights() {
                   <div className="flex gap-2">
                     <input
                       type="date"
-                      value={searchParams.departureDate}
+                      value={moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('YYYY-MM-DD') : searchParams.departureDate}
                       onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
                       className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
                     />
@@ -328,7 +328,7 @@ export default function Flights() {
                    <div className="flex gap-2">
                      <input
                        type="date"
-                       value={searchParams.returnDate}
+                       value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
                        onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
                      />
