@@ -30,27 +30,29 @@ Deno.serve(async (req) => {
 
     if (duffelApiKey) {
       try {
-        const duffelResp = await fetch('http://localhost:8000/searchFlightsDuffel', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ origin, destination, departureDate, returnDate, adults, cabinClass })
+        const duffelResp = await base44.functions.invoke('searchFlightsDuffel', {
+          origin,
+          destination,
+          departureDate,
+          returnDate,
+          adults,
+          cabinClass
         });
 
-        if (duffelResp.ok) {
-          const duffelData = await duffelResp.json();
-          duffelFlights = (duffelData.offers || []).map((offer, idx) => ({
+        if (duffelResp.data?.offers) {
+          duffelFlights = (duffelResp.data.offers || []).map((offer, idx) => ({
             id: `duffel_${idx}`,
-            airline_name: offer.owner.name,
-            flight_number: offer.slices[0]?.segments[0]?.operating_carrier_flight_number || 'N/A',
-            origin: offer.slices[0]?.origin.iata_code,
-            destination: offer.slices[0]?.destination.iata_code,
-            departure_time: offer.slices[0]?.segments[0]?.departing_at,
-            arrival_time: offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at,
-            duration_hours: (new Date(offer.slices[0]?.segments[offer.slices[0].segments.length - 1]?.arriving_at) - new Date(offer.slices[0]?.segments[0]?.departing_at)) / (1000 * 60 * 60),
-            is_direct: offer.slices[0]?.segments?.length === 1,
-            stops: offer.slices[0]?.segments?.length - 1 || 0,
-            price: parseFloat((parseFloat(offer.total_amount) * (1 + markupPct)).toFixed(2)),
-            currency: offer.total_currency,
+            airline_name: offer.airline_name || offer.owner?.name || 'Unknown',
+            flight_number: offer.flight_number || 'N/A',
+            origin: offer.origin,
+            destination: offer.destination,
+            departure_time: offer.departure_time,
+            arrival_time: offer.arrival_time,
+            duration_hours: offer.duration_hours || 0,
+            is_direct: offer.is_direct,
+            stops: offer.stops || 0,
+            price: parseFloat((parseFloat(offer.price || 0) * (1 + markupPct)).toFixed(2)),
+            currency: offer.currency || 'USD',
             source: 'duffel'
           }));
           console.log(`[MULTI-PROVIDER] Got ${duffelFlights.length} flights from Duffel`);
