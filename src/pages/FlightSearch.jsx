@@ -87,7 +87,9 @@ export default function FlightSearch() {
             <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-12">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
                     <h1 className="text-3xl md:text-4xl font-bold mb-2">Flight Search</h1>
-                    <p className="text-base opacity-80">Book domestic & international flights via Biyaheko</p>
+                    <p className="text-base opacity-80">
+                        {searchSource === "biyaheko" ? "Powered by Biyaheko — Domestic & International Flights" : "Powered by Amadeus — 500+ Airlines Worldwide"}
+                    </p>
                 </div>
             </div>
 
