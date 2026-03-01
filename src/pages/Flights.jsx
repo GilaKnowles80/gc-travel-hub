@@ -297,9 +297,9 @@ export default function Flights() {
               {/* Trip Type + Airports + Dates + Search */}
               <div className="space-y-4">
                 {/* Top Row: Trip Type + Dates */}
-                <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+                <div className="flex flex-col md:flex-row gap-3 items-end">
                   {/* Trip Type Buttons */}
-                  <div className="md:col-span-2 flex gap-2 items-end">
+                  <div className="flex gap-2 md:w-auto">
                     <Button
                       type="button"
                       onClick={() => setTripType("roundtrip")}
@@ -309,7 +309,7 @@ export default function Flights() {
                           : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                       }`}
                     >
-                      Roundtrip
+                      Round Trip
                     </Button>
                     <Button
                       type="button"
@@ -324,8 +324,10 @@ export default function Flights() {
                     </Button>
                   </div>
 
-                  {/* Departure Date */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-2 relative">
+                  {/* Date Picker Group */}
+                  <div className="flex gap-2 flex-1 md:flex-none">
+                    {/* Departure Date */}
+                    <div className="flex-1 md:flex-none space-y-1 relative">
                     <Label className="text-xs font-semibold text-slate-700">Depart</Label>
                     <button
                       type="button"
