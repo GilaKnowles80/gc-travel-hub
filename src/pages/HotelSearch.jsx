@@ -72,21 +72,21 @@ export default function HotelSearch() {
 
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
                 {/* Search Form */}
-                <Tabs defaultValue="city" className="mb-8">
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
-                        <TabsTrigger value="city">Search by City</TabsTrigger>
-                        <TabsTrigger value="location">Search by Location</TabsTrigger>
-                    </TabsList>
+                <Card className="mb-8">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Hotel className="w-5 h-5" />
+                            Hotel Search
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Tabs defaultValue="city" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2 mb-6">
+                                <TabsTrigger value="city">Search by City</TabsTrigger>
+                                <TabsTrigger value="location">Search by Location</TabsTrigger>
+                            </TabsList>
 
-                    <TabsContent value="city">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Hotel className="w-5 h-5" />
-                                    Hotel Search
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
+                            <TabsContent value="city">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                             <div>
                                 <Label>City Code (IATA)</Label>
@@ -219,16 +219,15 @@ export default function HotelSearch() {
                                 </Button>
                             </div>
                         </div>
+                            </TabsContent>
+
+                            <TabsContent value="location">
+                                <LocationHotelSearch onResults={setLocationResults} />
+                            </TabsContent>
+                        </Tabs>
                     </CardContent>
                 </Card>
-            </TabsContent>
-
-            <TabsContent value="location">
-                <LocationHotelSearch onResults={setLocationResults} />
-            </TabsContent>
-        </Tabs>
-
-                {/* Location Results */}
+                {/* Results */}
                 {locationResults.length > 0 && (
                     <div className="mb-8">
                         <h2 className="text-2xl font-bold mb-4">
