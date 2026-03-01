@@ -89,6 +89,10 @@ export default function AdminDashboard() {
               <TrendingUp className="w-4 h-4 mr-2" />
               TikTok
             </TabsTrigger>
+            <TabsTrigger value="revenue">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Revenue Split
+            </TabsTrigger>
             <TabsTrigger value="manage">
               <Settings className="w-4 h-4 mr-2" />
               Manage
