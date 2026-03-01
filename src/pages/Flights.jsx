@@ -296,56 +296,36 @@ export default function Flights() {
               
               {/* Trip Type + Airports + Dates + Search */}
               <div className="space-y-4">
-                {/* Top Row: Trip Type Buttons */}
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    onClick={() => setTripType("roundtrip")}
-                    className={`h-10 px-4 rounded-lg font-medium transition-colors ${
-                      tripType === "roundtrip"
-                        ? "bg-amber-500 text-white"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    Roundtrip
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setTripType("oneway")}
-                    className={`h-10 px-4 rounded-lg font-medium transition-colors ${
-                      tripType === "oneway"
-                        ? "bg-amber-500 text-white"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    One Way
-                  </Button>
-                </div>
-
-                {/* Form Row: From / To / Dates / Search */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
-                  {/* From Airport */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
-                    <Label className="text-xs font-semibold text-slate-700">From</Label>
-                    <AirportInput
-                      value={searchParams.origin}
-                      onChange={(code) => setSearchParams({...searchParams, origin: code})}
-                      placeholder="MNL"
-                    />
-                  </div>
-
-                  {/* To Airport */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
-                    <Label className="text-xs font-semibold text-slate-700">To</Label>
-                    <AirportInput
-                      value={searchParams.destination}
-                      onChange={(code) => setSearchParams({...searchParams, destination: code})}
-                      placeholder="SIN"
-                    />
+                {/* Top Row: Trip Type + Dates */}
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+                  {/* Trip Type Buttons */}
+                  <div className="md:col-span-2 flex gap-2 items-end">
+                    <Button
+                      type="button"
+                      onClick={() => setTripType("roundtrip")}
+                      className={`flex-1 h-10 px-4 rounded-lg font-medium transition-colors ${
+                        tripType === "roundtrip"
+                          ? "bg-amber-500 text-white"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      Roundtrip
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => setTripType("oneway")}
+                      className={`flex-1 h-10 px-4 rounded-lg font-medium transition-colors ${
+                        tripType === "oneway"
+                          ? "bg-amber-500 text-white"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      One Way
+                    </Button>
                   </div>
 
                   {/* Departure Date */}
-                  <div className="space-y-1 sm:col-span-1 md:col-span-1 relative">
+                  <div className="space-y-1 sm:col-span-1 md:col-span-2 relative">
                     <Label className="text-xs font-semibold text-slate-700">Depart</Label>
                     <button
                       type="button"
