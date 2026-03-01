@@ -52,7 +52,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-10 w-full max-w-6xl">
+          <TabsList className="grid grid-cols-11 w-full max-w-6xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
