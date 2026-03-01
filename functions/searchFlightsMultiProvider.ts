@@ -125,26 +125,27 @@ Deno.serve(async (req) => {
         cabin: cabinClass
       });
 
-      if (sabreResp.data?.offers) {
-        sabreFlights = sabreResp.data.offers.map((offer, idx) => ({
-          id: `sabre_${idx}`,
-          airline_name: offer.airline_name,
-          flight_number: offer.flight_number,
-          origin: offer.origin,
-          destination: offer.destination,
-          departure_time: offer.departure_time,
-          arrival_time: offer.arrival_time,
-          duration_hours: offer.duration_hours || 0,
-          is_direct: offer.is_direct,
-          stops: offer.stops || 0,
-          price: parseFloat(offer.price),
-          currency: offer.currency || 'USD',
-          source: 'sabre'
-        }));
-        console.log(`[MULTI-PROVIDER] Got ${sabreFlights.length} flights from Sabre`);
+        if (sabreResp.data?.offers) {
+          sabreFlights = sabreResp.data.offers.map((offer, idx) => ({
+            id: `sabre_${idx}`,
+            airline_name: offer.airline_name,
+            flight_number: offer.flight_number,
+            origin: offer.origin,
+            destination: offer.destination,
+            departure_time: offer.departure_time,
+            arrival_time: offer.arrival_time,
+            duration_hours: offer.duration_hours || 0,
+            is_direct: offer.is_direct,
+            stops: offer.stops || 0,
+            price: parseFloat(offer.price),
+            currency: offer.currency || 'USD',
+            source: 'sabre'
+          }));
+          console.log(`[MULTI-PROVIDER] Got ${sabreFlights.length} flights from Sabre`);
+        }
+      } catch (err) {
+        console.warn('[MULTI-PROVIDER] Sabre search failed:', err.message);
       }
-    } catch (err) {
-      console.warn('[MULTI-PROVIDER] Sabre search failed:', err.message);
     }
 
     // 4. Combine & deduplicate
