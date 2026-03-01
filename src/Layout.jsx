@@ -205,8 +205,24 @@ function LayoutContent({ children, currentPageName }) {
                   </button>
                 </Link>
               ))}
-              {/* Admin links in a dropdown */}
+              {/* Admin mode toggle */}
               {user?.role === "admin" && (
+                <button
+                  onClick={toggleAdminMode}
+                  className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                    adminMode
+                      ? "bg-purple-100 text-purple-700 shadow-md"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                  title={adminMode ? "Switch to user view" : "Switch to admin view"}
+                >
+                  <Shield className="w-4 h-4" />
+                  {adminMode ? "Admin" : "User"}
+                </button>
+              )}
+
+              {/* Admin links in a dropdown */}
+              {user?.role === "admin" && adminMode && (
                 <div className="relative shrink-0" ref={adminMenuRef}>
                   <button
                     type="button"
