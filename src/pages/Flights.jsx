@@ -13,6 +13,7 @@ import { Plane, Clock, Calendar, PackageOpen, Sparkles, Search } from "lucide-re
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightFilters from "../components/flights/FlightFilters";
+import FlightScheduleBoard from "../components/flights/FlightScheduleBoard";
 import PriceTrackingBadge from "../components/shared/PriceTrackingBadge";
 import DiscoverFlights from "../components/flights/DiscoverFlights";
 import AdBanner from "../components/ads/AdBanner";
