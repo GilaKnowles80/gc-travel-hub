@@ -260,6 +260,7 @@ export default function HeroSection() {
                   <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
                     From
+                    {geoDetecting && <span className="ml-1 text-amber-500 text-[10px] flex items-center gap-1"><span className="w-2 h-2 rounded-full border border-amber-500 border-t-transparent animate-spin inline-block" />detecting...</span>}
                   </label>
                   <Input
                     value={originSearch}
