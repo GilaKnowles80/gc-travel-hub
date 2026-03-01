@@ -373,7 +373,7 @@ export default function Flights() {
 
                   {/* Return Date (only for roundtrip) */}
                   {tripType === "roundtrip" && (
-                    <div className="space-y-1 sm:col-span-1 md:col-span-1 relative">
+                    <div className="space-y-1 sm:col-span-1 md:col-span-2 relative">
                       <Label className="text-xs font-semibold text-slate-700">Return</Label>
                       <button
                         type="button"
