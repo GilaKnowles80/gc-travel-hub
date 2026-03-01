@@ -294,117 +294,93 @@ export default function Flights() {
                 </div>
               )}
               
-              {/* Trip Type + Dates Row */}
-              <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="space-y-2 sm:col-span-1">
-                  <Label className="font-semibold text-slate-700 block">Trip Type</Label>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      onClick={() => setTripType("roundtrip")}
-                      className={`flex-1 h-10 rounded-lg font-medium transition-colors ${
-                        tripType === "roundtrip"
-                          ? "bg-amber-500 text-white"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                      }`}
-                    >
-                      Roundtrip
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => setTripType("oneway")}
-                      className={`flex-1 h-10 rounded-lg font-medium transition-colors ${
-                        tripType === "oneway"
-                          ? "bg-amber-500 text-white"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                      }`}
-                    >
-                      One Way
-                    </Button>
-                  </div>
-                </div>
-                <div className="space-y-2 sm:col-span-1">
-                  <Label className="font-semibold text-slate-700">Departure</Label>
-                  <button
+              {/* Trip Type + Airports + Dates + Search */}
+              <div className="space-y-4">
+                {/* Top Row: Trip Type Buttons */}
+                <div className="flex gap-2">
+                  <Button
                     type="button"
-                    onClick={() => setShowDepartCalendar(!showDepartCalendar)}
-                    className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left text-sm"
+                    onClick={() => setTripType("roundtrip")}
+                    className={`h-10 px-4 rounded-lg font-medium transition-colors ${
+                      tripType === "roundtrip"
+                        ? "bg-amber-500 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
                   >
-                    {moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('MMM DD') : 'Date'}
-                  </button>
-                  {showDepartCalendar && (
-                    <div className="absolute bg-white rounded-lg shadow-lg border border-slate-200 p-4 max-h-80 overflow-y-auto z-50">
-                      <div className="flex items-center justify-between mb-4">
-                        <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-4 h-4" /></button>
-                        <h3 className="font-semibold text-slate-900 text-sm">{departMonth.format('MMM YYYY')}</h3>
-                        <button type="button" onClick={() => setDepartMonth(moment(departMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
-                      </div>
-                      <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-3">
-                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className="text-center py-1">{d}</div>)}
-                      </div>
-                      <div className="grid grid-cols-7 gap-1">
-                        {renderCalendarDays(departMonth, (day) => {
-                          setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
-                          setShowDepartCalendar(false);
-                        }).map((day, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => {
-                              if (day) {
-                                setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
-                                setShowDepartCalendar(false);
-                              }
-                            }}
-                            disabled={!day || day.isBefore(moment(), 'day')}
-                            className={`w-6 h-6 rounded text-xs font-medium transition-colors ${
-                              day ? (day.format('YYYY-MM-DD') === searchParams.departureDate ? 'bg-amber-500 text-white' : day.isBefore(moment(), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
-                            }`}
-                          >
-                            {day?.date()}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    Roundtrip
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setTripType("oneway")}
+                    className={`h-10 px-4 rounded-lg font-medium transition-colors ${
+                      tripType === "oneway"
+                        ? "bg-amber-500 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    One Way
+                  </Button>
                 </div>
-                {tripType === "roundtrip" && (
-                  <div className="space-y-2 sm:col-span-1">
-                    <Label className="font-semibold text-slate-700">Return</Label>
+
+                {/* Form Row: From / To / Dates / Search */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
+                  {/* From Airport */}
+                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
+                    <Label className="text-xs font-semibold text-slate-700">From</Label>
+                    <AirportInput
+                      value={searchParams.origin}
+                      onChange={(code) => setSearchParams({...searchParams, origin: code})}
+                      placeholder="MNL"
+                    />
+                  </div>
+
+                  {/* To Airport */}
+                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
+                    <Label className="text-xs font-semibold text-slate-700">To</Label>
+                    <AirportInput
+                      value={searchParams.destination}
+                      onChange={(code) => setSearchParams({...searchParams, destination: code})}
+                      placeholder="SIN"
+                    />
+                  </div>
+
+                  {/* Departure Date */}
+                  <div className="space-y-1 sm:col-span-1 md:col-span-1 relative">
+                    <Label className="text-xs font-semibold text-slate-700">Depart</Label>
                     <button
                       type="button"
-                      onClick={() => setShowReturnCalendar(!showReturnCalendar)}
-                      className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left text-sm"
+                      onClick={() => setShowDepartCalendar(!showDepartCalendar)}
+                      className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left text-xs h-10"
                     >
-                      {searchParams.returnDate && moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('MMM DD') : 'Date'}
+                      {moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('MMM DD') : 'Date'}
                     </button>
-                    {showReturnCalendar && (
-                      <div className="absolute bg-white rounded-lg shadow-lg border border-slate-200 p-4 max-h-80 overflow-y-auto z-50">
-                        <div className="flex items-center justify-between mb-4">
-                          <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-4 h-4" /></button>
-                          <h3 className="font-semibold text-slate-900 text-sm">{returnMonth.format('MMM YYYY')}</h3>
-                          <button type="button" onClick={() => setReturnMonth(moment(returnMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
+                    {showDepartCalendar && (
+                      <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-slate-200 p-3 max-h-80 overflow-y-auto z-50 w-56">
+                        <div className="flex items-center justify-between mb-2">
+                          <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-3 h-3" /></button>
+                          <h3 className="font-semibold text-slate-900 text-xs">{departMonth.format('MMM YYYY')}</h3>
+                          <button type="button" onClick={() => setDepartMonth(moment(departMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-3 h-3" /></button>
                         </div>
-                        <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-3">
+                        <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-2">
                           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className="text-center py-1">{d}</div>)}
                         </div>
                         <div className="grid grid-cols-7 gap-1">
-                          {renderCalendarDays(returnMonth, (day) => {
-                            setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
-                            setShowReturnCalendar(false);
+                          {renderCalendarDays(departMonth, (day) => {
+                            setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
+                            setShowDepartCalendar(false);
                           }).map((day, idx) => (
                             <button
                               key={idx}
                               type="button"
                               onClick={() => {
                                 if (day) {
-                                  setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
-                                  setShowReturnCalendar(false);
+                                  setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
+                                  setShowDepartCalendar(false);
                                 }
                               }}
-                              disabled={!day || day.isBefore(moment(searchParams.departureDate), 'day')}
-                              className={`w-6 h-6 rounded text-xs font-medium transition-colors ${
-                                day ? (day.format('YYYY-MM-DD') === searchParams.returnDate ? 'bg-amber-500 text-white' : day.isBefore(moment(searchParams.departureDate), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
+                              disabled={!day || day.isBefore(moment(), 'day')}
+                              className={`w-5 h-5 rounded text-xs font-medium transition-colors ${
+                                day ? (day.format('YYYY-MM-DD') === searchParams.departureDate ? 'bg-amber-500 text-white' : day.isBefore(moment(), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
                               }`}
                             >
                               {day?.date()}
@@ -414,28 +390,55 @@ export default function Flights() {
                       </div>
                     )}
                   </div>
-                )}
-              </div>
 
-              {/* Row 1: From / To */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div className="space-y-2">
-                  <Label className="font-semibold text-slate-700">From</Label>
-                  <AirportInput
-                    value={searchParams.origin}
-                    onChange={(code) => setSearchParams({...searchParams, origin: code})}
-                    placeholder="e.g. MNL, SIN, LHR"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-semibold text-slate-700">To</Label>
-                  <AirportInput
-                    value={searchParams.destination}
-                    onChange={(code) => setSearchParams({...searchParams, destination: code})}
-                    placeholder="e.g. MNL, SIN, DXB"
-                  />
-                </div>
-              </div>
+                  {/* Return Date (only for roundtrip) */}
+                  {tripType === "roundtrip" && (
+                    <div className="space-y-1 sm:col-span-1 md:col-span-1 relative">
+                      <Label className="text-xs font-semibold text-slate-700">Return</Label>
+                      <button
+                        type="button"
+                        onClick={() => setShowReturnCalendar(!showReturnCalendar)}
+                        className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-left text-xs h-10"
+                      >
+                        {searchParams.returnDate && moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('MMM DD') : 'Date'}
+                      </button>
+                      {showReturnCalendar && (
+                        <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-slate-200 p-3 max-h-80 overflow-y-auto z-50 w-56">
+                          <div className="flex items-center justify-between mb-2">
+                            <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronLeft className="w-3 h-3" /></button>
+                            <h3 className="font-semibold text-slate-900 text-xs">{returnMonth.format('MMM YYYY')}</h3>
+                            <button type="button" onClick={() => setReturnMonth(moment(returnMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-3 h-3" /></button>
+                          </div>
+                          <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-2">
+                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className="text-center py-1">{d}</div>)}
+                          </div>
+                          <div className="grid grid-cols-7 gap-1">
+                            {renderCalendarDays(returnMonth, (day) => {
+                              setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
+                              setShowReturnCalendar(false);
+                            }).map((day, idx) => (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => {
+                                  if (day) {
+                                    setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
+                                    setShowReturnCalendar(false);
+                                  }
+                                }}
+                                disabled={!day || day.isBefore(moment(searchParams.departureDate), 'day')}
+                                className={`w-5 h-5 rounded text-xs font-medium transition-colors ${
+                                  day ? (day.format('YYYY-MM-DD') === searchParams.returnDate ? 'bg-amber-500 text-white' : day.isBefore(moment(searchParams.departureDate), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
+                                }`}
+                              >
+                                {day?.date()}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
               {/* Row 2: Passengers & Class & Search */}
               <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
