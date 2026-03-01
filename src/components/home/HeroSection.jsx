@@ -108,10 +108,31 @@ export default function HeroSection() {
     a.iata.toLowerCase().includes(originSearch.toLowerCase())
   );
 
-  const filteredDestCities = airports.filter(a =>
-    a.city.toLowerCase().includes(destinationSearch.toLowerCase()) ||
-    a.iata.toLowerCase().includes(destinationSearch.toLowerCase())
-  );
+  const [userCountry, setUserCountry] = useState("PH");
+
+  // Track user country from geo detection
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(data => { if (data.country_code) setUserCountry(data.country_code); })
+      .catch(() => {});
+  }, []);
+
+  const filteredDestCities = (() => {
+    const query = destinationSearch.toLowerCase();
+    const matched = airports.filter(a =>
+      a.city.toLowerCase().includes(query) ||
+      a.iata.toLowerCase().includes(query)
+    );
+    if (!query && userCountry === 'PH') {
+      // Show domestic first, then international
+      return [
+        ...matched.filter(a => a.domestic),
+        ...matched.filter(a => !a.domestic),
+      ];
+    }
+    return matched;
+  })();
 
   useEffect(() => {
     const interval = setInterval(() => {
