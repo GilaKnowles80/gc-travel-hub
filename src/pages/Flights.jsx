@@ -22,6 +22,8 @@ import PriceCalendar from "../components/shared/PriceCalendar";
 import AirportInput from "../components/flights/AirportInput";
 import FlightDurationDisplay from "../components/flights/FlightDurationDisplay";
 import moment from "moment";
+import { useMemo, useState } from "react";
+import SeatAvailabilityIndicator from "../components/flights/SeatAvailabilityIndicator";
 
 export default function Flights() {
   const queryClient = useQueryClient();
