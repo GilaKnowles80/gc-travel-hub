@@ -3,6 +3,127 @@ import Stripe from 'npm:stripe@17.6.0';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
+// ─── Revenue Split Constants ───────────────────────────────────────────────
+const GC_MARKUP_PCT = 0.20;   // 20% to GC Travel
+const SUPPLIER_PCT  = 0.80;   // 80% to supplier
+const STRIPE_FEE_PCT = 0.029; // 2.9% Stripe fee
+
+async function logRevenueSplit(base44, { bookingId, bookingType, totalAmount, currency, userEmail, sessionId }) {
+  const supplierCost  = parseFloat((totalAmount * SUPPLIER_PCT).toFixed(2));
+  const agencyRevenue = parseFloat((totalAmount * GC_MARKUP_PCT).toFixed(2));
+  const stripeFee     = parseFloat((totalAmount * STRIPE_FEE_PCT).toFixed(2));
+  const netProfit     = parseFloat((agencyRevenue - stripeFee).toFixed(2));
+
+  try {
+    await base44.asServiceRole.entities.PaymentSplit.create({
+      booking_id: bookingId,
+      booking_type: bookingType,
+      gross_amount: totalAmount,
+      supplier_amount: supplierCost,
+      agency_amount: agencyRevenue,
+      stripe_fee: stripeFee,
+      net_profit: netProfit,
+      currency: currency || 'PHP',
+      user_email: userEmail,
+      stripe_session_id: sessionId,
+      split_date: new Date().toISOString(),
+      status: 'settled'
+    });
+
+    console.log(`[80/20 SPLIT] Gross: ${totalAmount} | Supplier: ${supplierCost} | GC Revenue: ${agencyRevenue} | Net: ${netProfit}`);
+  } catch (err) {
+    console.error('Revenue split log error:', err.message);
+  }
+}
+
+async function createSupplierPaymentRecord(base44, { bookingId, bookingType, totalAmount, supplier }) {
+  const supplierAmount = parseFloat((totalAmount * SUPPLIER_PCT).toFixed(2));
+  const markupRetained = parseFloat((totalAmount * GC_MARKUP_PCT).toFixed(2));
+
+  try {
+    const existing = await base44.asServiceRole.entities.SupplierPayment.filter({ booking_id: bookingId });
+    if (existing.length > 0) return;
+
+    await base44.asServiceRole.entities.SupplierPayment.create({
+      booking_id: bookingId,
+      booking_type: bookingType,
+      supplier: supplier || 'direct',
+      supplier_amount: supplierAmount,
+      customer_paid_amount: totalAmount,
+      markup_retained: markupRetained,
+      payment_status: 'pending',
+      payment_method: 'manual',
+      notes: `Auto-created via Stripe webhook. Awaiting supplier settlement.`
+    });
+
+    console.log(`[SUPPLIER PAYMENT] Created pending payment: ${supplierAmount} to ${supplier}`);
+  } catch (err) {
+    console.error('Supplier payment creation error:', err.message);
+  }
+}
+
+async function sendBookingEmail(base44, { to, bookingId, bookingType, totalAmount, currency }) {
+  try {
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      from_name: 'GC Travel & Tours',
+      to,
+      subject: `Booking Confirmed – GC Travel & Tours`,
+      body: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:24px">
+          <h2 style="color:#d97706">✅ Booking Confirmed!</h2>
+          <p>Thank you for booking with <strong>GC Travel and Tours Agency</strong>.</p>
+          <table style="width:100%;border-collapse:collapse;margin:16px 0">
+            <tr><td style="padding:8px;background:#f9fafb;font-weight:bold">Booking ID</td><td style="padding:8px">${bookingId}</td></tr>
+            <tr><td style="padding:8px;background:#f9fafb;font-weight:bold">Type</td><td style="padding:8px">${bookingType}</td></tr>
+            <tr><td style="padding:8px;background:#f9fafb;font-weight:bold">Amount Paid</td><td style="padding:8px">${currency?.toUpperCase()} ${totalAmount}</td></tr>
+            <tr><td style="padding:8px;background:#f9fafb;font-weight:bold">Status</td><td style="padding:8px;color:green">Confirmed</td></tr>
+          </table>
+          <p>We will send your e-ticket / confirmation documents shortly.</p>
+          <p style="color:#64748b;font-size:12px">GC Travel and Tours Agency | info@gctravelandtours.com | +63 915 440 1150</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Confirmation email error:', err.message);
+  }
+}
+
+async function updateBookingStatus(base44, bookingId, bookingType, session) {
+  const entityMap = {
+    flight: 'FlightBooking',
+    hotel: 'HotelBooking',
+    tour: 'Booking',
+    ferry: 'FerryBooking',
+    cruise: 'CruiseBooking',
+    train: 'TrainBooking',
+    car: 'CarRentalBooking',
+    car_rental: 'CarRentalBooking',
+    bus: 'BusBooking',
+    visa: 'VisaAppointment',
+    insurance: 'InsurancePolicy',
+    bulk: 'BulkBooking',
+    package: 'PackageBooking',
+  };
+
+  const entity = entityMap[bookingType];
+  if (!entity) { console.warn('Unknown bookingType:', bookingType); return null; }
+
+  const statusFields = bookingType === 'insurance'
+    ? { payment_status: 'paid', status: 'active' }
+    : { payment_status: 'paid', status: 'confirmed' };
+
+  try {
+    await base44.asServiceRole.entities[entity].update(bookingId, statusFields);
+    const booking = await base44.asServiceRole.entities[entity].get(bookingId);
+    console.log(`[BOOKING] ${bookingType}:${bookingId} → confirmed`);
+    return booking;
+  } catch (err) {
+    console.error(`Update booking error [${bookingType}:${bookingId}]:`, err.message);
+    return null;
+  }
+}
+
+// ─── Main Webhook Handler ──────────────────────────────────────────────────
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const signature = req.headers.get('stripe-signature');
@@ -10,315 +131,247 @@ Deno.serve(async (req) => {
 
   try {
     const event = await stripe.webhooks.constructEventAsync(
-      body,
-      signature,
-      Deno.env.get('STRIPE_WEBHOOK_SECRET')
+      body, signature, Deno.env.get('STRIPE_WEBHOOK_SECRET')
     );
 
-    console.log('Webhook event:', event.type);
+    console.log('[WEBHOOK] Event:', event.type, event.id);
 
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object;
-        const paymentId = session.metadata.payment_id;
-        const bookingId = session.metadata.booking_id;
-        const bookingType = session.metadata.booking_type;
-        
-        // Handle package booking payment
-        if (bookingType === 'package' && session.metadata.package_id) {
-          await base44.asServiceRole.entities.PackageBooking.update(
-            session.metadata.package_id,
-            { status: 'paid' }
-          );
-          
-          const paymentRecord = await base44.asServiceRole.entities.Payment.create({
-            user_email: session.metadata.user_email,
-            amount: session.amount_total / 100,
-            currency: session.currency,
-            status: 'completed',
-            payment_method: 'stripe',
-            stripe_session_id: session.id,
-            metadata: {
-              package_id: session.metadata.package_id,
-              booking_type: 'package'
-            }
-          });
-          
-          // Send confirmation notification
-          try {
-            await base44.asServiceRole.entities.Notification.create({
-              user_email: session.metadata.user_email,
-              title: 'Package Booking Confirmed',
-              message: 'Your custom travel package has been successfully booked and paid for!',
-              type: 'payment_confirmed',
-              booking_id: session.metadata.package_id,
-              link: `/PackageBookingSuccess?package_id=${session.metadata.package_id}&session_id=${session.id}`
-            });
-          } catch (notifError) {
-            console.error('Notification error:', notifError);
-          }
-          
-          await base44.asServiceRole.integrations.Core.SendEmail({
-            from_name: 'GC Travel & Tours',
-            to: session.customer_email,
-            subject: 'Package Booking Confirmed - GC Travel & Tours',
-            body: `
-              <h2>Package Booking Confirmed!</h2>
-              <p>Your custom travel package has been successfully booked.</p>
-              <p><strong>Package ID:</strong> ${session.metadata.package_id}</p>
-              <p><strong>Amount:</strong> $${session.amount_total / 100}</p>
-              <p>View your booking details in My Packages section.</p>
-              <p><a href="${req.headers.get('origin')}/PackageBookingSuccess?package_id=${session.metadata.package_id}&session_id=${session.id}">View Booking Confirmation</a></p>
-            `
-          });
-          
-          console.log(`Package booking completed: ${session.metadata.package_id}`);
-          break;
-        }
+    // ── Phase 5: checkout.session.completed ──────────────────────────────
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const { payment_id, booking_id, booking_type, user_email, package_id } = session.metadata || {};
+      const totalAmount = session.amount_total / 100;
+      const currency = session.currency;
 
-        // Update payment record if exists
-        if (paymentId) {
-          await base44.asServiceRole.entities.Payment.update(paymentId, {
+      // 1. Update payment record
+      if (payment_id) {
+        try {
+          await base44.asServiceRole.entities.Payment.update(payment_id, {
             status: 'completed',
             stripe_payment_intent: session.payment_intent,
             payment_date: new Date().toISOString(),
-            receipt_url: session.url
           });
-          
-          // Calculate and track affiliate commission
-          try {
-            await base44.asServiceRole.functions.invoke('calculateAffiliateCommission', {
-              bookingId: bookingId,
-              bookingType: bookingType,
-              bookingAmount: session.amount_total / 100,
-              customerEmail: session.metadata.user_email
-            });
-          } catch (commError) {
-            console.error('Affiliate commission error:', commError);
-          }
-        }
+        } catch (err) { console.error('Payment update error:', err.message); }
+      }
 
-        // Update booking payment status based on type
-        if (bookingId && bookingType) {
-          switch (bookingType) {
-            case 'flight': {
-              const flightBooking = await base44.asServiceRole.entities.FlightBooking.get(bookingId);
-              await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              
-              // Auto-trigger Duffel payment processing if booking is via Duffel
-              if (flightBooking && flightBooking.supplier === 'duffel') {
-                try {
-                  const totalAmount = session.amount_total / 100;
-                  // Assume supplier cost is 85% of total, markup is 15%
-                  const supplierCost = parseFloat((totalAmount * 0.85).toFixed(2));
-                  const markupAmount = parseFloat((totalAmount * 0.15).toFixed(2));
-                  
-                  console.log(`Auto-processing Duffel payment: ${supplierCost} USD supplier cost, ${markupAmount} PHP markup`);
-                  
-                  await base44.asServiceRole.functions.invoke('processDuffelPayment', {
-                    booking_id: bookingId,
-                    booking_type: 'flight',
-                    supplier_cost: supplierCost,
-                    markup_amount: markupAmount,
-                    total_amount: totalAmount
-                  });
-                } catch (duffelErr) {
-                  console.error('Duffel payment auto-processing failed:', duffelErr);
-                }
-              }
-              break;
-            }
-            case 'hotel':
-              await base44.asServiceRole.entities.HotelBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-            case 'ferry':
-              await base44.asServiceRole.entities.FerryBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-            case 'cruise':
-              await base44.asServiceRole.entities.CruiseBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-            case 'train':
-              await base44.asServiceRole.entities.TrainBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-            case 'tour':
-              const tourBooking = await base44.asServiceRole.entities.Booking.get(bookingId);
-              await base44.asServiceRole.entities.Booking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              
-              // Track tour booking completion
-              if (tourBooking) {
-                try {
-                  await base44.asServiceRole.analytics.track({
-                    eventName: 'tour_booking_completed',
-                    properties: {
-                      booking_id: bookingId,
-                      tour_id: tourBooking.tour_id,
-                      tour_title: tourBooking.tour_title,
-                      destination: tourBooking.destination,
-                      travelers: tourBooking.number_of_travelers,
-                      total_price: session.amount_total / 100,
-                      currency: session.currency.toUpperCase(),
-                      trip_type: tourBooking.trip_type
-                    }
-                  });
-                } catch (trackError) {
-                  console.error('Analytics tracking error:', trackError);
-                }
-              }
-              break;
-            case 'car':
-            case 'car_rental':
-              const carBooking = await base44.asServiceRole.entities.CarRentalBooking.get(bookingId);
-              await base44.asServiceRole.entities.CarRentalBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              
-              // Track successful car rental booking
-              await base44.analytics.track({
-                eventName: 'car_rental_booking_completed',
-                properties: {
-                  booking_id: bookingId,
-                  car_model: carBooking.car_model,
-                  rental_company: carBooking.rental_company,
-                  total_price: carBooking.total_price
-                }
-              });
-              
-              // Send confirmation email
-              await base44.asServiceRole.integrations.Core.SendEmail({
-                from_name: 'GC Travel & Tours',
-                to: carBooking.renter_email,
-                subject: 'Car Rental Confirmed - GC Travel & Tours',
-                body: `
-                  <h2>Car Rental Confirmed!</h2>
-                  <p>Your car rental for <strong>${carBooking.car_model}</strong> has been confirmed.</p>
-                  <p><strong>Booking ID:</strong> ${bookingId}</p>
-                  <p><strong>Pickup:</strong> ${carBooking.pickup_date}</p>
-                  <p><strong>Return:</strong> ${carBooking.return_date}</p>
-                  <p><strong>Total:</strong> ₱${carBooking.total_price}</p>
-                `
-              });
-              break;
-            case 'bus':
-              const busBooking = await base44.asServiceRole.entities.BusBooking.get(bookingId);
-              await base44.asServiceRole.entities.BusBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              
-              // Update bus seat availability
-              const bus = await base44.asServiceRole.entities.Bus.get(busBooking.bus_id);
-              if (bus) {
-                await base44.asServiceRole.entities.Bus.update(bus.id, {
-                  seats_available: bus.seats_available - busBooking.number_of_passengers
-                });
-              }
-              
-              // Track successful bus booking
-              await base44.analytics.track({
-                eventName: 'bus_booking_completed',
-                properties: {
-                  booking_id: bookingId,
-                  operator: busBooking.operator,
-                  route: busBooking.route || `${busBooking.origin_terminal} - ${busBooking.destination_terminal}`,
-                  passengers: busBooking.number_of_passengers,
-                  total_price: busBooking.total_price
-                }
-              });
-              
-              // Send confirmation email
-              await base44.asServiceRole.integrations.Core.SendEmail({
-                from_name: 'GC Travel & Tours',
-                to: busBooking.passenger_email,
-                subject: 'Bus Ticket Confirmed - GC Travel & Tours',
-                body: `
-                  <h2>Bus Ticket Confirmed!</h2>
-                  <p>Your bus ticket has been confirmed.</p>
-                  <p><strong>Booking ID:</strong> ${bookingId}</p>
-                  <p><strong>Operator:</strong> ${busBooking.operator}</p>
-                  <p><strong>Route:</strong> ${busBooking.origin_terminal} → ${busBooking.destination_terminal}</p>
-                  <p><strong>Departure:</strong> ${busBooking.departure_time}</p>
-                  <p><strong>Passengers:</strong> ${busBooking.number_of_passengers}</p>
-                  <p><strong>Total:</strong> ₱${busBooking.total_price}</p>
-                `
-              });
-              break;
-            case 'visa':
-              await base44.asServiceRole.entities.VisaAppointment.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-            case 'insurance':
-              await base44.asServiceRole.entities.InsurancePolicy.update(bookingId, {
-                payment_status: 'paid',
-                status: 'active'
-              });
-              break;
-            case 'bulk':
-              await base44.asServiceRole.entities.BulkBooking.update(bookingId, {
-                payment_status: 'paid',
-                status: 'confirmed'
-              });
-              break;
-          }
-        }
+      // 2. Update booking status
+      if (booking_id && booking_type) {
+        const booking = await updateBookingStatus(base44, booking_id, booking_type, session);
 
-        // Send confirmation email
-        await base44.asServiceRole.integrations.Core.SendEmail({
-          from_name: 'GC Travel & Tours',
-          to: session.customer_email,
-          subject: 'Payment Confirmation - GC Travel & Tours',
-          body: `
-            <h2>Payment Confirmed!</h2>
-            <p>Thank you for your payment.</p>
-            <p><strong>Booking ID:</strong> ${bookingId}</p>
-            <p><strong>Amount:</strong> ${session.amount_total / 100} ${session.currency.toUpperCase()}</p>
-            <p><strong>Status:</strong> Confirmed</p>
-            <p>We'll send you booking details shortly.</p>
-          `
+        // 3. Log 80/20 Revenue Split (Phase 6 & 7)
+        await logRevenueSplit(base44, {
+          bookingId: booking_id,
+          bookingType: booking_type,
+          totalAmount,
+          currency,
+          userEmail: user_email || session.customer_email,
+          sessionId: session.id
         });
 
-        console.log(`Payment completed for booking ${bookingId}`);
-        break;
+        // 4. Create pending supplier payment record
+        const supplier = booking?.supplier || 'direct';
+        await createSupplierPaymentRecord(base44, {
+          bookingId: booking_id,
+          bookingType: booking_type,
+          totalAmount,
+          supplier
+        });
+
+        // 5. Award loyalty points (1 point per peso/dollar)
+        try {
+          await base44.asServiceRole.functions.invoke('awardLoyaltyPoints', {
+            userEmail: user_email || session.customer_email,
+            bookingId: booking_id,
+            bookingType: booking_type,
+            amount: totalAmount
+          });
+        } catch (err) { console.error('Loyalty points error:', err.message); }
+
+        // 6. Affiliate commission tracking
+        try {
+          await base44.asServiceRole.functions.invoke('calculateAffiliateCommission', {
+            bookingId: booking_id,
+            bookingType: booking_type,
+            bookingAmount: totalAmount,
+            customerEmail: user_email || session.customer_email
+          });
+        } catch (err) { console.error('Affiliate commission error:', err.message); }
+
+        // 7. Auto-trigger Duffel ticketing for Duffel flights
+        if (booking_type === 'flight' && booking?.supplier === 'duffel') {
+          try {
+            await base44.asServiceRole.functions.invoke('processDuffelPayment', {
+              booking_id: booking_id,
+              booking_type: 'flight',
+              supplier_cost: parseFloat((totalAmount * SUPPLIER_PCT).toFixed(2)),
+              markup_amount: parseFloat((totalAmount * GC_MARKUP_PCT).toFixed(2)),
+              total_amount: totalAmount
+            });
+          } catch (err) { console.error('Duffel payment error:', err.message); }
+        }
       }
 
-      case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object;
-        console.error('Payment failed:', paymentIntent.id);
-        break;
+      // Handle package bookings
+      if (package_id) {
+        try {
+          await base44.asServiceRole.entities.PackageBooking.update(package_id, { status: 'paid' });
+          await logRevenueSplit(base44, {
+            bookingId: package_id, bookingType: 'package',
+            totalAmount, currency, userEmail: user_email, sessionId: session.id
+          });
+        } catch (err) { console.error('Package update error:', err.message); }
       }
 
-      case 'charge.refunded': {
-        const charge = event.data.object;
-        // Handle refund
-        console.log('Refund processed:', charge.id);
-        break;
+      // 8. Send confirmation email (Phase 5)
+      const customerEmail = session.customer_email;
+      if (customerEmail) {
+        await sendBookingEmail(base44, {
+          to: customerEmail,
+          bookingId: booking_id || package_id || 'N/A',
+          bookingType: booking_type || 'package',
+          totalAmount,
+          currency
+        });
       }
+
+      // 9. Create notification
+      if (user_email) {
+        try {
+          await base44.asServiceRole.entities.Notification.create({
+            user_email,
+            title: '✅ Booking Confirmed & Paid',
+            message: `Your ${booking_type || 'package'} booking has been confirmed. Amount: ${currency?.toUpperCase()} ${totalAmount}`,
+            type: 'payment_confirmed',
+            booking_id: booking_id || package_id,
+            link: `/MyBookings`
+          });
+        } catch (err) { console.error('Notification error:', err.message); }
+      }
+
+      console.log(`[PHASE 5 COMPLETE] Booking confirmed. GC Revenue: ${(totalAmount * GC_MARKUP_PCT).toFixed(2)} | Supplier: ${(totalAmount * SUPPLIER_PCT).toFixed(2)}`);
+    }
+
+    // ── Phase 9: payment_intent.payment_failed ────────────────────────────
+    if (event.type === 'payment_intent.payment_failed') {
+      const pi = event.data.object;
+      const { booking_id, booking_type, user_email } = pi.metadata || {};
+      console.error('[PAYMENT FAILED]', pi.id, pi.last_payment_error?.message);
+
+      if (user_email) {
+        try {
+          await base44.asServiceRole.entities.Notification.create({
+            user_email,
+            title: '❌ Payment Failed',
+            message: `Your payment was not processed. Please try again or use a different card.`,
+            type: 'payment_failed',
+            booking_id,
+            link: '/MyBookings'
+          });
+        } catch (err) { console.error('Notify error:', err.message); }
+      }
+    }
+
+    // ── Phase 8: charge.refunded ──────────────────────────────────────────
+    if (event.type === 'charge.refunded') {
+      const charge = event.data.object;
+      const refundAmount = charge.amount_refunded / 100;
+      console.log('[REFUND] Processed:', charge.id, 'Amount:', refundAmount);
+
+      try {
+        // Find payment by stripe session and reverse the split
+        const payments = await base44.asServiceRole.entities.Payment.filter({
+          stripe_session_id: charge.payment_intent
+        });
+        if (payments[0]) {
+          await base44.asServiceRole.entities.Payment.update(payments[0].id, {
+            status: 'refunded',
+            refund_amount: refundAmount,
+            refund_date: new Date().toISOString()
+          });
+
+          // Reverse revenue split record
+          const splits = await base44.asServiceRole.entities.PaymentSplit.filter({
+            booking_id: payments[0].booking_id
+          });
+          if (splits[0]) {
+            await base44.asServiceRole.entities.PaymentSplit.update(splits[0].id, {
+              status: 'refunded',
+              net_profit: 0
+            });
+          }
+
+          console.log('[PHASE 8] Refund accounting reversed for booking:', payments[0].booking_id);
+        }
+      } catch (err) { console.error('Refund reversal error:', err.message); }
+    }
+
+    // ── Phase 9: charge.dispute.created ─────────────────────────────────
+    if (event.type === 'charge.dispute.created') {
+      const dispute = event.data.object;
+      console.error('[CHARGEBACK] Dispute opened:', dispute.id, 'Amount:', dispute.amount / 100);
+
+      try {
+        await base44.asServiceRole.entities.AuditLog.create({
+          action: 'chargeback_opened',
+          entity_type: 'payment',
+          entity_id: dispute.charge,
+          details: JSON.stringify({
+            dispute_id: dispute.id,
+            amount: dispute.amount / 100,
+            reason: dispute.reason,
+            status: dispute.status,
+            due_by: new Date(dispute.evidence_details?.due_by * 1000).toISOString()
+          }),
+          user_email: 'system@gctravelandtours.com',
+          timestamp: new Date().toISOString()
+        });
+      } catch (err) { console.error('Chargeback log error:', err.message); }
+    }
+
+    // ── Phase 9: charge.dispute.closed ──────────────────────────────────
+    if (event.type === 'charge.dispute.closed') {
+      const dispute = event.data.object;
+      const outcome = dispute.status === 'won' ? 'WIN – Funds Returned' : 'LOSE – Funds Lost';
+      console.log('[CHARGEBACK CLOSED]', outcome, dispute.id);
+
+      try {
+        await base44.asServiceRole.entities.AuditLog.create({
+          action: 'chargeback_resolved',
+          entity_type: 'payment',
+          entity_id: dispute.charge,
+          details: JSON.stringify({ dispute_id: dispute.id, outcome, status: dispute.status }),
+          user_email: 'system@gctravelandtours.com',
+          timestamp: new Date().toISOString()
+        });
+      } catch (err) { console.error('Chargeback resolve log error:', err.message); }
+    }
+
+    // ── Phase 6: payout.paid (profit withdrawal) ─────────────────────────
+    if (event.type === 'payout.paid') {
+      const payout = event.data.object;
+      console.log('[PAYOUT] Paid:', payout.id, 'Amount:', payout.amount / 100, payout.currency);
+
+      try {
+        await base44.asServiceRole.entities.AuditLog.create({
+          action: 'stripe_payout_paid',
+          entity_type: 'payout',
+          entity_id: payout.id,
+          details: JSON.stringify({
+            amount: payout.amount / 100,
+            currency: payout.currency,
+            arrival_date: new Date(payout.arrival_date * 1000).toISOString(),
+            description: payout.description
+          }),
+          user_email: 'admin@gctravelandtours.com',
+          timestamp: new Date().toISOString()
+        });
+      } catch (err) { console.error('Payout log error:', err.message); }
     }
 
     return Response.json({ received: true });
 
   } catch (error) {
-    console.error('Webhook error:', error);
+    console.error('[WEBHOOK ERROR]', error.message);
     return Response.json({ error: error.message }, { status: 400 });
   }
 });
