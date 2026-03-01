@@ -291,13 +291,12 @@ export default function Flights() {
                 <div className="space-y-2">
                   <Label className="font-semibold text-slate-700">Departure</Label>
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowPriceCalendar(v => !v)}
+                    <input
+                      type="date"
+                      value={searchParams.departureDate}
+                      onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
                       className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
-                    >
-                      📅 {moment(searchParams.departureDate).format('MMM DD, YYYY')}
-                    </button>
+                    />
                     <button
                       type="button"
                       onClick={() => setShowPriceCalendar(v => !v)}
