@@ -353,7 +353,7 @@ export default function HeroSection() {
                          </span>
                        </button>
                        {showFlightCalendar && (
-                         <div className="absolute top-full left-0 mt-1 z-[100]">
+                           <div className="absolute top-full left-0 mt-1 z-[200]">
                            <PriceCalendar
                              type="flight"
                              origin={origin}
