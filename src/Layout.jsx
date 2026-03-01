@@ -212,20 +212,26 @@ export default function Layout({ children, currentPageName }) {
               {user?.role === "admin" && (
                 <div className="relative shrink-0" ref={adminMenuRef}>
                   <button
-                    onClick={() => setAdminMenuOpen(v => !v)}
-                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${adminMenuOpen ? "bg-amber-100 text-amber-800 shadow-md scale-105" : `${textColor} hover:bg-amber-50/80 hover:shadow-md`}`}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setAdminMenuOpen(v => !v);
+                    }}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${adminMenuOpen ? "bg-amber-100 text-amber-800 shadow-md" : "bg-white/10 hover:bg-white/20 text-white border border-white/20"}`}
                   >
-                    <Shield className="w-3.5 h-3.5" />
-                    Admin <span className={`text-xs transition-transform ${adminMenuOpen ? 'rotate-180' : ''}`}>▾</span>
+                    <Shield className="w-4 h-4" />
+                    Admin
+                    <span className={`text-xs transition-transform ml-1 ${adminMenuOpen ? 'rotate-180' : ''}`}>▾</span>
                   </button>
                   {adminMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-[999] animate-in fade-in slide-in-from-top-2">
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
                       {navLinks.filter(link => link.adminOnly).map((link) => (
-                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)}>
-                          <button className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600 hover:bg-amber-50"}`}>
+                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
+                          <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
                             <link.icon className="w-4 h-4" />
                             {link.name}
-                          </button>
+                          </div>
                         </Link>
                       ))}
                     </div>
