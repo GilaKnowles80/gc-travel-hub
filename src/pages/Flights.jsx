@@ -325,13 +325,14 @@ export default function Flights() {
                       type="date"
                       value={moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('YYYY-MM-DD') : searchParams.departureDate}
                       onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
-                      className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
+                      className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg bg-white hover:border-amber-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all text-sm text-slate-900 font-semibold cursor-pointer"
+                      style={{ colorScheme: 'light' }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPriceCalendar(v => !v)}
                       title="View price calendar"
-                      className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
+                      className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
                     >
                       💰 Prices
                     </button>
@@ -361,13 +362,14 @@ export default function Flights() {
                          type="date"
                          value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
                          onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                         className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
+                         className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg bg-white hover:border-amber-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all text-sm text-slate-900 font-semibold cursor-pointer"
+                         style={{ colorScheme: 'light' }}
                        />
                        <button
                          type="button"
                          onClick={() => setShowReturnCalendar(v => !v)}
                          title="View price calendar"
-                         className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
+                         className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
                        >
                          💰 Prices
                        </button>
