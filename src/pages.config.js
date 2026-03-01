@@ -154,6 +154,7 @@ import UnifiedCheckout from './pages/UnifiedCheckout';
 import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
 import utils from './pages/utils';
+import TripzynxPortal from './pages/TripzynxPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -265,6 +266,7 @@ export const PAGES = {
     "VisaCheckout": VisaCheckout,
     "Visas": Visas,
     "utils": utils,
+    "TripzynxPortal": TripzynxPortal,
 }
 
 export const pagesConfig = {
