@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
 
     // Search flights
     const searchResponse = await fetch(
-      `https://test.api.amadeus.com/v2/shopping/flight-offers?${params}`,
+      `https://api.amadeus.com/v2/shopping/flight-offers?${params}`,
       {
         headers: { Authorization: `Bearer ${access_token}` },
       }
