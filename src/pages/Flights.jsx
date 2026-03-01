@@ -155,8 +155,16 @@ export default function Flights() {
         throw err;
       }
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 2 * 60 * 1000, // Refresh every 2 minutes for real-time updates
   });
+
+  // Auto-refresh for real-time ticket availability
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries({ queryKey: ["realtime-flights", searchParams] });
+    }, 30000); // Refresh every 30 seconds for live availability
+    return () => clearInterval(interval);
+  }, [searchParams, queryClient]);
 
   const flights = flightData?.flights || [];
 
