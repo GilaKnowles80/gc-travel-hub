@@ -440,73 +440,43 @@ export default function Flights() {
                     </div>
                   )}
 
-              {/* Row 2: Passengers & Class & Search */}
-              <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">Adults</Label>
-                  <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  {/* Travelers & Class */}
+                  <div className="flex gap-2 sm:col-span-2 md:col-span-2">
+                    <div className="flex-1 space-y-1">
+                      <Label className="text-xs font-semibold text-slate-700">Travelers</Label>
+                      <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
+                        <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n} Adult{n > 1 ? 's' : ''}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <Label className="text-xs font-semibold text-slate-700">Class</Label>
+                      <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
+                        <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="economy">Economy</SelectItem>
+                          <SelectItem value="premium_economy">Premium</SelectItem>
+                          <SelectItem value="business">Business</SelectItem>
+                          <SelectItem value="first">First</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Search Button */}
+                  <div className="flex items-end sm:col-span-2 md:col-span-1">
+                    <Button
+                      onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                      disabled={isLoading || !searchParams.origin || !searchParams.destination}
+                      className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-4"
+                    >
+                      <Search className="w-4 h-4 mr-2" />
+                      Search
+                    </Button>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">Children</Label>
-                  <Select value={String(searchParams.children)} onValueChange={(v) => setSearchParams({...searchParams, children: Number(v)})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">Infants</Label>
-                  <Select value={String(searchParams.infants)} onValueChange={(v) => setSearchParams({...searchParams, infants: Number(v)})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {[0,1,2].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">PWD</Label>
-                  <Select value={String(searchParams.pwd)} onValueChange={(v) => setSearchParams({...searchParams, pwd: Number(v)})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">Senior</Label>
-                  <Select value={String(searchParams.senior)} onValueChange={(v) => setSearchParams({...searchParams, senior: Number(v)})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-slate-700">Class</Label>
-                  <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
-                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="economy">Economy</SelectItem>
-                      <SelectItem value="premium_economy">Premium Economy</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
-                      <SelectItem value="first">First Class</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button
-                  onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                  disabled={isLoading || !searchParams.origin || !searchParams.destination}
-                  className="bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
-                >
-                  <Search className="w-4 h-4 mr-2" />
-                  Search
-                </Button>
               </div>
             </Card>
           </div>
