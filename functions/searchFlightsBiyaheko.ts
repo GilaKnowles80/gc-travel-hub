@@ -20,117 +20,82 @@ Deno.serve(async (req) => {
             return Response.json({ error: "Missing required fields: origin, destination, departureDate" }, { status: 400 });
         }
 
-        const classMap = { "ECONOMY": "ECONOMY", "BUSINESS": "BUSINESS", "FIRST": "FIRST", "PREMIUM_ECONOMY": "PREMIUM_ECONOMY" };
         const tripType = returnDate ? "R" : "O";
+        const classMap = { "ECONOMY": "ECONOMY", "BUSINESS": "BUSINESS", "FIRST": "FIRST", "PREMIUM_ECONOMY": "PREMIUM_ECONOMY" };
 
-        // Step 1: GET the login page to get any CSRF token / cookies first
-        const loginPageRes = await fetch(`${BASE_URL}/`, {
-            method: "GET",
-            headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
-        });
+        // Step 1: Login via Biyaheko's AngularJS API
+        const loginPayload = {
+            TERMINALID: terminalId,
+            USERID: userId,
+            PASSWORD: password,
+        };
 
-        const initialCookies = (loginPageRes.headers.getSetCookie?.() || []).map(c => c.split(";")[0]).join("; ");
-        console.log("Initial cookies:", initialCookies);
-
-        // Step 2: POST login
-        const loginBody = new URLSearchParams({
-            TerminalID: terminalId,
-            UserID: userId,
-            Password: password,
-        });
-
-        const loginResponse = await fetch(`${BASE_URL}/Home/Login`, {
+        const loginResponse = await fetch(`${BASE_URL}/api/UserLogin`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "User-Agent": "Mozilla/5.0",
                 "Referer": `${BASE_URL}/`,
-                "Accept": "application/json, text/html, */*",
-                "Cookie": initialCookies,
             },
-            body: loginBody.toString(),
-            redirect: "manual",
+            body: JSON.stringify(loginPayload),
         });
 
         console.log("Login status:", loginResponse.status);
-        console.log("Login Location:", loginResponse.headers.get("location"));
+        const loginText = await loginResponse.text();
+        console.log("Login response snippet:", loginText.substring(0, 500));
 
-        const loginSetCookies = loginResponse.headers.getSetCookie?.() || [];
-        const allCookies = [
-            ...initialCookies.split("; ").filter(Boolean),
-            ...loginSetCookies.map(c => c.split(";")[0])
-        ].filter(Boolean).join("; ");
+        let loginData = null;
+        try { loginData = JSON.parse(loginText); } catch { /* not json */ }
 
-        console.log("All cookies after login:", allCookies);
+        const sessionToken = loginData?.SessionID || loginData?.sessionID || loginData?.Token || loginData?.token
+            || loginData?.SessionId || loginData?.data?.SessionID || loginData?.data?.Token;
 
-        // If no cookies, check response body
-        if (!allCookies || loginSetCookies.length === 0) {
-            const loginText = await loginResponse.text();
-            console.error("Login response body snippet:", loginText.substring(0, 800));
+        if (!sessionToken) {
             return Response.json({
-                error: "Login did not return session cookies",
+                error: "Biyaheko login did not return session token",
                 status: loginResponse.status,
-                hint: "Biyaheko may have changed their login endpoint or credentials are wrong"
+                raw: loginText.substring(0, 500),
             }, { status: 401 });
         }
 
-        // Step 3: Follow redirect if needed
-        let sessionCookie = allCookies;
-        const redirectUrl = loginResponse.headers.get("location");
-        if (redirectUrl) {
-            const redirectFull = redirectUrl.startsWith("http") ? redirectUrl : `${BASE_URL}${redirectUrl}`;
-            const redirectRes = await fetch(redirectFull, {
-                headers: {
-                    "Cookie": sessionCookie,
-                    "User-Agent": "Mozilla/5.0",
-                },
-                redirect: "manual",
-            });
-            const redirectCookies = (redirectRes.headers.getSetCookie?.() || []).map(c => c.split(";")[0]);
-            if (redirectCookies.length > 0) {
-                sessionCookie = [...sessionCookie.split("; "), ...redirectCookies].join("; ");
-            }
-            console.log("After redirect, cookie count:", sessionCookie.split("; ").length);
-        }
+        console.log("Got session token:", sessionToken.substring(0, 20) + "...");
 
-        // Step 4: POST flight search
-        const searchBody = new URLSearchParams({
+        // Step 2: Search flights
+        const searchPayload = {
+            SessionID: sessionToken,
             TripType: tripType,
             Origin: origin,
             Destination: destination,
             DepartDate: departureDate,
             ReturnDate: returnDate || "",
-            Adult: adults.toString(),
-            Child: children.toString(),
-            Infant: infants.toString(),
+            Adult: adults,
+            Child: children,
+            Infant: infants,
             Class: classMap[cabinClass] || "ECONOMY",
-        });
+        };
 
-        const searchResponse = await fetch(`${BASE_URL}/Airline/SearchFlight`, {
+        const searchResponse = await fetch(`${BASE_URL}/api/AirlineSearch`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Cookie": sessionCookie,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
                 "User-Agent": "Mozilla/5.0",
-                "X-Requested-With": "XMLHttpRequest",
-                "Referer": `${BASE_URL}/Airline`,
-                "Accept": "application/json, */*",
+                "Referer": `${BASE_URL}/`,
             },
-            body: searchBody.toString(),
+            body: JSON.stringify(searchPayload),
         });
 
         const searchText = await searchResponse.text();
-        console.log("Search status:", searchResponse.status, "Length:", searchText.length, "Snippet:", searchText.substring(0, 300));
+        console.log("Search status:", searchResponse.status, "Length:", searchText.length);
+        console.log("Search snippet:", searchText.substring(0, 400));
 
         let searchData = null;
-        try {
-            searchData = JSON.parse(searchText);
-        } catch {
+        try { searchData = JSON.parse(searchText); } catch {
             return Response.json({
-                error: "Biyaheko search returned non-JSON",
+                error: "Biyaheko search returned non-JSON response",
                 status: searchResponse.status,
-                hint: "The flight search endpoint may have changed or session is invalid",
-                snippet: searchText.substring(0, 300)
+                snippet: searchText.substring(0, 400),
             }, { status: 502 });
         }
 
