@@ -66,39 +66,76 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 2. Call Aviation Edge (budget carriers + regional airlines)
-    console.log('[MULTI-PROVIDER] Starting Aviation Edge search...');
-    let aviationEdgeFlights = [];
+    // 2. Call Amadeus (global airlines)
+    console.log('[MULTI-PROVIDER] Starting Amadeus search...');
+    let amadeusFlights = [];
 
     try {
-      const aeResp = await base44.functions.invoke('searchFlightsAviationEdge', {
+      const amadeusResp = await base44.functions.invoke('searchFlightsAmadeus', {
         origin,
         destination,
         departureDate,
+        returnDate,
         adults,
-        cabinClass
+        cabin: cabinClass
       });
 
-      if (aeResp.data?.flights) {
-        aviationEdgeFlights = aeResp.data.flights.map((flight, idx) => ({
-          id: `ae_${idx}`,
-          airline_name: flight.airline_name,
-          flight_number: flight.flight_number,
-          origin: flight.origin,
-          destination: flight.destination,
-          departure_time: flight.departure_time,
-          arrival_time: flight.arrival_time,
-          duration_hours: flight.duration_hours || 0,
-          is_direct: flight.is_direct,
-          stops: flight.stops || 0,
-          price: parseFloat((flight.price * (1 + markupPct)).toFixed(2)),
-          currency: 'USD',
-          source: 'aviation_edge'
+      if (amadeusResp.data?.offers) {
+        amadeusFlights = amadeusResp.data.offers.map((offer, idx) => ({
+          id: `amadeus_${idx}`,
+          airline_name: offer.airline_name,
+          flight_number: offer.flight_number,
+          origin: offer.origin,
+          destination: offer.destination,
+          departure_time: offer.departure_time,
+          arrival_time: offer.arrival_time,
+          duration_hours: offer.duration_hours || 0,
+          is_direct: offer.is_direct,
+          stops: offer.stops || 0,
+          price: parseFloat(offer.price),
+          currency: offer.currency || 'USD',
+          source: 'amadeus'
         }));
-        console.log(`[MULTI-PROVIDER] Got ${aviationEdgeFlights.length} flights from Aviation Edge`);
+        console.log(`[MULTI-PROVIDER] Got ${amadeusFlights.length} flights from Amadeus`);
       }
     } catch (err) {
-      console.warn('[MULTI-PROVIDER] Aviation Edge search failed:', err.message);
+      console.warn('[MULTI-PROVIDER] Amadeus search failed:', err.message);
+    }
+
+    // 3. Call Sabre (business & premium airlines)
+    console.log('[MULTI-PROVIDER] Starting Sabre search...');
+    let sabreFlights = [];
+
+    try {
+      const sabreResp = await base44.functions.invoke('searchFlightsSabre', {
+        origin,
+        destination,
+        departureDate,
+        returnDate,
+        adults,
+        cabin: cabinClass
+      });
+
+      if (sabreResp.data?.offers) {
+        sabreFlights = sabreResp.data.offers.map((offer, idx) => ({
+          id: `sabre_${idx}`,
+          airline_name: offer.airline_name,
+          flight_number: offer.flight_number,
+          origin: offer.origin,
+          destination: offer.destination,
+          departure_time: offer.departure_time,
+          arrival_time: offer.arrival_time,
+          duration_hours: offer.duration_hours || 0,
+          is_direct: offer.is_direct,
+          stops: offer.stops || 0,
+          price: parseFloat(offer.price),
+          currency: offer.currency || 'USD',
+          source: 'sabre'
+        }));
+        console.log(`[MULTI-PROVIDER] Got ${sabreFlights.length} flights from Sabre`);
+      }
+    } catch (err) {
+      console.warn('[MULTI-PROVIDER] Sabre search failed:', err.message);
     }
 
     // 3. Combine & deduplicate
