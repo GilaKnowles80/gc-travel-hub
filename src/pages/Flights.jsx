@@ -299,13 +299,13 @@ export default function Flights() {
                 <div className="space-y-2 relative">
                    <Label className="font-semibold text-slate-700">Return (Optional)</Label>
                    <div className="flex gap-2">
-                     <Input
-                       type="date"
-                       value={searchParams.returnDate}
-                       onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                       min={searchParams.departureDate}
-                       className="flex-1"
-                     />
+                     <button
+                       type="button"
+                       onClick={() => setShowReturnCalendar(v => !v)}
+                       className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
+                     >
+                       📅 {searchParams.returnDate ? moment(searchParams.returnDate).format('MMM DD, YYYY') : 'Select return date'}
+                     </button>
                      <button
                        type="button"
                        onClick={() => setShowReturnCalendar(v => !v)}
@@ -316,7 +316,7 @@ export default function Flights() {
                      </button>
                    </div>
                    {showReturnCalendar && searchParams.departureDate && (
-                     <div className="absolute top-full right-0 z-50 mt-2">
+                     <div className="absolute top-full left-0 z-50 mt-2">
                        <PriceCalendar
                          type="flight"
                          origin={searchParams.destination}
