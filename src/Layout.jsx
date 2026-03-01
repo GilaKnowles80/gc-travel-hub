@@ -405,8 +405,17 @@ function LayoutContent({ children, currentPageName }) {
         </div>
       </footer>
       </div>
+          </AdminModeProvider>
         </CurrencyProvider>
       </LanguageProvider>
     </RecaptchaProvider>
+  );
+}
+
+export default function Layout({ children, currentPageName }) {
+  return (
+    <AdminModeProvider>
+      <LayoutContent children={children} currentPageName={currentPageName} />
+    </AdminModeProvider>
   );
 }
