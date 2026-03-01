@@ -316,7 +316,7 @@ export default function Flights() {
                      </button>
                    </div>
                    {showReturnCalendar && searchParams.departureDate && (
-                     <div className="absolute top-full left-0 z-50 mt-2">
+                     <div className="absolute top-full right-0 z-50 mt-2">
                        <PriceCalendar
                          type="flight"
                          origin={searchParams.destination}
