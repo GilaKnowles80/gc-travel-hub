@@ -399,10 +399,12 @@ function LayoutContent({ children, currentPageName }) {
   );
 }
 
-export default function Layout({ children, currentPageName }) {
+function LayoutContent_WithProvider({ children, currentPageName }) {
   return (
     <AdminModeProvider>
       <LayoutContent children={children} currentPageName={currentPageName} />
     </AdminModeProvider>
   );
 }
+
+export default LayoutContent_WithProvider;
