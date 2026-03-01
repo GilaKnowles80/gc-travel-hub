@@ -245,7 +245,7 @@ export default function Flights() {
     <PullToRefresh onRefresh={handleRefresh}>
       <AdBanner placement="top_banner" pageName="Flights" />
       <div className="min-h-screen bg-slate-50">
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -434,7 +434,7 @@ export default function Flights() {
           </div>
         </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-8 relative z-10">
         <div className="mb-6">
           <AdBanner placement="in_content" pageName="Flights" />
         </div>
