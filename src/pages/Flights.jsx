@@ -499,16 +499,14 @@ export default function Flights() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-end">
-                  <Button
-                    onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                    disabled={isLoading || !searchParams.origin || !searchParams.destination}
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg"
-                  >
-                    <Search className="w-4 h-4 mr-2" />
-                    Search
-                  </Button>
-                </div>
+                <Button
+                  onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                  disabled={isLoading || !searchParams.origin || !searchParams.destination}
+                  className="bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Search
+                </Button>
               </div>
             </Card>
           </div>
