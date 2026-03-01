@@ -405,7 +405,6 @@ function LayoutContent({ children, currentPageName }) {
         </div>
       </footer>
       </div>
-          </AdminModeProvider>
         </CurrencyProvider>
       </LanguageProvider>
     </RecaptchaProvider>
