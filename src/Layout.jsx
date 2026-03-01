@@ -28,7 +28,7 @@ const navLinks = [
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
-  { name: "Tawk Support", page: "TawkSupport", icon: Mail, adminOnly: true },
+
   { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
   { name: "Tripzynx", page: "TripzynxPortal", icon: Globe, adminOnly: true },
   { name: "Wanderlinx", page: "WanderlinxPortal", icon: Globe, adminOnly: true },
@@ -96,31 +96,7 @@ function LayoutContent({ children, currentPageName }) {
     setMobileOpen(false);
   }, [currentPageName]);
 
-  // Initialize Tawk.to chat widget
-  useEffect(() => {
-    // Set Tawk_API before loading the script with i18n protection
-    window.Tawk_API = window.Tawk_API || {};
-    window.Tawk_LoadStart = new Date();
-    
-    // Prevent Tawk from trying to access missing i18next
-    if (!window.Tawk_API.i18next) {
-      window.Tawk_API.i18next = { language: 'en' };
-    }
 
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://embed.tawk.to/69a329afb156831c340d08e3/default';
-    script.charset = 'UTF-8';
-    script.setAttribute('crossorigin', '*');
-    script.onerror = () => console.warn('Tawk.to widget failed to load');
-    document.body.appendChild(script);
-
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, []);
 
   const headerBg = isHome && !scrolled
     ? "bg-transparent"
