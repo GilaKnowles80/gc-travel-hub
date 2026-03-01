@@ -45,7 +45,7 @@ export default function DynamicPricingBadge({ pricing }) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4" />
-              <span className="font-medium">{demand_level.charAt(0).toUpperCase() + demand_level.slice(1)} Demand</span>
+              <span className="font-medium">{demand_level ? demand_level.charAt(0).toUpperCase() + demand_level.slice(1) : 'Variable'} Demand</span>
             </div>
             <p className="text-sm">{reason}</p>
             <div className="pt-2 border-t border-slate-700 text-xs">

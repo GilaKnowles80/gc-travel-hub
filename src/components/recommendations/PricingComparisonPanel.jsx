@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import DynamicPricingBadge from './DynamicPricingBadge';
-import { Zap, AlertCircle } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 export default function PricingComparisonPanel({ productType, productId, basePrice, date, destination }) {
   const [pricing, setPricing] = useState(null);
