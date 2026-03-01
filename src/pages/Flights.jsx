@@ -296,15 +296,40 @@ export default function Flights() {
                     </div>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label className="font-semibold text-slate-700">Return (Optional)</Label>
-                  <Input
-                    type="date"
-                    value={searchParams.returnDate}
-                    onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                    min={searchParams.departureDate}
-                  />
-                </div>
+                <div className="space-y-2 relative">
+                   <Label className="font-semibold text-slate-700">Return (Optional)</Label>
+                   <div className="flex gap-2">
+                     <Input
+                       type="date"
+                       value={searchParams.returnDate}
+                       onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
+                       min={searchParams.departureDate}
+                       className="flex-1"
+                     />
+                     <button
+                       type="button"
+                       onClick={() => setShowReturnCalendar(v => !v)}
+                       title="View price calendar"
+                       className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
+                     >
+                       💰 Prices
+                     </button>
+                   </div>
+                   {showReturnCalendar && searchParams.departureDate && (
+                     <div className="absolute top-full left-0 z-50 mt-2">
+                       <PriceCalendar
+                         type="flight"
+                         origin={searchParams.destination}
+                         destination={searchParams.origin}
+                         selectedDate={searchParams.returnDate}
+                         onSelectDate={(date) => {
+                           setSearchParams(p => ({...p, returnDate: date}));
+                           setShowReturnCalendar(false);
+                         }}
+                       />
+                     </div>
+                   )}
+                 </div>
               </div>
 
               {/* Row 2: Passengers & Class & Search */}
