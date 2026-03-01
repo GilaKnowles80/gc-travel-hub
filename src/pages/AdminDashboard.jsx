@@ -27,6 +27,7 @@ import WalletManagementPanel from '@/components/admin/WalletManagementPanel';
 import RevenueSplitFlowDiagram from '@/components/flows/RevenueSplitFlowDiagram';
 import FinancialControlDashboard from '@/components/admin/FinancialControlDashboard';
 import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDashboard';
+import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 
 export default function AdminDashboard() {
   return (
