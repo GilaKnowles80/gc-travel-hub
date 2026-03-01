@@ -160,28 +160,31 @@ function LayoutContent({ children, currentPageName }) {
                 <LanguageSelector showLabel />
               </div>
               {/* Public links - always visible */}
-              {navLinks.filter(link => !link.adminOnly).map((link) => (
-                <Link key={link.page} to={createPageUrl(link.page)} className="shrink-0">
-                  <button
-                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                      currentPageName === link.page
-                        ? isHome && !scrolled
-                          ? "bg-white/20 text-white"
-                          : "bg-amber-50 text-amber-700"
-                        : `${textColor} hover:bg-slate-100/50`
-                    }`}
-                  >
-                    {link.name === "Home" && (
-                      <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/0ebce75b4_LogoAgency.jpeg"
-                        alt="GC Logo"
-                        className="h-5 w-auto"
-                      />
-                    )}
-                    {link.name}
-                  </button>
-                </Link>
-              ))}
+              {navLinks.filter(link => !link.adminOnly).map((link) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link key={link.page} to={createPageUrl(link.page)} className="shrink-0">
+                    <button
+                      className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                        currentPageName === link.page
+                          ? isHome && !scrolled
+                            ? "bg-white/20 text-white"
+                            : "bg-amber-50 text-amber-700"
+                          : `${textColor} hover:bg-slate-100/50`
+                      }`}
+                    >
+                      {link.name === "Home" && (
+                        <img 
+                          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/0ebce75b4_LogoAgency.jpeg"
+                          alt="GC Logo"
+                          className="h-5 w-auto"
+                        />
+                      )}
+                      {link.name}
+                    </button>
+                  </Link>
+                );
+              })}
               {/* Admin mode toggle */}
               {user?.role === "admin" && (
                 <button
@@ -218,13 +221,18 @@ function LayoutContent({ children, currentPageName }) {
                     <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
                       {navLinks.filter(link => link.adminOnly).map((link) => (
                         <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
-                          <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
-                            <link.icon className="w-4 h-4" />
-                            {link.name}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+                           {(() => {
+                             const IconComponent = link.icon;
+                             return (
+                               <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
+                                 <IconComponent className="w-4 h-4" />
+                                 {link.name}
+                               </div>
+                             );
+                           })()}
+                         </Link>
+                        ))}
+                        </div>
                   )}
                 </div>
               )}
@@ -254,21 +262,24 @@ function LayoutContent({ children, currentPageName }) {
                 <div className="mb-3 flex justify-center">
                   <LanguageSelector showLabel />
                 </div>
-                {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => (
-                  <Link key={link.page} to={createPageUrl(link.page)}>
-                    <button
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                        currentPageName === link.page
-                          ? "bg-amber-50 text-amber-700"
-                          : "text-slate-600 hover:bg-slate-50"
-                      }`}
-                    >
-                      <link.icon className="w-4 h-4" />
-                      {link.name}
-                    </button>
-                  </Link>
-                ))}
-              </div>
+                {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => {
+                   const IconComponent = link.icon;
+                   return (
+                     <Link key={link.page} to={createPageUrl(link.page)}>
+                       <button
+                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                           currentPageName === link.page
+                             ? "bg-amber-50 text-amber-700"
+                             : "text-slate-600 hover:bg-slate-50"
+                         }`}
+                       >
+                         <IconComponent className="w-4 h-4" />
+                         {link.name}
+                       </button>
+                     </Link>
+                   );
+                 })}
+                </div>
             </motion.div>
           )}
         </AnimatePresence>
