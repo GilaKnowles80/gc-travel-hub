@@ -209,21 +209,26 @@ export default function Layout({ children, currentPageName }) {
               ))}
               {/* Admin links in a dropdown */}
               {user?.role === "admin" && (
-                <div className="relative group shrink-0">
-                  <button className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${textColor} hover:bg-slate-100/50`}>
+                <div className="relative shrink-0" ref={adminMenuRef}>
+                  <button
+                    onClick={() => setAdminMenuOpen(v => !v)}
+                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${adminMenuOpen ? "bg-amber-50 text-amber-700" : `${textColor} hover:bg-slate-100/50`}`}
+                  >
                     <Shield className="w-3.5 h-3.5" />
                     Admin ▾
                   </button>
-                  <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-1 min-w-[160px] z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    {navLinks.filter(link => link.adminOnly).map((link) => (
-                      <Link key={link.page} to={createPageUrl(link.page)}>
-                        <button className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-50 text-amber-700" : "text-slate-600 hover:bg-slate-50"}`}>
-                          <link.icon className="w-3.5 h-3.5" />
-                          {link.name}
-                        </button>
-                      </Link>
-                    ))}
-                  </div>
+                  {adminMenuOpen && (
+                    <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-1 min-w-[180px] z-[999]">
+                      {navLinks.filter(link => link.adminOnly).map((link) => (
+                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)}>
+                          <button className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-50 text-amber-700" : "text-slate-600 hover:bg-slate-50"}`}>
+                            <link.icon className="w-3.5 h-3.5" />
+                            {link.name}
+                          </button>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {user && <NotificationBell />}
