@@ -25,6 +25,7 @@ import SupportTicketsPanel from '@/components/admin/SupportTicketsPanel';
 import TikTokAnalyticsDashboard from '@/components/admin/TikTokAnalyticsDashboard';
 import WalletManagementPanel from '@/components/admin/WalletManagementPanel';
 import RevenueSplitFlowDiagram from '@/components/flows/RevenueSplitFlowDiagram';
+import FinancialControlDashboard from '@/components/admin/FinancialControlDashboard';
 
 export default function AdminDashboard() {
   return (
