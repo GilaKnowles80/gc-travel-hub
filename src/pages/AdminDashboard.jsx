@@ -151,6 +151,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="revenue" className="space-y-6">
+            <FinancialControlDashboard />
             <RevenueSplitFlowDiagram />
           </TabsContent>
 
