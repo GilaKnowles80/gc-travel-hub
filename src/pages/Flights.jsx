@@ -495,10 +495,11 @@ export default function Flights() {
                   </div>
                 </div>
               </div>
+              </div>
               </Card>
               </div>
 
-        <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-8 relative z-10">
+              <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-8 relative z-10">
         <div className="mb-6">
           <AdBanner placement="in_content" pageName="Flights" />
         </div>
