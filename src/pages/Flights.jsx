@@ -334,8 +334,8 @@ export default function Flights() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">DSWD</Label>
-                  <Select value={String(searchParams.dswd)} onValueChange={(v) => setSearchParams({...searchParams, dswd: Number(v)})}>
+                  <Label className="text-xs">PWD</Label>
+                  <Select value={String(searchParams.pwd)} onValueChange={(v) => setSearchParams({...searchParams, pwd: Number(v)})}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
