@@ -363,22 +363,34 @@ export default function HeroSection() {
                     className="rounded-xl"
                   />
                   {showDestSuggestions && filteredDestCities.length > 0 && (
-                   <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-48 overflow-y-auto">
-                     {filteredDestCities.map((a) => (
-                       <button
-                         key={a.iata}
-                         onClick={() => {
-                           setDestination(a.iata);
-                           setDestinationSearch(`${a.city} (${a.iata})`);
-                           setShowDestSuggestions(false);
-                         }}
-                         className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2"
-                       >
-                         <span className="font-mono font-bold text-amber-600 text-xs">{a.iata}</span>
-                         <span>{a.city}</span>
-                       </button>
-                     ))}
-                   </div>
+                  <div className="absolute z-[60] w-full mt-1 bg-white rounded-xl shadow-lg border border-slate-200 max-h-56 overflow-y-auto">
+                    {filteredDestCities.map((a, i) => {
+                      const prevA = filteredDestCities[i - 1];
+                      const showDomesticHeader = a.domestic && (!prevA || !prevA.domestic);
+                      const showIntlHeader = !a.domestic && (!prevA || prevA.domestic);
+                      return (
+                        <React.Fragment key={a.iata}>
+                          {showDomesticHeader && (
+                            <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">🇵🇭 Philippines Domestic</div>
+                          )}
+                          {showIntlHeader && (
+                            <div className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100">✈️ International</div>
+                          )}
+                          <button
+                            onClick={() => {
+                              setDestination(a.iata);
+                              setDestinationSearch(`${a.city} (${a.iata})`);
+                              setShowDestSuggestions(false);
+                            }}
+                            className="w-full px-4 py-2 text-left hover:bg-amber-50 text-sm flex items-center gap-2"
+                          >
+                            <span className="font-mono font-bold text-amber-600 text-xs">{a.iata}</span>
+                            <span>{a.city}</span>
+                          </button>
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
                   )}
                 </div>
 
