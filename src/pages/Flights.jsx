@@ -200,6 +200,21 @@ export default function Flights() {
     return () => clearInterval(interval);
   }, [searchParams, queryClient]);
 
+  // Initialize Flatpickr for scrollable calendars
+  React.useEffect(() => {
+    flatpickr(".scrollable-calendar", {
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      animate: true,
+      onReady: function(selectedDates, dateStr, instance) {
+        instance.calendarContainer.addEventListener("wheel", (e) => {
+          e.preventDefault();
+          e.deltaY > 0 ? instance.changeMonth(1) : instance.changeMonth(-1);
+        });
+      }
+    });
+  }, []);
+
   const flights = flightData?.flights || [];
 
   const handleFilterChange = (key, value) => {
