@@ -137,7 +137,7 @@ export default function ConversationView({ conversation, onUpdate }) {
   };
 
   return (
-    <Card className="h-[600px] flex flex-col">
+    <Card className="h-[400px] md:h-[600px] flex flex-col max-h-screen md:max-h-none">
       <CardHeader className="border-b">
         <div className="flex items-center justify-between">
           <div>
@@ -156,7 +156,7 @@ export default function ConversationView({ conversation, onUpdate }) {
       </CardHeader>
 
       {/* Messages */}
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+      <CardContent className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-4">
         {messages.map((msg) => {
           const isOwn = msg.sender_email === user?.email;
 
@@ -169,7 +169,7 @@ export default function ConversationView({ conversation, onUpdate }) {
                       <User className="w-4 h-4 text-slate-600" />
                     </div>
                   )}
-                  <span className="text-xs text-slate-600">
+                  <span className="text-xs text-slate-500 line-clamp-1">
                     {msg.sender_name} • {moment(msg.created_date).format("MMM D, h:mm A")}
                   </span>
                 </div>
@@ -205,12 +205,12 @@ export default function ConversationView({ conversation, onUpdate }) {
       </CardContent>
 
       {/* Input */}
-      <div className="border-t p-4">
+      <div className="border-t p-2 md:p-4">
         {attachments.length > 0 && (
           <div className="flex gap-2 mb-2 flex-wrap">
             {attachments.map((url, i) => (
               <div key={i} className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded text-xs">
-                <span>Attachment {i + 1}</span>
+                <span className="hidden sm:inline">Attachment {i + 1}</span>
                 <button onClick={() => setAttachments(attachments.filter((_, idx) => idx !== i))}>
                   <X className="w-3 h-3" />
                 </button>
@@ -218,7 +218,7 @@ export default function ConversationView({ conversation, onUpdate }) {
             ))}
           </div>
         )}
-        <div className="flex gap-2">
+        <div className="flex gap-1 md:gap-2">
           <input
             type="file"
             multiple
@@ -244,8 +244,9 @@ export default function ConversationView({ conversation, onUpdate }) {
                 handleSend();
               }
             }}
-            className="flex-1"
-          />
+            className="flex-1 text-sm"
+            rows={1}
+            />
           <Button
             onClick={handleSend}
             disabled={sendMutation.isPending || (!message.trim() && attachments.length === 0)}
