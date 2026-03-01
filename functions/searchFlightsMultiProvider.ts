@@ -110,9 +110,13 @@ Deno.serve(async (req) => {
     // 3. Call Sabre (business & premium airlines)
     console.log('[MULTI-PROVIDER] Starting Sabre search...');
     let sabreFlights = [];
-
-    try {
-      const sabreResp = await base44.functions.invoke('searchFlightsSabre', {
+    
+    const sabreId = Deno.env.get('SABRE_CLIENT_ID');
+    if (!sabreId) {
+      console.warn('[MULTI-PROVIDER] Sabre Client ID not configured, skipping');
+    } else {
+      try {
+        const sabreResp = await base44.functions.invoke('searchFlightsSabre', {
         origin,
         destination,
         departureDate,
