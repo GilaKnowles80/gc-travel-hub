@@ -262,7 +262,7 @@ export default function Flights() {
                     placeholder="e.g. MNL, SIN, DXB"
                   />
                 </div>
-                <div className="space-y-2 relative">
+                <div className="space-y-2">
                   <Label className="font-semibold text-slate-700">Departure</Label>
                   <div className="flex gap-2">
                     <button
@@ -282,17 +282,19 @@ export default function Flights() {
                     </button>
                   </div>
                   {showPriceCalendar && (
-                    <div className="absolute top-full left-0 z-50 mt-2">
-                      <PriceCalendar
-                        type="flight"
-                        origin={searchParams.origin}
-                        destination={searchParams.destination}
-                        selectedDate={searchParams.departureDate}
-                        onSelectDate={(date) => {
-                          setSearchParams(p => ({...p, departureDate: date}));
-                          setShowPriceCalendar(false);
-                        }}
-                      />
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4">
+                      <div className="bg-white rounded-xl shadow-2xl max-h-[80vh] overflow-y-auto">
+                        <PriceCalendar
+                          type="flight"
+                          origin={searchParams.origin}
+                          destination={searchParams.destination}
+                          selectedDate={searchParams.departureDate}
+                          onSelectDate={(date) => {
+                            setSearchParams(p => ({...p, departureDate: date}));
+                            setShowPriceCalendar(false);
+                          }}
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
