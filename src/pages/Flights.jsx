@@ -224,7 +224,7 @@ export default function Flights() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Book Your Flight</h1>
-                <p className="text-slate-300">Real-time flight search powered by Duffel - 300+ airlines</p>
+                <p className="text-slate-300">Real-time flight search powered by Duffel, Amadeus, Sabre, TravelPro, Biyaheko, Wanderlinx - 300+ airlines</p>
               </div>
               <Button
                 onClick={() => setShowAIDiscovery(!showAIDiscovery)}
