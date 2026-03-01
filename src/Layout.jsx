@@ -212,17 +212,17 @@ export default function Layout({ children, currentPageName }) {
                 <div className="relative shrink-0" ref={adminMenuRef}>
                   <button
                     onClick={() => setAdminMenuOpen(v => !v)}
-                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${adminMenuOpen ? "bg-amber-50 text-amber-700" : `${textColor} hover:bg-slate-100/50`}`}
+                    className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 ${adminMenuOpen ? "bg-amber-100 text-amber-800 shadow-md scale-105" : `${textColor} hover:bg-amber-50/80 hover:shadow-md`}`}
                   >
                     <Shield className="w-3.5 h-3.5" />
-                    Admin ▾
+                    Admin <span className={`text-xs transition-transform ${adminMenuOpen ? 'rotate-180' : ''}`}>▾</span>
                   </button>
                   {adminMenuOpen && (
-                    <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-slate-100 py-1 min-w-[180px] z-[999]">
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-[999] animate-in fade-in slide-in-from-top-2">
                       {navLinks.filter(link => link.adminOnly).map((link) => (
                         <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)}>
-                          <button className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-50 text-amber-700" : "text-slate-600 hover:bg-slate-50"}`}>
-                            <link.icon className="w-3.5 h-3.5" />
+                          <button className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600 hover:bg-amber-50"}`}>
+                            <link.icon className="w-4 h-4" />
                             {link.name}
                           </button>
                         </Link>
