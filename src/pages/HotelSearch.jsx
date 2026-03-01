@@ -162,10 +162,9 @@ export default function HotelSearch() {
                             </div>
                             <div>
                                 <Label>Rooms</Label>
-                                <MobileSelect
+                                <Select
                                     value={searchParams.rooms.toString()}
                                     onValueChange={(value) => setSearchParams({...searchParams, rooms: parseInt(value)})}
-                                    placeholder="Select rooms"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -177,17 +176,16 @@ export default function HotelSearch() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </MobileSelect>
+                                </Select>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <Label>Adults per Room</Label>
-                                <MobileSelect
+                                <Select
                                     value={searchParams.adults.toString()}
                                     onValueChange={(value) => setSearchParams({...searchParams, adults: parseInt(value)})}
-                                    placeholder="Select adults"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -199,7 +197,7 @@ export default function HotelSearch() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </MobileSelect>
+                                </Select>
                             </div>
                             <div className="flex items-end">
                                 <Button 
