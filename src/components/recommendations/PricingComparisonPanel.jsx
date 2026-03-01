@@ -37,91 +37,25 @@ export default function PricingComparisonPanel({ productType, productId, basePri
 
   if (!basePrice || !date) return null;
 
+  if (loading) return <Skeleton className="h-16 w-full rounded-lg" />;
+  if (error || !pricing) return (
+    <div className="text-right">
+      <p className="text-3xl font-bold text-amber-600">₱{basePrice?.toLocaleString()}</p>
+    </div>
+  );
+
   return (
-    <div className="space-y-4">
-      {loading && (
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-32" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-32" />
-          </CardContent>
-        </Card>
+    <div>
+      <DynamicPricingBadge pricing={pricing} />
+      {pricing.is_discounted && (
+        <p className="text-xs text-green-600 mt-1">
+          {Math.abs(pricing.price_change_percent)}% below market average
+        </p>
       )}
-
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="w-4 h-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {pricing && !loading && (
-        <>
-          <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-blue-600" />
-                  <CardTitle>Dynamic Pricing Analysis</CardTitle>
-                </div>
-              </div>
-              <CardDescription>
-                Real-time market adjustment based on demand and competitor prices
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-white rounded-lg border">
-                  <p className="text-sm text-slate-500 mb-1">Your Price</p>
-                  <p className="text-3xl font-bold text-slate-900">
-                    ${pricing.dynamic_price}
-                  </p>
-                  <p className="text-xs text-slate-400 mt-2">
-                    Base: ${pricing.base_price}
-                  </p>
-                </div>
-
-                <div className="p-4 bg-white rounded-lg border">
-                  <p className="text-sm text-slate-500 mb-1">Market Average</p>
-                  <p className="text-3xl font-bold text-slate-900">
-                    ${pricing.avg_competitor_price}
-                  </p>
-                  <p className={`text-xs mt-2 font-medium ${pricing.competitiveness === 'competitive' ? 'text-green-600' : 'text-amber-600'}`}>
-                    {pricing.competitiveness === 'competitive' ? '✓ Competitive' : '△ Premium'}
-                  </p>
-                </div>
-              </div>
-
-              <DynamicPricingBadge pricing={pricing} />
-
-              {pricing.demand_level === 'very_high' && (
-                <Alert className="bg-amber-50 border-amber-200">
-                  <AlertCircle className="w-4 h-4 text-amber-600" />
-                  <AlertDescription className="text-amber-800">
-                    Very high demand detected. Prices may increase further.
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              {pricing.is_discounted && (
-                <Alert className="bg-green-50 border-green-200">
-                  <Zap className="w-4 h-4 text-green-600" />
-                  <AlertDescription className="text-green-800">
-                    Great deal! This price is {Math.abs(pricing.price_change_percent)}% lower than market average.
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <div className="p-4 bg-slate-50 rounded-lg border">
-                <p className="text-sm font-medium text-slate-900 mb-2">Why This Price?</p>
-                <p className="text-sm text-slate-600">{pricing.reason}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </>
+      {pricing.demand_level === 'very_high' && (
+        <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+          <Zap className="w-3 h-3" /> High demand – price may rise
+        </p>
       )}
     </div>
   );
