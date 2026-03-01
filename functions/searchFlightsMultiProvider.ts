@@ -1,8 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-// Multi-provider flight search: Duffel + Aviation Edge
-// Combines results from both providers to maximize airline coverage
-// Priority: Duffel (premium), Aviation Edge (budget carriers like AirAsia, Cebu Pacific, Tiger)
+// Multi-provider flight search: Duffel + Amadeus + Sabre
+// Combines results from all three providers to maximize airline coverage
+// Priority: Duffel (premium), Amadeus (global), Sabre (business)
 
 Deno.serve(async (req) => {
   try {
