@@ -357,10 +357,10 @@ export default function Flights() {
                         <h3 className="font-semibold text-slate-900">{departMonth.format('MMMM YYYY')}</h3>
                         <button type="button" onClick={() => setDepartMonth(moment(departMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
                       </div>
-                      <div className="grid grid-cols-7 gap-2 text-xs font-semibold text-slate-600 mb-2">
-                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center">{d}</div>)}
+                      <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-3">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center py-2">{d}</div>)}
                       </div>
-                      <div className="grid grid-cols-7 gap-2">
+                      <div className="grid grid-cols-7 gap-1">
                         {renderCalendarDays(departMonth, (day) => {
                           setSearchParams({...searchParams, departureDate: day.format('YYYY-MM-DD')});
                           setShowDepartCalendar(false);
@@ -375,8 +375,8 @@ export default function Flights() {
                               }
                             }}
                             disabled={!day || day.isBefore(moment(), 'day')}
-                            className={`aspect-square rounded text-xs font-medium transition-colors ${
-                              day ? (day.format('YYYY-MM-DD') === searchParams.departureDate ? 'bg-amber-500 text-white' : day.isBefore(moment(), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900') : ''
+                            className={`w-full py-2 rounded text-sm font-medium transition-colors ${
+                              day ? (day.format('YYYY-MM-DD') === searchParams.departureDate ? 'bg-amber-500 text-white' : day.isBefore(moment(), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
                             }`}
                           >
                             {day?.date()}
@@ -403,10 +403,10 @@ export default function Flights() {
                            <h3 className="font-semibold text-slate-900">{returnMonth.format('MMMM YYYY')}</h3>
                            <button type="button" onClick={() => setReturnMonth(moment(returnMonth).add(1, 'month'))} className="p-1 hover:bg-slate-100 rounded"><ChevronRight className="w-4 h-4" /></button>
                          </div>
-                         <div className="grid grid-cols-7 gap-2 text-xs font-semibold text-slate-600 mb-2">
-                           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center">{d}</div>)}
+                         <div className="grid grid-cols-7 gap-1 text-xs font-semibold text-slate-600 mb-3">
+                           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d} className="text-center py-2">{d}</div>)}
                          </div>
-                         <div className="grid grid-cols-7 gap-2">
+                         <div className="grid grid-cols-7 gap-1">
                            {renderCalendarDays(returnMonth, (day) => {
                              setSearchParams({...searchParams, returnDate: day.format('YYYY-MM-DD')});
                              setShowReturnCalendar(false);
@@ -421,8 +421,8 @@ export default function Flights() {
                                  }
                                }}
                                disabled={!day || day.isBefore(moment(searchParams.departureDate), 'day')}
-                               className={`aspect-square rounded text-xs font-medium transition-colors ${
-                                 day ? (day.format('YYYY-MM-DD') === searchParams.returnDate ? 'bg-amber-500 text-white' : day.isBefore(moment(searchParams.departureDate), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900') : ''
+                               className={`w-full py-2 rounded text-sm font-medium transition-colors ${
+                                 day ? (day.format('YYYY-MM-DD') === searchParams.returnDate ? 'bg-amber-500 text-white' : day.isBefore(moment(searchParams.departureDate), 'day') ? 'text-slate-300 cursor-not-allowed' : 'hover:bg-amber-100 text-slate-900 cursor-pointer') : ''
                                }`}
                              >
                                {day?.date()}
