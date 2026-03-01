@@ -117,7 +117,14 @@ export default function Flights() {
     queryKey: ["realtime-flights", searchParams],
     queryFn: async () => {
       try {
-        const response = await base44.functions.invoke('searchFlightsMultiProvider', searchParams);
+        const response = await base44.functions.invoke('searchFlightsMultiProvider', {
+          origin: searchParams.origin,
+          destination: searchParams.destination,
+          departureDate: searchParams.departureDate,
+          returnDate: searchParams.returnDate,
+          adults: searchParams.adults,
+          cabin: searchParams.cabin
+        });
         
         // Transform offers to app format
         const flights = response.data.offers?.map((offer, idx) => ({
