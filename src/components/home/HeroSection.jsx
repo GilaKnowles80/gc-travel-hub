@@ -34,6 +34,7 @@ export default function HeroSection() {
   const [showReturnCalendar, setShowReturnCalendar] = useState(false);
   const [showHotelCheckin, setShowHotelCheckin] = useState(false);
   const [showHotelCheckout, setShowHotelCheckout] = useState(false);
+  const [geoDetecting, setGeoDetecting] = useState(false);
   const flightCalRef = useRef(null);
   const returnCalRef = useRef(null);
   const checkinCalRef = useRef(null);
