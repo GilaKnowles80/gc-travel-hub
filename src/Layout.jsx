@@ -27,6 +27,7 @@ const navLinks = [
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
+  { name: "Tawk Support", page: "TawkSupport", icon: Mail, adminOnly: true },
   { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
   { name: "Tripzynx", page: "TripzynxPortal", icon: Globe, adminOnly: true },
   { name: "Wanderlinx", page: "WanderlinxPortal", icon: Globe, adminOnly: true },
