@@ -393,6 +393,9 @@ export default function Flights() {
           <FlightScheduleBoard
             defaultOrigin={searchParams.origin || 'MNL'}
             defaultDest={searchParams.destination || 'SIN'}
+            onSelectFlight={(s) => {
+              if (s?.id) window.location.href = createPageUrl("FlightDetail") + `?id=${s.id}`;
+            }}
           />
         </div>
 
