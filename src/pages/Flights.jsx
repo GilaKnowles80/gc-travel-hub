@@ -391,20 +391,7 @@ export default function Flights() {
           </div>
         )}
 
-        {/* Real-Time Schedule Board - Only show if user has filled origin/destination */}
-        {searchParams.origin && searchParams.destination && (
-          <div className="mb-6">
-            <FlightScheduleBoard
-              defaultOrigin={searchParams.origin}
-              defaultDest={searchParams.destination}
-              onSelectFlight={(flight) => {
-                if (flight?.id) {
-                  handleSelectFlight(flight.id);
-                }
-              }}
-            />
-          </div>
-        )}
+
 
         <FlightFilters 
           filters={filters} 
