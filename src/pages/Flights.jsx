@@ -391,6 +391,26 @@ export default function Flights() {
           </div>
         )}
 
+        {/* Fare Legend */}
+        {(isLoading || (flightData && flightData.length > 0)) && (
+          <div className="mb-6 flex items-center gap-4 px-4 py-3 bg-white rounded-lg border border-slate-200">
+            <span className="text-sm font-semibold text-slate-700">Fare Legend:</span>
+            <div className="flex gap-6">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span className="text-sm text-slate-600">Cheapest</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span className="text-sm text-slate-600">Regular</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span className="text-sm text-slate-600">Highest</span>
+              </div>
+            </div>
+          </div>
+        )}
 
 
         <FlightFilters 
