@@ -371,6 +371,14 @@ export default function Flights() {
           </div>
         )}
 
+        {/* Real-Time Schedule Board */}
+        <div className="mb-6">
+          <FlightScheduleBoard
+            defaultOrigin={searchParams.origin || 'MNL'}
+            defaultDest={searchParams.destination || 'SIN'}
+          />
+        </div>
+
         <FlightFilters 
           filters={filters} 
           onFilterChange={handleFilterChange} 
