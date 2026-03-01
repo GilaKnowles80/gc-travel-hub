@@ -84,44 +84,78 @@ export default function FlightSearch() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
             {/* Hero Section */}
-            <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-16">
+            <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-12">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Search Real-Time Flights</h1>
-                    <p className="text-xl opacity-90">Powered by Amadeus - 500+ airlines worldwide</p>
+                    <h1 className="text-3xl md:text-4xl font-bold mb-2">Flight Search</h1>
+                    <p className="text-base opacity-80">Book domestic & international flights via Biyaheko</p>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-                {/* Search Form */}
-                <Card className="mb-8">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Plane className="w-5 h-5" />
-                            Flight Search
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
+                {/* Search Form - Biyaheko Style */}
+                <Card className="mb-6 shadow-md">
+                    <CardContent className="pt-5 pb-5">
+                        {/* Trip type + Source selector row */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                            <div className="flex items-center gap-4">
+                                <label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                                    <input
+                                        type="radio"
+                                        name="tripType"
+                                        value="one_way"
+                                        checked={tripType === "one_way"}
+                                        onChange={() => setTripType("one_way")}
+                                        className="accent-red-500"
+                                    />
+                                    One Way
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                                    <input
+                                        type="radio"
+                                        name="tripType"
+                                        value="roundtrip"
+                                        checked={tripType === "roundtrip"}
+                                        onChange={() => setTripType("roundtrip")}
+                                        className="accent-red-500"
+                                    />
+                                    Round Trip
+                                </label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-500">Source:</span>
+                                <select
+                                    value={searchSource}
+                                    onChange={(e) => setSearchSource(e.target.value)}
+                                    className="text-xs border rounded px-2 py-1"
+                                >
+                                    <option value="biyaheko">Biyaheko</option>
+                                    <option value="amadeus">Amadeus</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Main search fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                             <div>
-                                <Label>Origin Airport</Label>
+                                <Label className="text-xs text-slate-500 mb-1">Origin City</Label>
                                 <AirportSelector
                                     value={searchParams.origin}
                                     onChange={(code) => setSearchParams({...searchParams, origin: code})}
-                                    placeholder="Select origin airport"
+                                    placeholder="Origin City"
                                     userLocation={userLocation}
                                 />
                             </div>
                             <div>
-                                <Label>Destination Airport</Label>
+                                <Label className="text-xs text-slate-500 mb-1">Destination City</Label>
                                 <AirportSelector
                                     value={searchParams.destination}
                                     onChange={(code) => setSearchParams({...searchParams, destination: code})}
-                                    placeholder="Select destination airport"
+                                    placeholder="Destination City"
                                     userLocation={userLocation}
                                 />
                             </div>
                             <div>
-                                <Label>Departure Date</Label>
+                                <Label className="text-xs text-slate-500 mb-1">Onward</Label>
                                 <Input
                                     type="date"
                                     value={searchParams.departureDate}
@@ -129,43 +163,26 @@ export default function FlightSearch() {
                                     onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
                                 />
                             </div>
-                            <div>
-                                <Label>Return Date (Optional)</Label>
-                                <Input
-                                    type="date"
-                                    value={searchParams.returnDate}
-                                    min={searchParams.departureDate || moment().format('YYYY-MM-DD')}
-                                    onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                                />
-                            </div>
+                            {tripType === "roundtrip" && (
+                                <div>
+                                    <Label className="text-xs text-slate-500 mb-1">Return</Label>
+                                    <Input
+                                        type="date"
+                                        value={searchParams.returnDate}
+                                        min={searchParams.departureDate || moment().format('YYYY-MM-DD')}
+                                        onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
+                                    />
+                                </div>
+                            )}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        {/* Passengers + Class + Search */}
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 items-end mb-3">
                             <div>
-                                <Label>Passengers</Label>
-                                <MobileSelect
-                                    value={searchParams.adults.toString()}
-                                    onValueChange={(value) => setSearchParams({...searchParams, adults: parseInt(value)})}
-                                    placeholder="Select passengers"
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {[1, 2, 3, 4, 5, 6].map(num => (
-                                            <SelectItem key={num} value={num.toString()}>
-                                                {num} {num === 1 ? 'Adult' : 'Adults'}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </MobileSelect>
-                            </div>
-                            <div>
-                                <Label>Cabin Class</Label>
-                                <MobileSelect
+                                <Label className="text-xs text-slate-500 mb-1">Class</Label>
+                                <Select
                                     value={searchParams.cabinClass}
                                     onValueChange={(value) => setSearchParams({...searchParams, cabinClass: value})}
-                                    placeholder="Select cabin class"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -176,27 +193,75 @@ export default function FlightSearch() {
                                         <SelectItem value="BUSINESS">Business</SelectItem>
                                         <SelectItem value="FIRST">First Class</SelectItem>
                                     </SelectContent>
-                                </MobileSelect>
+                                </Select>
                             </div>
-                            <div className="flex items-end">
-                                <Button 
-                                    onClick={handleSearch} 
-                                    className="w-full bg-amber-500 hover:bg-amber-600"
+                            <div>
+                                <Label className="text-xs text-slate-500 mb-1">Adult</Label>
+                                <Select
+                                    value={searchParams.adults.toString()}
+                                    onValueChange={(value) => setSearchParams({...searchParams, adults: parseInt(value)})}
+                                >
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={n.toString()}>{n}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-xs text-slate-500 mb-1">Child</Label>
+                                <Select
+                                    value={searchParams.children.toString()}
+                                    onValueChange={(value) => setSearchParams({...searchParams, children: parseInt(value)})}
+                                >
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        {[0,1,2,3,4].map(n => <SelectItem key={n} value={n.toString()}>{n}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-xs text-slate-500 mb-1">Infant</Label>
+                                <Select
+                                    value={searchParams.infants.toString()}
+                                    onValueChange={(value) => setSearchParams({...searchParams, infants: parseInt(value)})}
+                                >
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        {[0,1,2].map(n => <SelectItem key={n} value={n.toString()}>{n}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Button
+                                    onClick={handleSearch}
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white"
                                     disabled={isLoading}
                                 >
                                     {isLoading ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            Searching...
-                                        </>
+                                        <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Searching...</>
                                     ) : (
-                                        <>
-                                            <Plane className="w-4 h-4 mr-2" />
-                                            Search Flights
-                                        </>
+                                        <><Plane className="w-4 h-4 mr-2" />Search Flights</>
                                     )}
                                 </Button>
                             </div>
+                        </div>
+
+                        {/* Special fare / Senior citizen checkboxes */}
+                        <div className="flex items-center gap-6">
+                            <label className="flex items-center gap-2 cursor-pointer text-sm">
+                                <Checkbox
+                                    checked={searchParams.specialFare}
+                                    onCheckedChange={(v) => setSearchParams({...searchParams, specialFare: v})}
+                                />
+                                Special Fare
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer text-sm">
+                                <Checkbox
+                                    checked={searchParams.seniorCitizen}
+                                    onCheckedChange={(v) => setSearchParams({...searchParams, seniorCitizen: v})}
+                                />
+                                Senior Citizen (Age 60+)
+                            </label>
                         </div>
                     </CardContent>
                 </Card>
