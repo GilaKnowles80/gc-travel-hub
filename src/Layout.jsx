@@ -401,6 +401,8 @@ function LayoutContent({ children, currentPageName }) {
 
 export default function Layout({ children, currentPageName }) {
   return (
-    <LayoutContent children={children} currentPageName={currentPageName} />
+    <AdminModeProvider>
+      <LayoutContent children={children} currentPageName={currentPageName} />
+    </AdminModeProvider>
   );
 }
