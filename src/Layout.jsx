@@ -43,7 +43,17 @@ function LayoutContent({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const { adminMode, toggleAdminMode } = useAdminMode();
+  
+  let adminMode = false;
+  let toggleAdminMode = () => {};
+  
+  try {
+    const adminContext = useAdminMode();
+    adminMode = adminContext.adminMode;
+    toggleAdminMode = adminContext.toggleAdminMode;
+  } catch (e) {
+    // Hook not available, use defaults
+  }
   const adminMenuRef = React.useRef(null);
   const [navigationStack, setNavigationStack] = useState({
     Home: ["/"],
