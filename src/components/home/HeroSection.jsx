@@ -210,7 +210,7 @@ export default function HeroSection() {
           className="w-full max-w-5xl"
         >
 
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto overflow-x-visible">
             <div className="overflow-x-auto mb-6 -mx-6 px-6">
               <div className="flex gap-2 min-w-max">
                 {[
