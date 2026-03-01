@@ -334,12 +334,12 @@ export default function HeroSection() {
                   )}
                 </div>
 
-                <div>
+                <div className="overflow-visible">
                    <label className="text-xs font-medium text-slate-600 mb-2 flex items-center gap-1">
                      <Calendar className="w-3 h-3" />
                      Dates
                    </label>
-                   <div className="grid grid-cols-2 gap-2">
+                   <div className="grid grid-cols-2 gap-2 overflow-visible">
                      {/* Depart date with price calendar */}
                      <div className="relative" ref={flightCalRef}>
                        <button
