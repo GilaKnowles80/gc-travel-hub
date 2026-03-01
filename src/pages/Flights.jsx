@@ -42,6 +42,7 @@ export default function Flights() {
   });
   const [geoDetecting, setGeoDetecting] = useState(false);
   const [showPriceCalendar, setShowPriceCalendar] = useState(false);
+  const [showReturnCalendar, setShowReturnCalendar] = useState(false);
 
   // Auto-detect user's nearest airport from geo-location
   React.useEffect(() => {
