@@ -351,12 +351,22 @@ export default function FlightSearch() {
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                                                            <span className="font-medium">
-                                                                {offer.airline_name}
-                                                            </span>
+                                                                                        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
+                                                            <span className="font-medium">{offer.airline_name}</span>
+                                                            {offer.flight_number && <><span>•</span><span>{offer.flight_number}</span></>}
                                                             <span>•</span>
                                                             <span>{offer.cabin_classes?.[0]?.class || 'Economy'}</span>
+                                                            {offer.fare_class && <Badge variant="outline" className="text-xs">Class: {offer.fare_class}</Badge>}
+                                                            {offer.baggage_allowance && (
+                                                                <span className="flex items-center gap-1 text-xs text-slate-500">
+                                                                    <Luggage className="w-3 h-3" />{offer.baggage_allowance}
+                                                                </span>
+                                                            )}
+                                                            {offer.source === "biyaheko" && (
+                                                                <Badge className={offer.is_refundable ? "bg-green-100 text-green-700 text-xs" : "bg-red-100 text-red-700 text-xs"}>
+                                                                    {offer.is_refundable ? "Refundable" : "Non-Refundable"}
+                                                                </Badge>
+                                                            )}
                                                         </div>
                                                     </div>
 
