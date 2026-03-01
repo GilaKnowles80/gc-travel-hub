@@ -39,7 +39,9 @@ const navLinks = [
 export default function Layout({ children, currentPageName }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const adminMenuRef = React.useRef(null);
   const [navigationStack, setNavigationStack] = useState({
     Home: ["/"],
     Tours: [createPageUrl("Tours")],
