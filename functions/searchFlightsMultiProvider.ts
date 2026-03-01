@@ -69,9 +69,13 @@ Deno.serve(async (req) => {
     // 2. Call Amadeus (global airlines)
     console.log('[MULTI-PROVIDER] Starting Amadeus search...');
     let amadeusFlights = [];
-
-    try {
-      const amadeusResp = await base44.functions.invoke('searchFlightsAmadeus', {
+    
+    const amadeusKey = Deno.env.get('AMADEUS_API_KEY');
+    if (!amadeusKey) {
+      console.warn('[MULTI-PROVIDER] Amadeus API key not configured, skipping');
+    } else {
+      try {
+        const amadeusResp = await base44.functions.invoke('searchFlightsAmadeus', {
         origin,
         destination,
         departureDate,
