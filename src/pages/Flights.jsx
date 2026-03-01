@@ -234,18 +234,19 @@ export default function Flights() {
               </Button>
             </div>
 
-            {/* Search Form */}
-            <Card className="p-6 bg-white/95 backdrop-blur">
+            {/* Search Form Card */}
+            <Card className="p-6 bg-white/95 backdrop-blur rounded-2xl">
               {geoDetecting && (
                 <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
                   <div className="w-3 h-3 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
                   Detecting your location to pre-fill airports...
                 </div>
               )}
+              
               {/* Row 1: From / To / Departure / Return */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div className="space-y-2">
-                  <Label>From</Label>
+                  <Label className="font-semibold text-slate-700">From</Label>
                   <AirportInput
                     value={searchParams.origin}
                     onChange={(code) => setSearchParams({...searchParams, origin: code})}
@@ -253,7 +254,7 @@ export default function Flights() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>To</Label>
+                  <Label className="font-semibold text-slate-700">To</Label>
                   <AirportInput
                     value={searchParams.destination}
                     onChange={(code) => setSearchParams({...searchParams, destination: code})}
@@ -261,7 +262,7 @@ export default function Flights() {
                   />
                 </div>
                 <div className="space-y-2 relative">
-                  <Label>Departure</Label>
+                  <Label className="font-semibold text-slate-700">Departure</Label>
                   <div className="flex gap-2">
                     <Input
                       type="date"
@@ -295,7 +296,7 @@ export default function Flights() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label>Return (Optional)</Label>
+                  <Label className="font-semibold text-slate-700">Return (Optional)</Label>
                   <Input
                     type="date"
                     value={searchParams.returnDate}
@@ -304,60 +305,61 @@ export default function Flights() {
                   />
                 </div>
               </div>
-              {/* Row 2: Pax breakdown + class + search */}
+
+              {/* Row 2: Passengers & Class & Search */}
               <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
                 <div className="space-y-2">
-                  <Label className="text-xs">Adults</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Adults</Label>
                   <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Children</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Children</Label>
                   <Select value={String(searchParams.children)} onValueChange={(v) => setSearchParams({...searchParams, children: Number(v)})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Infants</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Infants</Label>
                   <Select value={String(searchParams.infants)} onValueChange={(v) => setSearchParams({...searchParams, infants: Number(v)})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[0,1,2].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">PWD</Label>
+                  <Label className="text-xs font-semibold text-slate-700">PWD</Label>
                   <Select value={String(searchParams.pwd)} onValueChange={(v) => setSearchParams({...searchParams, pwd: Number(v)})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Senior Citizen</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Senior</Label>
                   <Select value={String(searchParams.senior)} onValueChange={(v) => setSearchParams({...searchParams, senior: Number(v)})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {[0,1,2,3,4].map(n => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Class</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Class</Label>
                   <Select value={searchParams.cabin} onValueChange={(v) => setSearchParams({...searchParams, cabin: v})}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="economy">Economy</SelectItem>
-                      <SelectItem value="premium_economy">Premium Eco.</SelectItem>
+                      <SelectItem value="premium_economy">Premium Economy</SelectItem>
                       <SelectItem value="business">Business</SelectItem>
                       <SelectItem value="first">First Class</SelectItem>
                     </SelectContent>
@@ -366,7 +368,8 @@ export default function Flights() {
                 <div className="flex items-end">
                   <Button
                     onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold"
+                    disabled={isLoading || !searchParams.origin || !searchParams.destination}
+                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg"
                   >
                     <Search className="w-4 h-4 mr-2" />
                     Search
