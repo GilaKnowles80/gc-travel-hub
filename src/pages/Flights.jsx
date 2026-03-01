@@ -44,6 +44,7 @@ export default function Flights() {
   const [geoDetecting, setGeoDetecting] = useState(false);
   const [showPriceCalendar, setShowPriceCalendar] = useState(false);
   const [showReturnCalendar, setShowReturnCalendar] = useState(false);
+  const [tripType, setTripType] = useState("roundtrip");
 
   // Auto-detect user's nearest airport from geo-location
   React.useEffect(() => {
@@ -270,6 +271,35 @@ export default function Flights() {
                 </div>
               )}
               
+              {/* Trip Type Selection */}
+              <div className="mb-4">
+                <Label className="font-semibold text-slate-700 mb-2 block">Trip Type</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => setTripType("roundtrip")}
+                    className={`flex-1 h-10 rounded-lg font-medium transition-colors ${
+                      tripType === "roundtrip"
+                        ? "bg-amber-500 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    Roundtrip
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setTripType("oneway")}
+                    className={`flex-1 h-10 rounded-lg font-medium transition-colors ${
+                      tripType === "oneway"
+                        ? "bg-amber-500 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    One Way
+                  </Button>
+                </div>
+              </div>
+
               {/* Row 1: From / To / Departure / Return */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div className="space-y-2">
@@ -323,41 +353,43 @@ export default function Flights() {
                     </div>
                   )}
                 </div>
-                <div className="space-y-2">
-                   <Label className="font-semibold text-slate-700">Return (Optional)</Label>
-                   <div className="flex gap-2">
-                     <input
-                       type="date"
-                       value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
-                       onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                       className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
-                     />
-                     <button
-                       type="button"
-                       onClick={() => setShowReturnCalendar(v => !v)}
-                       title="View price calendar"
-                       className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
-                     >
-                       💰 Prices
-                     </button>
-                   </div>
-                   {showReturnCalendar && searchParams.departureDate && (
-                     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                       <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
-                         <PriceCalendar
-                           type="flight"
-                           origin={searchParams.destination}
-                           destination={searchParams.origin}
-                           selectedDate={searchParams.returnDate}
-                           onSelectDate={(date) => {
-                             setSearchParams(p => ({...p, returnDate: date}));
-                             setShowReturnCalendar(false);
-                           }}
-                         />
-                       </div>
+                {tripType === "roundtrip" && (
+                  <div className="space-y-2">
+                     <Label className="font-semibold text-slate-700">Return</Label>
+                     <div className="flex gap-2">
+                       <input
+                         type="date"
+                         value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
+                         onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
+                         className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-sm text-slate-700 font-medium"
+                       />
+                       <button
+                         type="button"
+                         onClick={() => setShowReturnCalendar(v => !v)}
+                         title="View price calendar"
+                         className="px-2 py-1 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
+                       >
+                         💰 Prices
+                       </button>
                      </div>
-                   )}
-                 </div>
+                     {showReturnCalendar && searchParams.departureDate && (
+                       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+                         <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
+                           <PriceCalendar
+                             type="flight"
+                             origin={searchParams.destination}
+                             destination={searchParams.origin}
+                             selectedDate={searchParams.returnDate}
+                             onSelectDate={(date) => {
+                               setSearchParams(p => ({...p, returnDate: date}));
+                               setShowReturnCalendar(false);
+                             }}
+                           />
+                         </div>
+                       </div>
+                     )}
+                   </div>
+                )}
               </div>
 
               {/* Row 2: Passengers & Class & Search */}
