@@ -420,6 +420,30 @@ export default function Flights() {
                     </div>
                   )}
 
+                </div>
+
+                {/* Bottom Row: From / To / Travelers & Class / Search */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
+                  {/* From Airport */}
+                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
+                    <Label className="text-xs font-semibold text-slate-700">From</Label>
+                    <AirportInput
+                      value={searchParams.origin}
+                      onChange={(code) => setSearchParams({...searchParams, origin: code})}
+                      placeholder="MNL"
+                    />
+                  </div>
+
+                  {/* To Airport */}
+                  <div className="space-y-1 sm:col-span-1 md:col-span-1">
+                    <Label className="text-xs font-semibold text-slate-700">To</Label>
+                    <AirportInput
+                      value={searchParams.destination}
+                      onChange={(code) => setSearchParams({...searchParams, destination: code})}
+                      placeholder="SIN"
+                    />
+                  </div>
+
                   {/* Travelers & Class */}
                   <div className="flex gap-2 sm:col-span-2 md:col-span-2">
                     <div className="flex-1 space-y-1">
