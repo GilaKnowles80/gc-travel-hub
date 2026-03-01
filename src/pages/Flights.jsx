@@ -320,23 +320,14 @@ export default function Flights() {
                 </div>
                 <div className="space-y-2">
                   <Label className="font-semibold text-slate-700">Departure</Label>
-                  <div className="flex gap-2">
-                    <input
-                      type="date"
-                      value={moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('YYYY-MM-DD') : searchParams.departureDate}
-                      onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
-                      className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg bg-white hover:border-amber-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all text-sm text-slate-900 font-semibold cursor-pointer"
-                      style={{ colorScheme: 'light' }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPriceCalendar(v => !v)}
-                      title="View price calendar"
-                      className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
-                    >
-                      💰 Prices
-                    </button>
-                  </div>
+                  <input
+                    type="date"
+                    placeholder="Date"
+                    value={moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('YYYY-MM-DD') : searchParams.departureDate}
+                    onChange={(e) => setSearchParams({...searchParams, departureDate: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
+                    style={{ colorScheme: 'light' }}
+                  />
                   {showPriceCalendar && (
                     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
                       <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
@@ -357,23 +348,14 @@ export default function Flights() {
                 {tripType === "roundtrip" && (
                   <div className="space-y-2">
                      <Label className="font-semibold text-slate-700">Return</Label>
-                     <div className="flex gap-2">
-                       <input
-                         type="date"
-                         value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
-                         onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
-                         className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg bg-white hover:border-amber-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all text-sm text-slate-900 font-semibold cursor-pointer"
-                         style={{ colorScheme: 'light' }}
-                       />
-                       <button
-                         type="button"
-                         onClick={() => setShowReturnCalendar(v => !v)}
-                         title="View price calendar"
-                         className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-amber-50 hover:border-amber-300 transition-colors text-xs text-amber-600 font-medium whitespace-nowrap"
-                       >
-                         💰 Prices
-                       </button>
-                     </div>
+                     <input
+                       type="date"
+                       placeholder="Date"
+                       value={searchParams.returnDate ? (moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('YYYY-MM-DD') : searchParams.returnDate) : ''}
+                       onChange={(e) => setSearchParams({...searchParams, returnDate: e.target.value})}
+                       className="w-full px-4 py-3 rounded-lg bg-white border-0 text-slate-900 font-medium cursor-pointer hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
+                       style={{ colorScheme: 'light' }}
+                     />
                      {showReturnCalendar && searchParams.departureDate && (
                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
                          <div className="bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto z-[10000]">
