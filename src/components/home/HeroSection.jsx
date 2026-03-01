@@ -96,35 +96,36 @@ export default function HeroSection() {
   // Geo-detect nearest airport for the "From" field
   useEffect(() => {
     setGeoDetecting(true);
+    // origin airport + popular destination from that country
     const countryAirportMap = {
-      'PH': { origin: 'MNL', label: 'Manila (MNL)' },
-      'SG': { origin: 'SIN', label: 'Singapore (SIN)' },
-      'JP': { origin: 'NRT', label: 'Tokyo (NRT)' },
-      'KR': { origin: 'ICN', label: 'Seoul (ICN)' },
-      'HK': { origin: 'HKG', label: 'Hong Kong (HKG)' },
-      'TW': { origin: 'TPE', label: 'Taipei (TPE)' },
-      'MY': { origin: 'KUL', label: 'Kuala Lumpur (KUL)' },
-      'TH': { origin: 'BKK', label: 'Bangkok (BKK)' },
-      'AU': { origin: 'SYD', label: 'Sydney (SYD)' },
-      'NZ': { origin: 'AKL', label: 'Auckland (AKL)' },
-      'US': { origin: 'LAX', label: 'Los Angeles (LAX)' },
-      'CA': { origin: 'YVR', label: 'Vancouver (YVR)' },
-      'GB': { origin: 'LHR', label: 'London Heathrow (LHR)' },
-      'DE': { origin: 'FRA', label: 'Frankfurt (FRA)' },
-      'FR': { origin: 'CDG', label: 'Paris (CDG)' },
-      'NL': { origin: 'AMS', label: 'Amsterdam (AMS)' },
-      'BE': { origin: 'BRU', label: 'Brussels (BRU)' },
-      'ES': { origin: 'MAD', label: 'Madrid (MAD)' },
-      'IT': { origin: 'FCO', label: 'Rome (FCO)' },
-      'PT': { origin: 'LIS', label: 'Lisbon (LIS)' },
-      'AT': { origin: 'VIE', label: 'Vienna (VIE)' },
-      'CH': { origin: 'ZRH', label: 'Zurich (ZRH)' },
-      'AE': { origin: 'DXB', label: 'Dubai (DXB)' },
-      'SA': { origin: 'RUH', label: 'Riyadh (RUH)' },
-      'QA': { origin: 'DOH', label: 'Doha (DOH)' },
-      'KW': { origin: 'KWI', label: 'Kuwait City (KWI)' },
-      'IN': { origin: 'BOM', label: 'Mumbai (BOM)' },
-      'CN': { origin: 'PEK', label: 'Beijing (PEK)' },
+      'PH': { origin: 'MNL', originLabel: 'Manila (MNL)', dest: 'SIN', destLabel: 'Singapore (SIN)' },
+      'SG': { origin: 'SIN', originLabel: 'Singapore (SIN)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'JP': { origin: 'NRT', originLabel: 'Tokyo (NRT)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'KR': { origin: 'ICN', originLabel: 'Seoul (ICN)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'HK': { origin: 'HKG', originLabel: 'Hong Kong (HKG)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'TW': { origin: 'TPE', originLabel: 'Taipei (TPE)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'MY': { origin: 'KUL', originLabel: 'Kuala Lumpur (KUL)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'TH': { origin: 'BKK', originLabel: 'Bangkok (BKK)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'AU': { origin: 'SYD', originLabel: 'Sydney (SYD)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'NZ': { origin: 'AKL', originLabel: 'Auckland (AKL)', dest: 'SYD', destLabel: 'Sydney (SYD)' },
+      'US': { origin: 'LAX', originLabel: 'Los Angeles (LAX)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'CA': { origin: 'YVR', originLabel: 'Vancouver (YVR)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'GB': { origin: 'LHR', originLabel: 'London Heathrow (LHR)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'DE': { origin: 'FRA', originLabel: 'Frankfurt (FRA)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'FR': { origin: 'CDG', originLabel: 'Paris (CDG)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'NL': { origin: 'AMS', originLabel: 'Amsterdam (AMS)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'BE': { origin: 'BRU', originLabel: 'Brussels (BRU)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'ES': { origin: 'MAD', originLabel: 'Madrid (MAD)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'IT': { origin: 'FCO', originLabel: 'Rome (FCO)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'PT': { origin: 'LIS', originLabel: 'Lisbon (LIS)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'AT': { origin: 'VIE', originLabel: 'Vienna (VIE)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'CH': { origin: 'ZRH', originLabel: 'Zurich (ZRH)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'AE': { origin: 'DXB', originLabel: 'Dubai (DXB)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'SA': { origin: 'RUH', originLabel: 'Riyadh (RUH)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'QA': { origin: 'DOH', originLabel: 'Doha (DOH)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'KW': { origin: 'KWI', originLabel: 'Kuwait City (KWI)', dest: 'MNL', destLabel: 'Manila (MNL)' },
+      'IN': { origin: 'BOM', originLabel: 'Mumbai (BOM)', dest: 'SIN', destLabel: 'Singapore (SIN)' },
+      'CN': { origin: 'PEK', originLabel: 'Beijing (PEK)', dest: 'MNL', destLabel: 'Manila (MNL)' },
     };
     fetch('https://ipapi.co/json/')
       .then(r => r.json())
@@ -132,15 +133,21 @@ export default function HeroSection() {
         const mapped = countryAirportMap[data.country_code];
         if (mapped) {
           setOrigin(mapped.origin);
-          setOriginSearch(mapped.label);
+          setOriginSearch(mapped.originLabel);
+          setDestination(mapped.dest);
+          setDestinationSearch(mapped.destLabel);
         } else {
           setOrigin('MNL');
           setOriginSearch('Manila (MNL)');
+          setDestination('SIN');
+          setDestinationSearch('Singapore (SIN)');
         }
       })
       .catch(() => {
         setOrigin('MNL');
         setOriginSearch('Manila (MNL)');
+        setDestination('SIN');
+        setDestinationSearch('Singapore (SIN)');
       })
       .finally(() => setGeoDetecting(false));
   }, []);
