@@ -8,7 +8,7 @@ import { base44 } from "@/api/base44Client";
  *  🔵 Blue   = regular / mid fares
  *  🔴 Red    = highest fares
  */
-export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate }) {
+export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate, minDate }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
     selectedDate ? new Date(selectedDate + "T00:00:00") : new Date(today.getFullYear(), today.getMonth(), 1)
@@ -129,6 +129,7 @@ export default function PriceCalendar({ origin, destination, location, type = "f
   };
 
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const minDateStr = minDate || todayStr;
   const monthName = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
 
   const cells = [];
@@ -170,7 +171,7 @@ export default function PriceCalendar({ origin, destination, location, type = "f
           if (!day) return <div key={`empty-${idx}`} />;
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const price = prices[dateStr];
-          const isPast = dateStr < todayStr;
+          const isPast = dateStr < minDateStr;
           const isSelected = selectedDate === dateStr;
           const isToday = dateStr === todayStr;
           const tier = getPriceTier(price);
