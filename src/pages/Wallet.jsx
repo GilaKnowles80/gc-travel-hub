@@ -66,56 +66,11 @@ export default function WalletPage() {
   });
 
   // Deposit mutation
-  const depositMutation = useMutation({
-    mutationFn: async (amount) => {
-      const numAmount = parseFloat(amount);
-
-      if (isNaN(numAmount) || numAmount <= 0) {
-        throw new Error("Amount must be greater than 0");
-      }
-
-      if (numAmount > MAX_WALLET_AMOUNT) {
-        throw new Error(`Maximum deposit amount is ${MAX_WALLET_AMOUNT.toLocaleString()}`);
-      }
-
-      const currentBalance = walletData?.balance || 0;
-      const newBalance = currentBalance + numAmount;
-
-      if (newBalance > MAX_WALLET_AMOUNT) {
-        throw new Error(`Wallet balance cannot exceed ${MAX_WALLET_AMOUNT.toLocaleString()}`);
-      }
-
-      // Create or update wallet
-      if (walletData) {
-        await base44.entities.Wallet.update(walletData.id, { balance: newBalance });
-      } else {
-        await base44.entities.Wallet.create({
-          user_email: user.email,
-          balance: numAmount,
-          points_balance: 0,
-        });
-      }
-
-      // Record transaction
-      await base44.entities.WalletTransaction.create({
-        user_email: user.email,
-        transaction_type: "deposit",
-        amount: numAmount,
-        description: `Deposited ${numAmount.toLocaleString()}`,
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["wallet", user.email] });
-      queryClient.invalidateQueries({ queryKey: ["wallet-transactions", user.email] });
-    },
-    onSuccess: () => {
-      setDepositAmount("");
-      setDepositError("");
-      setIsDepositOpen(false);
-    },
-    onError: (error) => {
-      setDepositError(error.message);
-    },
-  });
+  const handleDepositSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["wallet", user.email] });
+    queryClient.invalidateQueries({ queryKey: ["wallet-transactions", user.email] });
+    queryClient.invalidateQueries({ queryKey: ["all-wallets"] });
+  };
 
   // Withdraw mutation
   const withdrawMutation = useMutation({
