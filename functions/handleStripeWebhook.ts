@@ -187,6 +187,17 @@ Deno.serve(async (req) => {
           });
         } catch (err) { console.error('Loyalty points error:', err.message); }
 
+        // 5b. Credit wallet with 5% cashback
+        try {
+          await base44.asServiceRole.functions.invoke('creditWalletOnBooking', {
+            user_email: user_email || session.customer_email,
+            booking_id: booking_id,
+            booking_type: booking_type,
+            payment_amount: totalAmount,
+            payment_method: 'stripe'
+          });
+        } catch (err) { console.error('Wallet credit error:', err.message); }
+
         // 6. Affiliate commission tracking
         try {
           await base44.asServiceRole.functions.invoke('calculateAffiliateCommission', {
