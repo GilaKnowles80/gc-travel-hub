@@ -135,24 +135,50 @@ function AirportDropdown({ airports, onSelect, userCountry }) {
 }
 
 export default function HeroSection() {
-  const [currentImage, setCurrentImage] = useState(0);
-  const [searchType, setSearchType] = useState("flights");
-  const [tripType, setTripType] = useState("round_trip");
-  const [flightTripType, setFlightTripType] = useState("round_trip");
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [originSearch, setOriginSearch] = useState("");
-  const [destinationSearch, setDestinationSearch] = useState("");
-  const [onwardDate, setOnwardDate] = useState("");
-  const [returnDate, setReturnDate] = useState("");
-  const [showOriginDrop, setShowOriginDrop] = useState(false);
-  const [showDestDrop, setShowDestDrop] = useState(false);
-  const [showDepartCal, setShowDepartCal] = useState(false);
-  const [showReturnCal, setShowReturnCal] = useState(false);
-  const [showCheckinCal, setShowCheckinCal] = useState(false);
-  const [showCheckoutCal, setShowCheckoutCal] = useState(false);
-  const [geoDetecting, setGeoDetecting] = useState(false);
-  const [userCountry, setUserCountry] = useState("PH");
+   const [currentImage, setCurrentImage] = useState(0);
+   const [searchType, setSearchType] = useState("flights");
+   const [tripType, setTripType] = useState("round_trip");
+   const [flightTripType, setFlightTripType] = useState("round_trip");
+   const [origin, setOrigin] = useState("");
+   const [destination, setDestination] = useState("");
+   const [originSearch, setOriginSearch] = useState("");
+   const [destinationSearch, setDestinationSearch] = useState("");
+   const [onwardDate, setOnwardDate] = useState("");
+   const [returnDate, setReturnDate] = useState("");
+   const [showOriginDrop, setShowOriginDrop] = useState(false);
+   const [showDestDrop, setShowDestDrop] = useState(false);
+   const [showDepartCal, setShowDepartCal] = useState(false);
+   const [showReturnCal, setShowReturnCal] = useState(false);
+   const [showCheckinCal, setShowCheckinCal] = useState(false);
+   const [showCheckoutCal, setShowCheckoutCal] = useState(false);
+   const [geoDetecting, setGeoDetecting] = useState(false);
+   const [userCountry, setUserCountry] = useState("PH");
+
+   // Load URL parameters
+   useEffect(() => {
+     const params = new URLSearchParams(window.location.search);
+     const urlOrigin = params.get("origin");
+     const urlDest = params.get("destination");
+     const urlDepart = params.get("departDate");
+     const urlReturn = params.get("returnDate");
+
+     if (urlOrigin) {
+       const airport = ALL_AIRPORTS.find(a => a.iata === urlOrigin.toUpperCase());
+       if (airport) {
+         setOrigin(airport.iata);
+         setOriginSearch(`${airport.city} (${airport.iata})`);
+       }
+     }
+     if (urlDest) {
+       const airport = ALL_AIRPORTS.find(a => a.iata === urlDest.toUpperCase());
+       if (airport) {
+         setDestination(airport.iata);
+         setDestinationSearch(`${airport.city} (${airport.iata})`);
+       }
+     }
+     if (urlDepart) setOnwardDate(urlDepart);
+     if (urlReturn) setReturnDate(urlReturn);
+   }, []);
 
   const departCalRef = useRef(null);
   const returnCalRef = useRef(null);
