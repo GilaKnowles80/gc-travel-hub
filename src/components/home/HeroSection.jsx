@@ -242,7 +242,7 @@ export default function HeroSection() {
                   <div className="flex gap-2">
                     {["round_trip", "one_way"].map(t => (
                       <button key={t} onClick={() => setTripType(t)}
-                        className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold border-2 transition-all ${tripType === t ? "bg-orange-500 text-white border-orange-500 shadow-sm" : "text-slate-500 border-slate-200 hover:border-orange-300 bg-white"}`}>
+                        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${tripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
                         <ArrowLeftRight className="w-3 h-3" />{t === "round_trip" ? "Round Trip" : "One Way"}
                       </button>
                     ))}
