@@ -23,16 +23,20 @@ export default function WalletPage() {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [allWallets, setAllWallets] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const queryClient = useQueryClient();
 
   // Fetch current user
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => setUser(null));
+    base44.auth.me().then((u) => {
+      setUser(u);
+      setIsAdmin(u?.role === "admin");
+    }).catch(() => {
+      setUser(null);
+      setIsAdmin(false);
+    });
   }, []);
-
-  // Memoize isAdmin to avoid recalculation and early access issues
-  const isAdmin = useMemo(() => user?.role === "admin", [user?.role]);
 
   // Fetch all wallets for admin view
   const { data: adminWallets = [], refetch: refetchWallets } = useQuery({
