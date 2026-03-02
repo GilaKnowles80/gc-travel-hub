@@ -287,7 +287,7 @@ export default function HeroSection() {
                         {showDepartCal && createPortal(
                            <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
                              <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
-                               onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} locked={true} />
+                               onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
                            </CalendarPortal>,
                            document.body
                          )}
@@ -303,7 +303,7 @@ export default function HeroSection() {
                         {showReturnCal && createPortal(
                            <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
                              <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
-                               onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} locked={true} />
+                               onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
                            </CalendarPortal>,
                            document.body
                          )}
@@ -374,7 +374,7 @@ export default function HeroSection() {
                     {showCheckinCal && (
                        <div className="absolute top-full left-0 mt-1 z-[200]">
                          <PriceCalendar type="hotel" destination={destination} selectedDate={onwardDate}
-                           onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} locked={true} />
+                           onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} />
                        </div>
                      )}
                   </div>
@@ -388,7 +388,7 @@ export default function HeroSection() {
                     {showCheckoutCal && (
                        <div className="absolute top-full right-0 mt-1 z-[200]">
                          <PriceCalendar type="hotel" destination={destination} selectedDate={returnDate} minDate={onwardDate}
-                           onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} locked={true} />
+                           onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} />
                        </div>
                      )}
                   </div>
