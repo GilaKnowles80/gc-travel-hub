@@ -239,7 +239,7 @@ export default function HeroSection() {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl border border-white/20">
             {/* Tab Bar */}
             <div className="overflow-x-auto">
-              <div className="flex gap-0 min-w-max px-2 pt-2">
+              <div className="flex gap-0 min-w-max px-3 pt-3">
                 {SEARCH_TABS.map(({ type, label, icon: Icon }) => (
                   <button
                     key={type}
