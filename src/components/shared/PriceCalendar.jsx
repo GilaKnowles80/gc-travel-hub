@@ -92,7 +92,7 @@ export default function PriceCalendar({ origin, destination, location, type = "f
   };
   const nextMonth = () => {
     const newMonth = new Date(year, month + 1, 1);
-    if (newMonth.getFullYear() <= 2056) setCurrentMonth(newMonth);
+    if (newMonth.getFullYear() <= 2030) setCurrentMonth(newMonth);
   };
 
   const firstDay = new Date(year, month, 1).getDay();
