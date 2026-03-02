@@ -199,7 +199,7 @@ export default function HeroSection() {
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImages[currentImage]})` }} />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-orange-900/40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 pt-20 pb-6">
