@@ -497,7 +497,7 @@ export default function HeroSection() {
 
               {/* CAR RENTAL */}
               {searchType === "car" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Pick-up Location" /><Input placeholder="e.g. Manila, Cebu" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Pick-up Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
                   <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate} /></div>
