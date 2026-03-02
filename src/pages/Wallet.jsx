@@ -116,7 +116,6 @@ export default function WalletPage() {
   }
 
   const balance = walletData?.balance || 0;
-  const usagePercent = (balance / MAX_WALLET_AMOUNT) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 pb-16">
