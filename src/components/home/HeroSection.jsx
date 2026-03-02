@@ -498,10 +498,10 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Trust badges */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="mt-5 flex items-center gap-6 text-white/80 text-xs font-medium">
-          <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-400 inline-block shadow-sm shadow-green-300" />Real-time Prices</span>
-          <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block shadow-sm shadow-amber-300" />300+ Airlines</span>
-          <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block shadow-sm shadow-blue-300" />Verified Hotels</span>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="mt-4 flex items-center gap-6 text-white/70 text-xs">
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400 inline-block" />Real-time Prices</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />300+ Airlines</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block" />Verified Hotels</span>
         </motion.div>
       </div>
 
