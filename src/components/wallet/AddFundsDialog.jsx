@@ -7,11 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CreditCard, Loader } from "lucide-react";
 
 export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) {
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("stripe");
   const [amount, setAmount] = useState("");
-  const [expDate, setExpDate] = useState("");
-  const [cvv, setCvv] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountName, setAccountName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
