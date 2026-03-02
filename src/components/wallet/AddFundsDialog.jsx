@@ -20,7 +20,6 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
     setIsLoading(true);
 
     try {
-      // Check if running in iframe
       if (window.self !== window.top) {
         throw new Error("Checkout must be accessed from the published app, not from an embedded preview");
       }
@@ -30,16 +29,47 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
         throw new Error("Amount must be greater than 0");
       }
 
-      // Create Stripe checkout session
-      const response = await base44.functions.invoke("createWalletDepositCheckout", {
-        amount: numAmount,
-      });
+      let response;
 
-      if (response.data.success && response.data.url) {
-        // Redirect to Stripe checkout
-        window.location.href = response.data.url;
-      } else {
-        throw new Error(response.data.error || "Failed to create checkout session");
+      if (paymentMethod === "stripe") {
+        response = await base44.functions.invoke("createWalletDepositCheckout", {
+          amount: numAmount,
+        });
+        if (response.data.success && response.data.url) {
+          window.location.href = response.data.url;
+        }
+      } else if (paymentMethod === "paypal") {
+        response = await base44.functions.invoke("createPayPalWalletCheckout", {
+          amount: numAmount,
+        });
+        if (response.data.success && response.data.approvalUrl) {
+          window.location.href = response.data.approvalUrl;
+        }
+      } else if (paymentMethod === "paymongo") {
+        response = await base44.functions.invoke("createPayMongoWalletCheckout", {
+          amount: numAmount,
+        });
+        if (response.data.success && response.data.checkoutUrl) {
+          window.location.href = response.data.checkoutUrl;
+        }
+      } else if (paymentMethod === "bank") {
+        response = await base44.functions.invoke("createBankTransferRequest", {
+          amount: numAmount,
+          bankName,
+          accountName,
+        });
+        if (response.data.success) {
+          setAmount("");
+          setBankName("");
+          setAccountName("");
+          onOpenChange(false);
+          onSuccess?.();
+          return;
+        }
+      }
+
+      if (!response.data.success) {
+        throw new Error(response.data.error || "Payment processing failed");
       }
     } catch (err) {
       setError(err.message);
