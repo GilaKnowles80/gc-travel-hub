@@ -262,52 +262,49 @@ export default function HeroSection() {
               {/* FLIGHTS */}
               {searchType === "flights" && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                  {/* Trip type + Depart + Return — full width row */}
-                  <div className="md:col-span-4 flex items-center justify-between gap-4">
-                    {/* Trip type buttons — left side */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      {["round_trip", "one_way", "multi_city"].map(t => (
-                        <button key={t} onClick={() => setFlightTripType(t)}
-                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
-                          <ArrowLeftRight className="w-3 h-3" />
-                          {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
-                        </button>
-                      ))}
+                  {/* Trip type + Depart + Return — all in one row, close together */}
+                  <div className="md:col-span-4 flex items-center gap-2 flex-wrap">
+                    {["round_trip", "one_way", "multi_city"].map(t => (
+                      <button key={t} onClick={() => setFlightTripType(t)}
+                        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
+                        <ArrowLeftRight className="w-3 h-3" />
+                        {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
+                      </button>
+                    ))}
+
+                    {/* Separator */}
+                    <div className="w-px h-6 bg-slate-200 mx-1" />
+
+                    {/* Depart */}
+                    <div className="relative" ref={departCalRef}>
+                      <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
+                        className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
+                      </button>
+                      {showDepartCal && createPortal(
+                        <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
+                          <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
+                            onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
+                        </CalendarPortal>,
+                        document.body
+                      )}
                     </div>
 
-                    {/* Date pickers — right side */}
-                    <div className="flex items-center gap-2">
-                      {/* Depart */}
-                      <div className="relative" ref={departCalRef}>
-                        <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
-                          className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
-                          <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                          <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
-                        </button>
-                        {showDepartCal && createPortal(
-                          <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
-                            <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
-                              onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
-                          </CalendarPortal>,
-                          document.body
-                        )}
-                      </div>
-
-                      {/* Return — always rendered, just visually hidden for one_way/multi_city */}
-                      <div className="relative" ref={returnCalRef} style={{ opacity: (flightTripType === "one_way" || flightTripType === "multi_city") ? 0 : 1, pointerEvents: (flightTripType === "one_way" || flightTripType === "multi_city") ? "none" : "auto" }}>
-                        <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
-                          className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
-                          <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                          <span className={`truncate text-xs ${returnDate ? "text-slate-800" : "text-slate-400"}`}>{returnDate || "Return Date"}</span>
-                        </button>
-                        {showReturnCal && createPortal(
-                          <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
-                            <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
-                              onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
-                          </CalendarPortal>,
-                          document.body
-                        )}
-                      </div>
+                    {/* Return — always rendered, just visually hidden for one_way/multi_city */}
+                    <div className="relative" ref={returnCalRef} style={{ opacity: (flightTripType === "one_way" || flightTripType === "multi_city") ? 0 : 1, pointerEvents: (flightTripType === "one_way" || flightTripType === "multi_city") ? "none" : "auto" }}>
+                      <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
+                        className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={`truncate text-xs ${returnDate ? "text-slate-800" : "text-slate-400"}`}>{returnDate || "Return Date"}</span>
+                      </button>
+                      {showReturnCal && createPortal(
+                        <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
+                          <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
+                            onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
+                        </CalendarPortal>,
+                        document.body
+                      )}
                     </div>
                   </div>
 
