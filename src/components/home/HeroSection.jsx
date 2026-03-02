@@ -87,26 +87,35 @@ function FieldLabel({ icon: Icon, text }) {
 }
 
 function CalendarPortal({ anchorRef, onClose, children }) {
-  const [pos, setPos] = useState({ top: 0, left: 0 });
+   const [pos, setPos] = useState({ top: 0, left: 0 });
 
-  useEffect(() => {
-    if (anchorRef.current) {
-      const rect = anchorRef.current.getBoundingClientRect();
-      setPos({ top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX });
-    }
-    const handler = (e) => {
-      if (anchorRef.current && !anchorRef.current.contains(e.target)) onClose();
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+   useEffect(() => {
+     const updatePos = () => {
+       if (anchorRef.current) {
+         const rect = anchorRef.current.getBoundingClientRect();
+         setPos({ top: rect.bottom + window.scrollY + 8, left: rect.left + window.scrollX });
+       }
+     };
+     updatePos();
+     const handler = (e) => {
+       if (anchorRef.current && !anchorRef.current.contains(e.target)) onClose();
+     };
+     document.addEventListener("mousedown", handler);
+     window.addEventListener("scroll", updatePos);
+     window.addEventListener("resize", updatePos);
+     return () => {
+       document.removeEventListener("mousedown", handler);
+       window.removeEventListener("scroll", updatePos);
+       window.removeEventListener("resize", updatePos);
+     };
+   }, [anchorRef, onClose]);
 
-  return (
-    <div style={{ position: "absolute", top: pos.top, left: pos.left, zIndex: 99999 }}>
-      {children}
-    </div>
-  );
-}
+   return (
+     <div style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999 }}>
+       {children}
+     </div>
+   );
+ }
 
 function AirportDropdown({ airports, onSelect, userCountry }) {
   const domestic = airports.filter(a => a.domestic);
@@ -397,12 +406,13 @@ export default function HeroSection() {
                       <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                       <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>{onwardDate || "Select"}</span>
                     </button>
-                    {showCheckinCal && (
-                       <div className="absolute top-full left-0 mt-1 z-[200]">
-                         <PriceCalendar type="hotel" destination={destination} selectedDate={onwardDate}
-                           onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} />
-                       </div>
-                     )}
+                    {showCheckinCal && createPortal(
+                      <CalendarPortal anchorRef={checkinCalRef} onClose={() => setShowCheckinCal(false)}>
+                        <PriceCalendar type="hotel" destination={destination} selectedDate={onwardDate}
+                          onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} />
+                      </CalendarPortal>,
+                      document.body
+                    )}
                   </div>
                   <div className="relative" ref={checkoutCalRef}>
                     <FieldLabel icon={Calendar} text="Check-out" />
@@ -411,12 +421,13 @@ export default function HeroSection() {
                       <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                       <span className={returnDate ? "text-slate-800" : "text-slate-400"}>{returnDate || "Select"}</span>
                     </button>
-                    {showCheckoutCal && (
-                       <div className="absolute top-full right-0 mt-1 z-[200]">
-                         <PriceCalendar type="hotel" destination={destination} selectedDate={returnDate} minDate={onwardDate}
-                           onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} />
-                       </div>
-                     )}
+                    {showCheckoutCal && createPortal(
+                      <CalendarPortal anchorRef={checkoutCalRef} onClose={() => setShowCheckoutCal(false)}>
+                        <PriceCalendar type="hotel" destination={destination} selectedDate={returnDate} minDate={onwardDate}
+                          onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} />
+                      </CalendarPortal>,
+                      document.body
+                    )}
                   </div>
                   <div className="md:col-span-4">
                     <Link to={`${createPageUrl("HotelSearch")}?location=${destination}&checkIn=${onwardDate}&checkOut=${returnDate}`}>
