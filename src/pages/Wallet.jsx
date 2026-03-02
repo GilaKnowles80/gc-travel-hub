@@ -164,7 +164,7 @@ export default function WalletPage() {
               <div className="w-full bg-white/20 rounded-full h-2">
                 <div
                   className="bg-white h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(usagePercent, 100)}%` }}
+                  style={{ width: `${Math.min((balance / MAX_WALLET_AMOUNT) * 100, 100)}%` }}
                 />
               </div>
               <p className="text-xs text-amber-100 mt-2">Max: {MAX_WALLET_AMOUNT.toLocaleString()}</p>
