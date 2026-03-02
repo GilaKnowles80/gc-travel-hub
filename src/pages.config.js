@@ -95,8 +95,10 @@ import Contact from './pages/Contact';
 import CorporateBooking from './pages/CorporateBooking';
 import CruiseCheckout from './pages/CruiseCheckout';
 import CruiseSearch from './pages/CruiseSearch';
+import DatabaseSchema from './pages/DatabaseSchema';
 import FerryCheckout from './pages/FerryCheckout';
 import FerrySearch from './pages/FerrySearch';
+import FinitechArchitecture from './pages/FinitechArchitecture';
 import FlightCheckout from './pages/FlightCheckout';
 import FlightDetail from './pages/FlightDetail';
 import FlightSearch from './pages/FlightSearch';
@@ -130,6 +132,7 @@ import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
 import RefundPolicy from './pages/RefundPolicy';
+import RegulatoryChecklist from './pages/RegulatoryChecklist';
 import SafeAndSecure from './pages/SafeAndSecure';
 import SalesDashboard from './pages/SalesDashboard';
 import Settings from './pages/Settings';
@@ -158,9 +161,6 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import FinitechArchitecture from './pages/FinitechArchitecture';
-import DatabaseSchema from './pages/DatabaseSchema';
-import RegulatoryChecklist from './pages/RegulatoryChecklist';
 import __Layout from './Layout.jsx';
 
 
@@ -213,8 +213,10 @@ export const PAGES = {
     "CorporateBooking": CorporateBooking,
     "CruiseCheckout": CruiseCheckout,
     "CruiseSearch": CruiseSearch,
+    "DatabaseSchema": DatabaseSchema,
     "FerryCheckout": FerryCheckout,
     "FerrySearch": FerrySearch,
+    "FinitechArchitecture": FinitechArchitecture,
     "FlightCheckout": FlightCheckout,
     "FlightDetail": FlightDetail,
     "FlightSearch": FlightSearch,
@@ -248,6 +250,7 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
     "RefundPolicy": RefundPolicy,
+    "RegulatoryChecklist": RegulatoryChecklist,
     "SafeAndSecure": SafeAndSecure,
     "SalesDashboard": SalesDashboard,
     "Settings": Settings,
@@ -276,9 +279,6 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "FinitechArchitecture": FinitechArchitecture,
-    "DatabaseSchema": DatabaseSchema,
-    "RegulatoryChecklist": RegulatoryChecklist,
 }
 
 export const pagesConfig = {
