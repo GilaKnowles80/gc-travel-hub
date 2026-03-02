@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Wallet, Plus, Send, TrendingUp } from "lucide-react";
+import { Wallet, Plus, Send, TrendingUp, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import AddFundsDialog from "@/components/wallet/AddFundsDialog";
 import WithdrawFundsDialog from "@/components/wallet/WithdrawFundsDialog";
 import LiveTransactionFeed from "@/components/wallet/LiveTransactionFeed";
+import WalletFintech from "@/components/wallet/WalletFintech";
 
 const MAX_WALLET_AMOUNT = 1_000_000_000; // 1 billion
 
