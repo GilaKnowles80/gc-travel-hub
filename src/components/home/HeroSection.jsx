@@ -139,6 +139,11 @@ export default function HeroSection() {
   const [searchType, setSearchType] = useState("flights");
   const [tripType, setTripType] = useState("round_trip");
   const [flightTripType, setFlightTripType] = useState("round_trip");
+
+  const handleSearchTypeChange = (type) => {
+    setSearchType(type);
+    if (type === "flights") setTripType(flightTripType);
+  };
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [originSearch, setOriginSearch] = useState("");
