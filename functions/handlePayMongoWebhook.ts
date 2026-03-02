@@ -104,11 +104,24 @@ Deno.serve(async (req) => {
       // Send confirmation notification
       const booking = await base44.asServiceRole.entities[getEntityName(booking_type)].get(booking_id);
       if (booking) {
+        const userEmail = booking.passenger_email || booking.guest_email || booking.renter_email || booking.applicant_email || booking.user_email;
+        
         await base44.asServiceRole.integrations.Core.SendEmail({
-          to: booking.passenger_email || booking.guest_email || booking.renter_email || booking.applicant_email || booking.user_email,
+          to: userEmail,
           subject: 'Payment Confirmed - GC Travel & Tours',
           body: `Your payment has been confirmed for booking ${booking_id}. You will receive your booking details shortly.`
         });
+
+        // Credit wallet with 5% cashback
+        try {
+          await base44.asServiceRole.functions.invoke('creditWalletOnBooking', {
+            user_email: userEmail,
+            booking_id: booking_id,
+            booking_type: booking_type,
+            payment_amount: paymentIntent.attributes.amount / 100,
+            payment_method: 'paymongo'
+          });
+        } catch (err) { console.error('Wallet credit error:', err.message); }
       }
     }
 
