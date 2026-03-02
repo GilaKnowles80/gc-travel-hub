@@ -138,6 +138,9 @@ export default function Flights() {
     await queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
   };
 
+  // Validate if search can be executed
+  const canSearch = searchParams.origin && searchParams.destination && searchParams.departureDate && moment(searchParams.departureDate).isValid();
+
   // Fetch real-time flights from multiple providers (Duffel + Aviation Edge)
   const { data: flightData, isLoading, error } = useQuery({
     queryKey: ["realtime-flights", searchParams],
@@ -189,6 +192,7 @@ export default function Flights() {
         throw err;
       }
     },
+    enabled: canSearch,
     staleTime: 2 * 60 * 1000, // Refresh every 2 minutes for real-time updates
   });
 
@@ -466,15 +470,15 @@ export default function Flights() {
 
                 {/* Search Button + Travelers & Class Row */}
                 <div className="flex gap-2 items-end">
-                  {/* Search Button */}
-                  <Button
-                    onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                    disabled={isLoading || !searchParams.origin || !searchParams.destination}
-                    className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
-                  >
-                    <Search className="w-4 h-4 mr-2" />
-                    Search Flights
-                  </Button>
+                 {/* Search Button */}
+                 <Button
+                   onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                   disabled={isLoading || !canSearch}
+                   className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
+                 >
+                   <Search className="w-4 h-4 mr-2" />
+                   Search Flights
+                 </Button>
 
                   {/* Travelers */}
                   <div className="w-32 space-y-1">
