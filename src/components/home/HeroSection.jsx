@@ -261,7 +261,7 @@ export default function HeroSection() {
 
               {/* FLIGHTS */}
               {searchType === "flights" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   {/* Trip type + Depart + Return — all in one row, close together */}
                   <div className="md:col-span-4 flex items-center gap-2 flex-wrap">
                     {["round_trip", "one_way", "multi_city"].map(t => (
