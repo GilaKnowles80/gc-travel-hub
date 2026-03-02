@@ -75,7 +75,7 @@ const COUNTRY_MAP = {
   'KW': { origin: 'KWI', originLabel: 'Kuwait City (KWI)', dest: 'MNL', destLabel: 'Manila (MNL)' },
 };
 
-const BTN_SEARCH = "w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl h-12 font-bold shadow-lg text-base tracking-wide";
+const BTN_SEARCH = "w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-600 text-white rounded-xl h-10 font-bold shadow-lg";
 
 function FieldLabel({ icon: Icon, text }) {
   return (
