@@ -98,8 +98,8 @@ export default function WalletPage() {
   };
 
   const handleWithdrawSuccess = () => {
+    refetchTransactions?.();
     queryClient.invalidateQueries({ queryKey: ["wallet", user.email] });
-    queryClient.invalidateQueries({ queryKey: ["wallet-transactions", user.email] });
     queryClient.invalidateQueries({ queryKey: ["all-wallets"] });
   };
 
