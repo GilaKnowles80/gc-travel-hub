@@ -511,7 +511,7 @@ export default function HeroSection() {
 
               {/* TRAIN */}
               {searchType === "train" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="From Station" /><Input placeholder="e.g. Paris, Tokyo" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="To Station" /><Input placeholder="e.g. London, Osaka" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div className="md:col-span-4"><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
