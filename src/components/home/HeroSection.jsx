@@ -295,7 +295,7 @@ export default function HeroSection() {
                       </div>
 
                       {/* Return */}
-                      {flightTripType !== "one_way" && flightTripType !== "multi_city" && (
+                      {flightTripTypeRef.current !== "one_way" && flightTripTypeRef.current !== "multi_city" && (
                         <div className="relative" ref={returnCalRef}>
                           <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
                             className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
