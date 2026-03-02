@@ -289,7 +289,7 @@ export default function Flights() {
             </div>
 
             {/* Search Form Card */}
-            <Card className="p-6 bg-white/95 backdrop-blur rounded-2xl">
+            <Card className="p-6 bg-white/95 backdrop-blur rounded-2xl overflow-visible">
               {geoDetecting && (
                 <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
                   <div className="w-3 h-3 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
@@ -371,7 +371,7 @@ export default function Flights() {
                       </span>
                     </button>
                     {showDepartCal && (
-                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl border border-slate-200 p-3 w-64 z-50">
+                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[9999]">
                         <div className="flex items-center justify-between mb-3">
                           <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
                           <h3 className="font-bold text-slate-900 text-sm">{departMonth.format('MMMM YYYY')}</h3>
@@ -424,7 +424,7 @@ export default function Flights() {
                         </span>
                       </button>
                       {showReturnCal && (
-                        <div className="absolute top-full right-0 mt-1 bg-white rounded-xl shadow-xl border border-slate-200 p-3 w-64 z-50">
+                        <div className="absolute top-full right-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[9999]">
                           <div className="flex items-center justify-between mb-3">
                             <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
                             <h3 className="font-bold text-slate-900 text-sm">{returnMonth.format('MMMM YYYY')}</h3>
