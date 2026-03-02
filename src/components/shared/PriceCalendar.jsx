@@ -11,7 +11,7 @@ import { base44 } from "@/api/base44Client";
 export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate, minDate }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
-    selectedDate ? new Date(selectedDate + "T00:00:00") : new Date(2026, 2, 1)
+    selectedDate ? new Date(selectedDate + "T00:00:00") : new Date(today.getFullYear(), today.getMonth(), 1)
   );
   const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(false);
