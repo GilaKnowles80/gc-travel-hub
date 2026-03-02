@@ -675,7 +675,6 @@ export default function Flights() {
           </>
         )}
         </div>
-        </div>
       </div>
     </PullToRefresh>
   );
