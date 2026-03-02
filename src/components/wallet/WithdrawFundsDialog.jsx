@@ -29,13 +29,12 @@ export default function WithdrawFundsDialog({ open, onOpenChange, user, balance,
         throw new Error("Insufficient balance");
       }
 
-      // Call backend function to process withdrawal
-      const response = await base44.functions.invoke("processWalletWithdrawal", {
+      // Call backend function to process withdrawal with Stripe
+      const response = await base44.functions.invoke("processWalletWithdrawalStripe", {
         amount: numAmount,
         withdrawMethod,
         bankAccount,
         accountName,
-        userEmail: user.email,
       });
 
       if (response.data.success) {
