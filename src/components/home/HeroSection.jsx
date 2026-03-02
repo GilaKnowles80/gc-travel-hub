@@ -291,21 +291,23 @@ export default function HeroSection() {
                       )}
                     </div>
 
-                    {/* Return — always rendered, just visually hidden for one_way/multi_city */}
-                    <div className="relative" ref={returnCalRef} style={{ opacity: (flightTripType === "one_way" || flightTripType === "multi_city") ? 0 : 1, pointerEvents: (flightTripType === "one_way" || flightTripType === "multi_city") ? "none" : "auto", visibility: (flightTripType === "one_way" || flightTripType === "multi_city") ? "hidden" : "visible" }}>
-                      <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
-                        className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
-                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                        <span className={`truncate text-xs ${returnDate ? "text-slate-800" : "text-slate-400"}`}>{returnDate || "Return Date"}</span>
-                      </button>
-                      {showReturnCal && createPortal(
-                        <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
-                          <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
-                            onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
-                        </CalendarPortal>,
-                        document.body
-                      )}
-                    </div>
+                    {/* Return — only shown for round_trip */}
+                    {flightTripType === "round_trip" && (
+                      <div className="relative" ref={returnCalRef}>
+                        <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
+                          className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
+                          <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className={`truncate text-xs ${returnDate ? "text-slate-800" : "text-slate-400"}`}>{returnDate || "Return Date"}</span>
+                        </button>
+                        {showReturnCal && createPortal(
+                          <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
+                            <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
+                              onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
+                          </CalendarPortal>,
+                          document.body
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* From */}
