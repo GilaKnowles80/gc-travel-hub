@@ -120,7 +120,7 @@ export function CurrencyProvider({ children }) {
   };
 
   // Detect countryCode from ipapi (reuse the detection logic)
-  const [countryCode, setCountryCode] = React.useState('PH');
+  const [countryCode, setCountryCode] = useState('PH');
   useEffect(() => {
     fetch('https://ipapi.co/json/')
       .then(r => r.json())
