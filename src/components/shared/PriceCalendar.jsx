@@ -8,7 +8,7 @@ import { base44 } from "@/api/base44Client";
  *  🔵 Blue   = regular / mid fares
  *  🔴 Red    = highest fares
  */
-export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate, minDate }) {
+export default function PriceCalendar({ origin, destination, location, type = "flight", selectedDate, onSelectDate, minDate, locked = false }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(
     selectedDate ? new Date(selectedDate + "T00:00:00") : new Date(today.getFullYear(), today.getMonth(), 1)
@@ -86,8 +86,14 @@ export default function PriceCalendar({ origin, destination, location, type = "f
     setLoading(false);
   };
 
-  const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
-  const nextMonth = () => setCurrentMonth(new Date(year, month + 1, 1));
+  const prevMonth = () => {
+    // Only allow month changes if not locked to March 2026
+    if (!locked) setCurrentMonth(new Date(year, month - 1, 1));
+  };
+  const nextMonth = () => {
+    // Only allow month changes if not locked to March 2026
+    if (!locked) setCurrentMonth(new Date(year, month + 1, 1));
+  };
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -140,14 +146,14 @@ export default function PriceCalendar({ origin, destination, location, type = "f
     <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xl w-full" style={{ minWidth: 320 }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+        <button onClick={prevMonth} disabled={locked} className={`p-1.5 rounded-lg transition-colors ${locked ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronLeft className="w-4 h-4 text-slate-600" />
         </button>
         <div className="flex items-center gap-2">
           <span className="font-bold text-slate-800 text-sm">{monthName}</span>
           {loading && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
         </div>
-        <button onClick={nextMonth} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+        <button onClick={nextMonth} disabled={locked} className={`p-1.5 rounded-lg transition-colors ${locked ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronRight className="w-4 h-4 text-slate-600" />
         </button>
       </div>

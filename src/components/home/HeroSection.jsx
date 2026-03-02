@@ -285,12 +285,12 @@ export default function HeroSection() {
                           <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
                         </button>
                         {showDepartCal && createPortal(
-                          <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
-                            <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
-                              onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
-                          </CalendarPortal>,
-                          document.body
-                        )}
+                           <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
+                             <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
+                               onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} locked={true} />
+                           </CalendarPortal>,
+                           document.body
+                         )}
                       </div>
 
                       {/* Return — always rendered, just visually hidden for one_way/multi_city */}
@@ -301,12 +301,12 @@ export default function HeroSection() {
                           <span className={`truncate text-xs ${returnDate ? "text-slate-800" : "text-slate-400"}`}>{returnDate || "Return Date"}</span>
                         </button>
                         {showReturnCal && createPortal(
-                          <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
-                            <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
-                              onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
-                          </CalendarPortal>,
-                          document.body
-                        )}
+                           <CalendarPortal anchorRef={returnCalRef} onClose={() => setShowReturnCal(false)}>
+                             <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
+                               onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} locked={true} />
+                           </CalendarPortal>,
+                           document.body
+                         )}
                       </div>
                     </div>
                   </div>
@@ -372,11 +372,11 @@ export default function HeroSection() {
                       <span className={onwardDate ? "text-slate-800" : "text-slate-400"}>{onwardDate || "Select"}</span>
                     </button>
                     {showCheckinCal && (
-                      <div className="absolute top-full left-0 mt-1 z-[200]">
-                        <PriceCalendar type="hotel" destination={destination} selectedDate={onwardDate}
-                          onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} />
-                      </div>
-                    )}
+                       <div className="absolute top-full left-0 mt-1 z-[200]">
+                         <PriceCalendar type="hotel" destination={destination} selectedDate={onwardDate}
+                           onSelectDate={d => { setOnwardDate(d); setShowCheckinCal(false); if (returnDate && d >= returnDate) setReturnDate(""); }} locked={true} />
+                       </div>
+                     )}
                   </div>
                   <div className="relative" ref={checkoutCalRef}>
                     <FieldLabel icon={Calendar} text="Check-out" />
@@ -386,11 +386,11 @@ export default function HeroSection() {
                       <span className={returnDate ? "text-slate-800" : "text-slate-400"}>{returnDate || "Select"}</span>
                     </button>
                     {showCheckoutCal && (
-                      <div className="absolute top-full right-0 mt-1 z-[200]">
-                        <PriceCalendar type="hotel" destination={destination} selectedDate={returnDate} minDate={onwardDate}
-                          onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} />
-                      </div>
-                    )}
+                       <div className="absolute top-full right-0 mt-1 z-[200]">
+                         <PriceCalendar type="hotel" destination={destination} selectedDate={returnDate} minDate={onwardDate}
+                           onSelectDate={d => { setReturnDate(d); setShowCheckoutCal(false); }} locked={true} />
+                       </div>
+                     )}
                   </div>
                   <div className="md:col-span-4">
                     <Link to={`${createPageUrl("HotelSearch")}?location=${destination}&checkIn=${onwardDate}&checkOut=${returnDate}`}>
