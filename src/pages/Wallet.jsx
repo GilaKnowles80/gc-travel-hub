@@ -56,7 +56,7 @@ export default function WalletPage() {
   });
 
   // Fetch wallet transactions
-  const { data: transactions = [] } = useQuery({
+  const { data: transactions = [], refetch: refetchTransactions } = useQuery({
     queryKey: ["wallet-transactions", user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
@@ -65,6 +65,19 @@ export default function WalletPage() {
     },
     enabled: !!user?.email,
   });
+
+  // Real-time transaction subscription
+  useEffect(() => {
+    if (!user?.email || isAdmin) return;
+
+    const unsubscribe = base44.entities.WalletTransaction.subscribe((event) => {
+      if (event.data?.user_email === user.email) {
+        refetchTransactions();
+      }
+    });
+
+    return unsubscribe;
+  }, [user?.email, isAdmin, refetchTransactions]);
 
   // Deposit mutation
   const handleDepositSuccess = () => {
