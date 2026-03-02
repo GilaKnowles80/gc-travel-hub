@@ -111,8 +111,10 @@ function CalendarPortal({ anchorRef, onClose, children }) {
    }, [anchorRef, onClose]);
 
    return (
-     <div style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999 }}>
-       {children}
+     <div style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
+       <div style={{ maxHeight: "500px", overflow: "auto" }}>
+         {children}
+       </div>
      </div>
    );
  }
