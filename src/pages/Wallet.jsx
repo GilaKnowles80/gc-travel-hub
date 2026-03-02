@@ -242,9 +242,18 @@ export default function WalletPage() {
           </Card>
         </motion.div>
 
+        {/* Fintech Features */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <div className="flex items-center gap-3 mb-6">
+            <Zap className="w-6 h-6 text-blue-600" />
+            <h2 className="text-2xl font-bold text-slate-900">Advanced Wallet Features</h2>
+          </div>
+          <WalletFintech user={user} />
+        </motion.div>
+
         {/* Admin Wallets Table */}
         {isAdmin && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <Card className="p-6">
               <h3 className="text-xl font-bold text-slate-900 mb-4">All User Wallets</h3>
               <div className="overflow-x-auto">
