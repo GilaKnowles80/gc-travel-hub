@@ -502,8 +502,7 @@ export default function Flights() {
                   </div>
                 </div>
               </div>
-              </Card>
-            </div>
+            </Card>
           </div>
         </div>
 
