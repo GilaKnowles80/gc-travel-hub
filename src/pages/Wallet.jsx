@@ -72,46 +72,11 @@ export default function WalletPage() {
     queryClient.invalidateQueries({ queryKey: ["all-wallets"] });
   };
 
-  // Withdraw mutation
-  const withdrawMutation = useMutation({
-    mutationFn: async (amount) => {
-      const numAmount = parseFloat(amount);
-
-      if (isNaN(numAmount) || numAmount <= 0) {
-        throw new Error("Amount must be greater than 0");
-      }
-
-      const currentBalance = walletData?.balance || 0;
-
-      if (numAmount > currentBalance) {
-        throw new Error("Insufficient balance");
-      }
-
-      const newBalance = currentBalance - numAmount;
-
-      // Update wallet
-      await base44.entities.Wallet.update(walletData.id, { balance: newBalance });
-
-      // Record transaction
-      await base44.entities.WalletTransaction.create({
-        user_email: user.email,
-        transaction_type: "withdrawal",
-        amount: numAmount,
-        description: `Withdrew ${numAmount.toLocaleString()}`,
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["wallet", user.email] });
-      queryClient.invalidateQueries({ queryKey: ["wallet-transactions", user.email] });
-    },
-    onSuccess: () => {
-      setWithdrawAmount("");
-      setWithdrawError("");
-      setIsWithdrawOpen(false);
-    },
-    onError: (error) => {
-      setWithdrawError(error.message);
-    },
-  });
+  const handleWithdrawSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["wallet", user.email] });
+    queryClient.invalidateQueries({ queryKey: ["wallet-transactions", user.email] });
+    queryClient.invalidateQueries({ queryKey: ["all-wallets"] });
+  };
 
   if (!user) {
     return (
