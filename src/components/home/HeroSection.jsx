@@ -351,8 +351,9 @@ export default function HeroSection() {
               {searchType === "hotels" && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2">
-                    <FieldLabel icon={MapPin} text="Location" />
-                    <Input placeholder="City, hotel, or landmark" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} />
+                    <FieldLabel icon={MapPin} text={`Location (${userCountry === 'PH' ? '🇵🇭 Domestic' : 'Local Destinations'})`} />
+                    <Input placeholder={userCountry === 'PH' ? "e.g. Manila, Cebu, Boracay" : "City or landmark"} className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} />
+                    <p className="text-xs text-slate-400 mt-1">Showing domestic & local hotel options</p>
                   </div>
                   <div className="relative" ref={checkinCalRef}>
                     <FieldLabel icon={Calendar} text="Check-in" />
