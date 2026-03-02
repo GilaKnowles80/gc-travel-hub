@@ -204,10 +204,10 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 pt-20 pb-6">
         {/* Headline */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="text-center mb-6">
-          <p className="text-amber-400 font-bold tracking-[0.2em] uppercase text-xs mb-3 drop-shadow">GC TRAVEL & TOURS</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-2xl mb-3" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.9)" }}>Find Your Perfect Trip</h1>
-          <p className="text-white/80 text-sm md:text-base max-w-lg mx-auto font-medium drop-shadow-md">Curated travel experiences that transform ordinary trips into extraordinary memories</p>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="text-center mb-5">
+          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-2">GC Travel & Tours</p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight" style={{ textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>Find Your Perfect Trip</h1>
+          <p className="text-amber-100 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium drop-shadow-md">Curated travel experiences that transform ordinary trips into extraordinary memories</p>
         </motion.div>
 
         {/* Search Card */}
