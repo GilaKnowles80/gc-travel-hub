@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, Clock, AlertCircle, Upload } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, Upload, Copy } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function KYCVerification({ user, currentKyc }) {
@@ -20,6 +20,31 @@ export default function KYCVerification({ user, currentKyc }) {
     city: currentKyc?.city || "",
     postal_code: currentKyc?.postal_code || "",
   });
+  const [selectedPnr, setSelectedPnr] = useState(null);
+
+  // Fetch user's flight bookings to extract PNR data
+  const { data: bookings = [] } = useQuery({
+    queryKey: ["flight-bookings", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      const flightBookings = await base44.entities.FlightBooking.filter({ 
+        passenger_email: user.email 
+      });
+      return flightBookings;
+    },
+    enabled: !!user?.email,
+  });
+
+  // Auto-populate form from selected PNR
+  const handlePnrSelect = (booking) => {
+    setSelectedPnr(booking);
+    setFormData((prev) => ({
+      ...prev,
+      full_name: booking.passenger_name || prev.full_name,
+      phone_number: booking.passenger_phone || prev.phone_number,
+      date_of_birth: booking.date_of_birth || prev.date_of_birth,
+    }));
+  };
 
   const submitMutation = useMutation({
     mutationFn: async (data) => {
