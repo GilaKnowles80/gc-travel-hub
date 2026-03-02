@@ -31,6 +31,8 @@ export default function WalletPage() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  const isAdmin = user?.role === "admin";
+
   // Fetch all wallets for admin view
   const { data: adminWallets = [], refetch: refetchWallets } = useQuery({
     queryKey: ["all-wallets"],
@@ -41,7 +43,7 @@ export default function WalletPage() {
         return [];
       }
     },
-    enabled: user?.role === "admin",
+    enabled: isAdmin,
   });
 
   // Real-time wallet updates for admin

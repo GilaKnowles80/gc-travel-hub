@@ -155,9 +155,9 @@ import TrustedAgency from './pages/TrustedAgency';
 import UnifiedCheckout from './pages/UnifiedCheckout';
 import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
+import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import Wallet from './pages/Wallet';
 import __Layout from './Layout.jsx';
 
 
@@ -270,9 +270,9 @@ export const PAGES = {
     "UnifiedCheckout": UnifiedCheckout,
     "VisaCheckout": VisaCheckout,
     "Visas": Visas,
+    "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "Wallet": Wallet,
 }
 
 export const pagesConfig = {
