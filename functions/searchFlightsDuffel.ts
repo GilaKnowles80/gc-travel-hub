@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${duffelKey}`,
-        'Duffel-Version': '2024-04',
+        'Duffel-Version': '2024-12',
       },
       body: JSON.stringify(duffelPayload),
     });
