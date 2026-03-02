@@ -31,7 +31,8 @@ export default function WalletPage() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  const isAdmin = user?.role === "admin";
+  // Memoize isAdmin to avoid recalculation and early access issues
+  const isAdmin = useMemo(() => user?.role === "admin", [user?.role]);
 
   // Fetch all wallets for admin view
   const { data: adminWallets = [], refetch: refetchWallets } = useQuery({
