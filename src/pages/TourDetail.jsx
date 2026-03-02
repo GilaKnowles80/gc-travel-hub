@@ -251,7 +251,9 @@ export default function TourDetail() {
                 <div className="text-center mb-6">
                     <p className="text-sm text-slate-400">{showCustomizer ? "Customized" : "Starting from"}</p>
                     <p className="text-4xl font-bold text-slate-900 mt-1">
-                      {formatPrice(customizedPrice ?? tour.price_per_person, 'USD')}
+                      {tour.destination?.toLowerCase().includes('philippines') 
+                        ? `₱${(customizedPrice ?? tour.price_per_person)?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
+                        : formatPrice(customizedPrice ?? tour.price_per_person, 'USD')}
                     </p>
                     <p className="text-sm text-slate-400">{showCustomizer ? "total price" : "per person"}</p>
                   </div>
