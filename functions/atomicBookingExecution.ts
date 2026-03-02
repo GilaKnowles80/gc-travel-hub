@@ -116,98 +116,188 @@ Deno.serve(async (req) => {
       console.error('Supplier API call failed:', supplierError);
     }
 
-    // ===== STEP 4A: SUCCESS PATH =====
+    // ===== STEP 4A: SUCCESS PATH (BEGIN TRANSACTION) =====
     if (!supplierError && supplierConfirmation) {
-      // Update wallet lock to confirmed
-      await base44.entities.WalletLock.update(lockRecord.id, {
-        status: 'confirmed',
-        confirmed_at: new Date().toISOString()
-      });
-
-      // Create confirmed debit ledger entry
-      const debitLedgerEntry = await base44.entities.WalletLedger.create({
-        user_email: userEmail,
-        transaction_type: 'charge',
-        amount: wallet_amount || 0,
-        booking_id,
-        booking_type,
-        status: 'confirmed',
-        reference_id: lockRecord.id,
-        notes: `Confirmed charge for ${booking_type} booking - supplier confirmed`
-      });
-
-      // Update wallet balance
-      const wallets = await base44.entities.Wallet.filter({ user_email: userEmail });
-      if (wallets.length > 0) {
-        const wallet = wallets[0];
-        await base44.entities.Wallet.update(wallet.id, {
-          balance: (wallet.balance || 0) - (wallet_amount || 0)
-        });
-      }
-
-      // Create payment split
-      const paymentSplit = await base44.entities.PaymentSplit.create({
-        booking_id,
-        booking_type,
-        total_amount,
-        wallet_debit: wallet_amount || 0,
-        card_debit: card_amount || 0,
-        supplier_payout,
-        service_fee: service_fee || 0,
-        gc_commission: (total_amount - supplier_payout) - (service_fee || 0),
-        payment_method,
-        supplier_id,
-        status: 'confirmed',
-        ledger_entries: [lockLedgerEntry.id, debitLedgerEntry.id]
-      });
-
-      // Create disbursement for supplier
-      const settlementAccounts = await base44.entities.SettlementAccount.filter({
-        supplier_id
-      });
-      
-      let settlementAccountId = null;
-      if (settlementAccounts.length > 0) {
-        settlementAccountId = settlementAccounts[0].id;
-        // Update settlement account balance
-        await base44.entities.SettlementAccount.update(settlementAccountId, {
-          balance: (settlementAccounts[0].balance || 0) + supplier_payout,
-          total_earned: (settlementAccounts[0].total_earned || 0) + supplier_payout
-        });
-      }
-
-      const disbursement = await base44.entities.Disbursement.create({
-        settlement_account_id: settlementAccountId,
-        supplier_id,
-        supplier_name,
-        source_account: 'revenue_account',
-        destination_account: 'supplier_bank_account',
-        amount: supplier_payout,
-        status: 'pending',
-        notes: `Auto-generated from booking ${booking_id}`
-      });
-
-      // Update velocity limits
-      const newVelocity = {
-        transacted_today: (userLimit.transacted_today || 0) + total_amount
+      const txnState = {
+        lockUpdated: false,
+        debitLedgerCreated: false,
+        walletUpdated: false,
+        paymentSplitCreated: false,
+        settlementUpdated: false,
+        disbursementCreated: false,
+        velocityUpdated: false,
+        ids: {
+          debitLedgerEntry: null,
+          paymentSplit: null,
+          disbursement: null
+        }
       };
-      if (velocityLimits.length > 0) {
-        await base44.entities.VelocityLimit.update(velocityLimits[0].id, newVelocity);
-      } else {
-        await base44.entities.VelocityLimit.create({
-          user_email: userEmail,
-          ...newVelocity
-        });
-      }
 
-      return Response.json({
-        status: 'success',
-        booking_id,
-        payment_split_id: paymentSplit.id,
-        disbursement_id: disbursement.id,
-        supplier_reference: supplierConfirmation.id || supplierConfirmation.reference_id,
-        message: 'Booking confirmed and payment processed'
-      });
+      try {
+        // STEP 1: Confirm lock debit
+        await base44.entities.WalletLock.update(lockRecord.id, {
+          status: 'confirmed',
+          confirmed_at: new Date().toISOString()
+        });
+        txnState.lockUpdated = true;
+        console.log(`✓ Lock confirmed for booking ${booking_id}`);
+
+        // STEP 2: Create confirmed debit ledger entry
+        const debitLedgerEntry = await base44.entities.WalletLedger.create({
+          user_email: userEmail,
+          transaction_type: 'charge',
+          amount: wallet_amount || 0,
+          booking_id,
+          booking_type,
+          status: 'confirmed',
+          reference_id: lockRecord.id,
+          notes: `Confirmed charge for ${booking_type} booking - supplier confirmed`
+        });
+        txnState.debitLedgerCreated = true;
+        txnState.ids.debitLedgerEntry = debitLedgerEntry.id;
+        console.log(`✓ Debit ledger entry created: ${debitLedgerEntry.id}`);
+
+        // STEP 2b: Update wallet balance
+        const wallets = await base44.entities.Wallet.filter({ user_email: userEmail });
+        if (wallets.length > 0) {
+          const wallet = wallets[0];
+          await base44.entities.Wallet.update(wallet.id, {
+            balance: (wallet.balance || 0) - (wallet_amount || 0)
+          });
+        }
+        txnState.walletUpdated = true;
+        console.log(`✓ Wallet balance updated (debit: ${wallet_amount || 0})`);
+
+        // STEP 3: Create payment split
+        const paymentSplit = await base44.entities.PaymentSplit.create({
+          booking_id,
+          booking_type,
+          total_amount,
+          wallet_debit: wallet_amount || 0,
+          card_debit: card_amount || 0,
+          supplier_payout,
+          service_fee: service_fee || 0,
+          gc_commission: (total_amount - supplier_payout) - (service_fee || 0),
+          payment_method,
+          supplier_id,
+          status: 'confirmed',
+          ledger_entries: [lockLedgerEntry.id, debitLedgerEntry.id]
+        });
+        txnState.paymentSplitCreated = true;
+        txnState.ids.paymentSplit = paymentSplit.id;
+        console.log(`✓ Payment split created: ${paymentSplit.id}`);
+
+        // STEP 4: Credit Supplier Settlement Account & Revenue Account
+        const settlementAccounts = await base44.entities.SettlementAccount.filter({
+          supplier_id
+        });
+        
+        let settlementAccountId = null;
+        if (settlementAccounts.length > 0) {
+          settlementAccountId = settlementAccounts[0].id;
+          await base44.entities.SettlementAccount.update(settlementAccountId, {
+            balance: (settlementAccounts[0].balance || 0) + supplier_payout,
+            total_earned: (settlementAccounts[0].total_earned || 0) + supplier_payout
+          });
+        }
+        txnState.settlementUpdated = true;
+        console.log(`✓ Settlement account credited: ${supplier_payout}`);
+
+        // Create disbursement (pending approval)
+        const disbursement = await base44.entities.Disbursement.create({
+          settlement_account_id: settlementAccountId,
+          supplier_id,
+          supplier_name,
+          source_account: 'revenue_account',
+          destination_account: 'supplier_bank_account',
+          amount: supplier_payout,
+          status: 'pending',
+          notes: `Auto-generated from booking ${booking_id}`
+        });
+        txnState.disbursementCreated = true;
+        txnState.ids.disbursement = disbursement.id;
+        console.log(`✓ Disbursement created: ${disbursement.id}`);
+
+        // STEP 5: Update velocity limits
+        const newVelocity = {
+          transacted_today: (userLimit.transacted_today || 0) + total_amount
+        };
+        if (velocityLimits.length > 0) {
+          await base44.entities.VelocityLimit.update(velocityLimits[0].id, newVelocity);
+        } else {
+          await base44.entities.VelocityLimit.create({
+            user_email: userEmail,
+            ...newVelocity
+          });
+        }
+        txnState.velocityUpdated = true;
+        console.log(`✓ Velocity limits updated`);
+
+        // ===== TRANSACTION COMMITTED =====
+        console.log(`✓✓✓ TRANSACTION COMMITTED for booking ${booking_id}`);
+
+        return Response.json({
+          status: 'success',
+          booking_id,
+          payment_split_id: paymentSplit.id,
+          disbursement_id: disbursement.id,
+          supplier_reference: supplierConfirmation.id || supplierConfirmation.reference_id,
+          message: 'Booking confirmed and payment processed',
+          txn_state: 'committed'
+        });
+
+      } catch (txnError) {
+        // ===== TRANSACTION ROLLBACK =====
+        console.error(`✗ Transaction error at step - initiating ROLLBACK`, txnError);
+
+        // Mark all created records as failed
+        if (txnState.lockUpdated) {
+          await base44.entities.WalletLock.update(lockRecord.id, {
+            status: 'released',
+            reason_for_release: 'txn_rollback'
+          });
+        }
+
+        if (txnState.debitLedgerCreated && txnState.ids.debitLedgerEntry) {
+          await base44.entities.WalletLedger.update(txnState.ids.debitLedgerEntry, {
+            status: 'cancelled'
+          });
+        }
+
+        if (txnState.paymentSplitCreated && txnState.ids.paymentSplit) {
+          await base44.entities.PaymentSplit.update(txnState.ids.paymentSplit, {
+            status: 'failed'
+          });
+        }
+
+        if (txnState.disbursementCreated && txnState.ids.disbursement) {
+          await base44.entities.Disbursement.update(txnState.ids.disbursement, {
+            status: 'failed',
+            error_message: `Booking failed: ${txnError.message}`
+          });
+        }
+
+        // Release funds
+        await base44.entities.WalletLedger.create({
+          user_email: userEmail,
+          transaction_type: 'unlock',
+          amount: wallet_amount || 0,
+          booking_id,
+          booking_type,
+          status: 'confirmed',
+          notes: `Transaction rollback - funds released due to: ${txnError.message}`
+        });
+
+        console.log(`✗✗✗ TRANSACTION ROLLED BACK for booking ${booking_id}`);
+
+        return Response.json({
+          status: 'failed',
+          booking_id,
+          error: txnError.message,
+          message: 'Transaction failed and rolled back - funds released',
+          txn_state: 'rolled_back'
+        }, { status: 400 });
+      }
     }
 
     // ===== STEP 4B: FAILURE PATH =====
