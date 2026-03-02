@@ -106,6 +106,32 @@ export default function KYCVerification({ user, currentKyc }) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* PNR Data Import */}
+        {bookings.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm font-medium text-blue-900 mb-3">📋 Auto-fill from PNR Data</p>
+            <div className="space-y-2">
+              {bookings.map((booking) => (
+                <button
+                  key={booking.id}
+                  type="button"
+                  onClick={() => handlePnrSelect(booking)}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    selectedPnr?.id === booking.id
+                      ? "bg-blue-100 border-blue-400"
+                      : "bg-white border-blue-200 hover:border-blue-400"
+                  }`}
+                >
+                  <p className="font-medium text-sm text-slate-900">{booking.passenger_name}</p>
+                  <p className="text-xs text-slate-600">
+                    Flight {booking.flight_number} • {new Date(booking.created_date).toLocaleDateString()}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium">Identity Type</label>
