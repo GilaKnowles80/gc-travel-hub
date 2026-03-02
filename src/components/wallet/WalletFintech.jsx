@@ -13,6 +13,7 @@ import MultiCurrencyWallet from "./MultiCurrencyWallet";
 
 export default function WalletFintech({ user }) {
   const [showCardDetails, setShowCardDetails] = useState(false);
+  const [activeTab, setActiveTab] = useState("cards");
   const queryClient = useQueryClient();
 
   // Fetch user's wallet cards
