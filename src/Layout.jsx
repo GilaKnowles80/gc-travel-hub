@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
-import LiveVisitorCounter from "@/components/analytics/LiveVisitorCounter";
+
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import { LanguageProvider } from "@/components/language/LanguageContext";
 import LanguageSelector from "@/components/language/LanguageSelector";
