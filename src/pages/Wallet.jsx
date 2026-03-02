@@ -115,7 +115,9 @@ export default function WalletPage() {
     );
   }
 
+  const isAdmin = user?.role === "admin";
   const balance = walletData?.balance || 0;
+  const usagePercent = (balance / MAX_WALLET_AMOUNT) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 pb-16">
@@ -164,7 +166,7 @@ export default function WalletPage() {
               <div className="w-full bg-white/20 rounded-full h-2">
                 <div
                   className="bg-white h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min((balance / MAX_WALLET_AMOUNT) * 100, 100)}%` }}
+                  style={{ width: `${Math.min(usagePercent, 100)}%` }}
                 />
               </div>
               <p className="text-xs text-amber-100 mt-2">Max: {MAX_WALLET_AMOUNT.toLocaleString()}</p>
@@ -178,10 +180,12 @@ export default function WalletPage() {
                 user={user}
                 onSuccess={handleDepositSuccess}
               />
-              <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold" onClick={() => setIsDepositOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Funds
-              </Button>
+              <DialogTrigger asChild>
+                <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold" onClick={() => setIsDepositOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Funds
+                </Button>
+              </DialogTrigger>
 
               <WithdrawFundsDialog 
                 open={isWithdrawOpen} 
@@ -190,10 +194,12 @@ export default function WalletPage() {
                 balance={balance}
                 onSuccess={handleWithdrawSuccess}
               />
-              <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30" onClick={() => setIsWithdrawOpen(true)}>
-                <Send className="w-4 h-4 mr-2" />
-                Withdraw
-              </Button>
+              <DialogTrigger asChild>
+                <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30" onClick={() => setIsWithdrawOpen(true)}>
+                  <Send className="w-4 h-4 mr-2" />
+                  Withdraw
+                </Button>
+              </DialogTrigger>
             </div>
           </Card>
         </motion.div>
