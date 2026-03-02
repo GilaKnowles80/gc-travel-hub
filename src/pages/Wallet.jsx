@@ -32,7 +32,7 @@ export default function WalletPage() {
   }, []);
 
   // Fetch all wallets for admin view
-  const { data: adminWallets = [] } = useQuery({
+  const { data: adminWallets = [], refetch: refetchWallets } = useQuery({
     queryKey: ["all-wallets"],
     queryFn: async () => {
       try {
@@ -43,6 +43,17 @@ export default function WalletPage() {
     },
     enabled: user?.role === "admin",
   });
+
+  // Real-time wallet updates for admin
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const unsubscribe = base44.entities.Wallet.subscribe((event) => {
+      refetchWallets();
+    });
+
+    return unsubscribe;
+  }, [isAdmin, refetchWallets]);
 
   // Fetch user's wallet
   const { data: walletData, isLoading: walletLoading } = useQuery({
