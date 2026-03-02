@@ -125,6 +125,7 @@ function LayoutContent({ children, currentPageName }) {
           <GoogleTagManager />
           <GoogleAdsTracking />
           <FloatingContactWidget />
+          <RealTimePaymentNotification />
           {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />
           {user && user.role !== 'admin' && (
