@@ -311,9 +311,9 @@ export default function HeroSection() {
                     <FieldLabel icon={MapPin} text={<>From {geoDetecting && <span className="text-amber-500 text-[9px] ml-1">● detecting</span>}</>} />
                     <div className="relative">
                       <Input value={originSearch} onChange={e => { setOriginSearch(e.target.value); setShowOriginDrop(true); }} onFocus={() => setShowOriginDrop(true)}
-                        placeholder="City or airport" className="rounded-xl pr-8" />
-                      <button onClick={swapAirports} title="Swap" className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-orange-500 transition-colors">
-                        <ArrowLeftRight className="w-3.5 h-3.5" />
+                        placeholder="City or airport" className="rounded-xl pr-8 h-11 text-sm" />
+                      <button onClick={swapAirports} title="Swap" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-orange-500 transition-colors">
+                        <ArrowLeftRight className="w-4 h-4" />
                       </button>
                     </div>
                     {showOriginDrop && filterAirports(originSearch).length > 0 && (
@@ -326,7 +326,7 @@ export default function HeroSection() {
                   <div className="md:col-span-2 relative" ref={destRef}>
                     <FieldLabel icon={MapPin} text="To" />
                     <Input value={destinationSearch} onChange={e => { setDestinationSearch(e.target.value); setShowDestDrop(true); }} onFocus={() => setShowDestDrop(true)}
-                      placeholder="City or airport" className="rounded-xl" />
+                      placeholder="City or airport" className="rounded-xl h-11 text-sm" />
                     {showDestDrop && filterAirports(destinationSearch).length > 0 && (
                       <AirportDropdown airports={filterAirports(destinationSearch)} userCountry={userCountry}
                         onSelect={a => { setDestination(a.iata); setDestinationSearch(`${a.city} (${a.iata})`); setShowDestDrop(false); }} />
