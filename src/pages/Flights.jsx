@@ -424,7 +424,7 @@ export default function Flights() {
                         </span>
                       </button>
                       {showReturnCal && (
-                        <div className="absolute top-full right-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[10000]" style={{position: 'fixed', top: returnCalRef.current?.getBoundingClientRect().bottom + window.scrollY + 4, right: 'auto', left: returnCalRef.current?.getBoundingClientRect().left + window.scrollX}}>
+                        <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[10000]" style={{position: 'fixed', top: (returnCalRef.current?.getBoundingClientRect().bottom || 0) + window.scrollY + 4, left: (returnCalRef.current?.getBoundingClientRect().left || 0) + window.scrollX}}>
                           <div className="flex items-center justify-between mb-3">
                             <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
                             <h3 className="font-bold text-slate-900 text-sm">{returnMonth.format('MMMM YYYY')}</h3>
