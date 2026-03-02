@@ -212,21 +212,21 @@ export default function HeroSection() {
 
         {/* Search Card */}
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="w-full max-w-5xl">
-          <div className="bg-white/95 backdrop-blur-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/30">
+          <div className="bg-white/96 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden">
             {/* Tab Bar */}
-            <div className="overflow-x-auto border-b border-slate-100/80">
-              <div className="flex gap-0.5 px-4 pt-3 pb-0 min-w-max">
+            <div className="overflow-x-auto border-b border-slate-100">
+              <div className="flex gap-1 p-3 min-w-max">
                 {SEARCH_TABS.map(({ type, label, icon: Icon }) => (
                   <button
                     key={type}
                     onClick={() => setSearchType(type)}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-t-xl text-sm font-semibold whitespace-nowrap transition-all border-b-2 ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
                       searchType === type
-                        ? "bg-orange-500 text-white border-orange-500 shadow-sm"
-                        : "text-slate-500 hover:text-orange-600 hover:bg-orange-50/50 border-transparent"
+                        ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md"
+                        : "text-slate-600 hover:bg-amber-50 hover:text-orange-600"
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5" />{label}
+                    <Icon className="w-4 h-4" />{label}
                   </button>
                 ))}
               </div>
