@@ -272,7 +272,7 @@ export default function Flights() {
     <PullToRefresh onRefresh={handleRefresh}>
       <AdBanner placement="top_banner" pageName="Flights" />
       <div className="min-h-screen bg-slate-50">
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4 md:px-8">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4 md:px-8 overflow-visible">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -289,7 +289,7 @@ export default function Flights() {
             </div>
 
             {/* Search Form Card */}
-            <Card className="p-6 bg-white/95 backdrop-blur rounded-2xl overflow-visible">
+            <Card className="p-6 bg-white/95 backdrop-blur rounded-2xl overflow-visible relative z-10">
               {geoDetecting && (
                 <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
                   <div className="w-3 h-3 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
@@ -371,7 +371,7 @@ export default function Flights() {
                       </span>
                     </button>
                     {showDepartCal && (
-                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[9999]">
+                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[10000]" style={{position: 'fixed', top: departCalRef.current?.getBoundingClientRect().bottom + window.scrollY + 4, left: departCalRef.current?.getBoundingClientRect().left + window.scrollX}}>
                         <div className="flex items-center justify-between mb-3">
                           <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
                           <h3 className="font-bold text-slate-900 text-sm">{departMonth.format('MMMM YYYY')}</h3>
