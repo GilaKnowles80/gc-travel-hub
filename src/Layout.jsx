@@ -196,40 +196,20 @@ function LayoutContent({ children, currentPageName }) {
                 );
               })}
               {/* Admin mode toggle */}
-               {user?.role === "admin" && (
-                 <>
-                   <button
-                     onClick={toggleAdminMode}
-                     className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
-                       adminMode
-                         ? "bg-purple-100 text-purple-700 shadow-md"
-                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                     }`}
-                     title={adminMode ? "Switch to user view" : "Switch to admin view"}
-                   >
-                     <Shield className="w-4 h-4" />
-                     {adminMode ? "Admin" : "User"}
-                   </button>
-
-                   {/* Quick access to supplier portals in admin mode */}
-                   {adminMode && (
-                     <div className="flex items-center gap-1 ml-2 pl-2 border-l border-slate-300">
-                       {[
-                         { name: "Biyaheko", url: "https://booking.biyaheko.com", color: "from-blue-400 to-blue-600" },
-                         { name: "Wanderlinx", url: "https://www.wanderlinx.com", color: "from-green-400 to-green-600" },
-                         { name: "Tripzynx", url: "https://www.tripzynx.com", color: "from-purple-400 to-purple-600" },
-                       ].map(portal => (
-                         <a key={portal.name} href={portal.url} target="_blank" rel="noopener noreferrer"
-                           className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r ${portal.color} hover:shadow-md transition-all flex items-center gap-1`}
-                           title={`Open ${portal.name}`}>
-                           <Globe className="w-3.5 h-3.5" />
-                           {portal.name}
-                         </a>
-                       ))}
-                     </div>
-                   )}
-                 </>
-               )}
+              {user?.role === "admin" && (
+                <button
+                  onClick={toggleAdminMode}
+                  className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                    adminMode
+                      ? "bg-purple-100 text-purple-700 shadow-md"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                  title={adminMode ? "Switch to user view" : "Switch to admin view"}
+                >
+                  <Shield className="w-4 h-4" />
+                  {adminMode ? "Admin" : "User"}
+                </button>
+              )}
 
               {/* Admin links in a dropdown */}
               {user?.role === "admin" && adminMode && (
@@ -248,38 +228,21 @@ function LayoutContent({ children, currentPageName }) {
                     <span className={`text-xs transition-transform ml-1 ${adminMenuOpen ? 'rotate-180' : ''}`}>▾</span>
                   </button>
                   {adminMenuOpen && (
-                   <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
-                     {navLinks.filter(link => link.adminOnly).map((link) => (
-                       <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
-                          {(() => {
-                            const IconComponent = link.icon;
-                            return (
-                              <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
-                                <IconComponent className="w-4 h-4" />
-                                {link.name}
-                              </div>
-                            );
-                          })()}
-                        </Link>
-                       ))}
-                       {/* Supplier Web Portals */}
-                       <div className="border-t border-slate-100 mt-1 pt-1">
-                         <div className="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Supplier Portals</div>
-                         {[
-                           { name: "Biyaheko", url: "https://booking.biyaheko.com", color: "text-blue-600" },
-                           { name: "Wanderlinx", url: "https://www.wanderlinx.com", color: "text-green-600" },
-                           { name: "Tripzynx", url: "https://www.tripzynx.com", color: "text-purple-600" },
-                         ].map(portal => (
-                           <a key={portal.name} href={portal.url} target="_blank" rel="noopener noreferrer"
-                             onClick={() => setAdminMenuOpen(false)}
-                             className="w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer text-slate-600 block">
-                             <Globe className={`w-4 h-4 ${portal.color}`} />
-                             {portal.name}
-                             <span className="ml-auto text-[10px] text-slate-400">↗</span>
-                           </a>
-                         ))}
-                       </div>
-                       </div>
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
+                      {navLinks.filter(link => link.adminOnly).map((link) => (
+                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
+                           {(() => {
+                             const IconComponent = link.icon;
+                             return (
+                               <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
+                                 <IconComponent className="w-4 h-4" />
+                                 {link.name}
+                               </div>
+                             );
+                           })()}
+                         </Link>
+                        ))}
+                        </div>
                   )}
                 </div>
               )}

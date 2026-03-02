@@ -239,7 +239,7 @@ export default function HeroSection() {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl border border-white/20">
             {/* Tab Bar */}
             <div className="overflow-x-auto">
-              <div className="flex gap-0 min-w-max px-3 pt-3">
+              <div className="flex gap-0 min-w-max px-2 pt-2">
                 {SEARCH_TABS.map(({ type, label, icon: Icon }) => (
                   <button
                     key={type}
@@ -257,43 +257,44 @@ export default function HeroSection() {
             </div>
 
             {/* Search Forms */}
-            <div className="bg-white/95 backdrop-blur-xl px-6 py-5 rounded-b-2xl">
+            <div className="bg-white/95 backdrop-blur-xl px-5 py-4 rounded-b-2xl mx-0">
 
               {/* FLIGHTS */}
               {searchType === "flights" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                  {/* Trip type + Depart + Return — all in one row, close together */}
-                  <div className="md:col-span-4 flex items-center gap-2 flex-wrap">
-                    {["round_trip", "one_way", "multi_city"].map(t => (
-                      <button key={t} onClick={() => setFlightTripType(t)}
-                        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
-                        <ArrowLeftRight className="w-3 h-3" />
-                        {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
-                      </button>
-                    ))}
-
-                    {/* Separator */}
-                    <div className="w-px h-6 bg-slate-200 mx-1" />
-
-                    {/* Depart */}
-                    <div className="relative" ref={departCalRef}>
-                      <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
-                        className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
-                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                        <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
-                      </button>
-                      {showDepartCal && createPortal(
-                        <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
-                          <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
-                            onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
-                        </CalendarPortal>,
-                        document.body
-                      )}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  {/* Trip type + Depart + Return — full width row */}
+                  <div className="md:col-span-4 flex items-center justify-between gap-4">
+                    {/* Trip type buttons — left side */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {["round_trip", "one_way", "multi_city"].map(t => (
+                        <button key={t} onClick={() => setFlightTripType(t)}
+                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
+                          <ArrowLeftRight className="w-3 h-3" />
+                          {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
+                        </button>
+                      ))}
                     </div>
 
-                    {/* Return — only shown for round_trip */}
-                    {flightTripType === "round_trip" && (
-                      <div className="relative" ref={returnCalRef}>
+                    {/* Date pickers — right side */}
+                    <div className="flex items-center gap-2">
+                      {/* Depart */}
+                      <div className="relative" ref={departCalRef}>
+                        <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
+                          className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
+                          <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
+                        </button>
+                        {showDepartCal && createPortal(
+                          <CalendarPortal anchorRef={departCalRef} onClose={() => setShowDepartCal(false)}>
+                            <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
+                              onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
+                          </CalendarPortal>,
+                          document.body
+                        )}
+                      </div>
+
+                      {/* Return — always rendered, just visually hidden for one_way/multi_city */}
+                      <div className="relative" ref={returnCalRef} style={{ opacity: (flightTripType === "one_way" || flightTripType === "multi_city") ? 0 : 1, pointerEvents: (flightTripType === "one_way" || flightTripType === "multi_city") ? "none" : "auto" }}>
                         <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
                           className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
                           <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
@@ -307,7 +308,7 @@ export default function HeroSection() {
                           document.body
                         )}
                       </div>
-                    )}
+                    </div>
                   </div>
 
                   {/* From */}
@@ -348,7 +349,7 @@ export default function HeroSection() {
 
               {/* HOTELS */}
               {searchType === "hotels" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2">
                     <FieldLabel icon={MapPin} text="Location" />
                     <Input placeholder="City, hotel, or landmark" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} />
@@ -391,7 +392,7 @@ export default function HeroSection() {
 
               {/* TOURS */}
               {searchType === "tours" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Destination" /><Input placeholder="e.g. Palawan, Bali, Paris" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Travel Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
                   <div>
@@ -419,7 +420,7 @@ export default function HeroSection() {
 
               {/* BUS */}
               {searchType === "bus" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div><FieldLabel icon={MapPin} text="From" /><Input placeholder="e.g. Manila" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
                   <div><FieldLabel icon={MapPin} text="To" /><Input placeholder="e.g. Baguio" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
@@ -433,7 +434,7 @@ export default function HeroSection() {
 
               {/* FERRY */}
               {searchType === "ferry" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div><FieldLabel icon={MapPin} text="From Port" /><Input placeholder="e.g. Manila, Batangas" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
                   <div><FieldLabel icon={MapPin} text="To Port" /><Input placeholder="e.g. Cebu, Coron" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
@@ -447,7 +448,7 @@ export default function HeroSection() {
 
               {/* CRUISE */}
               {searchType === "cruise" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Destination" /><Input placeholder="e.g. Caribbean, Mediterranean" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Departure" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
                   <div>
@@ -471,7 +472,7 @@ export default function HeroSection() {
 
               {/* VISA */}
               {searchType === "visa" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Destination Country" /><Input placeholder="e.g. Japan, USA, Schengen" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div>
                     <FieldLabel icon={Umbrella} text="Visa Type" />
@@ -497,10 +498,10 @@ export default function HeroSection() {
 
               {/* CAR RENTAL */}
               {searchType === "car" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Pick-up Location" /><Input placeholder="e.g. Manila, Cebu" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
-                  <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Pick-up Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
-                  <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate} /></div>
+                  <div><FieldLabel icon={Calendar} text="Pick-up Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
+                  <div><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate} /></div>
                   <div className="md:col-span-4">
                     <Link to={`${createPageUrl("CarRentalSearch")}?location=${destination}&pickupDate=${onwardDate}&returnDate=${returnDate}`}>
                       <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Find Cars</Button>
@@ -511,11 +512,11 @@ export default function HeroSection() {
 
               {/* TRAIN */}
               {searchType === "train" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                  <div className="md:col-span-2"><FieldLabel icon={MapPin} text="From Station" /><Input placeholder="e.g. Paris, Tokyo" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
-                  <div className="md:col-span-2"><FieldLabel icon={MapPin} text="To Station" /><Input placeholder="e.g. London, Osaka" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
-                  <div className="md:col-span-4"><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
-                  <div className="md:col-span-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div><FieldLabel icon={MapPin} text="From Station" /><Input placeholder="e.g. Paris, Tokyo" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
+                  <div><FieldLabel icon={MapPin} text="To Station" /><Input placeholder="e.g. London, Osaka" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
+                  <div><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
+                  <div className="flex items-end">
                     <Link to={`${createPageUrl("TrainSearch")}?origin=${origin}&destination=${destination}&date=${onwardDate}`} className="w-full">
                       <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Search Trains</Button>
                     </Link>
