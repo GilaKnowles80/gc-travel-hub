@@ -62,13 +62,25 @@ export default function WalletPage() {
     return unsubscribe;
   }, [isAdmin, refetchWallets]);
 
-  // Fetch user's wallet
+  // Fetch user's wallet (auto-create if missing)
   const { data: walletData, isLoading: walletLoading } = useQuery({
     queryKey: ["wallet", user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
       const wallets = await base44.entities.Wallet.filter({ user_email: user.email });
-      return wallets[0] || null;
+      if (wallets.length > 0) return wallets[0];
+      
+      // Auto-create wallet if it doesn't exist
+      try {
+        const newWallet = await base44.entities.Wallet.create({ 
+          user_email: user.email, 
+          balance: 0 
+        });
+        return newWallet;
+      } catch (error) {
+        console.error("Failed to create wallet:", error);
+        return null;
+      }
     },
     enabled: !!user?.email,
   });
