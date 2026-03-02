@@ -343,7 +343,7 @@ export default function HeroSection() {
 
                   {/* Search Button */}
                   <div className="md:col-span-4">
-                    <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`}>
+                    <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${flightTripType}`}>
                       <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Search Flights</Button>
                     </Link>
                   </div>
