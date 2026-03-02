@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { base44 } from "@/api/base44Client";
 import { DollarSign, TrendingUp, Percent, AlertCircle } from "lucide-react";
 
 export default function PaymentSplitSummary({ totalAmount, supplier = "Third-party" }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => setUser(null));
+  }, []);
+
+  // Only show split payment details to admins
+  if (!user?.role === 'admin') {
+    return null;
+  }
+
   const merchantAmount = totalAmount * 0.75;
   const markupAmount = totalAmount * 0.20;
   const taxFeesAmount = totalAmount * 0.05;
