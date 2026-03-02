@@ -60,53 +60,12 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            placeholder="Full Name on Card"
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value)}
-            required
-          />
-
-          <Input
-            placeholder="Debit/Credit Card or Account Number"
-            value={cardNumber}
-            onChange={(e) => {
-              let val = e.target.value.replace(/\D/g, "").slice(0, 16);
-              val = val.replace(/(\d{4})/g, "$1 ").trim();
-              setCardNumber(val);
-            }}
-            required
-          />
-
-          <Input
             type="number"
             placeholder="Amount to be Deposited (₱)"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             min="1"
             step="0.01"
-            required
-          />
-
-          <Input
-            placeholder="EXP Date (MM/DD)"
-            value={expDate}
-            onChange={(e) => {
-              let val = e.target.value.replace(/\D/g, "");
-              if (val.length >= 2) {
-                val = val.slice(0, 2) + "/" + val.slice(2, 4);
-              }
-              setExpDate(val);
-            }}
-            maxLength="5"
-            required
-          />
-
-          <Input
-            placeholder="CVV"
-            value={cvv}
-            onChange={(e) => setCvv(e.target.value.slice(0, 4))}
-            maxLength="4"
-            type="password"
             required
           />
 
