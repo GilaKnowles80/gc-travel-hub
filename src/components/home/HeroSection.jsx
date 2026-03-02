@@ -138,6 +138,7 @@ export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0);
   const [searchType, setSearchType] = useState("flights");
   const [tripType, setTripType] = useState("round_trip");
+  const [flightTripType, setFlightTripType] = useState("round_trip");
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [originSearch, setOriginSearch] = useState("");
