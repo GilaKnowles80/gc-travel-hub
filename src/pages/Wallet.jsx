@@ -207,45 +207,19 @@ export default function WalletPage() {
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-6">
               <TrendingUp className="w-5 h-5 text-amber-600" />
-              <h3 className="text-2xl font-bold text-slate-900">Transaction History</h3>
+              <h3 className="text-2xl font-bold text-slate-900">
+                {isAdmin ? "Live Transaction Feed" : "Transaction History"}
+              </h3>
+              {transactions.length > 0 && (
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-2 h-2 bg-green-500 rounded-full"
+                  title="Live updates enabled"
+                />
+              )}
             </div>
-
-            {transactions.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">No transactions yet</p>
-            ) : (
-              <div className="space-y-2">
-                {transactions.map((txn) => (
-                  <motion.div
-                    key={txn.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      {txn.transaction_type === "deposit" ? (
-                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                          <ArrowDownLeft className="w-5 h-5 text-green-600" />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                          <ArrowUpRight className="w-5 h-5 text-red-600" />
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-semibold text-slate-900 capitalize">{txn.transaction_type}</p>
-                        <p className="text-xs text-slate-500">
-                          {new Date(txn.created_date).toLocaleDateString()} {new Date(txn.created_date).toLocaleTimeString()}
-                        </p>
-                      </div>
-                    </div>
-                    <p className={`font-bold text-lg ${txn.transaction_type === "deposit" ? "text-green-600" : "text-red-600"}`}>
-                      {txn.transaction_type === "deposit" ? "+" : "-"}
-                      {txn.amount.toLocaleString()}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            )}
+            <LiveTransactionFeed transactions={transactions} isAdmin={isAdmin} />
           </Card>
         </motion.div>
 
