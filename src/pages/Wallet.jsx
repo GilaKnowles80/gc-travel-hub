@@ -147,77 +147,32 @@ export default function WalletPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
-                <DialogTrigger asChild>
-                  <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Funds
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Deposit Funds</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input
-                      type="number"
-                      placeholder="Enter amount"
-                      value={depositAmount}
-                      onChange={(e) => {
-                        setDepositAmount(e.target.value);
-                        setDepositError("");
-                      }}
-                      max={MAX_WALLET_AMOUNT}
-                      min="0"
-                      step="0.01"
-                    />
-                    {depositError && <p className="text-red-600 text-sm">{depositError}</p>}
-                    <Button
-                      onClick={() => depositMutation.mutate(depositAmount)}
-                      disabled={depositMutation.isPending || !depositAmount}
-                      className="w-full bg-amber-600 hover:bg-amber-700"
-                    >
-                      {depositMutation.isPending ? "Processing..." : "Confirm Deposit"}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <AddFundsDialog 
+                open={isDepositOpen} 
+                onOpenChange={setIsDepositOpen} 
+                user={user}
+                onSuccess={handleDepositSuccess}
+              />
+              <DialogTrigger asChild>
+                <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold" onClick={() => setIsDepositOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Funds
+                </Button>
+              </DialogTrigger>
 
-              <Dialog open={isWithdrawOpen} onOpenChange={setIsWithdrawOpen}>
-                <DialogTrigger asChild>
-                  <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30">
-                    <Send className="w-4 h-4 mr-2" />
-                    Withdraw
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Withdraw Funds</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input
-                      type="number"
-                      placeholder="Enter amount"
-                      value={withdrawAmount}
-                      onChange={(e) => {
-                        setWithdrawAmount(e.target.value);
-                        setWithdrawError("");
-                      }}
-                      max={balance}
-                      min="0"
-                      step="0.01"
-                    />
-                    {withdrawError && <p className="text-red-600 text-sm">{withdrawError}</p>}
-                    <Button
-                      onClick={() => withdrawMutation.mutate(withdrawAmount)}
-                      disabled={withdrawMutation.isPending || !withdrawAmount}
-                      className="w-full bg-red-600 hover:bg-red-700"
-                    >
-                      {withdrawMutation.isPending ? "Processing..." : "Confirm Withdrawal"}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <WithdrawFundsDialog 
+                open={isWithdrawOpen} 
+                onOpenChange={setIsWithdrawOpen} 
+                user={user}
+                balance={balance}
+                onSuccess={handleWithdrawSuccess}
+              />
+              <DialogTrigger asChild>
+                <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30" onClick={() => setIsWithdrawOpen(true)}>
+                  <Send className="w-4 h-4 mr-2" />
+                  Withdraw
+                </Button>
+              </DialogTrigger>
             </div>
           </Card>
         </motion.div>
