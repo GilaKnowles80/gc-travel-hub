@@ -268,7 +268,7 @@ export default function HeroSection() {
                     {/* Trip type buttons — left side */}
                     <div className="flex items-center gap-2 shrink-0">
                       {["round_trip", "one_way", "multi_city"].map(t => (
-                        <button key={t} onClick={() => { setTripType(t); setFlightTripType(t); }}
+                        <button key={t} onClick={() => setFlightTripType(t)}
                           className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
                           <ArrowLeftRight className="w-3 h-3" />
                           {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
