@@ -61,12 +61,18 @@ export default function WalletFintech({ user }) {
         >
           <p className="text-amber-900 font-semibold mb-2">⚠️ KYC Verification Required</p>
           <p className="text-amber-800 text-sm mb-3">Complete KYC to unlock higher limits and premium features.</p>
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-700">Verify Now</Button>
+          <Button 
+            size="sm" 
+            className="bg-amber-600 hover:bg-amber-700"
+            onClick={() => setActiveTab("kyc")}
+          >
+            Verify Now
+          </Button>
         </motion.div>
       )}
 
       {/* Main Tabs */}
-      <Tabs defaultValue="cards" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="cards" className="flex items-center gap-2">
             <CreditCard className="w-4 h-4" />
