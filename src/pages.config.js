@@ -159,6 +159,7 @@ import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
 import FinitechArchitecture from './pages/FinitechArchitecture';
+import DatabaseSchema from './pages/DatabaseSchema';
 import __Layout from './Layout.jsx';
 
 
@@ -275,6 +276,7 @@ export const PAGES = {
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
     "FinitechArchitecture": FinitechArchitecture,
+    "DatabaseSchema": DatabaseSchema,
 }
 
 export const pagesConfig = {
