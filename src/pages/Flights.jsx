@@ -23,7 +23,7 @@ import AirportInput from "../components/flights/AirportInput";
 import FlightDurationDisplay from "../components/flights/FlightDurationDisplay";
 import moment from "moment";
 import SeatAvailabilityIndicator from "../components/flights/SeatAvailabilityIndicator";
-import flatpickr from "flatpickr";
+
 
 export default function Flights() {
   const queryClient = useQueryClient();
