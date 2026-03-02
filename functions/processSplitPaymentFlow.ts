@@ -15,6 +15,48 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Verify booking exists and is confirmed
+    let booking;
+    if (bookingType === 'flight') {
+      const bookings = await base44.entities.FlightBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'hotel') {
+      const bookings = await base44.entities.HotelBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'tour') {
+      const bookings = await base44.entities.TourBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'bus') {
+      const bookings = await base44.entities.BusBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'ferry') {
+      const bookings = await base44.entities.FerryBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'cruise') {
+      const bookings = await base44.entities.CruiseBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'train') {
+      const bookings = await base44.entities.TrainBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    } else if (bookingType === 'car') {
+      const bookings = await base44.entities.CarRentalBooking.filter({ id: bookingId });
+      booking = bookings[0];
+    }
+
+    if (!booking) {
+      return Response.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    if (booking.status !== 'confirmed') {
+      return Response.json({ error: `Booking must be confirmed to process split payment. Current status: ${booking.status}` }, { status: 400 });
+    }
+
+    // Check if split payment already processed
+    const existingSplits = await base44.entities.PaymentSplit.filter({ booking_id: bookingId });
+    if (existingSplits.length > 0) {
+      return Response.json({ error: 'Split payment already processed for this booking' }, { status: 400 });
+    }
+
     // Calculate payment split
     const merchantAmount = totalAmount * 0.75; // 75% to merchant
     const markupAmount = totalAmount * 0.20; // 20% markup
