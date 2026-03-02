@@ -1,0 +1,146 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { CreditCard, DollarSign, Building2, Loader2 } from "lucide-react";
+
+/**
+ * StandardPaymentSelector - Unified payment method selection
+ * Supports: Stripe, PayMongo, PayPal, Bank Transfer
+ */
+export default function StandardPaymentSelector({
+  bookingData,
+  customerInfo,
+  isProcessing,
+  onPayment,
+}) {
+  const [selectedMethod, setSelectedMethod] = useState("stripe");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePayment = async () => {
+    setIsLoading(true);
+    try {
+      await onPayment(selectedMethod, {
+        booking: bookingData,
+        customer: customerInfo,
+      });
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment processing failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const paymentMethods = [
+    {
+      id: "stripe",
+      name: "Credit/Debit Card",
+      description: "Visa, Mastercard, American Express",
+      icon: CreditCard,
+      fee: "2.9% + $0.30",
+    },
+    {
+      id: "paymongo",
+      name: "PayMongo",
+      description: "GCash, Debit Cards, Online Banking",
+      icon: DollarSign,
+      fee: "Free",
+    },
+    {
+      id: "paypal",
+      name: "PayPal",
+      description: "Fast & Secure",
+      icon: CreditCard,
+      fee: "Free",
+    },
+    {
+      id: "bank_transfer",
+      name: "Bank Transfer",
+      description: "Direct bank transfer with manual confirmation",
+      icon: Building2,
+      fee: "Free",
+    },
+  ];
+
+  const total = bookingData?.totalPrice || 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Total Amount */}
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+        <div className="flex items-baseline justify-between">
+          <span className="text-slate-700 font-medium">Total Amount:</span>
+          <span className="text-4xl font-bold text-amber-600">
+            ₱{total?.toLocaleString() || "0.00"}
+          </span>
+        </div>
+      </div>
+
+      {/* Payment Methods */}
+      <div className="space-y-3">
+        <Label className="text-base font-semibold text-slate-900">
+          Select Payment Method
+        </Label>
+
+        <RadioGroup value={selectedMethod} onValueChange={setSelectedMethod}>
+          {paymentMethods.map((method) => {
+            const Icon = method.icon;
+            return (
+              <div
+                key={method.id}
+                className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                  selectedMethod === method.id
+                    ? "border-amber-500 bg-amber-50"
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                onClick={() => setSelectedMethod(method.id)}
+              >
+                <RadioGroupItem value={method.id} id={method.id} />
+                <Icon className="w-5 h-5 text-amber-600 shrink-0" />
+                <div className="flex-1">
+                  <Label
+                    htmlFor={method.id}
+                    className="font-semibold text-slate-900 cursor-pointer block"
+                  >
+                    {method.name}
+                  </Label>
+                  <p className="text-xs text-slate-600">{method.description}</p>
+                </div>
+                <span className="text-xs font-medium text-slate-600 whitespace-nowrap">
+                  {method.fee}
+                </span>
+              </div>
+            );
+          })}
+        </RadioGroup>
+      </div>
+
+      {/* Payment Button */}
+      <Button
+        onClick={handlePayment}
+        disabled={isLoading || isProcessing || !customerInfo.email}
+        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold h-12 rounded-xl gap-2 text-lg"
+      >
+        {isLoading || isProcessing ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <CreditCard className="w-5 h-5" />
+            Pay ₱{total?.toLocaleString() || "0.00"}
+          </>
+        )}
+      </Button>
+
+      {/* Security Info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+        <p className="text-xs text-blue-700">
+          🔒 Your payment information is encrypted and secure. We never store your card details.
+        </p>
+      </div>
+    </div>
+  );
+}
