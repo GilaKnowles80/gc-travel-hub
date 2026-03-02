@@ -499,8 +499,8 @@ export default function HeroSection() {
               {searchType === "car" && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Pick-up Location" /><Input placeholder="e.g. Manila, Cebu" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
-                  <div><FieldLabel icon={Calendar} text="Pick-up Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
-                  <div><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate} /></div>
+                  <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Pick-up Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
+                  <div className="md:col-span-2"><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate} /></div>
                   <div className="md:col-span-4">
                     <Link to={`${createPageUrl("CarRentalSearch")}?location=${destination}&pickupDate=${onwardDate}&returnDate=${returnDate}`}>
                       <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Find Cars</Button>
