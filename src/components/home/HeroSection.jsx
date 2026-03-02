@@ -433,7 +433,7 @@ export default function HeroSection() {
 
               {/* FERRY */}
               {searchType === "ferry" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   <div><FieldLabel icon={MapPin} text="From Port" /><Input placeholder="e.g. Manila, Batangas" className="rounded-xl" value={origin} onChange={e => setOrigin(e.target.value)} /></div>
                   <div><FieldLabel icon={MapPin} text="To Port" /><Input placeholder="e.g. Cebu, Coron" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
