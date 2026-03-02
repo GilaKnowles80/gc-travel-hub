@@ -86,6 +86,28 @@ function FieldLabel({ icon: Icon, text }) {
   );
 }
 
+function CalendarPortal({ anchorRef, onClose, children }) {
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      setPos({ top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX });
+    }
+    const handler = (e) => {
+      if (anchorRef.current && !anchorRef.current.contains(e.target)) onClose();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div style={{ position: "absolute", top: pos.top, left: pos.left, zIndex: 99999 }}>
+      {children}
+    </div>
+  );
+}
+
 function AirportDropdown({ airports, onSelect, userCountry }) {
   const domestic = airports.filter(a => a.domestic);
   const intl = airports.filter(a => !a.domestic);
