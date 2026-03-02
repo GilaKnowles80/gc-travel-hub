@@ -13,6 +13,7 @@ import { createPageUrl } from "@/pages/utils";
 import BookingForm from "../components/tours/BookingForm";
 import LocationMap from "../components/shared/LocationMap";
 import TourCustomizer from "../components/tours/TourCustomizer";
+import { useCurrency } from "@/components/currency/CurrencyContext";
 
 export default function TourDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@ export default function TourDetail() {
   const [expandedDay, setExpandedDay] = useState(null);
   const [showCustomizer, setShowCustomizer] = useState(false);
   const [customizedPrice, setCustomizedPrice] = useState(null);
+  const { formatPrice } = useCurrency();
 
   const { data: tour, isLoading } = useQuery({
     queryKey: ["tour", tourId],
@@ -247,12 +249,12 @@ export default function TourDetail() {
                 className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"
               >
                 <div className="text-center mb-6">
-                   <p className="text-sm text-slate-400">{showCustomizer ? "Customized" : "Starting from"}</p>
-                   <p className="text-4xl font-bold text-slate-900 mt-1">
-                     ${(customizedPrice ?? tour.price_per_person)?.toLocaleString()}
-                   </p>
-                   <p className="text-sm text-slate-400">{showCustomizer ? "total price" : "per person"}</p>
-                 </div>
+                    <p className="text-sm text-slate-400">{showCustomizer ? "Customized" : "Starting from"}</p>
+                    <p className="text-4xl font-bold text-slate-900 mt-1">
+                      {formatPrice(customizedPrice ?? tour.price_per_person, 'USD')}
+                    </p>
+                    <p className="text-sm text-slate-400">{showCustomizer ? "total price" : "per person"}</p>
+                  </div>
 
                 {!showCustomizer && (
                    <div className="space-y-3 mb-6">
