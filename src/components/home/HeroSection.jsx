@@ -192,7 +192,7 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative min-h-[640px] h-[88vh] overflow-hidden">
+    <div className="relative min-h-[640px] h-[88vh]">
       {/* Background */}
       <AnimatePresence mode="wait">
         <motion.div key={currentImage} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.2 }} className="absolute inset-0">
