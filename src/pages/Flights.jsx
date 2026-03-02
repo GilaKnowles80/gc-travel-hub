@@ -43,30 +43,30 @@ export default function Flights() {
     cabin: urlParams.get('cabin') || "economy"
   });
   const [geoDetecting, setGeoDetecting] = useState(false);
-  const [showDepartCalendar, setShowDepartCalendar] = useState(false);
-  const [showReturnCalendar, setShowReturnCalendar] = useState(false);
+  const [showDepartCal, setShowDepartCal] = useState(false);
+  const [showReturnCal, setShowReturnCal] = useState(false);
   const [tripType, setTripType] = useState("roundtrip");
-  const [departMonth, setDepartMonth] = useState(moment(searchParams.departureDate));
-  const [returnMonth, setReturnMonth] = useState(moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate) : moment(searchParams.departureDate).add(1, 'day'));
+  const [departMonth, setDepartMonth] = useState(moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate) : moment());
+  const [returnMonth, setReturnMonth] = useState(moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate) : moment().add(1, 'month'));
 
-  const getDaysInMonth = (momentDate) => {
-    const daysInMonth = momentDate.daysInMonth();
-    const firstDay = moment(momentDate).startOf('month').day();
-    return { daysInMonth, firstDay };
-  };
+  const departCalRef = useRef(null);
+  const returnCalRef = useRef(null);
 
-  const renderCalendarDays = (month, onSelectDate) => {
-    const { daysInMonth, firstDay } = getDaysInMonth(month);
+  useEffect(() => {
+    const handler = (e) => {
+      if (departCalRef.current && !departCalRef.current.contains(e.target)) setShowDepartCal(false);
+      if (returnCalRef.current && !returnCalRef.current.contains(e.target)) setShowReturnCal(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const renderCalendarDays = (month) => {
+    const daysInMonth = month.daysInMonth();
+    const firstDay = moment(month).startOf('month').day();
     const days = [];
-    
-    for (let i = 0; i < firstDay; i++) {
-      days.push(null);
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(moment(month).date(day));
-    }
-    
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let day = 1; day <= daysInMonth; day++) days.push(moment(month).date(day));
     return days;
   };
 
