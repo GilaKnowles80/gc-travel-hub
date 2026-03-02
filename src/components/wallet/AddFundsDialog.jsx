@@ -20,37 +20,26 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
     setIsLoading(true);
 
     try {
+      // Check if running in iframe
+      if (window.self !== window.top) {
+        throw new Error("Checkout must be accessed from the published app, not from an embedded preview");
+      }
+
       const numAmount = parseFloat(amount);
       if (isNaN(numAmount) || numAmount <= 0) {
         throw new Error("Amount must be greater than 0");
       }
 
-      if (expDate.length !== 5 || !expDate.includes("/")) {
-        throw new Error("Expiry date must be in MM/DD format");
-      }
-
-      const [expMonth, expYear] = expDate.split("/");
-
-      const response = await base44.functions.invoke("processWalletDeposit", {
+      // Create Stripe checkout session
+      const response = await base44.functions.invoke("createWalletDepositCheckout", {
         amount: numAmount,
-        cardName,
-        cardNumber: cardNumber.replace(/\s/g, ""),
-        expMonth,
-        expYear,
-        cvv,
-        userEmail: user.email,
       });
 
-      if (response.data.success) {
-        setCardName("");
-        setCardNumber("");
-        setAmount("");
-        setExpDate("");
-        setCvv("");
-        onOpenChange(false);
-        onSuccess?.();
+      if (response.data.success && response.data.url) {
+        // Redirect to Stripe checkout
+        window.location.href = response.data.url;
       } else {
-        throw new Error(response.data.error || "Payment processing failed");
+        throw new Error(response.data.error || "Failed to create checkout session");
       }
     } catch (err) {
       setError(err.message);
