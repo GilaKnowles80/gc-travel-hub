@@ -267,8 +267,8 @@ export default function HeroSection() {
                     {/* Trip type buttons — left side */}
                     <div className="flex items-center gap-2 shrink-0">
                       {["round_trip", "one_way", "multi_city"].map(t => (
-                        <button key={t} onClick={() => setTripType(t)}
-                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${tripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
+                        <button key={t} onClick={() => { setTripType(t); setFlightTripType(t); }}
+                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${flightTripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
                           <ArrowLeftRight className="w-3 h-3" />
                           {t === "round_trip" ? "Round Trip" : t === "one_way" ? "One Way" : "Multi City"}
                         </button>
@@ -294,7 +294,7 @@ export default function HeroSection() {
                       </div>
 
                       {/* Return */}
-                      {tripType !== "one_way" && tripType !== "multi_city" && (
+                      {flightTripType !== "one_way" && flightTripType !== "multi_city" && (
                         <div className="relative" ref={returnCalRef}>
                           <button onClick={() => { setShowReturnCal(v => !v); setShowDepartCal(false); }}
                             className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors w-[140px]">
