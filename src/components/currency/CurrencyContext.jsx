@@ -119,6 +119,15 @@ export function CurrencyProvider({ children }) {
     return `${symbol}${converted.toFixed(decimals)}`;
   };
 
+  // Detect countryCode from ipapi (reuse the detection logic)
+  const [countryCode, setCountryCode] = React.useState('PH');
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(data => { if (data.country_code) setCountryCode(data.country_code); })
+      .catch(() => {});
+  }, []);
+
   const value = {
     selectedCurrency,
     setSelectedCurrency,
@@ -126,7 +135,8 @@ export function CurrencyProvider({ children }) {
     convertFromPHP,
     formatPrice,
     rates,
-    symbols
+    symbols,
+    countryCode
   };
 
   return (
