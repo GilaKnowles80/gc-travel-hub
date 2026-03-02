@@ -18,6 +18,8 @@ export default function WalletPage() {
   const [withdrawError, setWithdrawError] = useState("");
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [selectedUserEmail, setSelectedUserEmail] = useState("");
+  const [allWallets, setAllWallets] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -25,6 +27,19 @@ export default function WalletPage() {
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
+
+  // Fetch all wallets for admin view
+  const { data: adminWallets = [] } = useQuery({
+    queryKey: ["all-wallets"],
+    queryFn: async () => {
+      try {
+        return await base44.entities.Wallet.list();
+      } catch {
+        return [];
+      }
+    },
+    enabled: user?.role === "admin",
+  });
 
   // Fetch user's wallet
   const { data: walletData, isLoading: walletLoading } = useQuery({
@@ -151,20 +166,41 @@ export default function WalletPage() {
     );
   }
 
+  const isAdmin = user?.role === "admin";
   const balance = walletData?.balance || 0;
   const usagePercent = (balance / MAX_WALLET_AMOUNT) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 pb-16">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Wallet className="w-8 h-8 text-amber-600" />
-            <h1 className="text-4xl font-bold text-slate-900">My Wallet</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <Wallet className="w-8 h-8 text-amber-600" />
+              <h1 className="text-4xl font-bold text-slate-900">{isAdmin ? "Wallet Management" : "My Wallet"}</h1>
+            </div>
+            {isAdmin && <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full">Admin View</span>}
           </div>
-          <p className="text-slate-600">Manage your account balance</p>
+          <p className="text-slate-600">{isAdmin ? "Monitor and manage all user wallets" : "Manage your account balance"}</p>
         </motion.div>
+
+        {isAdmin && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-6 bg-blue-50 border-blue-200">
+              <p className="text-blue-700 text-sm font-medium">Total Wallets</p>
+              <p className="text-3xl font-bold text-blue-900 mt-2">{adminWallets.length}</p>
+            </Card>
+            <Card className="p-6 bg-green-50 border-green-200">
+              <p className="text-green-700 text-sm font-medium">Total Balance</p>
+              <p className="text-3xl font-bold text-green-900 mt-2">₱{adminWallets.reduce((sum, w) => sum + (w.balance || 0), 0).toLocaleString()}</p>
+            </Card>
+            <Card className="p-6 bg-orange-50 border-orange-200">
+              <p className="text-orange-700 text-sm font-medium">Avg Balance</p>
+              <p className="text-3xl font-bold text-orange-900 mt-2">₱{adminWallets.length > 0 ? Math.round(adminWallets.reduce((sum, w) => sum + (w.balance || 0), 0) / adminWallets.length).toLocaleString() : 0}</p>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Balance Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
@@ -310,6 +346,49 @@ export default function WalletPage() {
             )}
           </Card>
         </motion.div>
+
+        {/* Admin Wallets Table */}
+        {isAdmin && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <Card className="p-6">
+              <h3 className="text-xl font-bold text-slate-900 mb-4">All User Wallets</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b-2 border-slate-200">
+                    <tr>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">User Email</th>
+                      <th className="text-right py-3 px-4 font-semibold text-slate-700">Balance</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-700">Usage</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {adminWallets.map((wallet) => {
+                      const usage = (wallet.balance / MAX_WALLET_AMOUNT) * 100;
+                      return (
+                        <tr key={wallet.id} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-4 px-4 text-slate-900 font-medium">{wallet.user_email}</td>
+                          <td className="py-4 px-4 text-right font-bold text-slate-900">₱{(wallet.balance || 0).toLocaleString()}</td>
+                          <td className="py-4 px-4">
+                            <div className="w-full bg-slate-200 rounded-full h-2 mx-auto max-w-xs">
+                              <div className={`h-2 rounded-full transition-all ${usage > 80 ? "bg-red-500" : usage > 50 ? "bg-yellow-500" : "bg-green-500"}`} style={{ width: `${Math.min(usage, 100)}%` }} />
+                            </div>
+                            <p className="text-xs text-slate-500 text-center mt-1">{usage.toFixed(1)}%</p>
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <Button size="sm" variant="outline" onClick={() => setSelectedUserEmail(wallet.user_email)} className="text-xs">
+                              View Details
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </motion.div>
+        )}
       </div>
     </div>
   );
