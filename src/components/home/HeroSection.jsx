@@ -233,7 +233,7 @@ export default function HeroSection() {
             </div>
 
             {/* Search Forms */}
-            <div className="p-4">
+            <div className="p-5">
 
               {/* FLIGHTS */}
               {searchType === "flights" && (
