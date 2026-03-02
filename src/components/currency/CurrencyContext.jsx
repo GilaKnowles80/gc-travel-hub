@@ -15,8 +15,8 @@ const countryCurrencyMap = {
   'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR', 'HR': 'EUR',
   // UK
   'GB': 'GBP',
-  // North, Central & South America (USD)
-  'US': 'USD', 'CA': 'USD', 'MX': 'USD',
+  // North, Central & South America
+  'US': 'USD', 'CA': 'CAD', 'MX': 'USD',
   'GT': 'USD', 'BZ': 'USD', 'HN': 'USD', 'SV': 'USD', 'NI': 'USD',
   'CR': 'USD', 'PA': 'USD', 'CU': 'USD', 'JM': 'USD', 'HT': 'USD',
   'DO': 'USD', 'PR': 'USD', 'CO': 'USD', 'VE': 'USD', 'GY': 'USD',
@@ -80,7 +80,7 @@ export function CurrencyProvider({ children }) {
 
   const symbols = {
     PHP: '₱', USD: '$', EUR: '€', GBP: '£',
-    JPY: '¥', SGD: 'S$', AUD: 'A$'
+    JPY: '¥', SGD: 'S$', AUD: 'A$', CAD: 'C$'
   };
 
   // Convert from PHP base to target currency
