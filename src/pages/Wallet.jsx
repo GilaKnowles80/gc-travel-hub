@@ -179,12 +179,10 @@ export default function WalletPage() {
                 user={user}
                 onSuccess={handleDepositSuccess}
               />
-              <DialogTrigger asChild>
-                <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold" onClick={() => setIsDepositOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Funds
-                </Button>
-              </DialogTrigger>
+              <Button className="flex-1 bg-white text-amber-600 hover:bg-amber-50 font-semibold" onClick={() => setIsDepositOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Funds
+              </Button>
 
               <WithdrawFundsDialog 
                 open={isWithdrawOpen} 
@@ -193,12 +191,10 @@ export default function WalletPage() {
                 balance={balance}
                 onSuccess={handleWithdrawSuccess}
               />
-              <DialogTrigger asChild>
-                <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30" onClick={() => setIsWithdrawOpen(true)}>
-                  <Send className="w-4 h-4 mr-2" />
-                  Withdraw
-                </Button>
-              </DialogTrigger>
+              <Button className="flex-1 bg-white/20 text-white hover:bg-white/30 font-semibold border border-white/30" onClick={() => setIsWithdrawOpen(true)}>
+                <Send className="w-4 h-4 mr-2" />
+                Withdraw
+              </Button>
             </div>
           </Card>
         </motion.div>
