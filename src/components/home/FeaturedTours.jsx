@@ -72,11 +72,11 @@ function TourCard({ tour, index, applyMarkup, markupPct }) {
               <div className="text-right">
                 <p className="text-xs text-slate-400">from</p>
                 <p className="text-xl font-bold text-slate-900">
-                  <PriceDisplay amount={applyMarkup(tour.price_per_person, 'tour')} />
+                  <PriceDisplay amount={applyMarkup(tour.price_per_person, 'tour')} tourDestination={tour.destination} />
                 </p>
                 {markupPct > 0 && (
                   <p className="text-xs text-slate-400 line-through">
-                    <PriceDisplay amount={tour.price_per_person} />
+                    <PriceDisplay amount={tour.price_per_person} tourDestination={tour.destination} />
                   </p>
                 )}
               </div>
