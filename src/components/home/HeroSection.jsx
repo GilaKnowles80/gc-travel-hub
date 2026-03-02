@@ -348,7 +348,7 @@ export default function HeroSection() {
 
               {/* HOTELS */}
               {searchType === "hotels" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                   <div className="md:col-span-2">
                     <FieldLabel icon={MapPin} text="Location" />
                     <Input placeholder="City, hotel, or landmark" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} />
