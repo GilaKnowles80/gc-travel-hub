@@ -431,7 +431,7 @@ export default function TripzynxPortal() {
                   </Button>
                   <Button
                     className="flex-1 bg-indigo-600 hover:bg-indigo-700"
-                    onClick={() => window.open('https://tripzynx.com', '_blank')}
+                    onClick={() => window.open('https://tripzynx.com/travel-agent/dashboard', '_blank')}
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
                     Open Tripzynx

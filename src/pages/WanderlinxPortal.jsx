@@ -453,10 +453,10 @@ export default function WanderlinxPortal() {
                   <Button
                     className="flex-1 bg-teal-600 hover:bg-teal-700"
                     onClick={() => window.open('https://mywanderlinx.com', '_blank')}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Open Wanderlinx
-                  </Button>
+                    >
+                     <ExternalLink className="w-4 h-4 mr-2" />
+                     Open Wanderlinx
+                    </Button>
                 </div>
               </CardContent>
             </Card>
