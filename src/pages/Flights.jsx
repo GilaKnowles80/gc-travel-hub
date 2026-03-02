@@ -367,13 +367,13 @@ export default function Flights() {
                     >
                       <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                       <span className={searchParams.departureDate ? "text-slate-900" : "text-slate-400"}>
-                        {searchParams.departureDate && moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('MMM DD, YYYY') : 'Date'}
+                        {searchParams.departureDate && moment(searchParams.departureDate).isValid() ? moment(searchParams.departureDate).format('MMM DD') : 'Select date'}
                       </span>
                     </button>
                     {showDepartCal && (
-                       <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[10000]" style={{position: 'fixed', top: (departCalRef.current?.getBoundingClientRect().bottom || 0) + window.scrollY + 4, left: (departCalRef.current?.getBoundingClientRect().left || 0) + window.scrollX}}>
+                      <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-200 p-3 w-72 z-50">
                         <div className="flex items-center justify-between mb-3">
-                          <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
+                          <button type="button" onClick={() => setDepartMonth(moment(departMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg" disabled={departMonth.isSameOrBefore(moment(), 'month')}><ChevronLeft className="w-4 h-4" /></button>
                           <h3 className="font-bold text-slate-900 text-sm">{departMonth.format('MMMM YYYY')}</h3>
                           <button type="button" onClick={() => setDepartMonth(moment(departMonth).add(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronRight className="w-4 h-4" /></button>
                         </div>
@@ -420,11 +420,11 @@ export default function Flights() {
                       >
                         <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
                         <span className={searchParams.returnDate ? "text-slate-900" : "text-slate-400"}>
-                          {searchParams.returnDate && moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('MMM DD, YYYY') : 'Date'}
+                          {searchParams.returnDate && moment(searchParams.returnDate).isValid() ? moment(searchParams.returnDate).format('MMM DD') : 'Select date'}
                         </span>
                       </button>
                       {showReturnCal && (
-                        <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-64 z-[10000]" style={{position: 'fixed', top: (returnCalRef.current?.getBoundingClientRect().bottom || 0) + window.scrollY + 4, left: (returnCalRef.current?.getBoundingClientRect().left || 0) + window.scrollX}}>
+                        <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-200 p-3 w-72 z-50">
                           <div className="flex items-center justify-between mb-3">
                             <button type="button" onClick={() => setReturnMonth(moment(returnMonth).subtract(1, 'month'))} className="p-1.5 hover:bg-slate-100 rounded-lg"><ChevronLeft className="w-4 h-4" /></button>
                             <h3 className="font-bold text-slate-900 text-sm">{returnMonth.format('MMMM YYYY')}</h3>
