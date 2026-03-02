@@ -260,10 +260,9 @@ export default function HeroSection() {
 
               {/* FLIGHTS */}
               {searchType === "flights" && (
-                <div className="space-y-3">
-                  {/* Row 1: Trip type toggle + Depart + Return dates */}
-                  <div className="flex flex-wrap items-center gap-2">
-                    {/* Trip type buttons */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  {/* Trip type + Depart + Return — full width row */}
+                  <div className="md:col-span-4 flex flex-wrap items-center gap-2">
                     {["round_trip", "one_way", "multi_city"].map(t => (
                       <button key={t} onClick={() => setTripType(t)}
                         className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${tripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
@@ -307,39 +306,39 @@ export default function HeroSection() {
                     )}
                   </div>
 
-                  {/* Row 2: From / To */}
-                  <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
-                    {/* From */}
-                    <div className="relative" ref={originRef}>
-                      <FieldLabel icon={MapPin} text={<>From {geoDetecting && <span className="text-amber-500 text-[9px] ml-1">● detecting</span>}</>} />
-                      <div className="relative">
-                        <Input value={originSearch} onChange={e => { setOriginSearch(e.target.value); setShowOriginDrop(true); }} onFocus={() => setShowOriginDrop(true)}
-                          placeholder="City or airport" className="rounded-xl pr-8" />
-                        <button onClick={swapAirports} title="Swap" className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-orange-500 transition-colors">
-                          <ArrowLeftRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                      {showOriginDrop && filterAirports(originSearch).length > 0 && (
-                        <AirportDropdown airports={filterAirports(originSearch)} userCountry={userCountry}
-                          onSelect={a => { setOrigin(a.iata); setOriginSearch(`${a.city} (${a.iata})`); setShowOriginDrop(false); }} />
-                      )}
+                  {/* From */}
+                  <div className="md:col-span-2 relative" ref={originRef}>
+                    <FieldLabel icon={MapPin} text={<>From {geoDetecting && <span className="text-amber-500 text-[9px] ml-1">● detecting</span>}</>} />
+                    <div className="relative">
+                      <Input value={originSearch} onChange={e => { setOriginSearch(e.target.value); setShowOriginDrop(true); }} onFocus={() => setShowOriginDrop(true)}
+                        placeholder="City or airport" className="rounded-xl pr-8" />
+                      <button onClick={swapAirports} title="Swap" className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-orange-500 transition-colors">
+                        <ArrowLeftRight className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-
-                    {/* To */}
-                    <div className="relative" ref={destRef}>
-                      <FieldLabel icon={MapPin} text="To" />
-                      <Input value={destinationSearch} onChange={e => { setDestinationSearch(e.target.value); setShowDestDrop(true); }} onFocus={() => setShowDestDrop(true)}
-                        placeholder="City or airport" className="rounded-xl" />
-                      {showDestDrop && filterAirports(destinationSearch).length > 0 && (
-                        <AirportDropdown airports={filterAirports(destinationSearch)} userCountry={userCountry}
-                          onSelect={a => { setDestination(a.iata); setDestinationSearch(`${a.city} (${a.iata})`); setShowDestDrop(false); }} />
-                      )}
-                    </div>
+                    {showOriginDrop && filterAirports(originSearch).length > 0 && (
+                      <AirportDropdown airports={filterAirports(originSearch)} userCountry={userCountry}
+                        onSelect={a => { setOrigin(a.iata); setOriginSearch(`${a.city} (${a.iata})`); setShowOriginDrop(false); }} />
+                    )}
                   </div>
 
-                  <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`}>
-                    <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Search Flights</Button>
-                  </Link>
+                  {/* To */}
+                  <div className="md:col-span-2 relative" ref={destRef}>
+                    <FieldLabel icon={MapPin} text="To" />
+                    <Input value={destinationSearch} onChange={e => { setDestinationSearch(e.target.value); setShowDestDrop(true); }} onFocus={() => setShowDestDrop(true)}
+                      placeholder="City or airport" className="rounded-xl" />
+                    {showDestDrop && filterAirports(destinationSearch).length > 0 && (
+                      <AirportDropdown airports={filterAirports(destinationSearch)} userCountry={userCountry}
+                        onSelect={a => { setDestination(a.iata); setDestinationSearch(`${a.city} (${a.iata})`); setShowDestDrop(false); }} />
+                    )}
+                  </div>
+
+                  {/* Search Button */}
+                  <div className="md:col-span-4">
+                    <Link to={`${createPageUrl("Flights")}?origin=${origin}&destination=${destination}&departDate=${onwardDate}&returnDate=${returnDate}&tripType=${tripType}`}>
+                      <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Search Flights</Button>
+                    </Link>
+                  </div>
                 </div>
               )}
 
