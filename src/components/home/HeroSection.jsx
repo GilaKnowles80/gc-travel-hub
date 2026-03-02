@@ -212,7 +212,7 @@ export default function HeroSection() {
 
         {/* Search Card */}
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="w-full max-w-5xl">
-          <div className="bg-white/96 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden">
+          <div className="bg-white/96 backdrop-blur-xl rounded-3xl shadow-2xl">
             {/* Tab Bar */}
             <div className="overflow-x-auto border-b border-slate-100">
               <div className="flex gap-1 p-3 min-w-max">
