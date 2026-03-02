@@ -160,6 +160,7 @@ import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
 import FinitechArchitecture from './pages/FinitechArchitecture';
 import DatabaseSchema from './pages/DatabaseSchema';
+import RegulatoryChecklist from './pages/RegulatoryChecklist';
 import __Layout from './Layout.jsx';
 
 
@@ -277,6 +278,7 @@ export const PAGES = {
     "utils": utils,
     "FinitechArchitecture": FinitechArchitecture,
     "DatabaseSchema": DatabaseSchema,
+    "RegulatoryChecklist": RegulatoryChecklist,
 }
 
 export const pagesConfig = {
