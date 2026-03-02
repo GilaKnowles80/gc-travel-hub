@@ -257,7 +257,7 @@ export default function HeroSection() {
             </div>
 
             {/* Search Forms */}
-            <div className="bg-white/95 backdrop-blur-xl px-5 py-4 rounded-b-2xl mx-0">
+            <div className="bg-white/95 backdrop-blur-xl px-6 py-5 rounded-b-2xl">
 
               {/* FLIGHTS */}
               {searchType === "flights" && (
