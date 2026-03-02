@@ -238,20 +238,53 @@ export default function HeroSection() {
               {/* FLIGHTS */}
               {searchType === "flights" && (
                 <div className="space-y-3">
-                  {/* Trip type toggle */}
-                  <div className="flex gap-2">
-                    {["round_trip", "one_way"].map(t => (
-                      <button key={t} onClick={() => setTripType(t)}
-                        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${tripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
-                        <ArrowLeftRight className="w-3 h-3" />{t === "round_trip" ? "Round Trip" : "One Way"}
+                  {/* Row 1: Trip type toggle + Depart + Return dates */}
+                  <div className="flex flex-wrap items-end gap-2">
+                    {/* Trip type buttons */}
+                    <div className="flex gap-2">
+                      {["round_trip", "one_way"].map(t => (
+                        <button key={t} onClick={() => setTripType(t)}
+                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${tripType === t ? "bg-orange-500 text-white border-orange-500" : "text-slate-500 border-slate-200 hover:border-orange-300"}`}>
+                          <ArrowLeftRight className="w-3 h-3" />{t === "round_trip" ? "Round Trip" : "One Way"}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Depart */}
+                    <div className="relative" ref={departCalRef}>
+                      <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
+                        className="h-8 border border-input rounded-xl px-3 text-sm bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors min-w-[130px]">
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={`truncate text-xs ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Depart Date"}</span>
                       </button>
-                    ))}
+                      {showDepartCal && (
+                        <div className="absolute top-full left-0 mt-1 z-[200]">
+                          <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
+                            onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Return */}
+                    <div className="relative" ref={returnCalRef}>
+                      <button onClick={() => { if (tripType !== "one_way") { setShowReturnCal(v => !v); setShowDepartCal(false); } }}
+                        className={`h-8 border border-input rounded-xl px-3 text-sm flex items-center gap-1.5 transition-colors min-w-[130px] ${tripType === "one_way" ? "bg-slate-100 opacity-50 cursor-not-allowed" : "bg-white hover:bg-slate-50"}`}>
+                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className={`truncate text-xs ${returnDate && tripType !== "one_way" ? "text-slate-800" : "text-slate-400"}`}>{tripType === "one_way" ? "N/A" : (returnDate || "Return Date")}</span>
+                      </button>
+                      {showReturnCal && tripType !== "one_way" && (
+                        <div className="absolute top-full left-0 mt-1 z-[200]">
+                          <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
+                            onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* From / Swap / To / Depart / Return / Search */}
-                  <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+                  {/* Row 2: From / To */}
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
                     {/* From */}
-                    <div className="col-span-2 md:col-span-2 relative" ref={originRef}>
+                    <div className="relative" ref={originRef}>
                       <FieldLabel icon={MapPin} text={<>From {geoDetecting && <span className="text-amber-500 text-[9px] ml-1">● detecting</span>}</>} />
                       <div className="relative">
                         <Input value={originSearch} onChange={e => { setOriginSearch(e.target.value); setShowOriginDrop(true); }} onFocus={() => setShowOriginDrop(true)}
@@ -267,45 +300,13 @@ export default function HeroSection() {
                     </div>
 
                     {/* To */}
-                    <div className="col-span-2 md:col-span-2 relative" ref={destRef}>
+                    <div className="relative" ref={destRef}>
                       <FieldLabel icon={MapPin} text="To" />
                       <Input value={destinationSearch} onChange={e => { setDestinationSearch(e.target.value); setShowDestDrop(true); }} onFocus={() => setShowDestDrop(true)}
                         placeholder="City or airport" className="rounded-xl" />
                       {showDestDrop && filterAirports(destinationSearch).length > 0 && (
                         <AirportDropdown airports={filterAirports(destinationSearch)} userCountry={userCountry}
                           onSelect={a => { setDestination(a.iata); setDestinationSearch(`${a.city} (${a.iata})`); setShowDestDrop(false); }} />
-                      )}
-                    </div>
-
-                    {/* Depart */}
-                    <div className="col-span-1 relative" ref={departCalRef}>
-                      <FieldLabel icon={Calendar} text="Depart" />
-                      <button onClick={() => { setShowDepartCal(v => !v); setShowReturnCal(false); }}
-                        className="w-full h-10 border border-input rounded-xl px-2 text-sm text-left bg-white hover:bg-slate-50 flex items-center gap-1.5 transition-colors">
-                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                        <span className={`truncate ${onwardDate ? "text-slate-800" : "text-slate-400"}`}>{onwardDate || "Date"}</span>
-                      </button>
-                      {showDepartCal && (
-                        <div className="absolute top-full left-0 mt-1 z-[200]">
-                          <PriceCalendar type="flight" origin={origin} destination={destination} selectedDate={onwardDate}
-                            onSelectDate={d => { setOnwardDate(d); setShowDepartCal(false); if (returnDate && d > returnDate) setReturnDate(""); }} />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Return */}
-                    <div className="col-span-1 relative" ref={returnCalRef}>
-                      <FieldLabel icon={Calendar} text="Return" />
-                      <button onClick={() => { if (tripType !== "one_way") { setShowReturnCal(v => !v); setShowDepartCal(false); } }}
-                        className={`w-full h-10 border border-input rounded-xl px-2 text-sm text-left flex items-center gap-1.5 transition-colors ${tripType === "one_way" ? "bg-slate-100 opacity-50 cursor-not-allowed" : "bg-white hover:bg-slate-50"}`}>
-                        <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
-                        <span className={`truncate ${returnDate && tripType !== "one_way" ? "text-slate-800" : "text-slate-400"}`}>{tripType === "one_way" ? "N/A" : (returnDate || "Date")}</span>
-                      </button>
-                      {showReturnCal && tripType !== "one_way" && (
-                        <div className="absolute top-full right-0 mt-1 z-[200]">
-                          <PriceCalendar type="flight" origin={destination} destination={origin} selectedDate={returnDate} minDate={onwardDate}
-                            onSelectDate={d => { setReturnDate(d); setShowReturnCal(false); }} />
-                        </div>
                       )}
                     </div>
                   </div>
