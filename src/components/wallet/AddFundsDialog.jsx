@@ -89,6 +89,21 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Payment Method</label>
+            <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="stripe">Stripe (Card)</SelectItem>
+                <SelectItem value="paypal">PayPal</SelectItem>
+                <SelectItem value="paymongo">PayMongo</SelectItem>
+                <SelectItem value="bank">Bank Transfer</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Input
             type="number"
             placeholder="Amount to be Deposited (₱)"
@@ -98,6 +113,23 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
             step="0.01"
             required
           />
+
+          {paymentMethod === "bank" && (
+            <>
+              <Input
+                placeholder="Bank Name"
+                value={bankName}
+                onChange={(e) => setBankName(e.target.value)}
+                required
+              />
+              <Input
+                placeholder="Account Holder Name"
+                value={accountName}
+                onChange={(e) => setAccountName(e.target.value)}
+                required
+              />
+            </>
+          )}
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
