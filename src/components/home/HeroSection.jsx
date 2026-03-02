@@ -9,9 +9,9 @@ import { createPageUrl } from "@/pages/utils";
 import PriceCalendar from "@/components/shared/PriceCalendar";
 
 const heroImages = [
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
-  "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=80",
   "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80",
+  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
 ];
 
 const SEARCH_TABS = [
