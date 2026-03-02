@@ -228,21 +228,38 @@ function LayoutContent({ children, currentPageName }) {
                     <span className={`text-xs transition-transform ml-1 ${adminMenuOpen ? 'rotate-180' : ''}`}>▾</span>
                   </button>
                   {adminMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
-                      {navLinks.filter(link => link.adminOnly).map((link) => (
-                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
-                           {(() => {
-                             const IconComponent = link.icon;
-                             return (
-                               <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
-                                 <IconComponent className="w-4 h-4" />
-                                 {link.name}
-                               </div>
-                             );
-                           })()}
-                         </Link>
-                        ))}
-                        </div>
+                   <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
+                     {navLinks.filter(link => link.adminOnly).map((link) => (
+                       <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
+                          {(() => {
+                            const IconComponent = link.icon;
+                            return (
+                              <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
+                                <IconComponent className="w-4 h-4" />
+                                {link.name}
+                              </div>
+                            );
+                          })()}
+                        </Link>
+                       ))}
+                       {/* Supplier Web Portals */}
+                       <div className="border-t border-slate-100 mt-1 pt-1">
+                         <div className="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Supplier Portals</div>
+                         {[
+                           { name: "Biyaheko", url: "https://booking.biyaheko.com", color: "text-blue-600" },
+                           { name: "Wanderlinx", url: "https://www.wanderlinx.com", color: "text-green-600" },
+                           { name: "Tripzynx", url: "https://www.tripzynx.com", color: "text-purple-600" },
+                         ].map(portal => (
+                           <a key={portal.name} href={portal.url} target="_blank" rel="noopener noreferrer"
+                             onClick={() => setAdminMenuOpen(false)}
+                             className="w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer text-slate-600 block">
+                             <Globe className={`w-4 h-4 ${portal.color}`} />
+                             {portal.name}
+                             <span className="ml-auto text-[10px] text-slate-400">↗</span>
+                           </a>
+                         ))}
+                       </div>
+                       </div>
                   )}
                 </div>
               )}
