@@ -139,7 +139,7 @@ export default function Flights() {
   };
 
   // Validate if search can be executed
-  const canSearch = searchParams.origin && searchParams.destination && searchParams.departureDate && moment(searchParams.departureDate).isValid();
+  const canSearch = !!(searchParams.origin && searchParams.destination && searchParams.departureDate && moment(searchParams.departureDate).isValid());
 
   // Fetch real-time flights from multiple providers (Duffel + Aviation Edge)
   const { data: flightData, isLoading, error } = useQuery({
