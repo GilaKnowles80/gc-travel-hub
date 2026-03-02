@@ -115,7 +115,6 @@ export default function WalletPage() {
     );
   }
 
-  const isAdmin = user?.role === "admin";
   const balance = walletData?.balance || 0;
   const usagePercent = (balance / MAX_WALLET_AMOUNT) * 100;
 
