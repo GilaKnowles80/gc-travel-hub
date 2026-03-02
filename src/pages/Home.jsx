@@ -66,6 +66,7 @@ export default function Home() {
       <FeaturedPackages />
       <WhyChooseUs />
       <TestimonialSection />
+      <CustomerSatisfaction />
       <CTASection />
     </div>
   );
