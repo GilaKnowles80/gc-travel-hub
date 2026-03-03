@@ -31,8 +31,8 @@ export default function PriceCalendar({
   const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const todayFirstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const maxMonthDate = new Date(today.getFullYear() + 1, today.getMonth(), 1);
+  const todayFirstOfMonth = new Date(2026, 0, 1); // Jan 1 2026
+  const maxMonthDate = new Date(2056, 11, 1); // Dec 2056
 
   // Build array of months to display
   const months = Array.from({ length: numberOfMonths }, (_, i) => {
