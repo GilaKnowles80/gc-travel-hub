@@ -23,7 +23,7 @@ import { AdminModeProvider, useAdminMode } from "@/components/admin/AdminModeCon
 import AdminSearchSoundAlert from "@/components/admin/AdminSearchSoundAlert";
 
 const navLinks = [
-  { name: "Home", page: "Home", icon: Plane },
+  { name: "Home", page: "Home", icon: Home },
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },

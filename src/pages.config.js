@@ -68,6 +68,7 @@ import AdminHelpdesk from './pages/AdminHelpdesk';
 import AdminHotels from './pages/AdminHotels';
 import AdminInsurance from './pages/AdminInsurance';
 import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
+import AdminInventoryMonitor from './pages/AdminInventoryMonitor';
 import AdminLoyalty from './pages/AdminLoyalty';
 import AdminMonetization from './pages/AdminMonetization';
 import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
@@ -131,6 +132,7 @@ import PremiumMembership from './pages/PremiumMembership';
 import PriceAlerts from './pages/PriceAlerts';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Profile from './pages/Profile';
+import RealTimeAvailability from './pages/RealTimeAvailability';
 import RefundPolicy from './pages/RefundPolicy';
 import RegulatoryChecklist from './pages/RegulatoryChecklist';
 import SafeAndSecure from './pages/SafeAndSecure';
@@ -161,8 +163,6 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import RealTimeAvailability from './pages/RealTimeAvailability';
-import AdminInventoryMonitor from './pages/AdminInventoryMonitor';
 import __Layout from './Layout.jsx';
 
 
@@ -188,6 +188,7 @@ export const PAGES = {
     "AdminHotels": AdminHotels,
     "AdminInsurance": AdminInsurance,
     "AdminInsuranceProviders": AdminInsuranceProviders,
+    "AdminInventoryMonitor": AdminInventoryMonitor,
     "AdminLoyalty": AdminLoyalty,
     "AdminMonetization": AdminMonetization,
     "AdminPackagePromoCodes": AdminPackagePromoCodes,
@@ -251,6 +252,7 @@ export const PAGES = {
     "PriceAlerts": PriceAlerts,
     "PrivacyPolicy": PrivacyPolicy,
     "Profile": Profile,
+    "RealTimeAvailability": RealTimeAvailability,
     "RefundPolicy": RefundPolicy,
     "RegulatoryChecklist": RegulatoryChecklist,
     "SafeAndSecure": SafeAndSecure,
@@ -281,8 +283,6 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "RealTimeAvailability": RealTimeAvailability,
-    "AdminInventoryMonitor": AdminInventoryMonitor,
 }
 
 export const pagesConfig = {
