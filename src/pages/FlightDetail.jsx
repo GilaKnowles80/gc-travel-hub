@@ -45,14 +45,28 @@ export default function FlightDetail() {
 
   if (!flight) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
-        <h2 className="text-2xl font-bold text-slate-600">Flight not found</h2>
-        <Link to={createPageUrl("Flights")}>
-          <Button variant="outline" className="rounded-xl">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Flights
-          </Button>
-        </Link>
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4 px-4">
+        <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+          <Plane className="w-8 h-8 text-amber-500" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-700">Flight not found</h2>
+        <p className="text-slate-500 text-center max-w-sm">
+          This flight may no longer be available in our system. You can search manually via the Biyaheko portal.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link to={createPageUrl("Flights")}>
+            <Button variant="outline" className="rounded-xl">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Flights
+            </Button>
+          </Link>
+          <Link to={createPageUrl("BiyahekoPortal")}>
+            <Button className="rounded-xl bg-red-600 hover:bg-red-700 text-white">
+              <Users className="w-4 h-4 mr-2" />
+              Search on Biyaheko Portal
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
