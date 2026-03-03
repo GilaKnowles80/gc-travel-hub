@@ -396,9 +396,21 @@ function LayoutContent({ children, currentPageName }) {
             </div>
           </div>
 
-          <div className="border-t border-slate-800 mt-12 pt-8 text-center">
+          <div className="border-t border-slate-800 mt-12 pt-8 text-center space-y-3">
             <p className="text-slate-500 text-sm">
               © {new Date().getFullYear()} GC Travel & Tours. All rights reserved.
+            </p>
+            <p className="text-slate-600 text-xs">
+              Powered by{" "}
+              <span className="text-slate-400">AI</span> ·{" "}
+              <span className="text-slate-400">Base44</span> ·{" "}
+              <span className="text-slate-400">Duffel</span> ·{" "}
+              <span className="text-slate-400">Sabre</span> ·{" "}
+              <span className="text-slate-400">Amadeus</span> ·{" "}
+              <span className="text-slate-400">Biyaheko</span> ·{" "}
+              <span className="text-slate-400">Tripzynx</span> ·{" "}
+              <span className="text-slate-400">Wanderlinx</span> ·{" "}
+              <span className="text-slate-400">Stripe</span>
             </p>
           </div>
         </div>
