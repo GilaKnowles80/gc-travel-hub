@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe } from "lucide-react";
+import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe, ScanLine, XCircle } from "lucide-react";
 
 const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment"];
 
