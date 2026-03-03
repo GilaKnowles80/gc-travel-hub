@@ -12,6 +12,178 @@ import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, I
 
 const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment"];
 
+// Rules data keyed by country code (PH = Philippines, US, GB, AU, SG, JP, etc.)
+const COUNTRY_RULES = {
+  PH: {
+    dos: [
+      "Arrive at the airport at least 3 hours before international flights.",
+      "Carry a valid government-issued ID or passport.",
+      "Ensure all carry-on items follow the 7 kg limit per person.",
+      "Declare all dutiable items at the Bureau of Customs counter.",
+      "Follow all MIAA/CAAP security screening procedures.",
+      "Keep your boarding pass and ID accessible at all times.",
+    ],
+    donts: [
+      "Do not carry prohibited items (sharp objects, liquids >100ml, etc.).",
+      "Do not make jokes about bombs or security threats — it is a criminal offense.",
+      "Do not leave baggage unattended at any time.",
+      "Do not use unauthorized taxis or fixers inside the terminal.",
+      "Do not smoke in non-designated areas.",
+    ],
+    immigration: [
+      "Filipino citizens require a valid passport with at least 6 months validity.",
+      "OFWs must present a valid OEC or iDOLE upon departure.",
+      "Minors traveling alone need a DSWD travel clearance.",
+      "Foreign nationals must present a valid visa for the destination country.",
+      "All passengers must fill out the Bureau of Immigration departure card.",
+      "Travel tax of ₱1,620 applies to most international departing passengers.",
+    ],
+  },
+  US: {
+    dos: [
+      "Arrive at least 2 hours before domestic and 3 hours before international flights.",
+      "Carry a REAL ID-compliant driver's license or passport.",
+      "Place liquids in a clear quart-sized bag (3-1-1 TSA rule).",
+      "Remove laptops and liquids from your bag for X-ray screening.",
+      "Follow all TSA agent instructions at checkpoints.",
+    ],
+    donts: [
+      "Do not carry firearms or ammunition in carry-on bags.",
+      "Do not make threatening remarks at airport checkpoints.",
+      "Do not leave bags unattended — they may be destroyed.",
+      "Do not exceed the $10,000 cash limit without declaring it.",
+      "Do not bring prohibited food items through customs.",
+    ],
+    immigration: [
+      "US citizens must present a valid US passport for international travel.",
+      "Non-US citizens need a valid visa or ESTA authorization.",
+      "Green card holders must carry their Permanent Resident Card.",
+      "Customs Declaration Form (CBP Form 6059B) must be completed on arrival.",
+      "Agricultural items must be declared at customs.",
+    ],
+  },
+  GB: {
+    dos: [
+      "Arrive at least 2 hours before domestic and 3 hours before international flights.",
+      "Carry a valid UK passport or national identity card (for EU travel).",
+      "Follow the 100ml liquid rule in a single clear resealable bag.",
+      "Declare items over the duty-free allowance at customs.",
+      "Use e-gates where available to speed up immigration.",
+    ],
+    donts: [
+      "Do not carry sharp objects, firearms, or flammable materials in hand luggage.",
+      "Do not make jokes about terrorism or security threats.",
+      "Do not carry more than £10,000 in cash without declaring it.",
+      "Do not bring restricted food items or plants without proper documentation.",
+      "Do not smoke inside any airport terminal.",
+    ],
+    immigration: [
+      "UK citizens must have a valid passport for all international travel.",
+      "EU/EEA citizens now need a valid passport (ID cards may not be accepted).",
+      "Non-UK nationals require the appropriate visa or ETA.",
+      "The UK Electronic Travel Authorisation (ETA) is required for some nationalities.",
+      "All arrivals must comply with UK Border Force declarations.",
+    ],
+  },
+  SG: {
+    dos: [
+      "Arrive at least 2 hours before departure at Changi Airport.",
+      "Carry a valid passport with at least 6 months validity.",
+      "Declare all dutiable goods and restricted items to customs.",
+      "Use the SG Arrival Card (SGAC) for customs/immigration declaration.",
+      "Follow ICA (Immigration & Checkpoints Authority) instructions.",
+    ],
+    donts: [
+      "Do not bring chewing gum, drugs, or firearms into Singapore.",
+      "Do not carry more than SGD 20,000 in cash without declaring.",
+      "Do not overstay your visa or social visit pass.",
+      "Do not bring tobacco exceeding the duty-free allowance.",
+      "Do not vape — e-cigarettes are banned in Singapore.",
+    ],
+    immigration: [
+      "Singapore citizens and PRs use automated immigration lanes (ICA).",
+      "Visitors may stay up to 30 or 90 days depending on nationality.",
+      "An SG Arrival Card must be submitted within 3 days before arrival.",
+      "Work Pass holders must carry their pass at all times.",
+      "Yellow Fever vaccination certificate required if arriving from endemic countries.",
+    ],
+  },
+  DEFAULT: {
+    dos: [
+      "Arrive at the airport at least 2–3 hours before your flight.",
+      "Carry a valid passport with at least 6 months validity.",
+      "Keep liquids under 100ml in a clear resealable bag.",
+      "Declare all dutiable or restricted goods at customs.",
+      "Follow all security screening procedures at the airport.",
+      "Keep your boarding pass and ID accessible at all times.",
+    ],
+    donts: [
+      "Do not carry prohibited items (sharp objects, firearms, liquids >100ml).",
+      "Do not make jokes about bombs or security threats.",
+      "Do not leave baggage unattended at any time.",
+      "Do not exceed the duty-free allowance without declaring.",
+      "Do not smoke in non-designated areas.",
+    ],
+    immigration: [
+      "Ensure your passport is valid for at least 6 months beyond your travel dates.",
+      "Check visa requirements for your destination country in advance.",
+      "Carry supporting documents (return ticket, hotel booking, bank statement).",
+      "Complete any required arrival/departure cards provided by the airline.",
+      "Comply with all customs and immigration regulations of the destination country.",
+    ],
+  },
+};
+
+function GeoRulesSection({ geoInfo, geoLoading, destination }) {
+  const rules = COUNTRY_RULES[geoInfo?.countryCode] || COUNTRY_RULES.DEFAULT;
+
+  return (
+    <div className="space-y-3">
+      {geoLoading ? (
+        <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 rounded-xl p-3">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Detecting your location for relevant travel rules...
+        </div>
+      ) : (
+        geoInfo && (
+          <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 rounded-xl px-3 py-2">
+            <Globe className="w-3.5 h-3.5 text-slate-400" />
+            Showing rules for <span className="font-semibold text-slate-700 ml-1">{geoInfo.country}</span>
+          </div>
+        )
+      )}
+
+      <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+        <p className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4" /> Do's at the Airport
+        </p>
+        <ul className="text-sm text-green-700 space-y-1 list-disc list-inside">
+          {rules.dos.map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+      </div>
+
+      <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+        <p className="font-semibold text-red-800 mb-2 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4" /> Don'ts at the Airport
+        </p>
+        <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
+          {rules.donts.map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+      </div>
+
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <p className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+          <Info className="w-4 h-4" /> Immigration Policy
+          {geoInfo && <span className="text-xs font-normal text-blue-500">({geoInfo.country})</span>}
+        </p>
+        <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
+          {rules.immigration.map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export default function FlightBookingForm({ flight, cabinClass, onClose, tripType, departureDate, returnDate: initialReturnDate }) {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
