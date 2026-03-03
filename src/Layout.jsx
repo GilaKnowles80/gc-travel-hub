@@ -173,7 +173,7 @@ function LayoutContent({ children, currentPageName }) {
                 return (
                   <Link key={link.page} to={createPageUrl(link.page)} className="shrink-0">
                     <button
-                      className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                      className={`px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all flex items-center gap-1 md:gap-1.5 whitespace-nowrap ${
                         currentPageName === link.page
                           ? isHome && !scrolled
                             ? "bg-white/20 text-white"
@@ -181,7 +181,8 @@ function LayoutContent({ children, currentPageName }) {
                           : `${textColor} hover:bg-slate-100/50`
                       }`}
                     >
-                      {link.name}
+                      <IconComponent className="w-4 h-4" />
+                      <span className="hidden md:inline">{link.name}</span>
                     </button>
                   </Link>
                 );
