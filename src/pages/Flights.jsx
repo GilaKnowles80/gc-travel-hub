@@ -519,12 +519,12 @@ export default function Flights() {
 
                 {/* Search Button */}
                 <Button
-                  onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                  onClick={handleSearch}
                   disabled={isLoading || !canSearch}
                   className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-11 rounded-lg px-6"
                 >
                   <Search className="w-4 h-4 mr-2" />
-                  Search Flights
+                  {isLoading ? "Searching..." : "Search Flights"}
                 </Button>
               </div>
             </Card>
