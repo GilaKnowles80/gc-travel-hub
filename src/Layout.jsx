@@ -315,6 +315,9 @@ function LayoutContent({ children, currentPageName }) {
         {!isHome && <AdBanner placement="banner_bottom" currentPage={currentPageName.toLowerCase()} />}
       </main>
       
+      {/* Admin Search Sound Alert */}
+      <AdminSearchSoundAlert user={user} />
+
       {/* Bottom Navigation (Mobile Only) */}
       <BottomNavigation currentPageName={currentPageName} onTabPress={handleTabPress} />
 
