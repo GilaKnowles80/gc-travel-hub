@@ -267,8 +267,7 @@ function LayoutContent({ children, currentPageName }) {
       {/* Admin Search Sound Alert */}
       <AdminSearchSoundAlert user={user} />
 
-      {/* Bottom Navigation (Mobile Only) */}
-      <BottomNavigation currentPageName={currentPageName} onTabPress={handleTabPress} />
+
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white">
