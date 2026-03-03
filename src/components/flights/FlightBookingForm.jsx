@@ -729,9 +729,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
       {splitResult && (
         <div className="bg-green-50 rounded-xl p-4 text-sm text-left space-y-1 border border-green-200">
-          <p className="font-semibold text-green-800 mb-2 flex items-center gap-2"><Plane className="w-4 h-4" /> Payment Split Processed</p>
-          <div className="flex justify-between text-green-700"><span>Duffel (Airline) 75%</span><span className="font-medium">${splitResult.duffel.toLocaleString()}</span></div>
-          <div className="flex justify-between text-green-700"><span>GC Travel GCash 25%</span><span className="font-medium">${splitResult.gcash.toLocaleString()}</span></div>
+          <p className="font-semibold text-green-800 mb-2 flex items-center gap-2"><Plane className="w-4 h-4" /> Payment Breakdown</p>
+          <div className="flex justify-between text-green-700"><span>Base Fare (75%)</span><span className="font-medium">${splitResult.duffel.toLocaleString()}</span></div>
+          <div className="flex justify-between text-green-700"><span>Taxes & Fees (25%)</span><span className="font-medium">${splitResult.gcash.toLocaleString()}</span></div>
           <p className="text-xs text-green-500 mt-1">Autopay processed ✓</p>
         </div>
       )}
