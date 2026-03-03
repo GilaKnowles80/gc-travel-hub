@@ -164,7 +164,9 @@ export default function Flights() {
         });
         
         // Transform offers to app format with real-time availability
-        const flights = response.data.offers?.map((offer, idx) => {
+        const rawOffers = response.data.offers || [];
+        console.log(`Got ${rawOffers.length} offers from Duffel`);
+        const flights = rawOffers.map((offer, idx) => {
           const seatsAvailable = offer.seats_available || Math.floor(Math.random() * 15) + 1;
           const isSoldOut = seatsAvailable === 0;
           const isLimited = seatsAvailable > 0 && seatsAvailable <= 3;
