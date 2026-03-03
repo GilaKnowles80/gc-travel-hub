@@ -651,7 +651,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
             <div className="mt-2 space-y-1">
               <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 rounded-lg px-2 py-1">
                 <CheckCircle className="w-3 h-3" />
-                <span><strong>If booking succeeds:</strong> Payment is split — 75% Base Fare, 25% Taxes & Fees.</span>
+                <span><strong>If booking succeeds:</strong> Airline Base Fare (75%) + Service, Taxes & Fees (25%).</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 rounded-lg px-2 py-1">
                 <Wallet className="w-3 h-3" />
