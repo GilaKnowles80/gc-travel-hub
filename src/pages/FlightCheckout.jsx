@@ -167,6 +167,25 @@ export default function FlightCheckout() {
     setLoading(true);
     setError("");
     try {
+      // Check if running in iframe
+      if (window.self !== window.top) {
+        setError("Checkout must be accessed from the published app. Please click the preview link to access the full app.");
+        setLoading(false);
+        return;
+      }
+
+      // Calculate total with add-ons
+      const addonsTotal = selectedAddons.reduce((sum, addon) => sum + addon.price, 0);
+      const totalPrice = booking.total_price + addonsTotal;
+
+      // Save checkout to localStorage for abandonment recovery
+      localStorage.setItem("pending_flight_checkout", JSON.stringify({
+        ...booking,
+        addons: selectedAddons,
+        total_price: totalPrice,
+        timestamp: Date.now(),
+      }));
+
       const { data } = await base44.functions.invoke("createFlightCheckout", {
         flight_id: booking.flight_id,
         cabin_class: booking.cabin_class,
@@ -176,6 +195,7 @@ export default function FlightCheckout() {
         number_of_passengers: booking.number_of_passengers,
         addons: selectedAddons,
         trip_type: booking.trip_type,
+        total_price: totalPrice,
       });
 
       if (data.checkout_url) {
