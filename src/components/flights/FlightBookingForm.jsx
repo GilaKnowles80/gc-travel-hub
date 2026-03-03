@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe, ScanLine, XCircle } from "lucide-react";
 
-const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment"];
+const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment", "Confirmation"];
 
 // Rules data keyed by country code (PH = Philippines, US, GB, AU, SG, JP, etc.)
 const COUNTRY_RULES = {
