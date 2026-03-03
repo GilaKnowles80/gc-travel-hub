@@ -42,9 +42,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const selectedClassData = flight.cabin_classes?.find((c) => c.class === cabinClass);
   const basePrice = selectedClassData?.price || flight.price || 0;
-  // If the flight price already represents a roundtrip fare (from search), don't multiply again
-  const isRoundtripFareAlreadyIncluded = normalizedTripType === "round_trip";
-  const tripMultiplier = (formData.trip_type === "round_trip" && !isRoundtripFareAlreadyIncluded) ? 2 : 1;
+  // The price from the API already accounts for trip type (roundtrip fare = total for both legs)
+  // Never multiply — the fare shown is always the final fare per passenger
+  const tripMultiplier = 1;
   const totalPassengers =
     formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
   const adultsPrice = formData.adults * basePrice * tripMultiplier;
