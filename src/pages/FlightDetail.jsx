@@ -20,6 +20,10 @@ export default function FlightDetail() {
   const flightId = urlParams.get("id");
   const location = useLocation();
   const stateFlight = location.state?.flight;
+  // Carry over search context from the Flights page
+  const searchTripType = urlParams.get("tripType") || location.state?.tripType || "oneway";
+  const searchDepartureDate = urlParams.get("departureDate") || location.state?.departureDate || "";
+  const searchReturnDate = urlParams.get("returnDate") || location.state?.returnDate || "";
   const [showBooking, setShowBooking] = useState(false);
   const [showPriceAlert, setShowPriceAlert] = useState(false);
   const [selectedClass, setSelectedClass] = useState(() => stateFlight?.cabin_classes?.[0]?.class || "economy");
