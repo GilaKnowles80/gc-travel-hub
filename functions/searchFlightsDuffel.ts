@@ -1,9 +1,11 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { origin, destination, departureDate, adults = 1, cabin = 'economy', returnDate } = await req.json();
+    const body = await req.json();
+    const { origin, destination, departureDate, adults = 1, returnDate } = body;
+    const cabin = body.cabin || body.cabinClass || 'economy';
 
     // Validate required fields
     if (!origin || !destination || !departureDate) {
