@@ -148,7 +148,11 @@ export default function FlightTrustSignals() {
           <p className="text-sm text-slate-600 mb-4">Secure Payment Methods</p>
           <div className="flex items-center justify-center gap-6 flex-wrap">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 68" className="h-6 opacity-50 hover:opacity-100 transition-opacity" aria-label="Visa">
+              <rect width="216" height="68" rx="6" fill="#1A1F71"/>
+              <path d="M87.2 47.8L93.8 20.4h10.1l-6.6 27.4H87.2zm48.3-26.7c-2-.7-5.1-1.5-9-1.5-9.9 0-16.9 5-16.9 12.2-.1 5.3 5 8.3 8.8 10.1 3.9 1.8 5.2 3 5.2 4.6 0 2.5-3.1 3.6-6 3.6-4 0-6.1-.6-9.4-2l-1.3-.6-1.4 8.2c2.3 1 6.6 1.9 11.1 2 10.5 0 17.3-4.9 17.4-12.5.1-4.2-2.6-7.3-8.3-9.9-3.5-1.7-5.6-2.8-5.6-4.5 0-1.5 1.8-3.1 5.7-3.1 3.2-.1 5.6.7 7.4 1.4l.9.4 1.4-8zM161.9 20.4h-7.7c-2.4 0-4.2.7-5.2 3l-14.8 24.4h10.5s1.7-4.5 2.1-5.5h12.8c.3 1.3 1.2 5.5 1.2 5.5h9.3l-8.2-27.4zm-12.3 15.9c.8-2.1 4-10.3 4-10.3s.8-2.2 1.3-3.6l.7 3.2s1.9 8.7 2.3 10.7h-8.3zM80.2 20.4L70.4 38.9l-1-5.1c-1.8-5.8-7.3-12.1-13.5-15.2l9 29.2h10.6l15.8-27.4H80.2z" fill="white"/>
+              <path d="M61.9 20.4H46.1l-.1.8c12.3 3 20.4 10.2 23.8 18.8l-3.4-16.4c-.6-2.3-2.3-3.1-4.5-3.2z" fill="#F9A533"/>
+            </svg>
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
             <div className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold text-slate-700">GCash</div>
             <div className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold text-slate-700">Maya</div>
