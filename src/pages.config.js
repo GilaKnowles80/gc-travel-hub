@@ -161,6 +161,8 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
+import RealTimeAvailability from './pages/RealTimeAvailability';
+import AdminInventoryMonitor from './pages/AdminInventoryMonitor';
 import __Layout from './Layout.jsx';
 
 
@@ -279,6 +281,8 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
+    "RealTimeAvailability": RealTimeAvailability,
+    "AdminInventoryMonitor": AdminInventoryMonitor,
 }
 
 export const pagesConfig = {
