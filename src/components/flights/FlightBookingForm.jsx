@@ -12,12 +12,16 @@ import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, I
 
 const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment"];
 
-export default function FlightBookingForm({ flight, cabinClass, onClose }) {
+export default function FlightBookingForm({ flight, cabinClass, onClose, tripType, departureDate, returnDate: initialReturnDate }) {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
+
+  // Normalize incoming trip type (search uses "roundtrip", form uses "round_trip")
+  const normalizedTripType = tripType === "roundtrip" ? "round_trip" : (tripType || "one_way");
+
   const [formData, setFormData] = useState({
-    trip_type: "one_way",
-    return_date: "",
+    trip_type: normalizedTripType,
+    return_date: initialReturnDate || "",
     passenger_name: "",
     passenger_email: "",
     passenger_phone: "",
