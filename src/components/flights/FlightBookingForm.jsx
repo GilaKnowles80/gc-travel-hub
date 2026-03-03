@@ -57,9 +57,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   const pwdPrice = +(formData.pwd * pricePerPax * 0.9).toFixed(2);
   const totalPrice = +(adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice).toFixed(2);
 
-  // Internal split: 75% goes to airline (Duffel), 25% is GC Travel markup
-  const duffelShare = +(totalPrice * 0.75).toFixed(2);
-  const gcashShare = +(totalPrice * 0.25).toFixed(2);
+  // Internal split: Duffel is 75% of total, GC Travel markup is 25%
+  const duffelShare = +(totalPrice * 0.75).toFixed(2); // goes to airline
+  const gcashShare = +(totalPrice * 0.25).toFixed(2);  // GC Travel markup/fees
 
   const bookFlightMutation = useMutation({
     mutationFn: async () => {
