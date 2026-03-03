@@ -86,15 +86,16 @@ export default function PriceCalendar({ origin, destination, location, type = "f
     setLoading(false);
   };
 
+  const todayFirstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const maxMonthDate = new Date(today.getFullYear() + 1, today.getMonth(), 1); // max 12 months ahead
+
   const prevMonth = () => {
     const newMonth = new Date(year, month - 1, 1);
-    if (newMonth.getFullYear() > 2026 || (newMonth.getFullYear() === 2026 && newMonth.getMonth() >= 0)) {
-      setCurrentMonth(newMonth);
-    }
+    if (newMonth >= todayFirstOfMonth) setCurrentMonth(newMonth);
   };
   const nextMonth = () => {
     const newMonth = new Date(year, month + 1, 1);
-    if (newMonth.getFullYear() <= 2056) setCurrentMonth(newMonth);
+    if (newMonth <= maxMonthDate) setCurrentMonth(newMonth);
   };
 
   const firstDay = new Date(year, month, 1).getDay();
