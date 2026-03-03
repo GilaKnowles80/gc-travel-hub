@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen, Sparkles, Tag, Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
 import PriceAlertDialog from "../components/flights/PriceAlertDialog";
@@ -18,16 +18,22 @@ import moment from "moment";
 export default function FlightDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const flightId = urlParams.get("id");
+  const location = useLocation();
+  const stateFlight = location.state?.flight;
   const [showBooking, setShowBooking] = useState(false);
   const [showPriceAlert, setShowPriceAlert] = useState(false);
-  const [selectedClass, setSelectedClass] = useState("economy");
+  const [selectedClass, setSelectedClass] = useState(() => stateFlight?.cabin_classes?.[0]?.class || "economy");
 
-  const { data: flight, isLoading } = useQuery({
+  // Only query DB if it's a real DB id (not a synthetic API id like "duffel_0")
+  const isDbId = flightId && !flightId.includes('_') || (flightId && flightId.length > 20);
+  const { data: dbFlight, isLoading } = useQuery({
     queryKey: ["flight", flightId],
     queryFn: () => base44.entities.Flight.filter({ id: flightId }),
     select: (data) => data?.[0],
-    enabled: !!flightId,
+    enabled: !!flightId && !stateFlight,
   });
+
+  const flight = stateFlight || dbFlight;
 
   if (isLoading) {
     return (
