@@ -687,8 +687,8 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
       {/* Internal split info */}
       <div className="bg-slate-50 rounded-xl p-3 text-xs text-slate-500 space-y-1 border border-slate-200">
         <p className="font-semibold text-slate-700 mb-1">Payment Breakdown on Successful Booking</p>
-        <div className="flex justify-between"><span>→ Base Fare (75%)</span><span className="font-medium text-slate-700">${duffelShare.toLocaleString()}</span></div>
-        <div className="flex justify-between"><span>→ Taxes & Fees (25%)</span><span className="font-medium text-slate-700">${gcashShare.toLocaleString()}</span></div>
+        <div className="flex justify-between"><span>→ Airline Base Fare (75%)</span><span className="font-medium text-slate-700">${duffelShare.toLocaleString()}</span></div>
+        <div className="flex justify-between"><span>→ Service, Taxes & Fees (25%)</span><span className="font-medium text-slate-700">${gcashShare.toLocaleString()}</span></div>
         <p className="text-slate-400 mt-1">Processed automatically upon booking confirmation.</p>
       </div>
 
