@@ -68,20 +68,38 @@ Deno.serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log(`Found ${data.data?.offers?.length || 0} flight offers`);
+    const rawOffers = data.data?.offers || [];
+    console.log(`Found ${rawOffers.length} flight offers from Duffel`);
 
-    // Transform response to standard format
-    const offers = (data.data?.offers || []).map((offer) => ({
-      id: offer.id,
-      airline: offer.owner?.name || 'Unknown',
-      departure_time: offer.slices?.[0]?.departure_at,
-      arrival_time: offer.slices?.[0]?.arrival_at,
-      duration: offer.slices?.[0]?.duration,
-      stops: offer.slices?.[0]?.stops?.length || 0,
-      total_amount: parseFloat(offer.total_amount),
-      currency: offer.total_currency,
-      cabin_class: cabin,
-    }));
+    // Return raw offers so multi-provider can parse slices/segments,
+    // AND also return a simplified format for direct use
+    const offers = rawOffers.map((offer) => {
+      const slice = offer.slices?.[0];
+      const segments = slice?.segments || [];
+      const firstSeg = segments[0];
+      const lastSeg = segments[segments.length - 1];
+      return {
+        id: offer.id,
+        owner: offer.owner,
+        slices: offer.slices,
+        total_amount: offer.total_amount,
+        total_currency: offer.total_currency,
+        // Simplified fields
+        airline_name: offer.owner?.name || 'Unknown',
+        flight_number: firstSeg?.operating_carrier_flight_number || firstSeg?.marketing_carrier_flight_number || 'N/A',
+        origin: slice?.origin?.iata_code || origin,
+        destination: slice?.destination?.iata_code || destination,
+        departure_time: firstSeg?.departing_at || slice?.segments?.[0]?.departing_at,
+        arrival_time: lastSeg?.arriving_at,
+        duration_hours: firstSeg && lastSeg ? Math.round((new Date(lastSeg.arriving_at) - new Date(firstSeg.departing_at)) / (1000 * 60 * 60) * 10) / 10 : null,
+        is_direct: segments.length === 1,
+        stops: segments.length - 1,
+        price: parseFloat(offer.total_amount),
+        currency: offer.total_currency || 'USD',
+        cabin_class: cabin,
+        source: 'duffel',
+      };
+    });
 
     return Response.json({
       success: true,
