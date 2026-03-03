@@ -28,6 +28,7 @@ import SeatAvailabilityIndicator from "../components/flights/SeatAvailabilityInd
 export default function Flights() {
   const queryClient = useQueryClient();
   const [showAIDiscovery, setShowAIDiscovery] = useState(false);
+  const [searchTriggered, setSearchTriggered] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const [searchParams, setSearchParams] = useState({
