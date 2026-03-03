@@ -58,19 +58,35 @@ export default function FlightDetail() {
         <p className="text-slate-500 text-center max-w-sm">
           This flight may no longer be available in our system. You can search manually via the Biyaheko portal.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 flex-wrap justify-center">
           <Link to={createPageUrl("Flights")}>
             <Button variant="outline" className="rounded-xl">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Flights
             </Button>
           </Link>
-          <Link to={createPageUrl("BiyahekoPortal")}>
-            <Button className="rounded-xl bg-red-600 hover:bg-red-700 text-white">
-              <Users className="w-4 h-4 mr-2" />
-              Search on Biyaheko Portal
-            </Button>
-          </Link>
+          {user?.role === 'admin' && (
+            <>
+              <Link to={createPageUrl("BiyahekoPortal")}>
+                <Button className="rounded-xl bg-red-600 hover:bg-red-700 text-white">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Search on Biyaheko
+                </Button>
+              </Link>
+              <Link to={createPageUrl("WanderlinxPortal")}>
+                <Button className="rounded-xl bg-teal-600 hover:bg-teal-700 text-white">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Search on Wanderlinx
+                </Button>
+              </Link>
+              <Link to={createPageUrl("TripzynxPortal")}>
+                <Button className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Search on Tripzynx
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     );
