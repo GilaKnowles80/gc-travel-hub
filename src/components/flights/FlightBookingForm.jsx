@@ -346,6 +346,29 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         status: "processed",
       });
       queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
+
+      // Send booking confirmation email automatically
+      const pnr = booking.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
+      base44.functions.invoke("sendBookingConfirmation", {
+        pnr,
+        customer_email: formData.passenger_email,
+        customer_name: formData.passenger_name,
+        product_type: "flight",
+        item_name: `${flight.airline_name} ${flight.flight_number}`,
+        total_price: totalPrice,
+        booking_date: new Date().toISOString(),
+        status: "confirmed",
+        origin: flight.origin,
+        destination: flight.destination,
+        departure_date: formData.departure_date,
+        return_date: formData.return_date || null,
+        airline: flight.airline_name,
+        flight_number: flight.flight_number,
+        cabin_class: cabinClass,
+        passengers: `${totalPassengers} passenger(s)`,
+        special_requests: formData.special_requests || null,
+      }).catch(console.error);
+
       setStep(5);
     },
   });
