@@ -13,6 +13,7 @@ import WhyChooseUs from "../components/home/WhyChooseUs";
 import TestimonialSection from "../components/home/TestimonialSection";
 import CTASection from "../components/home/CTASection";
 import CustomerSatisfaction from "../components/home/CustomerSatisfaction";
+import AbandonmentRecovery from "../components/checkout/AbandonmentRecovery";
 
 export default function Home() {
   const { countryCode } = useCurrency();
