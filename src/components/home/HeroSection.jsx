@@ -88,6 +88,7 @@ function FieldLabel({ icon: Icon, text }) {
 
 function CalendarPortal({ anchorRef, onClose, children }) {
    const [pos, setPos] = useState({ top: 0, left: 0 });
+   const containerRef = useRef(null);
 
    useEffect(() => {
      const updatePos = () => {
@@ -98,7 +99,10 @@ function CalendarPortal({ anchorRef, onClose, children }) {
      };
      updatePos();
      const handler = (e) => {
-       if (anchorRef.current && !anchorRef.current.contains(e.target)) onClose();
+       if (
+         anchorRef.current && !anchorRef.current.contains(e.target) &&
+         containerRef.current && !containerRef.current.contains(e.target)
+       ) onClose();
      };
      document.addEventListener("mousedown", handler);
      window.addEventListener("scroll", updatePos);
@@ -111,7 +115,7 @@ function CalendarPortal({ anchorRef, onClose, children }) {
    }, [anchorRef, onClose]);
 
    return (
-     <div style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
+     <div ref={containerRef} style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
        <div style={{ maxHeight: "500px", overflow: "auto" }}>
          {children}
        </div>
