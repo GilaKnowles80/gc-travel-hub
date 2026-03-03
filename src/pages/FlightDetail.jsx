@@ -359,7 +359,14 @@ export default function FlightDetail() {
           <DialogHeader>
             <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
           </DialogHeader>
-          <FlightBookingForm flight={flight} cabinClass={selectedClass} onClose={() => setShowBooking(false)} />
+          <FlightBookingForm
+            flight={flight}
+            cabinClass={selectedClass}
+            onClose={() => setShowBooking(false)}
+            tripType={searchTripType}
+            departureDate={searchDepartureDate}
+            returnDate={searchReturnDate}
+          />
         </DialogContent>
       </Dialog>
 
