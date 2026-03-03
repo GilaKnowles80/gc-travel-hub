@@ -163,6 +163,11 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         </Select>
       </div>
 
+      <div className="space-y-2">
+        <Label>Departure Date</Label>
+        <Input type="date" value={formData.departure_date} onChange={(e) => setFormData({ ...formData, departure_date: e.target.value })} className="rounded-xl" />
+      </div>
+
       {formData.trip_type === "round_trip" && (
         <div className="space-y-2">
           <Label>Return Date</Label>
