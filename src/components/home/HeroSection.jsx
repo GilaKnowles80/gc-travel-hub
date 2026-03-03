@@ -94,7 +94,12 @@ function CalendarPortal({ anchorRef, onClose, children }) {
      const updatePos = () => {
        if (anchorRef.current) {
          const rect = anchorRef.current.getBoundingClientRect();
-         setPos({ top: rect.bottom + window.scrollY + 8, left: rect.left + window.scrollX });
+         // Use viewport-relative coords for fixed positioning
+         const top = rect.bottom + 8;
+         // Clamp so calendar doesn't go off-screen to the right
+         const calWidth = 680; // approximate 2-month width
+         const left = Math.min(rect.left, window.innerWidth - calWidth - 8);
+         setPos({ top, left: Math.max(8, left) });
        }
      };
      updatePos();
@@ -114,9 +119,12 @@ function CalendarPortal({ anchorRef, onClose, children }) {
      };
    }, [anchorRef, onClose]);
 
+   // Clamp vertically so bottom rows aren't cut off
+   const maxH = typeof window !== "undefined" ? window.innerHeight - pos.top - 8 : 500;
+
    return (
      <div ref={containerRef} onMouseDown={e => e.stopPropagation()} style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
-       <div style={{ maxHeight: "500px", overflow: "auto" }}>
+       <div style={{ maxHeight: Math.max(300, maxH), overflowY: "auto" }}>
          {children}
        </div>
      </div>
