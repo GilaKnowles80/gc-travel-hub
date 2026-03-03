@@ -212,6 +212,10 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   const [splitResult, setSplitResult] = useState(null);
   const [geoInfo, setGeoInfo] = useState(null);
   const [geoLoading, setGeoLoading] = useState(true);
+  const [idType, setIdType] = useState("passport");
+  const [idNumber, setIdNumber] = useState("");
+  const [idValidation, setIdValidation] = useState(null); // null | "valid" | "invalid"
+  const [idValidationMsg, setIdValidationMsg] = useState("");
 
   useEffect(() => {
     fetch("https://ipapi.co/json/")
