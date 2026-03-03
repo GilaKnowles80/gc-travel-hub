@@ -160,12 +160,17 @@ function LayoutContent({ children, currentPageName }) {
 
             {/* Navigation */}
             <nav className="flex items-center gap-1 flex-1 justify-end overflow-x-auto">
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-1 shrink-0 md:flex hidden">
                 <Link to={createPageUrl("Wallet")} className="px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap">
                   <DollarSign className="w-4 h-4 inline mr-1" />
                   <span className="hidden md:inline">Wallet</span>
                 </Link>
                 <LanguageSelector showLabel />
+              </div>
+              <div className="md:hidden flex items-center gap-1">
+                <Link to={createPageUrl("Wallet")} className="p-2 rounded-xl text-xs font-medium transition-all hover:bg-amber-100">
+                  <DollarSign className="w-4 h-4" />
+                </Link>
               </div>
               {/* Public links - always visible */}
               {navLinks.filter(link => !link.adminOnly).map((link) => {
