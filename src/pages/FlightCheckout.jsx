@@ -19,6 +19,7 @@ export default function FlightCheckout() {
   const [step, setStep] = useState(1); // 1: Details, 2: Addons, 3: Passenger, 4: Review, 5: Payment
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [checkoutStartTime] = useState(Date.now());
 
   // Flight data from query params
   const flightId = searchParams.get("flightId");
