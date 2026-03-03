@@ -42,25 +42,22 @@ Deno.serve(async (req) => {
         });
 
         if (duffelResp.data?.offers) {
-          duffelFlights = (duffelResp.data.offers || []).map((offer, idx) => {
-            const firstSegment = offer.slices?.[0]?.segments?.[0];
-            const lastSegment = offer.slices?.[0]?.segments?.[offer.slices[0].segments.length - 1];
-            return {
-              id: `duffel_${idx}`,
-              airline_name: offer.owner?.name || 'Unknown',
-              flight_number: firstSegment?.operating_carrier_flight_number || 'N/A',
-              origin: offer.slices?.[0]?.origin?.iata_code,
-              destination: offer.slices?.[0]?.destination?.iata_code,
-              departure_time: firstSegment?.departing_at,
-              arrival_time: lastSegment?.arriving_at,
-              duration_hours: lastSegment && firstSegment ? (new Date(lastSegment.arriving_at) - new Date(firstSegment.departing_at)) / (1000 * 60 * 60) : 0,
-              is_direct: offer.slices?.[0]?.segments?.length === 1,
-              stops: (offer.slices?.[0]?.segments?.length || 1) - 1,
-              price: parseFloat(offer.total_amount),
-              currency: offer.total_currency || 'USD',
-              source: 'duffel'
-            };
-          });
+          // Duffel now returns simplified fields directly
+          duffelFlights = (duffelResp.data.offers || []).map((offer, idx) => ({
+            id: offer.id || `duffel_${idx}`,
+            airline_name: offer.airline_name || offer.owner?.name || 'Unknown',
+            flight_number: offer.flight_number || 'N/A',
+            origin: offer.origin || origin,
+            destination: offer.destination || destination,
+            departure_time: offer.departure_time,
+            arrival_time: offer.arrival_time,
+            duration_hours: offer.duration_hours || 0,
+            is_direct: offer.is_direct,
+            stops: offer.stops || 0,
+            price: parseFloat(offer.price || offer.total_amount || 0),
+            currency: offer.currency || offer.total_currency || 'USD',
+            source: 'duffel'
+          }));
           console.log(`[MULTI-PROVIDER] Got ${duffelFlights.length} flights from Duffel`);
         }
       } catch (err) {
