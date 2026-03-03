@@ -145,15 +145,7 @@ function LayoutContent({ children, currentPageName }) {
       >
         <div className="max-w-7xl mx-auto px-4 md:px-8" style={{ paddingTop: 0 }}>
           <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Back Button (Mobile Only, not on Home) */}
-            {!isHome && (
-              <button
-                onClick={() => navigate(-1)}
-                className={`md:hidden p-2 rounded-xl ${textColor}`}
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-            )}
+
             
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center">
