@@ -154,7 +154,7 @@ export default function Flights() {
     enabled: canSearch && searchTriggered,
     queryFn: async () => {
       try {
-        const response = await base44.functions.invoke('searchFlightsMultiProvider', {
+        const response = await base44.functions.invoke('searchFlightsDuffel', {
           origin: searchParams.origin,
           destination: searchParams.destination,
           departureDate: searchParams.departureDate,
