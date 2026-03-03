@@ -464,18 +464,8 @@ export default function Flights() {
                   )}
                 </div>
 
-                {/* Search Button + Travelers & Class Row */}
-                <div className="flex gap-2 items-end">
-                 {/* Search Button */}
-                 <Button
-                   onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
-                   disabled={isLoading || !canSearch}
-                   className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold h-10 rounded-lg px-6"
-                 >
-                   <Search className="w-4 h-4 mr-2" />
-                   Search Flights
-                 </Button>
-
+                {/* Travelers & Class Row */}
+                <div className="flex gap-2 items-end flex-wrap">
                   {/* Travelers */}
                   <div className="space-y-1">
                     <Label className="text-xs font-semibold text-slate-700">Travelers</Label>
@@ -519,6 +509,16 @@ export default function Flights() {
                     </Select>
                   </div>
                 </div>
+
+                {/* Search Button */}
+                <Button
+                  onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })}
+                  disabled={isLoading || !canSearch}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-11 rounded-lg px-6"
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Search Flights
+                </Button>
               </div>
             </Card>
           </div>
