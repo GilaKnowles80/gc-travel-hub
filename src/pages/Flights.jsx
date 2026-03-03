@@ -200,7 +200,6 @@ export default function Flights() {
         throw err;
       }
     },
-    enabled: canSearch,
     staleTime: 2 * 60 * 1000, // Refresh every 2 minutes for real-time updates
   });
 
