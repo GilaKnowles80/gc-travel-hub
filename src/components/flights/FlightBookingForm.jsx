@@ -238,6 +238,63 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const queryClient = useQueryClient();
 
+  // ── ID Validation ──────────────────────────────────────────────────
+  const ID_TYPES = [
+    { value: "passport", label: "Passport" },
+    { value: "phil_id", label: "Philippine National ID" },
+    { value: "drivers_license", label: "Driver's License" },
+    { value: "sss", label: "SSS ID" },
+    { value: "pagibig", label: "Pag-IBIG ID" },
+    { value: "philhealth", label: "PhilHealth ID" },
+    { value: "voters_id", label: "Voter's ID" },
+    { value: "postal_id", label: "Postal ID" },
+    { value: "umid", label: "UMID Card" },
+    { value: "nbi_clearance", label: "NBI Clearance" },
+    { value: "other", label: "Other Government ID" },
+  ];
+
+  // Format patterns per ID type
+  const ID_PATTERNS = {
+    passport:         { regex: /^[A-Z]{1,2}[0-9]{6,7}[A-Z]?$/i, hint: "e.g. P1234567A or AA1234567" },
+    phil_id:          { regex: /^[0-9]{4}-[0-9]{7}-[0-9]$/,      hint: "Format: XXXX-XXXXXXX-X" },
+    drivers_license:  { regex: /^[A-Z][0-9]{2}-[0-9]{2}-[0-9]{6}$/i, hint: "Format: A00-00-000000" },
+    sss:              { regex: /^[0-9]{2}-[0-9]{7}-[0-9]$/,       hint: "Format: XX-XXXXXXX-X" },
+    pagibig:          { regex: /^[0-9]{12}$/,                      hint: "12-digit number" },
+    philhealth:       { regex: /^[0-9]{2}-[0-9]{9}-[0-9]$/,       hint: "Format: XX-XXXXXXXXX-X" },
+    voters_id:        { regex: /^[0-9]{13}$/,                      hint: "13-digit Voter's ID number" },
+    postal_id:        { regex: /^[A-Z0-9]{6,15}$/i,               hint: "Alphanumeric code on your Postal ID" },
+    umid:             { regex: /^[0-9]{4}-[0-9]{7}-[0-9]$/,       hint: "Format: XXXX-XXXXXXX-X" },
+    nbi_clearance:    { regex: /^[A-Z]{3}[0-9]{9}$/i,             hint: "e.g. NBI123456789" },
+    other:            { regex: /^.{5,}$/,                          hint: "At least 5 characters" },
+  };
+
+  const validateId = (type, value) => {
+    if (!value) { setIdValidation(null); setIdValidationMsg(""); return; }
+    const pattern = ID_PATTERNS[type] || ID_PATTERNS.other;
+    const clean = value.trim().toUpperCase();
+    if (pattern.regex.test(clean)) {
+      setIdValidation("valid");
+      setIdValidationMsg("ID format looks valid ✓");
+    } else {
+      setIdValidation("invalid");
+      setIdValidationMsg(`Invalid format. ${pattern.hint}`);
+    }
+  };
+
+  const handleIdChange = (value) => {
+    setIdNumber(value);
+    validateId(idType, value);
+    setFormData((prev) => ({ ...prev, passport_number: value }));
+  };
+
+  const handleIdTypeChange = (type) => {
+    setIdType(type);
+    setIdNumber("");
+    setIdValidation(null);
+    setIdValidationMsg("");
+    setFormData((prev) => ({ ...prev, passport_number: "" }));
+  };
+
   const selectedClassData = flight.cabin_classes?.find((c) => c.class === cabinClass);
   const duffelFare = selectedClassData?.price || flight.price || 0; // Duffel price = 75% of total
   // Total = Duffel fare / 0.75  →  Duffel is 75%, markup is 25%, together = 100%
