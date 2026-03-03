@@ -247,12 +247,13 @@ export default function FlightCheckout() {
         )}
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {step === 1 && <StepPassengerDetails />}
-            {step === 2 && <StepAddons />}
-            {step === 3 && <StepReview />}
-          </div>
+           {/* Main Content */}
+           <div className="lg:col-span-2 space-y-6">
+             {step === 1 && <StepPassengerDetails />}
+             {step === 2 && <StepAddons />}
+             {step === 3 && <StepReview />}
+             {step >= 2 && <PaymentGuarantee />}
+           </div>
 
           {/* Sidebar Summary */}
           <div className="lg:col-span-1">
