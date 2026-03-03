@@ -159,7 +159,7 @@ function LayoutContent({ children, currentPageName }) {
 
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1 flex-1 justify-end overflow-hidden">
+            <nav className="flex items-center gap-1 flex-1 justify-end overflow-hidden">
               <div className="flex items-center gap-1 shrink-0">
                 <Link to={createPageUrl("Wallet")} className="px-3 py-1.5 rounded-xl text-sm font-medium transition-all bg-amber-50 text-amber-700 hover:bg-amber-100">
                   <DollarSign className="w-4 h-4 inline mr-1.5" />
