@@ -40,10 +40,10 @@ export default function FlightCheckout() {
   const [selectedAddons, setSelectedAddons] = useState([]);
 
   const ADDON_OPTIONS = [
-    { id: "baggage", name: "Extra Baggage (23kg)", price: 2500 },
-    { id: "seat", name: "Premium Seat Selection", price: 1500 },
-    { id: "meal", name: "Extra Meal Service", price: 800 },
-    { id: "insurance", name: "Travel Insurance", price: 3500 },
+    { id: "baggage", name: "Extra Baggage (23kg)", price: 2500, description: "Add 23kg extra baggage per passenger" },
+    { id: "seat", name: "Premium Seat Selection", price: 1500, description: "Choose your preferred seat" },
+    { id: "meal", name: "Extra Meal Service", price: 800, description: "Complimentary meal and beverage" },
+    { id: "insurance", name: "Travel Insurance", price: 3500, description: "Full trip protection coverage", popular: true },
   ];
 
   // Step 1: Passenger Details
