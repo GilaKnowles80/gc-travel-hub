@@ -53,6 +53,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${duffelKey}`,
         'Duffel-Version': 'v2',
+        'Accept': 'application/json',
       },
       body: JSON.stringify(duffelPayload),
     });
