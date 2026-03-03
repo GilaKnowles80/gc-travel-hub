@@ -167,6 +167,7 @@ export default function PriceCalendar({ origin, destination, location, type = "f
         </div>
       )}
 
+
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
