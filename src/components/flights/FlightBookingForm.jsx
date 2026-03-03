@@ -406,8 +406,8 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         <div className="flex justify-between"><span className="text-slate-500">Flight No.</span><span className="font-medium">{flight.flight_number}</span></div>
         <div className="flex justify-between"><span className="text-slate-500">Route</span><span className="font-medium">{flight.origin} → {flight.destination}</span></div>
         <div className="flex justify-between"><span className="text-slate-500">Cabin Class</span><span className="font-medium capitalize">{cabinClass?.replace(/_/g, " ")}</span></div>
-        <div className="flex justify-between"><span className="text-slate-500">Duffel Base Fare</span><span className="font-medium">${basePrice.toLocaleString()}</span></div>
-        <div className="flex justify-between"><span className="text-slate-500">Markup & Taxes (25%)</span><span className="font-medium text-orange-500">+${markup.toLocaleString()}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Base Fare</span><span className="font-medium">${basePrice.toLocaleString()}</span></div>
+        <div className="flex justify-between"><span className="text-slate-500">Taxes & Fees</span><span className="font-medium text-orange-500">+${markup.toLocaleString()}</span></div>
         <div className="flex justify-between border-t pt-2"><span className="text-slate-700 font-semibold">Fare per Passenger</span><span className="font-bold text-amber-600">${pricePerPax.toLocaleString()}</span></div>
       </div>
 
