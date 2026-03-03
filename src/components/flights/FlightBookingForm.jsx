@@ -732,39 +732,72 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
     </div>
   );
 
-  // ── STEP 5: Confirmation ───────────────────────────────────────────
-  if (step === 5) return (
-    <div className="space-y-4 text-center py-4">
-      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-        <CheckCircle className="w-10 h-10 text-green-500" />
-      </div>
-      <h3 className="text-2xl font-bold text-slate-900">Booking Confirmed!</h3>
-      <p className="text-slate-500">Your flight has been booked successfully.</p>
+  // ── STEP 5: Confirmation + Itinerary ──────────────────────────────
+  if (step === 5) {
+    const pnr = bookingResult?.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
+    return (
+      <div className="space-y-4">
+        {progressBar}
 
-      {bookingResult && (
-        <div className="bg-slate-50 rounded-xl p-4 text-sm text-left space-y-2 border border-slate-200">
-          <div className="flex justify-between"><span className="text-slate-500">Booking Ref</span><span className="font-bold">{bookingResult.id?.slice(-8).toUpperCase()}</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">Passenger</span><span className="font-medium">{formData.passenger_name}</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">Route</span><span className="font-medium">{flight.origin} → {flight.destination}</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">Total Paid</span><span className="font-bold text-green-600">${totalPrice.toLocaleString()}</span></div>
+        {/* Success Header */}
+        <div className="text-center py-2">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <CheckCircle className="w-10 h-10 text-green-500" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900">Booking Confirmed! ✈️</h3>
+          <p className="text-sm text-slate-500 mt-1">A confirmation itinerary has been sent to <strong>{formData.passenger_email}</strong></p>
         </div>
-      )}
 
-      {splitResult && (
-        <div className="bg-green-50 rounded-xl p-4 text-sm text-left space-y-1 border border-green-200">
-          <p className="font-semibold text-green-800 mb-2 flex items-center gap-2"><Plane className="w-4 h-4" /> Payment Breakdown</p>
-          <div className="flex justify-between text-green-700"><span>Airline Base Fare (75%)</span><span className="font-medium">${splitResult.duffel.toLocaleString()}</span></div>
-          <div className="flex justify-between text-green-700"><span>Service, Taxes & Fees (25%)</span><span className="font-medium">${splitResult.gcash.toLocaleString()}</span></div>
-          <p className="text-xs text-green-500 mt-1">Autopay processed ✓</p>
+        {/* PNR Reference Box */}
+        <div className="bg-amber-50 border-2 border-dashed border-amber-400 rounded-xl p-4 text-center">
+          <p className="text-xs font-semibold tracking-widest text-amber-700 uppercase mb-1">Booking Reference</p>
+          <p className="font-mono text-3xl font-extrabold text-amber-600 tracking-widest">{pnr}</p>
+          <p className="text-xs text-amber-600 mt-1">Save this for check-in and inquiries</p>
         </div>
-      )}
 
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">Close</Button>
-        <Button onClick={() => window.location.href = "/my-bookings"} className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl">View My Bookings</Button>
+        {/* Itinerary Details */}
+        <div className="border border-slate-200 rounded-xl overflow-hidden text-sm">
+          <div className="bg-slate-800 text-white px-4 py-2.5 flex items-center gap-2">
+            <Plane className="w-4 h-4" />
+            <span className="font-semibold">Flight Itinerary</span>
+          </div>
+          <div className="divide-y divide-slate-100">
+            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Passenger</span><span className="font-semibold">{formData.passenger_name}</span></div>
+            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Email</span><span className="font-medium">{formData.passenger_email}</span></div>
+            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Route</span><span className="font-semibold">{flight.origin} → {flight.destination}</span></div>
+            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Airline</span><span className="font-medium">{flight.airline_name} · {flight.flight_number}</span></div>
+            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Cabin Class</span><span className="font-medium capitalize">{cabinClass?.replace(/_/g, " ")}</span></div>
+            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Trip Type</span><span className="font-medium capitalize">{formData.trip_type.replace(/_/g, " ")}</span></div>
+            {formData.departure_date && <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Departure</span><span className="font-medium">{new Date(formData.departure_date).toLocaleDateString("en-PH", {weekday:"short",year:"numeric",month:"long",day:"numeric"})}</span></div>}
+            {formData.return_date && <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Return</span><span className="font-medium">{new Date(formData.return_date).toLocaleDateString("en-PH", {weekday:"short",year:"numeric",month:"long",day:"numeric"})}</span></div>}
+            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Passengers</span><span className="font-medium">{totalPassengers} passenger(s)</span></div>
+            {formData.special_requests && <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Special Requests</span><span className="font-medium italic text-slate-600 max-w-[60%] text-right">{formData.special_requests}</span></div>}
+          </div>
+        </div>
+
+        {/* Payment Breakdown */}
+        <div className="border border-green-200 rounded-xl overflow-hidden text-sm">
+          <div className="bg-green-700 text-white px-4 py-2.5 font-semibold">💳 Payment Summary</div>
+          <div className="divide-y divide-slate-100">
+            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Airline Base Fare (75%)</span><span className="font-medium">${splitResult?.duffel.toLocaleString()}</span></div>
+            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Service, Taxes & Fees (25%)</span><span className="font-medium">${splitResult?.gcash.toLocaleString()}</span></div>
+            <div className="flex justify-between px-4 py-3 bg-green-50 font-bold"><span>Total Paid</span><span className="text-green-700 text-base">${totalPrice.toLocaleString()}</span></div>
+          </div>
+        </div>
+
+        {/* Email notice */}
+        <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-xs text-blue-700">
+          <CheckCircle className="w-4 h-4 text-blue-500 flex-shrink-0" />
+          <span>Full itinerary sent to <strong>{formData.passenger_email}</strong>. Check your inbox (or spam folder).</span>
+        </div>
+
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">Close</Button>
+          <Button onClick={() => window.location.href = "/MyBookings"} className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl">View My Bookings</Button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return null;
 }
