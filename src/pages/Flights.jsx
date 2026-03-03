@@ -151,6 +151,7 @@ export default function Flights() {
   // Fetch real-time flights from multiple providers (Duffel + Aviation Edge)
   const { data: flightData, isLoading, error } = useQuery({
     queryKey: ["realtime-flights", searchParams],
+    enabled: canSearch && searchTriggered,
     queryFn: async () => {
       try {
         const response = await base44.functions.invoke('searchFlightsMultiProvider', {
