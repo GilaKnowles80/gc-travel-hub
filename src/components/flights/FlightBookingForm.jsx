@@ -41,20 +41,23 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const queryClient = useQueryClient();
 
+  const MARKUP_RATE = 0.25; // 25% markup + taxes & fees on top of Duffel base fare
+
   const selectedClassData = flight.cabin_classes?.find((c) => c.class === cabinClass);
-  const basePrice = selectedClassData?.price || flight.price || 0;
-  // The price from the API already accounts for trip type (roundtrip fare = total for both legs)
-  // Never multiply — the fare shown is always the final fare per passenger
-  const tripMultiplier = 1;
+  const basePrice = selectedClassData?.price || flight.price || 0; // raw Duffel fare per pax
+  const markup = +(basePrice * MARKUP_RATE).toFixed(2);
+  const pricePerPax = +(basePrice + markup).toFixed(2); // final price per passenger
+
   const totalPassengers =
     formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
-  const adultsPrice = formData.adults * basePrice * tripMultiplier;
-  const childrenPrice = formData.children * basePrice * tripMultiplier;
-  const seniorsPrice = formData.seniors * basePrice * 0.9 * tripMultiplier;
-  const infantsPrice = formData.infants * basePrice * 0.5 * tripMultiplier;
-  const pwdPrice = formData.pwd * basePrice * 0.9 * tripMultiplier;
-  const totalPrice = adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice;
+  const adultsPrice = formData.adults * pricePerPax;
+  const childrenPrice = formData.children * pricePerPax;
+  const seniorsPrice = +(formData.seniors * pricePerPax * 0.9).toFixed(2);
+  const infantsPrice = +(formData.infants * pricePerPax * 0.5).toFixed(2);
+  const pwdPrice = +(formData.pwd * pricePerPax * 0.9).toFixed(2);
+  const totalPrice = +(adultsPrice + childrenPrice + seniorsPrice + infantsPrice + pwdPrice).toFixed(2);
 
+  // Internal split: 75% goes to airline (Duffel), 25% is GC Travel markup
   const duffelShare = +(totalPrice * 0.75).toFixed(2);
   const gcashShare = +(totalPrice * 0.25).toFixed(2);
 
