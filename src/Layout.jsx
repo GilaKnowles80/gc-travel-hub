@@ -239,10 +239,10 @@ function LayoutContent({ children, currentPageName }) {
                 </div>
               )}
               {user && <NotificationBell />}
-            </nav>
-
-
-      </header>
+              </nav>
+              </div>
+              </div>
+              </header>
 
       {/* Page Content */}
       <main className={isHome ? "pb-0" : "pt-16 md:pt-20 pb-0"}>
