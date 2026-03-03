@@ -149,14 +149,11 @@ export default function PriceCalendar({ origin, destination, location, type = "f
     <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xl w-full" style={{ minWidth: 320 }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} disabled={year === 2026 && month === 0} className={`p-1.5 rounded-lg transition-colors ${year === 2026 && month === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
+        <button onClick={prevMonth} disabled={new Date(year, month, 1) <= todayFirstOfMonth} className={`p-1.5 rounded-lg transition-colors ${new Date(year, month, 1) <= todayFirstOfMonth ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronLeft className="w-4 h-4 text-slate-600" />
         </button>
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-800 text-sm">{monthName}</span>
-          {loading && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
-        </div>
-        <button onClick={nextMonth} disabled={year === 2056 && month === 11} className={`p-1.5 rounded-lg transition-colors ${year === 2056 && month === 11 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
+...
+        <button onClick={nextMonth} disabled={new Date(year, month + 1, 1) > maxMonthDate} className={`p-1.5 rounded-lg transition-colors ${new Date(year, month + 1, 1) > maxMonthDate ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronRight className="w-4 h-4 text-slate-600" />
         </button>
       </div>
