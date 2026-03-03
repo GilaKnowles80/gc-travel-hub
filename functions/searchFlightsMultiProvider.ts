@@ -13,7 +13,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { origin, destination, departureDate, returnDate, adults = 1, cabinClass = 'economy' } = await req.json();
+    const body = await req.json();
+    const { origin, destination, departureDate, returnDate, adults = 1 } = body;
+    const cabinClass = body.cabin || body.cabinClass || 'economy';
 
     if (!origin || !destination || !departureDate) {
       return Response.json({ error: 'Missing required parameters: origin, destination, departureDate' }, { status: 400 });
