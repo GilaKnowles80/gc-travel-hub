@@ -152,7 +152,10 @@ export default function PriceCalendar({ origin, destination, location, type = "f
         <button onClick={prevMonth} disabled={new Date(year, month, 1) <= todayFirstOfMonth} className={`p-1.5 rounded-lg transition-colors ${new Date(year, month, 1) <= todayFirstOfMonth ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronLeft className="w-4 h-4 text-slate-600" />
         </button>
-...
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-slate-800 text-sm">{monthName}</span>
+          {loading && <Loader2 className="w-3 h-3 animate-spin text-amber-500" />}
+        </div>
         <button onClick={nextMonth} disabled={new Date(year, month + 1, 1) > maxMonthDate} className={`p-1.5 rounded-lg transition-colors ${new Date(year, month + 1, 1) > maxMonthDate ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100'}`}>
           <ChevronRight className="w-4 h-4 text-slate-600" />
         </button>
