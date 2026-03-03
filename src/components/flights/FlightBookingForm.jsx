@@ -41,12 +41,12 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const queryClient = useQueryClient();
 
-  const MARKUP_RATE = 0.25; // 25% markup + taxes & fees on top of Duffel base fare
-
   const selectedClassData = flight.cabin_classes?.find((c) => c.class === cabinClass);
-  const basePrice = selectedClassData?.price || flight.price || 0; // raw Duffel fare per pax
-  const markup = +(basePrice * MARKUP_RATE).toFixed(2);
-  const pricePerPax = +(basePrice + markup).toFixed(2); // final price per passenger
+  const duffelFare = selectedClassData?.price || flight.price || 0; // Duffel price = 75% of total
+  // Total = Duffel fare / 0.75  →  Duffel is 75%, markup is 25%, together = 100%
+  const pricePerPax = +(duffelFare / 0.75).toFixed(2);
+  const markup = +(pricePerPax - duffelFare).toFixed(2); // 25% markup portion
+  const basePrice = duffelFare; // alias for display
 
   const totalPassengers =
     formData.adults + formData.children + formData.seniors + formData.infants + formData.pwd;
