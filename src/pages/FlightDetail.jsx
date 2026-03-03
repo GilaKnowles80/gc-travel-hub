@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
-import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen, Sparkles, Tag, Bell } from "lucide-react";
+import { Plane, Clock, Calendar, ArrowLeft, Users, CheckCircle, Briefcase, DoorOpen, Sparkles, Tag, Bell, Globe } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
