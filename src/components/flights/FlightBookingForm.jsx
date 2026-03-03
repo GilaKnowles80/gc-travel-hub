@@ -38,6 +38,27 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   });
   const [bookingResult, setBookingResult] = useState(null);
   const [splitResult, setSplitResult] = useState(null);
+  const [geoInfo, setGeoInfo] = useState(null);
+  const [geoLoading, setGeoLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://ipapi.co/json/")
+      .then((r) => r.json())
+      .then((data) => {
+        setGeoInfo({
+          country: data.country_name || "Unknown",
+          countryCode: data.country_code || "XX",
+          nationality: data.country_name || "Unknown",
+        });
+        // Pre-fill nationality from geo if not already set
+        setFormData((prev) => ({
+          ...prev,
+          nationality: prev.nationality || data.country_name || "",
+        }));
+      })
+      .catch(() => setGeoInfo(null))
+      .finally(() => setGeoLoading(false));
+  }, []);
 
   const queryClient = useQueryClient();
 
