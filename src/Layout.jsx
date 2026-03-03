@@ -240,50 +240,7 @@ function LayoutContent({ children, currentPageName }) {
               {user && <NotificationBell />}
             </nav>
 
-            {/* Mobile Toggle */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className={`md:hidden p-2 rounded-xl ${textColor}`}
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
 
-        {/* Mobile Nav */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-slate-100"
-            >
-              <div className="px-4 py-4 space-y-1">
-                <div className="mb-3 flex justify-center">
-                  <LanguageSelector showLabel />
-                </div>
-                {navLinks.filter(link => !link.adminOnly || user?.role === "admin").map((link) => {
-                   const IconComponent = link.icon;
-                   return (
-                     <Link key={link.page} to={createPageUrl(link.page)}>
-                       <button
-                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                           currentPageName === link.page
-                             ? "bg-amber-50 text-amber-700"
-                             : "text-slate-600 hover:bg-slate-50"
-                         }`}
-                       >
-                         <IconComponent className="w-4 h-4" />
-                         {link.name}
-                       </button>
-                     </Link>
-                   );
-                 })}
-                </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       {/* Page Content */}
