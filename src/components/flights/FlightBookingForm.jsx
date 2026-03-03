@@ -295,43 +295,8 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         <div className="flex justify-between border-t pt-2 font-bold"><span>Total</span><span className="text-amber-600">${totalPrice.toLocaleString()}</span></div>
       </Card>
 
-      {/* Do's and Don'ts */}
-      <div className="space-y-3">
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-          <p className="font-semibold text-green-800 mb-2 flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Do's at the Airport</p>
-          <ul className="text-sm text-green-700 space-y-1 list-disc list-inside">
-            <li>Arrive at the airport at least 3 hours before international flights.</li>
-            <li>Carry a valid government-issued ID or passport.</li>
-            <li>Ensure all carry-on items follow the 7 kg limit per person.</li>
-            <li>Declare all dutiable items at the customs counter.</li>
-            <li>Follow all security screening procedures.</li>
-            <li>Keep your boarding pass and ID accessible at all times.</li>
-          </ul>
-        </div>
-
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-          <p className="font-semibold text-red-800 mb-2 flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Don'ts at the Airport</p>
-          <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
-            <li>Do not carry prohibited items (sharp objects, liquids &gt;100ml, etc.).</li>
-            <li>Do not make jokes about bombs or security threats.</li>
-            <li>Do not leave baggage unattended at any time.</li>
-            <li>Do not use unauthorized taxis or fixers inside the terminal.</li>
-            <li>Do not smoke in non-designated areas.</li>
-          </ul>
-        </div>
-
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <p className="font-semibold text-blue-800 mb-2 flex items-center gap-2"><Info className="w-4 h-4" /> Immigration Policy</p>
-          <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
-            <li>Filipino citizens require a valid passport with at least 6 months validity.</li>
-            <li>OFWs must present a valid OEC or iDOLE upon departure.</li>
-            <li>Minors traveling alone need a DSWD travel clearance.</li>
-            <li>Foreign nationals must present a valid visa for the destination country.</li>
-            <li>All passengers must fill out the Bureau of Immigration departure card.</li>
-            <li>Travel tax of ₱1,620 applies to most international departing passengers.</li>
-          </ul>
-        </div>
-      </div>
+      {/* Do's and Don'ts + Immigration — geo-based */}
+      <GeoRulesSection geoInfo={geoInfo} geoLoading={geoLoading} destination={flight.destination} />
 
       <p className="text-xs text-slate-400 text-center">By proceeding, you confirm you have read and understood the above rules and regulations.</p>
 
