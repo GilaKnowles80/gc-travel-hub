@@ -23,26 +23,27 @@ Deno.serve(async (req) => {
 
     console.log(`Searching flights: ${origin} → ${destination} on ${departureDate}`);
 
-    // Build Duffel API request
+    // Build Duffel API request (v2 format uses origin/destination not origin_airport_iata_code)
+    const cabinMap = { economy: 'economy', premium_economy: 'premium_economy', business: 'business', first: 'first', first_class: 'first' };
     const duffelPayload = {
       data: {
         slices: [
           {
-            origin_airport_iata_code: origin.toUpperCase(),
-            destination_airport_iata_code: destination.toUpperCase(),
+            origin: origin.toUpperCase(),
+            destination: destination.toUpperCase(),
             departure_date: departureDate,
           },
         ],
         passengers: Array(parseInt(adults)).fill({ type: 'adult' }),
-        cabin_class: cabin.toUpperCase() === 'ECONOMY' ? 'economy' : cabin,
+        cabin_class: cabinMap[cabin] || 'economy',
       },
     };
 
     // If return date is provided, add return slice
     if (returnDate) {
       duffelPayload.data.slices.push({
-        origin_airport_iata_code: destination.toUpperCase(),
-        destination_airport_iata_code: origin.toUpperCase(),
+        origin: destination.toUpperCase(),
+        destination: origin.toUpperCase(),
         departure_date: returnDate,
       });
     }
