@@ -192,6 +192,17 @@ export default function FlightCheckout() {
         timestamp: Date.now(),
       }));
 
+      // Record checkout metrics
+      const conversionTime = Date.now() - checkoutStartTime;
+      await base44.functions.invoke("recordCheckoutMetrics", {
+        event_type: "initiated",
+        booking_type: "flight",
+        amount: totalPrice,
+        passenger_count: booking.number_of_passengers,
+        addons_selected: selectedAddons,
+        conversion_time_ms: conversionTime,
+      });
+
       const { data } = await base44.functions.invoke("createFlightCheckout", {
         flight_id: booking.flight_id,
         cabin_class: booking.cabin_class,
@@ -205,6 +216,8 @@ export default function FlightCheckout() {
       });
 
       if (data.checkout_url) {
+        // Clear abandoned checkout on successful payment initiation
+        localStorage.removeItem("pending_flight_checkout");
         window.location.href = data.checkout_url;
       }
     } catch (err) {
