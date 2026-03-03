@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import BookingSummary from "@/components/checkout/BookingSummary";
+import PaymentGuarantee from "@/components/checkout/PaymentGuarantee";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import { createPageUrl } from "@/pages/utils";
 
