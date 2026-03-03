@@ -614,7 +614,7 @@ export default function Flights() {
                       exit={{ opacity: 0 }}
                       transition={{ delay: i * 0.05 }}
                     >
-                      <Link to={createPageUrl("FlightDetail") + `?id=${flight.id}`} state={{ flight }}>
+                      <Link to={createPageUrl("FlightDetail") + `?id=${flight.id}`} state={{ flight, tripType, departureDate: searchParams.departureDate, returnDate: searchParams.returnDate }}>
                         <Card className="group hover:shadow-xl transition-all duration-300 rounded-2xl border-0 shadow-sm bg-white overflow-hidden">
                           <div className="p-6">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
