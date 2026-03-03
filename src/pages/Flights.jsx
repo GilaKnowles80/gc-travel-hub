@@ -305,28 +305,24 @@ export default function Flights() {
               <div className="space-y-3">
                 {/* Trip Type Buttons */}
                 <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    onClick={() => setTripType("roundtrip")}
-                    className={`h-9 px-4 rounded-lg font-medium transition-colors ${
-                      tripType === "roundtrip"
-                        ? "bg-amber-500 text-white"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    Round Trip
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setTripType("oneway")}
-                    className={`h-9 px-4 rounded-lg font-medium transition-colors ${
-                      tripType === "oneway"
-                        ? "bg-amber-500 text-white"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    One Way
-                  </Button>
+                  {[
+                    { value: "roundtrip", label: "Round Trip" },
+                    { value: "oneway", label: "One Way" },
+                    { value: "multicity", label: "Multi-City" },
+                  ].map(({ value, label }) => (
+                    <Button
+                      key={value}
+                      type="button"
+                      onClick={() => setTripType(value)}
+                      className={`h-9 px-4 rounded-lg font-medium transition-colors ${
+                        tripType === value
+                          ? "bg-amber-500 text-white"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {label}
+                    </Button>
+                  ))}
                 </div>
 
                 {/* Location Inputs + Dates Row */}
