@@ -59,6 +59,9 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <AbandonmentRecovery />
+      </div>
       <PopularFlightRoutes />
       <LiveFlightDeals />
       <FlightTrustSignals />
