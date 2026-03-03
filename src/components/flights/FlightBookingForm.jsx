@@ -21,6 +21,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const [formData, setFormData] = useState({
     trip_type: normalizedTripType,
+    departure_date: departureDate || "",
     return_date: initialReturnDate || "",
     passenger_name: "",
     passenger_email: "",
