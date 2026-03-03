@@ -154,8 +154,11 @@ export default function FlightTrustSignals() {
               <path d="M61.9 20.4H46.1l-.1.8c12.3 3 20.4 10.2 23.8 18.8l-3.4-16.4c-.6-2.3-2.3-3.1-4.5-3.2z" fill="#F9A533"/>
             </svg>
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
-            <div className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold text-slate-700">GCash</div>
-            <div className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold text-slate-700">Maya</div>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/86fc4c45f_image.png" alt="GCash" className="h-8 opacity-60 hover:opacity-100 transition-opacity object-contain" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/a83a74c78_image.png" alt="Maya" className="h-6 opacity-60 hover:opacity-100 transition-opacity object-contain" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/9f221866a_image.png" alt="Stripe" className="h-6 opacity-60 hover:opacity-100 transition-opacity object-contain" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/60ea156a3_image.png" alt="PayMongo" className="h-6 opacity-60 hover:opacity-100 transition-opacity object-contain" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/82d57a27b_image.png" alt="DragonPay" className="h-6 opacity-60 hover:opacity-100 transition-opacity object-contain" />
           </div>
         </div>
       </div>
