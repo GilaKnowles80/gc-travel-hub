@@ -474,12 +474,9 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
       <h3 className="text-lg font-semibold text-slate-900">Passenger Information</h3>
 
       {[
-        { key: "passenger_name", label: "Full Name (as in passport) *", type: "text", placeholder: "Juan Dela Cruz" },
+        { key: "passenger_name", label: "Full Name (as in ID) *", type: "text", placeholder: "Juan Dela Cruz" },
         { key: "passenger_email", label: "Email Address *", type: "email", placeholder: "juan@email.com" },
         { key: "passenger_phone", label: "Phone Number *", type: "tel", placeholder: "+63 9XX XXX XXXX" },
-        { key: "passport_number", label: "Passport Number", type: "text", placeholder: "P123456A" },
-        { key: "nationality", label: "Nationality", type: "text", placeholder: "Filipino" },
-        { key: "date_of_birth", label: "Date of Birth", type: "date", placeholder: "" },
       ].map(({ key, label, type, placeholder }) => (
         <div key={key} className="space-y-1">
           <Label>{label}</Label>
@@ -492,6 +489,91 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
           />
         </div>
       ))}
+
+      {/* Government ID Section */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <ScanLine className="w-4 h-4 text-amber-500" />
+          <Label className="text-sm font-semibold text-slate-700">Government ID Verification</Label>
+        </div>
+
+        <div className="space-y-1">
+          <Label className="text-xs text-slate-500">ID Type</Label>
+          <Select value={idType} onValueChange={handleIdTypeChange}>
+            <SelectTrigger className="rounded-xl bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ID_TYPES.map((t) => (
+                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-1">
+          <Label className="text-xs text-slate-500">
+            ID Number <span className="text-slate-400">({ID_PATTERNS[idType]?.hint})</span>
+          </Label>
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder={ID_PATTERNS[idType]?.hint || "Enter ID number"}
+              value={idNumber}
+              onChange={(e) => handleIdChange(e.target.value)}
+              className={`rounded-xl pr-10 bg-white ${
+                idValidation === "valid" ? "border-green-400 focus:ring-green-300" :
+                idValidation === "invalid" ? "border-red-400 focus:ring-red-300" : ""
+              }`}
+            />
+            {idValidation === "valid" && <CheckCircle className="absolute right-3 top-3 w-4 h-4 text-green-500" />}
+            {idValidation === "invalid" && <XCircle className="absolute right-3 top-3 w-4 h-4 text-red-400" />}
+          </div>
+          {idValidationMsg && (
+            <p className={`text-xs mt-1 ${idValidation === "valid" ? "text-green-600" : "text-red-500"}`}>
+              {idValidationMsg}
+            </p>
+          )}
+        </div>
+
+        {idValidation === "invalid" && (
+          <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3">
+            <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-red-600">
+              The ID number format does not match the expected pattern for a <strong>{ID_TYPES.find(t=>t.value===idType)?.label}</strong>. Please double-check and re-enter your ID number exactly as printed on your card.
+            </p>
+          </div>
+        )}
+
+        {idValidation === "valid" && (
+          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg p-3">
+            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <p className="text-xs text-green-700">ID format verified. Your information will be used for travel documentation.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <Label>Nationality</Label>
+          <Input
+            type="text"
+            placeholder="Filipino"
+            value={formData.nationality}
+            onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+            className="rounded-xl"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Date of Birth</Label>
+          <Input
+            type="date"
+            value={formData.date_of_birth}
+            onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })}
+            className="rounded-xl"
+          />
+        </div>
+      </div>
 
       <div className="space-y-1">
         <Label>Special Requests (Optional)</Label>
