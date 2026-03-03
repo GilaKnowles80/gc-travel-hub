@@ -477,14 +477,32 @@ export default function Flights() {
                  </Button>
 
                   {/* Travelers */}
-                  <div className="w-32 space-y-1">
+                  <div className="space-y-1">
                     <Label className="text-xs font-semibold text-slate-700">Travelers</Label>
-                    <Select value={String(searchParams.adults)} onValueChange={(v) => setSearchParams({...searchParams, adults: Number(v)})}>
-                      <SelectTrigger className="h-10 text-xs"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {[1,2,3,4,5,6].map(n => <SelectItem key={n} value={String(n)}>{n} Adult{n > 1 ? 's' : ''}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex gap-1 flex-wrap">
+                      {[
+                        { key: "adults", label: "Adult" },
+                        { key: "children", label: "Child" },
+                        { key: "infants", label: "Infant" },
+                        { key: "pwd", label: "PWD" },
+                        { key: "senior", label: "Senior" },
+                      ].map(({ key, label }) => (
+                        <div key={key} className="flex flex-col items-center">
+                          <span className="text-[10px] text-slate-500 mb-0.5">{label}</span>
+                          <Select
+                            value={String(searchParams[key] ?? 0)}
+                            onValueChange={(v) => setSearchParams({ ...searchParams, [key]: Number(v) })}
+                          >
+                            <SelectTrigger className="h-9 w-14 text-xs"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              {(key === "adults" ? [1,2,3,4,5,6] : [0,1,2,3,4,5,6]).map(n => (
+                                <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Cabin Class */}
