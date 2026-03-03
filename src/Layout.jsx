@@ -193,31 +193,6 @@ function LayoutContent({ children, currentPageName }) {
                   </Link>
                 );
               })}
-              
-              {/* Supplier Portal Links - always visible for quick access */}
-              {user?.role === "admin" && (
-                <div className="flex items-center gap-1 shrink-0">
-                  {["BiyahekoPortal", "TripzynxPortal", "WanderlinxPortal"].map((page) => {
-                    const portalName = page.replace("Portal", "");
-                    return (
-                      <Link key={page} to={createPageUrl(page)}>
-                        <button
-                          className={`px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${
-                            currentPageName === page
-                              ? isHome && !scrolled
-                                ? "bg-white/20 text-white"
-                                : "bg-blue-50 text-blue-700"
-                              : `${textColor} hover:bg-slate-100/50`
-                          }`}
-                          title={`${portalName} Portal`}
-                        >
-                          {portalName}
-                        </button>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
               {/* Admin mode toggle */}
               {user?.role === "admin" && (
                 <button
