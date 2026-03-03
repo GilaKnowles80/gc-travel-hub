@@ -244,7 +244,7 @@ function LayoutContent({ children, currentPageName }) {
       </header>
 
       {/* Page Content */}
-      <main className={isHome ? "pb-16 md:pb-0" : "pt-16 md:pt-20 pb-16 md:pb-0"}>
+      <main className={isHome ? "pb-0" : "pt-16 md:pt-20 pb-0"}>
         {/* Top Ad Banner */}
         {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
         
