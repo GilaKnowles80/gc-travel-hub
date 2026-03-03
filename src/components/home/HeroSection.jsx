@@ -115,7 +115,7 @@ function CalendarPortal({ anchorRef, onClose, children }) {
    }, [anchorRef, onClose]);
 
    return (
-     <div ref={containerRef} style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
+     <div ref={containerRef} onMouseDown={e => e.stopPropagation()} style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 99999, pointerEvents: "auto" }}>
        <div style={{ maxHeight: "500px", overflow: "auto" }}>
          {children}
        </div>
