@@ -23,6 +23,11 @@ export default function FlightDetail() {
   const [showBooking, setShowBooking] = useState(false);
   const [showPriceAlert, setShowPriceAlert] = useState(false);
   const [selectedClass, setSelectedClass] = useState(() => stateFlight?.cabin_classes?.[0]?.class || "economy");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
 
   // Only query DB if it's a real DB id (not a synthetic API id like "duffel_0")
   const isDbId = flightId && !flightId.includes('_') || (flightId && flightId.length > 20);
