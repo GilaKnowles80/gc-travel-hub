@@ -103,27 +103,31 @@ export default function FlightCheckout() {
           <CardTitle>Select Add-ons (Optional)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {ADDON_OPTIONS.map((addon) => (
-            <div key={addon.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-slate-50">
-              <Checkbox
-                id={addon.id}
-                checked={selectedAddons.some((a) => a.id === addon.id)}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    setSelectedAddons([...selectedAddons, addon]);
-                  } else {
-                    setSelectedAddons(selectedAddons.filter((a) => a.id !== addon.id));
-                  }
-                }}
-              />
-              <div className="flex-1">
-                <label htmlFor={addon.id} className="font-medium text-sm cursor-pointer">
-                  {addon.name}
-                </label>
-                <p className="text-xs text-slate-500 mt-1">₱{addon.price.toLocaleString()}</p>
-              </div>
-            </div>
-          ))}
+           {ADDON_OPTIONS.map((addon) => (
+             <div key={addon.id} className={`flex items-start gap-3 p-4 border rounded-lg hover:bg-slate-50 cursor-pointer ${addon.popular ? "border-amber-300 bg-amber-50" : ""}`}>
+               <Checkbox
+                 id={addon.id}
+                 checked={selectedAddons.some((a) => a.id === addon.id)}
+                 onCheckedChange={(checked) => {
+                   if (checked) {
+                     setSelectedAddons([...selectedAddons, addon]);
+                   } else {
+                     setSelectedAddons(selectedAddons.filter((a) => a.id !== addon.id));
+                   }
+                 }}
+               />
+               <div className="flex-1">
+                 <div className="flex items-center gap-2">
+                   <label htmlFor={addon.id} className="font-medium text-sm cursor-pointer">
+                     {addon.name}
+                   </label>
+                   {addon.popular && <span className="text-xs bg-amber-600 text-white px-2 py-0.5 rounded">Popular</span>}
+                 </div>
+                 <p className="text-xs text-slate-500 mt-1">{addon.description}</p>
+                 <p className="text-sm font-semibold text-amber-600 mt-2">+₱{addon.price.toLocaleString()}</p>
+               </div>
+             </div>
+           ))}
         </CardContent>
       </Card>
     </motion.div>
