@@ -28,44 +28,32 @@ const countryCurrencyMap = {
 
 export function CurrencyProvider({ children }) {
   const [selectedCurrency, setSelectedCurrency] = useState('PHP');
-  const [user, setUser] = useState(null);
-  const [autoDetected, setAutoDetected] = useState(false);
+  const [countryCode, setCountryCode] = useState('PH');
 
-  // Auto-detect currency from location
+  // On mount: fetch user preference AND geo-location together, then decide
   useEffect(() => {
-    const detectCurrencyFromLocation = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        
-        console.log('Detected location:', data);
-        
-        if (data.country_code && !autoDetected) {
-          const detectedCurrency = countryCurrencyMap[data.country_code] || 'PHP';
-          console.log('Auto-detected currency:', detectedCurrency, 'for country:', data.country_code);
-          setSelectedCurrency(detectedCurrency);
-          setAutoDetected(true);
-        }
-      } catch (error) {
-        console.log('Auto currency detection failed, using default PHP', error);
-        setSelectedCurrency('PHP');
-        setAutoDetected(true);
+    const init = async () => {
+      // Run both in parallel
+      const [userResult, geoResult] = await Promise.allSettled([
+        base44.auth.me().catch(() => null),
+        fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => null),
+      ]);
+
+      const user = userResult.value;
+      const geo = geoResult.value;
+
+      if (geo?.country_code) setCountryCode(geo.country_code);
+
+      // User saved preference takes priority
+      if (user?.preferred_currency) {
+        setSelectedCurrency(user.preferred_currency);
+      } else if (geo?.country_code) {
+        // Fall back to geo-detected currency
+        const detected = countryCurrencyMap[geo.country_code] || 'PHP';
+        setSelectedCurrency(detected);
       }
     };
-
-    if (!autoDetected) {
-      detectCurrencyFromLocation();
-    }
-  }, []);
-
-  // Load user preference (overrides auto-detection)
-  useEffect(() => {
-    base44.auth.me().then(u => {
-      setUser(u);
-      if (u?.preferred_currency) {
-        setSelectedCurrency(u.preferred_currency);
-      }
-    }).catch(() => {});
+    init();
   }, []);
 
   // Fetch all exchange rates
@@ -118,15 +106,6 @@ export function CurrencyProvider({ children }) {
     const symbol = symbols[targetCurrency] || targetCurrency + ' ';
     return `${symbol}${converted.toFixed(decimals)}`;
   };
-
-  // Detect countryCode from ipapi (reuse the detection logic)
-  const [countryCode, setCountryCode] = useState('PH');
-  useEffect(() => {
-    fetch('https://ipapi.co/json/')
-      .then(r => r.json())
-      .then(data => { if (data.country_code) setCountryCode(data.country_code); })
-      .catch(() => {});
-  }, []);
 
   const value = {
     selectedCurrency,
