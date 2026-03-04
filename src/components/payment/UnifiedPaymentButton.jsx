@@ -136,6 +136,14 @@ export default function UnifiedPaymentButton({
         return;
       }
 
+      // ── PAYMONGO QR PH (STATIC) ───────────────────────────────────────────
+      if (selected === 'paymongo_qr') {
+        setOpen(false);
+        setPaymongoQROpen(true);
+        setLoading(false);
+        return;
+      }
+
       // ── PAYMONGO local methods ────────────────────────────────────────────
       if (['gcash', 'paymaya', 'grab_pay', 'card_ph'].includes(selected)) {
         const { data } = await base44.functions.invoke('createPayMongoCheckout', {
