@@ -135,10 +135,23 @@ export default function StandardPaymentSelector({
         )}
       </Button>
 
+      {/* What happens next */}
+      <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-2">
+        <p className="text-xs font-semibold text-green-800">✅ What happens after payment:</p>
+        <ul className="text-xs text-green-700 space-y-1">
+          <li className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 shrink-0" /> You'll receive a booking confirmation email immediately</li>
+          <li className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 shrink-0" /> Your booking will appear in "My Bookings"</li>
+          <li className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 shrink-0" /> Our team will follow up within 24 hours if needed</li>
+        </ul>
+      </div>
+
       {/* Security Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
         <p className="text-xs text-blue-700">
-          🔒 Your payment information is encrypted and secure. We never store your card details.
+          🔒 Your payment is encrypted and secure. We never store your card details.
+        </p>
+        <p className="text-xs text-blue-600 mt-1">
+          Need help? <a href="tel:+639154401150" className="font-semibold underline">Call +639154401150</a> — we're here 24/7.
         </p>
       </div>
     </div>
