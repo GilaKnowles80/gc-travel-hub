@@ -47,8 +47,15 @@ export default function StandardPaymentSelector({
       fee: "2.9% + $0.30",
     },
     {
+      id: "paymongo_qr",
+      name: "QR Ph (PayMongo) — No Fees!",
+      description: "Scan QR · GCash, Maya, BDO, BPI & all QR Ph-enabled banks",
+      icon: QrCode,
+      fee: "Free",
+    },
+    {
       id: "paymongo",
-      name: "PayMongo",
+      name: "PayMongo (E-wallets)",
       description: "GCash, Debit Cards, Online Banking",
       icon: DollarSign,
       fee: "Free",
