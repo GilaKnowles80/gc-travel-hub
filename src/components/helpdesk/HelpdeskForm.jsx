@@ -14,18 +14,20 @@ import EmailVerificationDialog from "@/components/security/EmailVerificationDial
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CATEGORIES = [
-  { value: "general", label: "General Inquiries", email: "info@gctravelandtours.com" },
-  { value: "tour", label: "Tour Packages", email: "tour@gctravelandtours.com" },
-  { value: "flights", label: "Flights", email: "flights@gctravelandtours.com" },
-  { value: "visa", label: "Visa", email: "visa@gctravelandtours.com" },
-  { value: "bus", label: "Bus", email: "bus@gctravelandtours.com" },
-  { value: "car_rental", label: "Car Rentals", email: "car@gctravelandtours.com" },
-  { value: "ferry", label: "Ferry", email: "ferry@gctravelandtours.com" },
-  { value: "hotel", label: "Hotels", email: "hotel@gctravelandtours.com" },
-  { value: "travel_insurance", label: "Travel Insurance", email: "insurance@gctravelandtours.com" },
-  { value: "refund", label: "Refund", email: "refund@gctravelandtours.com" },
-  { value: "dispute", label: "Dispute", email: "dispute@gctravelandtours.com" },
-  { value: "complaint", label: "Complaint", email: "complaint@gctravelandtours.com" }
+  { value: "general",          label: "General Inquiries",  email: "info@gctravelandtours.com" },
+  { value: "tour",             label: "Tour Packages",       email: "info@gctravelandtours.com" },
+  { value: "hotel",            label: "Hotels",              email: "info@gctravelandtours.com" },
+  { value: "travel_insurance", label: "Travel Insurance",    email: "info@gctravelandtours.com" },
+  { value: "flights",          label: "Flights",             email: "sales@gctravelandtours.com" },
+  { value: "bus",              label: "Bus",                 email: "sales@gctravelandtours.com" },
+  { value: "ferry",            label: "Ferry",               email: "sales@gctravelandtours.com" },
+  { value: "car_rental",       label: "Car Rentals",         email: "sales@gctravelandtours.com" },
+  { value: "cruise",           label: "Cruise",              email: "sales@gctravelandtours.com" },
+  { value: "train",            label: "Train",               email: "sales@gctravelandtours.com" },
+  { value: "visa",             label: "Visa Processing",     email: "helpdesk@gctravelandtours.com" },
+  { value: "refund",           label: "Refund",              email: "helpdesk@gctravelandtours.com" },
+  { value: "dispute",          label: "Dispute",             email: "helpdesk@gctravelandtours.com" },
+  { value: "complaint",        label: "Complaint",           email: "helpdesk@gctravelandtours.com" },
 ];
 
 export default function HelpdeskForm() {
