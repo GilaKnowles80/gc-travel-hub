@@ -3,21 +3,41 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, Loader2, HelpCircle, MessageCircle, Phone, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const BOOKING_TIPS = {
+  1: [
+    "✅ Review all booking details carefully before proceeding.",
+    "📅 Check the date and time — make sure it matches your travel plans.",
+    "🔄 Prices shown are final including all fees and taxes.",
+  ],
+  2: [
+    "📝 Enter your details exactly as they appear on your government ID or passport.",
+    "📧 Use a valid email — your booking confirmation will be sent there.",
+    "📱 Include your country code in your phone number (e.g. +63 for Philippines).",
+  ],
+  3: [
+    "💳 Credit/Debit Card — instant confirmation via Stripe.",
+    "📲 PayMongo — supports GCash, Maya, and local banks.",
+    "🏦 Bank Transfer — send proof of payment to confirm your booking.",
+    "🔒 All payments are encrypted and secure.",
+  ],
+};
+
 /**
  * UnifiedCheckoutFlow - Standard booking flow for all travel services
  * Steps: 1) Summary 2) Customer Info 3) Payment
  */
 export default function UnifiedCheckoutFlow({
-  bookingType, // "flight", "hotel", "tour", "bus", "ferry", "train", "visa"
-  bookingData, // Selected item details
+  bookingType,
+  bookingData,
   summaryComponent: SummaryComponent,
   customerFormComponent: CustomerFormComponent,
   paymentComponent: PaymentComponent,
   onClose,
 }) {
-  const [step, setStep] = useState(1); // 1=Summary, 2=Customer, 3=Payment
+  const [step, setStep] = useState(1);
   const [customerInfo, setCustomerInfo] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showTips, setShowTips] = useState(true);
 
   const handleNextStep = () => {
     if (step < 3) setStep(step + 1);
@@ -29,7 +49,6 @@ export default function UnifiedCheckoutFlow({
 
   const handlePayment = async (paymentMethod) => {
     setIsProcessing(true);
-    // Payment processing handled by PaymentComponent
   };
 
   const steps = [
