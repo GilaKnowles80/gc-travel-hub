@@ -28,10 +28,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'PayMongo not configured' }, { status: 500 });
     }
 
+    // PayMongo requires secret key (sk_...) for server-side API calls
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Basic ${btoa(apiKey + ':')}`
     };
+    console.log('[PAYMONGO] Using key prefix:', apiKey.substring(0, 10));
 
     // Create PayMongo Checkout Session (supports all local PH payment methods)
     const response = await fetch('https://api.paymongo.com/v1/checkout_sessions', {
