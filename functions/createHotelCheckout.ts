@@ -1,69 +1,65 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import Stripe from 'npm:stripe';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import Stripe from 'npm:stripe@17.5.0';
 
+// GC Travel Payment Flow: Customer pays 100% (75% supplier + 25% GC markup)
+// Funds held → booking confirmed → auto-split executed via webhook
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
+const SUPPLIER_PCT = 0.75;
+const GC_PCT = 0.25;
 
 Deno.serve(async (req) => {
-    try {
-        const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
 
-        if (!user) {
-            return Response.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-        const { hotel, offer, guestDetails } = await req.json();
+    const { hotel, offer, guestDetails, bookingId, totalAmount, currency = 'php' } = await req.json();
 
-        if (!hotel || !offer || !guestDetails) {
-            return Response.json({ error: 'Missing required data' }, { status: 400 });
-        }
+    if (!totalAmount) return Response.json({ error: 'Missing totalAmount' }, { status: 400 });
 
-        // Get markup from admin settings
-        const markupResponse = await base44.asServiceRole.functions.invoke('getAdminMarkup');
-        const markup = markupResponse.data.markup / 100;
-        const basePrice = parseFloat(offer.price.total);
-        const markedUpPrice = basePrice * (1 + markup);
-        const totalAmount = Math.round(markedUpPrice * 100);
+    const amount = parseFloat(totalAmount);
+    const supplierAmount = parseFloat((amount * SUPPLIER_PCT).toFixed(2));
+    const gcAmount = parseFloat((amount * GC_PCT).toFixed(2));
 
-        // Create Stripe checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: offer.price.currency.toLowerCase(),
-                    product_data: {
-                        name: `${hotel.name} - ${offer.room?.description?.text || 'Room Booking'}`,
-                        description: `Check-in: ${offer.checkInDate}, Check-out: ${offer.checkOutDate}`,
-                    },
-                    unit_amount: totalAmount,
-                },
-                quantity: 1,
-            }],
-            mode: 'payment',
-            success_url: `${req.headers.get('origin')}${Deno.env.get('BASE44_APP_ID') ? `/${Deno.env.get('BASE44_APP_ID')}` : ''}/HotelBookingConfirmation?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.get('origin')}${Deno.env.get('BASE44_APP_ID') ? `/${Deno.env.get('BASE44_APP_ID')}` : ''}/HotelSearch`,
-            metadata: {
-                base44_app_id: Deno.env.get('BASE44_APP_ID'),
-                user_email: user.email,
-                hotel_name: hotel.name,
-                offer_id: offer.id,
-                check_in: offer.checkInDate,
-                check_out: offer.checkOutDate,
-                booking_data: JSON.stringify({ hotel, offer, guestDetails })
-            }
-        });
+    console.log(`[HOTEL CHECKOUT] Customer: ${user.email} | Total: ${amount} | Supplier(75%): ${supplierAmount} | GC(25%): ${gcAmount}`);
 
-        return Response.json({ 
-            sessionId: session.id,
-            url: session.url 
-        });
+    const productName = hotel?.name || 'Hotel Booking';
+    const productDesc = offer
+      ? `Check-in: ${offer.checkInDate || ''}, Check-out: ${offer.checkOutDate || ''} | ${offer.room?.description?.text || ''}`
+      : guestDetails?.check_in_date
+        ? `Check-in: ${guestDetails.check_in_date}, Check-out: ${guestDetails.check_out_date}`
+        : 'Hotel reservation';
 
-    } catch (error) {
-        console.error('Hotel checkout error:', {
-            message: error.message,
-            stack: error.stack,
-            timestamp: new Date().toISOString()
-        });
-        return Response.json({ error: error.message }, { status: 500 });
-    }
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: currency.toLowerCase(),
+          product_data: { name: `🏨 ${productName}`, description: productDesc },
+          unit_amount: Math.round(amount * 100),
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      customer_email: user.email,
+      success_url: `${req.headers.get('origin')}/HotelBookingConfirmation?session_id={CHECKOUT_SESSION_ID}&booking_id=${bookingId || ''}`,
+      cancel_url: `${req.headers.get('origin')}/HotelSearch?payment=cancelled`,
+      metadata: {
+        base44_app_id: Deno.env.get('BASE44_APP_ID'),
+        booking_id: bookingId || '',
+        booking_type: 'hotel',
+        user_email: user.email,
+        supplier_75pct: String(supplierAmount),
+        gc_markup_25pct: String(gcAmount),
+      },
+    });
+
+    console.log(`[HOTEL CHECKOUT] Stripe session: ${session.id}`);
+    return Response.json({ sessionId: session.id, url: session.url, bookingId });
+
+  } catch (error) {
+    console.error('[HOTEL CHECKOUT ERROR]', { message: error.message, timestamp: new Date().toISOString() });
+    return Response.json({ error: error.message }, { status: 500 });
+  }
 });

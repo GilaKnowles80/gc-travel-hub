@@ -1,141 +1,81 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import Stripe from 'npm:stripe@18.5.0';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import Stripe from 'npm:stripe@17.5.0';
 
+// GC Travel Payment Flow: Customer pays 100% (75% supplier + 25% GC markup)
+// Funds held → booking confirmed → auto-split executed via webhook
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
+const SUPPLIER_PCT = 0.75;
+const GC_PCT = 0.25;
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { bookingId, paymentMethod = 'stripe' } = await req.json();
+    const { bookingId, paymentMethod = 'stripe', currency = 'php' } = await req.json();
+    if (!bookingId) return Response.json({ error: 'Missing bookingId' }, { status: 400 });
 
     const booking = await base44.entities.TrainBooking.get(bookingId);
-    
-    if (!booking) {
-      return Response.json({ error: 'Booking not found' }, { status: 404 });
-    }
+    if (!booking) return Response.json({ error: 'Booking not found' }, { status: 404 });
 
-    const train = await base44.entities.Train.get(booking.train_id);
-    const description = `Train: ${train.origin_station} → ${train.destination_station} - ${train.train_number} | ${booking.class_type}`;
+    const amount = booking.total_price;
+    const supplierAmount = parseFloat((amount * SUPPLIER_PCT).toFixed(2));
+    const gcAmount = parseFloat((amount * GC_PCT).toFixed(2));
+
+    let trainName = `Train Ticket`;
+    try {
+      const train = await base44.entities.Train.get(booking.train_id);
+      trainName = `${train.origin_station} → ${train.destination_station} (${train.train_number})`;
+    } catch (_) {}
+
+    const description = `${trainName} | ${booking.class_type} | ${booking.number_of_passengers} pax`;
+
+    console.log(`[TRAIN CHECKOUT] Customer: ${user.email} | Total: ${amount} | Supplier(75%): ${supplierAmount} | GC(25%): ${gcAmount}`);
 
     if (paymentMethod === 'stripe') {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: `Train: ${train.origin_station} → ${train.destination_station}`,
-                description: `${train.operator} - ${train.train_number} | ${booking.class_type}`,
-              },
-              unit_amount: Math.round(booking.total_price * 100),
-            },
-            quantity: 1,
+        line_items: [{
+          price_data: {
+            currency: currency.toLowerCase(),
+            product_data: { name: `🚂 ${trainName}`, description },
+            unit_amount: Math.round(amount * 100),
           },
-        ],
+          quantity: 1,
+        }],
         mode: 'payment',
+        customer_email: user.email,
         success_url: `${req.headers.get('origin')}/TrainBookingConfirmation?id=${bookingId}&payment=success`,
         cancel_url: `${req.headers.get('origin')}/TrainSearch?payment=cancelled`,
         metadata: {
           base44_app_id: Deno.env.get("BASE44_APP_ID"),
           booking_id: bookingId,
           booking_type: 'train',
+          user_email: user.email,
+          supplier_75pct: String(supplierAmount),
+          gc_markup_25pct: String(gcAmount),
         },
       });
+      return Response.json({ sessionId: session.id, url: session.url, bookingId });
 
-      return Response.json({ 
-        sessionId: session.id,
-        url: session.url,
-        bookingId: booking.id
-      });
     } else if (paymentMethod === 'paymongo') {
-      const paymongoApiKey = Deno.env.get('PayMongo_API_KEY');
-      const authHeader = 'Basic ' + btoa(paymongoApiKey + ':');
-
-      const paymentResponse = await fetch('https://api.paymongo.com/v1/links', {
+      const authHeader = 'Basic ' + btoa(Deno.env.get('PayMongo_API_KEY') + ':');
+      const res = await fetch('https://api.paymongo.com/v1/links', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authHeader
-        },
-        body: JSON.stringify({
-          data: {
-            attributes: {
-              amount: Math.round(booking.total_price * 100),
-              description: description,
-              remarks: `Booking ID: ${bookingId}`
-            }
-          }
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
+        body: JSON.stringify({ data: { attributes: { amount: Math.round(amount * 100), description, remarks: `Booking ID: ${bookingId}` } } })
       });
+      const data = await res.json();
+      if (!data.data) throw new Error('PayMongo link creation failed');
+      return Response.json({ url: data.data.attributes.checkout_url, bookingId });
 
-      const paymentData = await paymentResponse.json();
-      
-      if (paymentData.data) {
-        return Response.json({
-          url: paymentData.data.attributes.checkout_url,
-          bookingId: booking.id
-        });
-      } else {
-        throw new Error('PayMongo payment link creation failed');
-      }
-    } else if (paymentMethod === 'paypal') {
-      const paypalClientId = Deno.env.get('PAYPAL_CLIENT_ID');
-      const paypalSecret = Deno.env.get('PAYPAL_SECRET');
-      const auth = btoa(`${paypalClientId}:${paypalSecret}`);
-
-      const tokenResponse = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${auth}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'grant_type=client_credentials'
-      });
-
-      const { access_token } = await tokenResponse.json();
-
-      const orderResponse = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${access_token}`
-        },
-        body: JSON.stringify({
-          intent: 'CAPTURE',
-          purchase_units: [{
-            amount: {
-              currency_code: 'USD',
-              value: booking.total_price.toFixed(2)
-            },
-            description: description
-          }],
-          application_context: {
-            return_url: `${req.headers.get('origin')}/TrainBookingConfirmation?id=${bookingId}&payment=success`,
-            cancel_url: `${req.headers.get('origin')}/TrainSearch?payment=cancelled`
-          }
-        })
-      });
-
-      const orderData = await orderResponse.json();
-      const approvalUrl = orderData.links.find(link => link.rel === 'approve').href;
-
-      return Response.json({ url: approvalUrl, orderId: orderData.id, bookingId: booking.id });
     } else {
       return Response.json({ error: 'Invalid payment method' }, { status: 400 });
     }
   } catch (error) {
-    console.error('Train checkout error:', {
-      message: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString()
-    });
+    console.error('[TRAIN CHECKOUT ERROR]', { message: error.message, timestamp: new Date().toISOString() });
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
