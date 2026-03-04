@@ -133,9 +133,17 @@ export default function BusSearch() {
             <span className="text-sm font-semibold text-slate-600">Also search via</span>
             <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">12Go Asia</span>
           </div>
+          <TwelveGoFormWidget />
+          <TwelveGoTimetable
+            country="PH"
+            from={filters.origin || "Manila"}
+            to={filters.destination || ""}
+            transportClass="bus"
+            lang="en"
+            curr="PHP"
+          />
           <TwelveGoWidget city={filters.destination || filters.origin || "Manila"} lang="en" fxcode="USD" />
           <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
-          <TwelveGoFormWidget />
         </div>
 
         {/* Bus Results */}

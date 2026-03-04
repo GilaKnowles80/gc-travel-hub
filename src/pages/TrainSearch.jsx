@@ -137,8 +137,16 @@ export default function TrainSearch() {
             <span className="text-sm font-semibold text-slate-600">Also search via</span>
             <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">12Go Asia</span>
           </div>
-          <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
           <TwelveGoFormWidget />
+          <TwelveGoTimetable
+            country="PH"
+            from={filters.origin || "Manila"}
+            to={filters.destination || ""}
+            transportClass="train"
+            lang="en"
+            curr="PHP"
+          />
+          <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
         </div>
 
         {/* Train Results */}
