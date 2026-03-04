@@ -25,6 +25,14 @@ const PAYMENT_METHODS = [
     tag: 'Philippines'
   },
   {
+    id: 'gcash_qr',
+    name: 'GCash QR (Direct)',
+    description: 'Scan QR code — direct deposit to GC E-wallet',
+    icon: '📲',
+    currency: 'PHP',
+    tag: 'Philippines'
+  },
+  {
     id: 'paymaya',
     name: 'Maya (PayMaya)',
     description: 'Pay with your Maya e-wallet',
