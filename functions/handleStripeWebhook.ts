@@ -4,9 +4,13 @@ import Stripe from 'npm:stripe@17.6.0';
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
 // ─── Revenue Split Constants ───────────────────────────────────────────────
-const GC_MARKUP_PCT = 0.20;   // 20% to GC Travel
-const SUPPLIER_PCT  = 0.80;   // 80% to supplier
-const STRIPE_FEE_PCT = 0.029; // 2.9% Stripe fee
+// GC Travel Airline Ticket Payment Flow:
+// Customer pays 100% → GC E-Wallet (holding)
+// On CONFIRMED booking: 75% → Merchant/Supplier, 25% → GC Travel
+// On FAILED booking:    100% → Refund to customer
+const GC_MARKUP_PCT  = 0.25;  // 25% to GC Travel (service, taxes, fees, profit)
+const SUPPLIER_PCT   = 0.75;  // 75% to Merchant/Airline supplier
+const STRIPE_FEE_PCT = 0.029; // 2.9% Stripe processing fee
 
 async function logRevenueSplit(base44, { bookingId, bookingType, totalAmount, currency, userEmail, sessionId }) {
   const supplierCost  = parseFloat((totalAmount * SUPPLIER_PCT).toFixed(2));
@@ -30,7 +34,7 @@ async function logRevenueSplit(base44, { bookingId, bookingType, totalAmount, cu
       status: 'settled'
     });
 
-    console.log(`[80/20 SPLIT] Gross: ${totalAmount} | Supplier: ${supplierCost} | GC Revenue: ${agencyRevenue} | Net: ${netProfit}`);
+    console.log(`[75/25 SPLIT] Gross: ${totalAmount} | Supplier(75%): ${supplierCost} | GC Revenue(25%): ${agencyRevenue} | Net after Stripe fee: ${netProfit}`);
   } catch (err) {
     console.error('Revenue split log error:', err.message);
   }
