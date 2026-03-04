@@ -272,18 +272,36 @@ Deno.serve(async (req) => {
       const { booking_id, booking_type, user_email } = pi.metadata || {};
       console.error('[PAYMENT FAILED]', pi.id, pi.last_payment_error?.message);
 
+      // Per GC Airline Flow: payment gateway failure (card declined etc.)
+      // Funds never left customer — no wallet holding needed, just notify
       if (user_email) {
         try {
           await base44.asServiceRole.entities.Notification.create({
             user_email,
-            title: '❌ Payment Failed',
-            message: `Your payment was not processed. Please try again or use a different card.`,
+            title: '❌ Payment Failed — No Charges Made',
+            message: `Your payment could not be processed. No funds were deducted. Please try again with a different payment method or contact our support at +639154401150.`,
             type: 'payment_failed',
             booking_id,
             link: '/MyBookings'
           });
         } catch (err) { console.error('Notify error:', err.message); }
       }
+
+      // Log audit
+      try {
+        await base44.asServiceRole.entities.AuditLog.create({
+          action: 'payment_gateway_failed',
+          entity_type: booking_type || 'booking',
+          entity_id: booking_id || pi.id,
+          details: JSON.stringify({
+            pi_id: pi.id,
+            reason: pi.last_payment_error?.message,
+            funds_status: 'not_charged'
+          }),
+          user_email: user_email || 'unknown',
+          timestamp: new Date().toISOString()
+        });
+      } catch (err) { console.error('Audit log error:', err.message); }
     }
 
     // ── Phase 8: charge.refunded ──────────────────────────────────────────
