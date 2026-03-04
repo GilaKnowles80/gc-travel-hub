@@ -134,6 +134,7 @@ export default function BusSearch() {
           </div>
           <TwelveGoWidget city={filters.destination || filters.origin || "Manila"} lang="en" fxcode="USD" />
           <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
+          <TwelveGoFormWidget />
         </div>
 
         {/* Bus Results */}

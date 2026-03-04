@@ -12,6 +12,7 @@ import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
 import TwelveGoWidget from '@/components/twelvego/TwelveGoWidget';
 import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
+import TwelveGoFormWidget from '@/components/twelvego/TwelveGoFormWidget';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({ operator: 'all', origin: '', destination: '', date: '' });
@@ -111,6 +112,7 @@ export default function FerrySearch() {
           </div>
           <TwelveGoWidget city={filters.destination || filters.origin || "Manila"} lang="en" fxcode="USD" />
           <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
+          <TwelveGoFormWidget />
         </div>
 
         {/* Ferry Results */}

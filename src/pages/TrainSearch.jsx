@@ -12,6 +12,7 @@ import StationSelector from '@/components/trains/StationSelector';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
 import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
+import TwelveGoFormWidget from '@/components/twelvego/TwelveGoFormWidget';
 
 export default function TrainSearch() {
   const [filters, setFilters] = useState({
@@ -136,6 +137,7 @@ export default function TrainSearch() {
             <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">12Go Asia</span>
           </div>
           <TwelveGoCountryWidget country="PH" lang="en" fxcode="USD" />
+          <TwelveGoFormWidget />
         </div>
 
         {/* Train Results */}
