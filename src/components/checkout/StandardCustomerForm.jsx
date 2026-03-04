@@ -177,12 +177,19 @@ export default function StandardCustomerForm({ bookingType, onDataChange }) {
         </div>
       )}
 
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-2">
+        <p className="text-xs text-amber-700 flex items-start gap-1">
+          <Info className="w-3 h-3 mt-0.5 shrink-0" />
+          Your details must match your government-issued ID or passport exactly to avoid booking issues.
+        </p>
+      </div>
+
       <Button
         type="button"
         onClick={validateForm}
         className="w-full bg-amber-500 hover:bg-amber-600 text-white mt-6"
       >
-        Validate Information
+        Confirm My Details
       </Button>
     </form>
   );
