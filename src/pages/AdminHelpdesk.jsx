@@ -166,9 +166,17 @@ export default function AdminHelpdesk() {
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Helpdesk</h1>
-          <p className="text-slate-600 mt-2">Manage customer support tickets</p>
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Helpdesk</h1>
+            <p className="text-slate-500 mt-1 text-sm">
+              📥 <span className="font-medium">info@</span> · <span className="font-medium">sales@</span> · <span className="font-medium">helpdesk@</span> gctravelandtours.com
+            </p>
+          </div>
+          <Button onClick={handleSyncGmail} disabled={syncingGmail} variant="outline" className="gap-2">
+            {syncingGmail ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            Sync Gmail Inbox
+          </Button>
         </div>
 
         {/* Stats */}
