@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CreditCard, DollarSign, Building2, Loader2 } from "lucide-react";
+import { CreditCard, DollarSign, Building2, Loader2, CheckCircle2, Info, Phone } from "lucide-react";
 
 /**
  * StandardPaymentSelector - Unified payment method selection
