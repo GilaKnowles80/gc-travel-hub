@@ -34,6 +34,14 @@ const PAYMENT_METHODS = [
     tag: 'Philippines'
   },
   {
+    id: 'paymongo_qr',
+    name: 'QR Ph (PayMongo)',
+    description: 'Scan QR Ph — works with GCash, Maya, BDO, BPI & all banks. No fees!',
+    icon: '🟦',
+    currency: 'PHP',
+    tag: 'Philippines'
+  },
+  {
     id: 'paymaya',
     name: 'Maya (PayMaya)',
     description: 'Pay with your Maya e-wallet',
@@ -83,6 +91,7 @@ export default function UnifiedPaymentButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [gcashQROpen, setGcashQROpen] = useState(false);
+  const [paymongoQROpen, setPaymongoQROpen] = useState(false);
   // PayPal flow state
   const [paypalOrderId, setPaypalOrderId] = useState(null);
 
