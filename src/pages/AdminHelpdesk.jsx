@@ -7,24 +7,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2, Mail, MessageSquare, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { Loader2, Mail, MessageSquare, AlertCircle, CheckCircle, Clock, Send, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CATEGORIES = {
-  general: { label: "General Inquiries", email: "info@gctravelandtours.com", color: "bg-blue-100 text-blue-700" },
-  tour: { label: "Tour Packages", email: "tour@gctravelandtours.com", color: "bg-green-100 text-green-700" },
-  flights: { label: "Flights", email: "flights@gctravelandtours.com", color: "bg-sky-100 text-sky-700" },
-  visa: { label: "Visa", email: "visa@gctravelandtours.com", color: "bg-purple-100 text-purple-700" },
-  bus: { label: "Bus", email: "bus@gctravelandtours.com", color: "bg-yellow-100 text-yellow-700" },
-  car_rental: { label: "Car Rentals", email: "car@gctravelandtours.com", color: "bg-orange-100 text-orange-700" },
-  ferry: { label: "Ferry", email: "ferry@gctravelandtours.com", color: "bg-cyan-100 text-cyan-700" },
-  hotel: { label: "Hotels", email: "hotel@gctravelandtours.com", color: "bg-pink-100 text-pink-700" },
-  travel_insurance: { label: "Travel Insurance", email: "insurance@gctravelandtours.com", color: "bg-indigo-100 text-indigo-700" },
-  refund: { label: "Refund", email: "refund@gctravelandtours.com", color: "bg-red-100 text-red-700" },
-  dispute: { label: "Dispute", email: "dispute@gctravelandtours.com", color: "bg-rose-100 text-rose-700" },
-  complaint: { label: "Complaint", email: "complaint@gctravelandtours.com", color: "bg-amber-100 text-amber-700" }
+  general:          { label: "General Inquiries", email: "info@gctravelandtours.com",     color: "bg-blue-100 text-blue-700" },
+  tour:             { label: "Tour Packages",      email: "info@gctravelandtours.com",     color: "bg-green-100 text-green-700" },
+  hotel:            { label: "Hotels",             email: "info@gctravelandtours.com",     color: "bg-pink-100 text-pink-700" },
+  travel_insurance: { label: "Travel Insurance",   email: "info@gctravelandtours.com",     color: "bg-indigo-100 text-indigo-700" },
+  flights:          { label: "Flights",            email: "sales@gctravelandtours.com",    color: "bg-sky-100 text-sky-700" },
+  bus:              { label: "Bus",                email: "sales@gctravelandtours.com",    color: "bg-yellow-100 text-yellow-700" },
+  ferry:            { label: "Ferry",              email: "sales@gctravelandtours.com",    color: "bg-cyan-100 text-cyan-700" },
+  car_rental:       { label: "Car Rentals",        email: "sales@gctravelandtours.com",    color: "bg-orange-100 text-orange-700" },
+  cruise:           { label: "Cruise",             email: "sales@gctravelandtours.com",    color: "bg-teal-100 text-teal-700" },
+  train:            { label: "Train",              email: "sales@gctravelandtours.com",    color: "bg-lime-100 text-lime-700" },
+  visa:             { label: "Visa Processing",    email: "helpdesk@gctravelandtours.com", color: "bg-purple-100 text-purple-700" },
+  refund:           { label: "Refund",             email: "helpdesk@gctravelandtours.com", color: "bg-red-100 text-red-700" },
+  dispute:          { label: "Dispute",            email: "helpdesk@gctravelandtours.com", color: "bg-rose-100 text-rose-700" },
+  complaint:        { label: "Complaint",          email: "helpdesk@gctravelandtours.com", color: "bg-amber-100 text-amber-700" },
 };
 
 const STATUS_COLORS = {
