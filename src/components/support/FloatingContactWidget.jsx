@@ -34,16 +34,22 @@ export default function FloatingContactWidget() {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a helpful customer service assistant for GC Travel & Tours Agency. A customer asked: "${userMessage}". 
-        
-        Help them with questions about:
-        - Tours and travel packages
-        - Flight bookings
-        - Hotel reservations
-        - Visa assistance
-        - General travel advice
-        
-        Keep responses brief and friendly. If they need to speak with a representative, suggest they call our hotlines: +639154401150 (GLOBE) or +639620595263 (SMART).`
+        prompt: `You are a dedicated booking support assistant for GC Travel & Tours Agency. A customer asked: "${userMessage}".
+
+        Your primary mission is to help them COMPLETE their booking successfully. Guide them step by step.
+
+        You can help with:
+        - How to book flights, hotels, tours, buses, ferries, trains, car rentals, and visas
+        - Explaining payment options: Stripe (card), PayMongo (GCash/Maya), PayPal, Bank Transfer, GC Wallet
+        - Troubleshooting booking errors or payment failures
+        - Loyalty points, discount codes, promotions
+        - Cancellation and refund policies
+        - Travel document requirements (passport, visa)
+        - Luggage allowance and travel tips
+
+        Always be proactive: if they seem stuck, give them the NEXT STEP they should take.
+        If they need urgent help with a pending booking, tell them to call: +639154401150 (GLOBE) or +639620595263 (SMART).
+        Keep responses short, friendly, and action-oriented.`
       });
 
       setMessages(prev => [...prev, { role: "assistant", text: response }]);
