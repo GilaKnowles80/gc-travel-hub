@@ -63,6 +63,12 @@ export default function StandardCustomerForm({ bookingType, onDataChange }) {
 
   return (
     <form className="space-y-4">
+      {autoFilled && (
+        <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs rounded-lg px-3 py-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          Your details have been auto-filled from your account. Please review and update if needed.
+        </div>
+      )}
       {/* Full Name */}
       <div>
         <Label htmlFor="name" className="text-sm font-medium text-slate-700">
