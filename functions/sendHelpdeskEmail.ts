@@ -1,18 +1,26 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const CATEGORY_EMAILS = {
-  general: "info@gctravelandtours.com",
-  tour: "tour@gctravelandtours.com",
-  flights: "flights@gctravelandtours.com",
-  visa: "visa@gctravelandtours.com",
-  bus: "bus@gctravelandtours.com",
-  car_rental: "car@gctravelandtours.com",
-  ferry: "ferry@gctravelandtours.com",
-  hotel: "hotel@gctravelandtours.com",
-  travel_insurance: "insurance@gctravelandtours.com",
-  refund: "refund@gctravelandtours.com",
-  dispute: "dispute@gctravelandtours.com",
-  complaint: "complaint@gctravelandtours.com"
+// ─── GC Travel Internal Email Routing ────────────────────────────────────────
+// info@gctravelandtours.com     → General, Tours, Hotels, Insurance
+// sales@gctravelandtours.com    → Flights, Bus, Ferry, Car, Cruise, Train
+// helpdesk@gctravelandtours.com → Visa, Refund, Dispute, Complaint, Support
+// ─────────────────────────────────────────────────────────────────────────────
+
+const CATEGORY_ROUTING = {
+  general:          'info@gctravelandtours.com',
+  tour:             'info@gctravelandtours.com',
+  hotel:            'info@gctravelandtours.com',
+  travel_insurance: 'info@gctravelandtours.com',
+  flights:          'sales@gctravelandtours.com',
+  bus:              'sales@gctravelandtours.com',
+  ferry:            'sales@gctravelandtours.com',
+  car_rental:       'sales@gctravelandtours.com',
+  cruise:           'sales@gctravelandtours.com',
+  train:            'sales@gctravelandtours.com',
+  visa:             'helpdesk@gctravelandtours.com',
+  refund:           'helpdesk@gctravelandtours.com',
+  dispute:          'helpdesk@gctravelandtours.com',
+  complaint:        'helpdesk@gctravelandtours.com',
 };
 
 Deno.serve(async (req) => {
@@ -20,95 +28,94 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const { ticket_id } = await req.json();
 
-    if (!ticket_id) {
-      return Response.json({ error: "Missing ticket_id" }, { status: 400 });
-    }
+    if (!ticket_id) return Response.json({ error: 'Missing ticket_id' }, { status: 400 });
 
-    // Fetch the ticket
     const ticket = await base44.asServiceRole.entities.HelpdeskTicket.read(ticket_id);
+    if (!ticket) return Response.json({ error: 'Ticket not found' }, { status: 404 });
 
-    if (!ticket) {
-      return Response.json({ error: "Ticket not found" }, { status: 404 });
-    }
+    const internalEmail = CATEGORY_ROUTING[ticket.category] || 'info@gctravelandtours.com';
+    const ticketRef = `[Ticket #${ticket.id}]`;
 
-    const departmentEmail = CATEGORY_EMAILS[ticket.category] || CATEGORY_EMAILS.general;
+    // Internal notification email
+    const internalBody = `
+New Customer Inquiry — GC Travel & Tours
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    // Email to department
-    const departmentEmailBody = `
-New Support Ticket Submitted
+Ticket ID   : ${ticket.id}
+Category    : ${ticket.category?.toUpperCase()}
+Priority    : ${ticket.priority?.toUpperCase() || 'MEDIUM'}
+Status      : ${ticket.status?.toUpperCase() || 'OPEN'}
+Received at : ${internalEmail}
+${ticket.booking_reference ? `Booking Ref : ${ticket.booking_reference}` : ''}
 
-Ticket ID: ${ticket.id}
-Category: ${ticket.category}
-Priority: ${ticket.priority}
-Status: ${ticket.status}
+━━━━━━━━━━━━ CUSTOMER DETAILS ━━━━━━━━━━━━
 
-From:
-Name: ${ticket.name}
-Email: ${ticket.email}
-Phone: ${ticket.phone || "N/A"}
+Name    : ${ticket.name}
+Email   : ${ticket.email}
+Phone   : ${ticket.phone || 'N/A'}
 
-${ticket.booking_reference ? `Booking Reference: ${ticket.booking_reference}` : ""}
+━━━━━━━━━━━━ MESSAGE ━━━━━━━━━━━━
 
 Subject: ${ticket.subject}
 
-Message:
 ${ticket.message}
 
----
-Please respond to: ${ticket.email}
-Visit Admin Panel to manage this ticket.
-    `;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👉 Reply directly to the customer at: ${ticket.email}
+Or manage this ticket in the Admin Panel.
+    `.trim();
 
-    // Email to customer
-    const customerEmailBody = `
-Hello ${ticket.name},
+    // Auto-reply to customer
+    const customerBody = `
+Dear ${ticket.name},
 
-Thank you for contacting GC Travel and Tours Agency. We have received your inquiry and assigned it ticket number ${ticket.id}.
+Thank you for reaching out to GC Travel and Tours Agency!
 
-Category: ${ticket.category}
-Subject: ${ticket.subject}
+We have successfully received your inquiry and created a support ticket for you.
 
-We appreciate your patience and will respond within 24 hours during business hours.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Ticket Reference : ${ticket.id}
+Category         : ${ticket.category?.charAt(0).toUpperCase() + ticket.category?.slice(1) || 'General'}
+Subject          : ${ticket.subject}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-If you need to provide additional information about your inquiry, please reply to this email with your ticket number: ${ticket.id}
+Our team will review your inquiry and respond within 24 hours during business hours (Mon–Sat, 8AM–6PM).
+
+If you need to follow up, please reply to this email and include your ticket reference: ${ticket.id}
+
+For urgent matters, you may also contact us at:
+📞 +63 915 440 1150
+📧 ${internalEmail}
 
 Best regards,
 GC Travel and Tours Agency
-+63 915 440 1150
-info@gctravelandtours.com
-    `;
+Imus City, Cavite, Philippines
+    `.trim();
 
-    // Send emails in parallel
     await Promise.all([
       base44.integrations.Core.SendEmail({
-        to: departmentEmail,
-        subject: `[Support Ticket #${ticket.id}] ${ticket.subject}`,
-        body: departmentEmailBody,
-        from_name: "GC Travel and Tours Support"
+        to: internalEmail,
+        subject: `${ticketRef} ${ticket.subject}`,
+        body: internalBody,
+        from_name: `${ticket.name} via GC Travel Support`,
       }),
       base44.integrations.Core.SendEmail({
         to: ticket.email,
-        subject: `[Ticket #${ticket.id}] We received your inquiry`,
-        body: customerEmailBody,
-        from_name: "GC Travel and Tours Support"
-      })
+        subject: `${ticketRef} We received your inquiry — GC Travel & Tours`,
+        body: customerBody,
+        from_name: 'GC Travel and Tours Support',
+      }),
     ]);
 
-    // Update ticket to mark email sent
     await base44.asServiceRole.entities.HelpdeskTicket.update(ticket_id, {
-      response_email_sent: true
+      response_email_sent: true,
     });
 
-    return Response.json({
-      success: true,
-      message: "Emails sent successfully",
-      department_email: departmentEmail,
-      ticket_id: ticket_id
-    });
+    console.log(`[HELPDESK EMAIL] Ticket ${ticket.id} routed to ${internalEmail}`);
+    return Response.json({ success: true, routed_to: internalEmail, ticket_id });
+
   } catch (error) {
-    console.error("Error sending helpdesk emails:", error);
-    return Response.json({
-      error: error.message || "Failed to send emails"
-    }, { status: 500 });
+    console.error('[HELPDESK EMAIL ERROR]', { message: error.message, timestamp: new Date().toISOString() });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });

@@ -1,102 +1,108 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+
+// Syncs unread emails from all 3 GC Travel inboxes to HelpdeskTickets
+// info@ → general | sales@ → sales inquiries | helpdesk@ → support
+
+const INBOX_CATEGORY_MAP = {
+  'info':     'general',
+  'sales':    'flights',
+  'helpdesk': 'complaint',
+};
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    // Only admins can sync emails
     if (user?.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Get Gmail access token
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('gmail');
+    const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 
-    // Fetch unread emails from Gmail
+    // Fetch unread emails from any of the 3 inboxes
+    const query = 'is:unread (to:info@gctravelandtours.com OR to:sales@gctravelandtours.com OR to:helpdesk@gctravelandtours.com)';
     const searchResponse = await fetch(
-      'https://www.googleapis.com/gmail/v1/users/me/messages?q=is:unread',
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      }
+      `https://www.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(query)}&maxResults=50`,
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
     );
 
-    if (!searchResponse.ok) {
-      throw new Error(`Gmail API error: ${searchResponse.statusText}`);
-    }
+    if (!searchResponse.ok) throw new Error(`Gmail API error: ${searchResponse.statusText}`);
 
     const searchData = await searchResponse.json();
     const messageIds = searchData.messages?.map(m => m.id) || [];
 
-    if (messageIds.length === 0) {
-      return Response.json({ synced: 0, message: 'No new emails' });
-    }
+    if (messageIds.length === 0) return Response.json({ synced: 0, message: 'No new emails' });
 
-    // Fetch full message details for each email
     const emails = await Promise.all(
-      messageIds.slice(0, 50).map(async (messageId) => {
+      messageIds.map(async (messageId) => {
         const msgResponse = await fetch(
-          `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
-          }
+          `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}?format=full`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
-        const msgData = await msgResponse.json();
-        
-        // Extract headers
-        const headers = msgData.payload?.headers || [];
-        const getHeader = (name) => headers.find(h => h.name === name)?.value || '';
-        
+        const msg = await msgResponse.json();
+        const headers = msg.payload?.headers || [];
+        const getHeader = (name) => headers.find(h => h.name.toLowerCase() === name.toLowerCase())?.value || '';
+
+        // Decode body
+        let body = '';
+        const parts = msg.payload?.parts || [];
+        const textPart = parts.find(p => p.mimeType === 'text/plain') || msg.payload;
+        if (textPart?.body?.data) {
+          body = atob(textPart.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+        }
+
+        // Determine which inbox it was sent to
+        const toHeader = getHeader('To').toLowerCase();
+        let inboxPrefix = 'info';
+        if (toHeader.includes('sales@')) inboxPrefix = 'sales';
+        else if (toHeader.includes('helpdesk@')) inboxPrefix = 'helpdesk';
+
         return {
           id: messageId,
           from: getHeader('From'),
-          subject: getHeader('Subject'),
+          subject: getHeader('Subject') || '(No Subject)',
           date: getHeader('Date'),
-          body: msgData.payload?.parts?.[0]?.body?.data 
-            ? Buffer.from(msgData.payload.parts[0].body.data, 'base64').toString('utf-8')
-            : msgData.payload?.body?.data
-            ? Buffer.from(msgData.payload.body.data, 'base64').toString('utf-8')
-            : ''
+          body: body || '(No message body)',
+          inbox: inboxPrefix,
         };
       })
     );
 
-    // Create helpdesk tickets from emails
     let synced = 0;
     for (const email of emails) {
-      // Parse sender email and name
-      const fromMatch = email.from.match(/^(.+?)\s*<(.+?)>$|^(.+)$/);
-      const senderName = fromMatch?.[1]?.trim() || fromMatch?.[3]?.trim() || 'Unknown';
-      const senderEmail = fromMatch?.[2] || email.from;
+      const fromMatch = email.from.match(/^(.+?)\s*<(.+?)>$/) || [null, email.from, email.from];
+      const senderName = fromMatch[1]?.trim() || 'Unknown';
+      const senderEmail = fromMatch[2]?.trim() || email.from;
 
-      // Check if ticket already exists
-      const existing = await base44.asServiceRole.entities.HelpdeskTicket.filter(
-        { email: senderEmail, subject: email.subject.substring(0, 100) }
-      );
+      // Deduplicate — skip if ticket already exists for this email+subject
+      const existing = await base44.asServiceRole.entities.HelpdeskTicket.filter({
+        email: senderEmail,
+        subject: email.subject.substring(0, 100),
+      });
 
       if (existing.length === 0) {
-        // Create new ticket
+        const category = INBOX_CATEGORY_MAP[email.inbox] || 'general';
         await base44.asServiceRole.entities.HelpdeskTicket.create({
           name: senderName,
           email: senderEmail,
           subject: email.subject,
-          message: email.body || '(No message body)',
-          category: 'general',
+          message: email.body,
+          category,
           status: 'open',
           priority: 'medium',
-          source: 'email'
+          source: 'email',
+          received_inbox: `${email.inbox}@gctravelandtours.com`,
         });
         synced++;
       }
     }
 
+    console.log(`[GMAIL SYNC] Synced ${synced} new emails from GC Travel inboxes`);
     return Response.json({ synced, total: messageIds.length });
+
   } catch (error) {
-    console.error('Gmail sync error:', error);
+    console.error('[GMAIL SYNC ERROR]', { message: error.message, timestamp: new Date().toISOString() });
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
