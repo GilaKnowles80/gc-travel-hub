@@ -263,7 +263,7 @@ Deno.serve(async (req) => {
         } catch (err) { console.error('Notification error:', err.message); }
       }
 
-      console.log(`[PHASE 5 COMPLETE] Booking confirmed. GC Revenue: ${(totalAmount * GC_MARKUP_PCT).toFixed(2)} | Supplier: ${(totalAmount * SUPPLIER_PCT).toFixed(2)}`);
+      console.log(`[PHASE 5 COMPLETE] 75/25 Split — GC Revenue(25%): ${(totalAmount * GC_MARKUP_PCT).toFixed(2)} | Supplier(75%): ${(totalAmount * SUPPLIER_PCT).toFixed(2)} | Total: ${totalAmount}`);
     }
 
     // ── Phase 9: payment_intent.payment_failed ────────────────────────────
