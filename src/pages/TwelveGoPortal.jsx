@@ -62,11 +62,19 @@ export default function TwelveGoPortal() {
           </Button>
           <Button
             size="sm"
+            onClick={() => window.open('https://12go.asia/?z=15166459', '_blank')}
+            className="gap-2 bg-green-500 hover:bg-green-600 text-white"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Customer Site
+          </Button>
+          <Button
+            size="sm"
             onClick={() => window.open('https://reseller.12go.asia/dashboard_p?module=dashboard_p', '_blank')}
             className="gap-2 bg-green-600 hover:bg-green-700 text-white"
           >
             <ExternalLink className="w-4 h-4" />
-            Open in New Tab
+            Reseller Portal
           </Button>
         </div>
       </div>
@@ -85,14 +93,25 @@ export default function TwelveGoPortal() {
                 Use the button below to open it directly in a new tab.
               </p>
             </div>
-            <Button
-              size="lg"
-              onClick={() => window.open('https://reseller.12go.asia/dashboard_p?module=dashboard_p', '_blank')}
-              className="gap-2 bg-green-600 hover:bg-green-700 text-white"
-            >
-              <ExternalLink className="w-5 h-5" />
-              Open 12Go Asia Partner Portal
-            </Button>
+            <div className="flex gap-3 flex-wrap justify-center">
+              <Button
+                size="lg"
+                onClick={() => window.open('https://12go.asia/?z=15166459', '_blank')}
+                className="gap-2 bg-green-500 hover:bg-green-600 text-white"
+              >
+                <ExternalLink className="w-5 h-5" />
+                Open 12Go Asia (Affiliate)
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => window.open('https://reseller.12go.asia/dashboard_p?module=dashboard_p', '_blank')}
+                className="gap-2"
+              >
+                <ExternalLink className="w-5 h-5" />
+                Reseller Dashboard
+              </Button>
+            </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left max-w-sm w-full">
               <p className="text-sm font-semibold text-slate-700 mb-3">What you can do on 12Go Asia:</p>
               <ul className="space-y-1.5 text-sm text-slate-600">
@@ -106,7 +125,7 @@ export default function TwelveGoPortal() {
         ) : (
           <iframe
             key={key}
-            src="https://reseller.12go.asia/dashboard_p?module=dashboard_p"
+            src="https://12go.asia/?z=15166459"
             className="w-full h-full border-0"
             title="12Go Asia Reseller Portal"
             onError={() => setIframeError(true)}
