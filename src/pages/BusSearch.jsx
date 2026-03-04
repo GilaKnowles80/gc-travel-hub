@@ -10,6 +10,7 @@ import { Bus, Clock, MapPin, Search, Zap } from 'lucide-react';
 import BusBookingDialog from '@/components/buses/BusBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
+import TwelveGoWidget from '@/components/twelvego/TwelveGoWidget';
 
 export default function BusSearch() {
   const [filters, setFilters] = useState({

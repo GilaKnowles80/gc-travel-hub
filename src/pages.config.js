@@ -157,13 +157,13 @@ import TravelAssistant from './pages/TravelAssistant';
 import TravelInsurance from './pages/TravelInsurance';
 import TripzynxPortal from './pages/TripzynxPortal';
 import TrustedAgency from './pages/TrustedAgency';
+import TwelveGoPortal from './pages/TwelveGoPortal';
 import UnifiedCheckout from './pages/UnifiedCheckout';
 import VisaCheckout from './pages/VisaCheckout';
 import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import TwelveGoPortal from './pages/TwelveGoPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -278,13 +278,13 @@ export const PAGES = {
     "TravelInsurance": TravelInsurance,
     "TripzynxPortal": TripzynxPortal,
     "TrustedAgency": TrustedAgency,
+    "TwelveGoPortal": TwelveGoPortal,
     "UnifiedCheckout": UnifiedCheckout,
     "VisaCheckout": VisaCheckout,
     "Visas": Visas,
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "TwelveGoPortal": TwelveGoPortal,
 }
 
 export const pagesConfig = {

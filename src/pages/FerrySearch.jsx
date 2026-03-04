@@ -10,6 +10,7 @@ import { Ship, Clock, MapPin, Search, Zap } from 'lucide-react';
 import FerryBookingDialog from '@/components/ferries/FerryBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
+import TwelveGoWidget from '@/components/twelvego/TwelveGoWidget';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({ operator: 'all', origin: '', destination: '', date: '' });
