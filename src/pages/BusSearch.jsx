@@ -124,6 +124,15 @@ export default function BusSearch() {
           </CardContent>
         </Card>
 
+        {/* 12Go Asia Widget */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-semibold text-slate-600">Also search via</span>
+            <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">12Go Asia</span>
+          </div>
+          <TwelveGoWidget city={filters.destination || filters.origin || "Manila"} lang="en" fxcode="USD" />
+        </div>
+
         {/* Bus Results */}
         <div className="grid grid-cols-1 gap-4">
           {filteredBuses.map(bus => (
