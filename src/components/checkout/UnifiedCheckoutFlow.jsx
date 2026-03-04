@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronRight, ChevronLeft, Loader2, HelpCircle, MessageCircle, Phone, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
