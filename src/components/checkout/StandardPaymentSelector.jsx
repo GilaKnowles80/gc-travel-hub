@@ -163,10 +163,27 @@ export default function StandardPaymentSelector({
         <p className="text-xs text-blue-700">
           🔒 Your payment is encrypted and secure. We never store your card details.
         </p>
+        <div className="flex items-center justify-center gap-2 mt-2 flex-wrap">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-4 opacity-60" />
+          <span className="text-slate-300 text-xs">|</span>
+          <span className="text-xs text-slate-500 font-semibold">PayMongo</span>
+          <span className="text-slate-300 text-xs">|</span>
+          <span className="text-xs text-slate-500 font-semibold">QR Ph</span>
+          <span className="text-slate-300 text-xs">|</span>
+          <span className="text-xs text-slate-500 font-semibold">Stripe</span>
+        </div>
         <p className="text-xs text-blue-600 mt-1">
           Need help? <a href="tel:+639154401150" className="font-semibold underline">Call +639154401150</a> — we're here 24/7.
         </p>
       </div>
+
+      <PayMongoQRModal
+        open={paymongoQROpen}
+        onClose={() => setPaymongoQROpen(false)}
+        amount={bookingData?.totalPrice || 0}
+        bookingType={bookingData?.type}
+        bookingId={bookingData?.id}
+      />
     </div>
   );
 }
