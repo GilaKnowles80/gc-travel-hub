@@ -34,6 +34,7 @@ const navLinks = [
   { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
   { name: "Tripzynx", page: "TripzynxPortal", icon: Globe, adminOnly: true },
   { name: "Wanderlinx", page: "WanderlinxPortal", icon: Globe, adminOnly: true },
+  { name: "12Go Asia", page: "TwelveGoPortal", icon: Globe, adminOnly: true },
   { name: "Reservations", page: "ManageReservations", icon: BookOpen, adminOnly: true },
   { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Data Manager", page: "AdminDataManager", icon: Receipt, adminOnly: true },
