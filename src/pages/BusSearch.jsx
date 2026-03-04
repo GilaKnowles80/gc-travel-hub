@@ -11,6 +11,7 @@ import BusBookingDialog from '@/components/buses/BusBookingDialog';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
 import TwelveGoWidget from '@/components/twelvego/TwelveGoWidget';
+import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
 
 export default function BusSearch() {
   const [filters, setFilters] = useState({

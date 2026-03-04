@@ -11,6 +11,7 @@ import TrainBookingDialog from '@/components/trains/TrainBookingDialog';
 import StationSelector from '@/components/trains/StationSelector';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useMarkup } from '@/components/markup/useMarkup';
+import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
 
 export default function TrainSearch() {
   const [filters, setFilters] = useState({
