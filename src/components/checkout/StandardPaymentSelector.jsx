@@ -17,6 +17,7 @@ export default function StandardPaymentSelector({
 }) {
   const [selectedMethod, setSelectedMethod] = useState("stripe");
   const [isLoading, setIsLoading] = useState(false);
+  const [paymongoQROpen, setPaymongoQROpen] = useState(false);
 
   const handlePayment = async () => {
     setIsLoading(true);
