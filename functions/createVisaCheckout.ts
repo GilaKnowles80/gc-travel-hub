@@ -1,29 +1,37 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import Stripe from 'npm:stripe@18.5.0';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import Stripe from 'npm:stripe@17.5.0';
 
+// ─── GC Travel Visa Processing Payment Flow ───────────────────────────────────
+// GC Travel collects only 25% of the total visa cost as a SERVICE FEE.
+// The remaining 75% (actual visa fee) is paid directly by the client
+// at their embassy/consulate appointment date.
+// ─────────────────────────────────────────────────────────────────────────────
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
+const SERVICE_FEE_PCT = 0.25; // GC Travel processing fee only
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
-    const { bookingId, amount, currency = 'PHP', paymentMethod = 'stripe' } = await req.json();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!bookingId || !amount) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    const { bookingId, amount, currency = 'php', paymentMethod = 'stripe' } = await req.json();
+
+    if (!bookingId || !amount) return Response.json({ error: 'Missing required fields' }, { status: 400 });
 
     const appointment = await base44.entities.VisaAppointment.get(bookingId);
-    if (!appointment) {
-      return Response.json({ error: 'Appointment not found' }, { status: 404 });
-    }
+    if (!appointment) return Response.json({ error: 'Appointment not found' }, { status: 404 });
 
-    const description = `Visa Appointment - ${appointment.country} | ${appointment.visa_type} visa application`;
+    // Only charge 25% — the GC service/processing fee
+    const totalVisaCost = parseFloat(amount);
+    const serviceFeeCharged = parseFloat((totalVisaCost * SERVICE_FEE_PCT).toFixed(2));
+    const balanceDueAtEmbassy = parseFloat((totalVisaCost * 0.75).toFixed(2));
+
+    console.log(`[VISA CHECKOUT] Customer: ${user.email} | Total Visa Cost: ${totalVisaCost} | GC Service Fee (25%): ${serviceFeeCharged} | Balance at Embassy (75%): ${balanceDueAtEmbassy}`);
+
+    const productName = `📋 Visa Processing - ${appointment.country} (${appointment.visa_type})`;
+    const description = `GC Travel Service Fee (25% of total). Remaining ₱${balanceDueAtEmbassy.toLocaleString()} payable at embassy on appointment date.`;
 
     if (paymentMethod === 'stripe') {
       const session = await stripe.checkout.sessions.create({
@@ -31,104 +39,63 @@ Deno.serve(async (req) => {
         line_items: [{
           price_data: {
             currency: currency.toLowerCase(),
-            product_data: {
-              name: `Visa Appointment - ${appointment.country}`,
-              description: `${appointment.visa_type} visa application`,
-            },
-            unit_amount: Math.round(amount * 100),
+            product_data: { name: productName, description },
+            unit_amount: Math.round(serviceFeeCharged * 100), // 25% only
           },
           quantity: 1,
         }],
         mode: 'payment',
-        success_url: `${req.headers.get('origin')}/payment-success?booking_id=${bookingId}&type=visa`,
-        cancel_url: `${req.headers.get('origin')}/payment-cancelled`,
+        customer_email: user.email,
+        success_url: `${req.headers.get('origin')}/PaymentSuccess?booking_id=${bookingId}&type=visa`,
+        cancel_url: `${req.headers.get('origin')}/PaymentCancelled`,
         metadata: {
           booking_id: bookingId,
           booking_type: 'visa',
           base44_app_id: Deno.env.get('BASE44_APP_ID'),
           user_email: user.email,
+          total_visa_cost: String(totalVisaCost),
+          service_fee_charged_25pct: String(serviceFeeCharged),
+          balance_due_at_embassy_75pct: String(balanceDueAtEmbassy),
+          payment_model: 'gc_service_fee_only',
         },
       });
+      return Response.json({
+        url: session.url,
+        sessionId: session.id,
+        chargedAmount: serviceFeeCharged,
+        balanceDueAtEmbassy,
+        note: 'Only the 25% GC processing fee is charged now. Balance is paid at embassy on appointment date.'
+      });
 
-      return Response.json({ url: session.url, sessionId: session.id });
     } else if (paymentMethod === 'paymongo') {
-      const paymongoApiKey = Deno.env.get('PayMongo_API_KEY');
-      const authHeader = 'Basic ' + btoa(paymongoApiKey + ':');
-
-      const paymentResponse = await fetch('https://api.paymongo.com/v1/links', {
+      const authHeader = 'Basic ' + btoa(Deno.env.get('PayMongo_API_KEY') + ':');
+      const res = await fetch('https://api.paymongo.com/v1/links', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authHeader
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
         body: JSON.stringify({
           data: {
             attributes: {
-              amount: Math.round(amount * 100),
-              description: description,
-              remarks: `Booking ID: ${bookingId}`
+              amount: Math.round(serviceFeeCharged * 100), // 25% only
+              description,
+              remarks: `Visa Processing Fee | Appointment ID: ${bookingId}`
             }
           }
         })
       });
-
-      const paymentData = await paymentResponse.json();
-      
-      if (paymentData.data) {
-        return Response.json({
-          url: paymentData.data.attributes.checkout_url,
-          bookingId: appointment.id
-        });
-      } else {
-        throw new Error('PayMongo payment link creation failed');
-      }
-    } else if (paymentMethod === 'paypal') {
-      const paypalClientId = Deno.env.get('PAYPAL_CLIENT_ID');
-      const paypalSecret = Deno.env.get('PAYPAL_SECRET');
-      const auth = btoa(`${paypalClientId}:${paypalSecret}`);
-
-      const tokenResponse = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${auth}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'grant_type=client_credentials'
+      const data = await res.json();
+      if (!data.data) throw new Error('PayMongo link creation failed');
+      return Response.json({
+        url: data.data.attributes.checkout_url,
+        bookingId: appointment.id,
+        chargedAmount: serviceFeeCharged,
+        balanceDueAtEmbassy,
       });
 
-      const { access_token } = await tokenResponse.json();
-
-      const orderResponse = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${access_token}`
-        },
-        body: JSON.stringify({
-          intent: 'CAPTURE',
-          purchase_units: [{
-            amount: {
-              currency_code: currency,
-              value: amount.toFixed(2)
-            },
-            description: description
-          }],
-          application_context: {
-            return_url: `${req.headers.get('origin')}/payment-success?booking_id=${bookingId}&type=visa`,
-            cancel_url: `${req.headers.get('origin')}/payment-cancelled`
-          }
-        })
-      });
-
-      const orderData = await orderResponse.json();
-      const approvalUrl = orderData.links.find(link => link.rel === 'approve').href;
-
-      return Response.json({ url: approvalUrl, orderId: orderData.id });
     } else {
       return Response.json({ error: 'Invalid payment method' }, { status: 400 });
     }
   } catch (error) {
-    console.error('Visa appointment checkout error:', error);
+    console.error('[VISA CHECKOUT ERROR]', { message: error.message, timestamp: new Date().toISOString() });
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
