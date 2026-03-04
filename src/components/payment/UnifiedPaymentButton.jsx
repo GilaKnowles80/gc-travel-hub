@@ -292,6 +292,13 @@ export default function UnifiedPaymentButton({
         bookingType={bookingType}
         bookingId={bookingId}
       />
+      <PayMongoQRModal
+        open={paymongoQROpen}
+        onClose={() => setPaymongoQROpen(false)}
+        amount={phpAmount}
+        bookingType={bookingType}
+        bookingId={bookingId}
+      />
     </>
   );
 }
