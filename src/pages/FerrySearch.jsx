@@ -13,6 +13,7 @@ import { useMarkup } from '@/components/markup/useMarkup';
 import TwelveGoWidget from '@/components/twelvego/TwelveGoWidget';
 import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
 import TwelveGoFormWidget from '@/components/twelvego/TwelveGoFormWidget';
+import TwelveGoTimetable from '@/components/twelvego/TwelveGoTimetable';
 
 export default function FerrySearch() {
   const [filters, setFilters] = useState({ operator: 'all', origin: '', destination: '', date: '' });
