@@ -15,7 +15,7 @@ export default function FloatingContactWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("call");
   const [messages, setMessages] = useState([
-    { role: "assistant", text: "Hello! How can we assist you today? Ask us anything about tours, flights, hotels, visas, or bookings." }
+    { role: "assistant", text: "👋 Hello! I'm your GC Travel booking assistant. I'm here to make sure your booking goes smoothly from start to finish. How can I help you today?\n\nYou can ask me about:\n• ✈️ Flights, 🏨 Hotels, 🗺️ Tours\n• 🚢 Ferries, 🚌 Bus, 🚂 Train\n• 💳 Payments & 📃 Visas" }
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
