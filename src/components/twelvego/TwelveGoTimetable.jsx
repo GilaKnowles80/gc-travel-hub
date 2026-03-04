@@ -6,10 +6,11 @@
  *  country    - ISO country code (default "PH")
  *  from       - Origin city (default "Manila")
  *  to         - Destination city (optional)
+ *  transportClass - Transport type: 'bus','train','ferry','van','avia','charter' (optional)
  *  lang       - Language code (default "en")
  *  curr       - Currency code (default "USD")
  *  noreturn   - Hide return trip (default false)
- *  lesslinks  - Minimal links mode (default false)
+ *  lesslinks  - Remove unnecessary links (default false)
  *  domain     - Domain (default "12go.asia")
  *  height     - iframe height (default "500px")
  */
@@ -17,6 +18,7 @@ export default function TwelveGoTimetable({
   country = "PH",
   from = "Manila",
   to = "",
+  transportClass = "",
   lang = "en",
   curr = "USD",
   noreturn = false,
@@ -26,21 +28,20 @@ export default function TwelveGoTimetable({
 }) {
   const AGENT_ID = "15166459";
 
+  // Build path: /{lang}/timetable/{country}/{from}/{to}/{class}
   let path = `/${lang}/timetable/${country}`;
-  if (from) {
-    path += "/" + from.replace(/ /g, "-");
-    if (to) path += "/" + to.replace(/ /g, "-");
-  }
+  path += "/" + from.replace(/ /g, "-");
+  if (to) path += "/" + to.replace(/ /g, "-");
+  if (transportClass) path += "/" + transportClass.replace(/ /g, "");
 
-  const params = new URLSearchParams();
-  params.set("embedded", "");
-  params.set("css", "yes");
-  params.set("z", AGENT_ID);
-  if (curr) params.set("currency", curr);
-  if (noreturn) params.set("noreturn", "1");
-  if (lesslinks) params.set("lesslinks", "1");
+  // Build query string (matches PHP v2.0 logic exactly)
+  let query = `${path}?embedded&css=yes&z=${AGENT_ID}`;
+  if (noreturn) query += "&noreturn";
+  if (lesslinks) query += "&lesslinks";
+  if (lang) query += `&lang=${lang}`;
+  if (curr) query += `&currency=${curr}`;
 
-  const src = `https://${domain}${path}?${params.toString()}`;
+  const src = `https://${domain}${query}`;
 
   return (
     <div className="w-full rounded-xl overflow-hidden border border-slate-200 shadow-sm">
