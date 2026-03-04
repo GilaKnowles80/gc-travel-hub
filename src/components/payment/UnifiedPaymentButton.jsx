@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertCircle, CreditCard, Wallet, ChevronRight } from 'lucide-react';
 import { createPageUrl } from '@/pages/utils';
+import GCashQRModal from '@/components/payment/GCashQRModal';
 
 const PAYMENT_METHODS = [
   {
