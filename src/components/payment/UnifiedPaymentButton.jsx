@@ -267,6 +267,13 @@ export default function UnifiedPaymentButton({
           </p>
         </DialogContent>
       </Dialog>
+      <GCashQRModal
+        open={gcashQROpen}
+        onClose={() => setGcashQROpen(false)}
+        amount={phpAmount}
+        bookingType={bookingType}
+        bookingId={bookingId}
+      />
     </>
   );
 }
