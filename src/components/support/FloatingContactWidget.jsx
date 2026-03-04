@@ -65,12 +65,13 @@ export default function FloatingContactWidget() {
       {/* Floating Button */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center cursor-pointer active:scale-95"
+        className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-xl hover:shadow-2xl transition-all flex flex-col items-center justify-center cursor-pointer active:scale-95 gap-0.5"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         style={{ pointerEvents: 'auto' }}
       >
-        <Phone className="w-6 h-6" />
+        <MessageCircle className="w-6 h-6" />
+        <span className="text-[9px] font-semibold leading-none">HELP</span>
       </motion.button>
 
       {/* Support Modal */}
