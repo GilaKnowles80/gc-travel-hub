@@ -23,17 +23,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const apiKey = Deno.env.get('PayMongo_API_KEY');
+    // PayMongo requires the SECRET key (sk_live_... or sk_test_...)
+    // Check both possible secret names
+    const apiKey = Deno.env.get('PAYMONGO_SECRET_KEY') || Deno.env.get('PayMongo_API_KEY');
     if (!apiKey) {
       return Response.json({ error: 'PayMongo not configured' }, { status: 500 });
     }
+    if (!apiKey.startsWith('sk_')) {
+      console.error('[PAYMONGO] Key does not start with sk_ – likely a public key. Please set PAYMONGO_SECRET_KEY with your secret key.');
+      return Response.json({ error: 'PayMongo secret key not configured. Please contact support.' }, { status: 500 });
+    }
 
-    // PayMongo requires secret key (sk_...) for server-side API calls
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Basic ${btoa(apiKey + ':')}`
     };
-    console.log('[PAYMONGO] Using key prefix:', apiKey.substring(0, 10));
 
     // Create PayMongo Checkout Session (supports all local PH payment methods)
     const response = await fetch('https://api.paymongo.com/v1/checkout_sessions', {
