@@ -20,6 +20,10 @@ export default function StandardPaymentSelector({
   const [paymongoQROpen, setPaymongoQROpen] = useState(false);
 
   const handlePayment = async () => {
+    if (selectedMethod === "paymongo_qr") {
+      setPaymongoQROpen(true);
+      return;
+    }
     setIsLoading(true);
     try {
       await onPayment(selectedMethod, {
