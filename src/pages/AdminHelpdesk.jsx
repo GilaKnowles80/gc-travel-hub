@@ -119,6 +119,38 @@ export default function AdminHelpdesk() {
     });
   };
 
+  const [replyMessage, setReplyMessage] = useState("");
+  const [syncingGmail, setSyncingGmail] = useState(false);
+
+  const replyMutation = useMutation({
+    mutationFn: async () => {
+      return await base44.functions.invoke('replyToCustomerEmail', {
+        ticket_id: selectedTicket.id,
+        reply_message: replyMessage,
+        admin_name: user?.full_name || ''
+      });
+    },
+    onSuccess: () => {
+      toast.success(`Reply sent to ${selectedTicket.email}`);
+      setReplyMessage('');
+      queryClient.invalidateQueries({ queryKey: ["helpdesk-tickets"] });
+    },
+    onError: (error) => toast.error(error.message || "Failed to send reply")
+  });
+
+  const handleSyncGmail = async () => {
+    setSyncingGmail(true);
+    try {
+      const { data } = await base44.functions.invoke('syncGmailToHelpdesk');
+      toast.success(`Synced ${data.synced} new email(s) from GC Travel inboxes`);
+      queryClient.invalidateQueries({ queryKey: ["helpdesk-tickets"] });
+    } catch (e) {
+      toast.error("Gmail sync failed");
+    } finally {
+      setSyncingGmail(false);
+    }
+  };
+
   const openCount = tickets?.filter(t => t.status === "open").length || 0;
   const inProgressCount = tickets?.filter(t => t.status === "in_progress").length || 0;
 
