@@ -73,6 +73,7 @@ export default function UnifiedPaymentButton({
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [gcashQROpen, setGcashQROpen] = useState(false);
   // PayPal flow state
   const [paypalOrderId, setPaypalOrderId] = useState(null);
 
