@@ -14,9 +14,28 @@ export default function StandardCustomerForm({ bookingType, onDataChange }) {
     email: "",
     phone: "",
     country: "",
-    passport: "", // for international bookings
+    passport: "",
   });
   const [errors, setErrors] = useState({});
+  const [autoFilled, setAutoFilled] = useState(false);
+
+  // Auto-fill from logged-in user
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user && !autoFilled) {
+        const filled = {
+          name: user.full_name || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          country: user.country || "Philippines",
+          passport: user.passport_number || "",
+        };
+        setFormData(filled);
+        onDataChange(filled);
+        if (user.full_name || user.email) setAutoFilled(true);
+      }
+    }).catch(() => {});
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
