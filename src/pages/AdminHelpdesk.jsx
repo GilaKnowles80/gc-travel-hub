@@ -381,6 +381,29 @@ export default function AdminHelpdesk() {
                 </div>
               </div>
 
+              {/* Reply to Customer */}
+              <div className="border rounded-lg p-3 bg-blue-50 border-blue-100">
+                <Label className="text-xs text-blue-700 font-semibold flex items-center gap-1">
+                  <Mail className="w-3 h-3" />
+                  Reply via {CATEGORIES[selectedTicket.category]?.email}
+                </Label>
+                <Textarea
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  placeholder={`Type your reply to ${selectedTicket.name}...`}
+                  className="mt-2 min-h-24 resize-none rounded-lg text-sm bg-white"
+                />
+                <Button
+                  onClick={() => replyMutation.mutate()}
+                  disabled={replyMutation.isPending || !replyMessage.trim()}
+                  className="mt-2 bg-blue-600 hover:bg-blue-700 gap-2 text-sm"
+                  size="sm"
+                >
+                  {replyMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                  Send Reply to Customer
+                </Button>
+              </div>
+
               {/* Internal Notes */}
               <div>
                 <Label className="text-xs text-slate-500">Internal Notes</Label>
