@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
  * @param {string} lang - Language code (default "en")
  * @param {string} fxcode - Currency code (default "USD")
  */
-export default function TwelveGoCountryWidget({ country = "PH", width = "100%", lang = "en", fxcode = "USD" }) {
+export default function TwelveGoCountryWidget({ country = "BE", width = "400", lang = "en", fxcode = "USD" }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
