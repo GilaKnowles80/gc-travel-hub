@@ -59,7 +59,12 @@ export default function AdminSupplierBankAccounts() {
       account_number: formData.get("account_number"),
       bank_code: formData.get("bank_code"),
       bank_name: formData.get("bank_name"),
+      aba_routing: formData.get("aba_routing"),
+      swift_code: formData.get("swift_code"),
+      bank_address: formData.get("bank_address"),
+      payment_reference: formData.get("payment_reference"),
       is_active: formData.get("is_active") === "on",
+      is_autopay: formData.get("is_autopay") === "on",
     });
   };
 
