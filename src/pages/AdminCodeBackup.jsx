@@ -78,6 +78,61 @@ export default function AdminCodeBackup() {
         }
     };
 
+    if (!unlocked) {
+        return (
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+                <Card className="w-full max-w-sm border-2 border-amber-500 shadow-2xl bg-slate-800 text-white">
+                    <CardHeader className="text-center pb-4">
+                        <div className="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center mx-auto mb-4">
+                            <Lock className="w-8 h-8 text-amber-400" />
+                        </div>
+                        <CardTitle className="text-white text-2xl">Restricted Access</CardTitle>
+                        <CardDescription className="text-slate-400">
+                            This area is private and protected.<br />Only the owner may enter.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {attempts >= 3 ? (
+                            <div className="text-center text-red-400 font-semibold py-4">
+                                🔒 Page locked due to too many failed attempts.<br />
+                                Please refresh and try again.
+                            </div>
+                        ) : (
+                            <>
+                                <div className="relative">
+                                    <Input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Enter owner password"
+                                        value={passwordInput}
+                                        onChange={(e) => setPasswordInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
+                                        className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(v => !v)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                                <Button
+                                    onClick={handleUnlock}
+                                    className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold"
+                                >
+                                    Unlock
+                                </Button>
+                                <p className="text-center text-xs text-slate-500">
+                                    {3 - attempts} attempt(s) remaining
+                                </p>
+                            </>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-slate-50 py-8">
             <div className="max-w-7xl mx-auto px-4">
