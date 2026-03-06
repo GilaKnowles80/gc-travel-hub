@@ -269,6 +269,30 @@ export default function AdminSupplierBankAccounts() {
                       <span className="text-slate-500">Account Number:</span>
                       <p className="font-medium font-mono">{account.account_number}</p>
                     </div>
+                    {account.aba_routing && (
+                      <div>
+                        <span className="text-slate-500">ABA Routing:</span>
+                        <p className="font-medium font-mono">{account.aba_routing}</p>
+                      </div>
+                    )}
+                    {account.swift_code && (
+                      <div>
+                        <span className="text-slate-500">SWIFT/BIC:</span>
+                        <p className="font-medium font-mono">{account.swift_code}</p>
+                      </div>
+                    )}
+                    {account.payment_reference && (
+                      <div>
+                        <span className="text-slate-500">Payment Reference:</span>
+                        <p className="font-medium font-mono text-amber-700">{account.payment_reference}</p>
+                      </div>
+                    )}
+                    {account.bank_address && (
+                      <div className="col-span-2">
+                        <span className="text-slate-500">Bank Address:</span>
+                        <p className="font-medium">{account.bank_address}</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
