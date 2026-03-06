@@ -103,7 +103,14 @@ export function CurrencyProvider({ children }) {
 
   const symbols = {
     PHP: '₱', USD: '$', EUR: '€', GBP: '£',
-    JPY: '¥', SGD: 'S$', AUD: 'A$', CAD: 'C$'
+    JPY: '¥', SGD: 'S$', AUD: 'A$', CAD: 'C$',
+    CNY: '¥', KRW: '₩', THB: '฿',
+    AED: 'د.إ', BHD: 'BD', KWD: 'KD', IQD: 'IQD',
+    JOD: 'JD', SAR: '﷼', QAR: 'QR', OMR: 'OMR', YER: '﷼',
+    NOK: 'kr', SEK: 'kr', DKK: 'kr', CHF: 'Fr',
+    NGN: '₦', ZAR: 'R', KES: 'KSh', GHS: '₵',
+    EGP: '£', ETB: 'Br', TZS: 'TSh', UGX: 'USh',
+    MAD: 'MAD', DZD: 'DA',
   };
 
   // Convert from PHP base to target currency
