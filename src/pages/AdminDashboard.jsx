@@ -30,7 +30,7 @@ import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDa
 import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
-import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
+import CustomersList from '@/components/admin/CustomersList';
 
 export default function AdminDashboard() {
   return (
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-11 w-full max-w-6xl">
+          <TabsList className="grid grid-cols-12 w-full max-w-6xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
