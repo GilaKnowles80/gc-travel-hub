@@ -11,7 +11,7 @@ const countryCurrencyMap = {
   // Europe (EUR)
   'BE': 'EUR', 'FR': 'EUR', 'DE': 'EUR', 'ES': 'EUR', 'IT': 'EUR',
   'NL': 'EUR', 'AT': 'EUR', 'PT': 'EUR', 'IE': 'EUR', 'GR': 'EUR',
-  'FI': 'EUR', 'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
+  'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
   'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR', 'HR': 'EUR',
   // UK
   'GB': 'GBP',
@@ -23,7 +23,42 @@ const countryCurrencyMap = {
   'SR': 'USD', 'EC': 'USD', 'PE': 'USD', 'BO': 'USD', 'BR': 'USD',
   'PY': 'USD', 'UY': 'USD', 'AR': 'USD', 'CL': 'USD',
   // Asia Pacific
-  'JP': 'JPY', 'SG': 'SGD', 'AU': 'AUD', 'CN': 'USD', 'KR': 'USD',
+  'JP': 'JPY', 'SG': 'SGD', 'AU': 'AUD',
+  // China (Yuan/CNY)
+  'CN': 'CNY',
+  // South Korea
+  'KR': 'KRW',
+  // Thailand
+  'TH': 'THB',
+  // Middle East
+  'AE': 'AED', // UAE Dirham
+  'BH': 'BHD', // Bahraini Dinar
+  'KW': 'KWD', // Kuwaiti Dinar
+  'IQ': 'IQD', // Iraqi Dinar
+  'JO': 'JOD', // Jordanian Dinar
+  'SA': 'SAR', // Saudi Riyal
+  'QA': 'QAR', // Qatari Riyal
+  'OM': 'OMR', // Omani Riyal
+  'YE': 'YER', // Yemeni Riyal
+  // Scandinavia
+  'NO': 'NOK', // Norwegian Krone
+  'SE': 'SEK', // Swedish Krona
+  'DK': 'DKK', // Danish Krone
+  // Finland uses EUR
+  'FI': 'EUR',
+  // Switzerland
+  'CH': 'CHF',
+  // Africa
+  'NG': 'NGN', // Nigerian Naira
+  'ZA': 'ZAR', // South African Rand
+  'KE': 'KES', // Kenyan Shilling
+  'GH': 'GHS', // Ghanaian Cedi
+  'EG': 'EGP', // Egyptian Pound
+  'ET': 'ETB', // Ethiopian Birr
+  'TZ': 'TZS', // Tanzanian Shilling
+  'UG': 'UGX', // Ugandan Shilling
+  'MA': 'MAD', // Moroccan Dirham
+  'DZ': 'DZD', // Algerian Dinar
 };
 
 export function CurrencyProvider({ children }) {
