@@ -149,6 +149,9 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="support" className="space-y-6">
+            <div className="flex justify-end">
+              <AdminCallReceiver />
+            </div>
             <SupportTicketsPanel />
           </TabsContent>
 
