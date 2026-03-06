@@ -5,13 +5,37 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Download, Shield, Database, Code, FileText, CheckCircle2, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Download, Shield, Database, Code, FileText, CheckCircle2, Loader2, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+
+// Secret password — known only to Gila Arayan Cain Knowles and Base44
+const OWNER_PASSWORD = "GilaACKnowles@GCTravel2025!";
 
 export default function AdminCodeBackup() {
     const [includeData, setIncludeData] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [lastBackup, setLastBackup] = useState(null);
+    const [unlocked, setUnlocked] = useState(false);
+    const [passwordInput, setPasswordInput] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [attempts, setAttempts] = useState(0);
+
+    const handleUnlock = () => {
+        if (passwordInput === OWNER_PASSWORD) {
+            setUnlocked(true);
+            toast.success("Welcome, Gila! Access granted.");
+        } else {
+            const newAttempts = attempts + 1;
+            setAttempts(newAttempts);
+            setPasswordInput("");
+            if (newAttempts >= 3) {
+                toast.error("Too many failed attempts. This page is locked.");
+            } else {
+                toast.error(`Incorrect password. ${3 - newAttempts} attempt(s) remaining.`);
+            }
+        }
+    };
 
     const handleExport = async (format) => {
         setIsExporting(true);
