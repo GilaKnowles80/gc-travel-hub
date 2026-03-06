@@ -10,6 +10,7 @@ import { ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import BookingSummary from "@/components/checkout/BookingSummary";
 import PriceDisplay from "@/components/currency/PriceDisplay";
+import { createPageUrl } from "@/pages/utils";
 
 export default function HotelCheckout() {
   const navigate = useNavigate();
