@@ -31,6 +31,7 @@ import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
 import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
+import AdminCallReceiver from '@/components/support/AdminCallReceiver';
 
 export default function AdminDashboard() {
   return (
