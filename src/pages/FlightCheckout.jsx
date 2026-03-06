@@ -215,10 +215,13 @@ export default function FlightCheckout() {
         total_price: totalPrice,
       });
 
-      if (data.checkout_url) {
+      const redirectUrl = data.url || data.checkout_url;
+      if (redirectUrl) {
         // Clear abandoned checkout on successful payment initiation
         localStorage.removeItem("pending_flight_checkout");
-        window.location.href = data.checkout_url;
+        window.location.href = redirectUrl;
+      } else {
+        throw new Error("No checkout URL returned from server.");
       }
     } catch (err) {
       setError(err.message);
