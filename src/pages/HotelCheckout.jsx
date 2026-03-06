@@ -177,25 +177,39 @@ export default function HotelCheckout() {
   const handlePayment = async () => {
     setLoading(true);
     setError("");
+
+    // Block checkout in iframe (preview mode)
+    if (window.self !== window.top) {
+      setError("Checkout works only from the published app. Please open the live site to complete payment.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const { data } = await base44.functions.invoke("processUnifiedCheckout", {
-        product_type: "hotel",
-        item_id: booking.hotel_id,
-        item_name: booking.room_type,
-        customer_name: booking.guest_name,
-        customer_email: booking.guest_email,
-        customer_phone: booking.guest_phone,
-        number_of_travelers: booking.number_of_rooms,
-        base_price: booking.total_price - selectedAddons.reduce((sum, a) => sum + a.price, 0),
-        total_price: booking.total_price,
-        addons: selectedAddons,
-        payment_method: "stripe",
+      const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
+      const totalAmount = (booking.total_price || 0) + addonsTotal;
+
+      const { data } = await base44.functions.invoke("createHotelCheckout", {
+        hotel: { name: booking.room_type || "Hotel Room" },
+        guestDetails: {
+          check_in_date: booking.check_in_date,
+          check_out_date: booking.check_out_date,
+          guest_name: booking.guest_name,
+          guest_email: booking.guest_email,
+          guest_phone: booking.guest_phone,
+        },
+        bookingId: booking.hotel_id,
+        totalAmount,
+        currency: "php",
       });
 
-      setPnr(data.pnr);
-      setStep(4);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned.");
+      }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Payment failed. Please try again.");
     } finally {
       setLoading(false);
     }
