@@ -173,6 +173,13 @@ export default function Support247() {
                 </button>
               </a>
             </div>
+            <div className="mt-6 max-w-sm mx-auto bg-green-50 border border-green-200 rounded-xl p-5">
+              <p className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <Phone className="w-4 h-4 text-green-600" />
+                Or call us right from your browser:
+              </p>
+              <CustomerCallButton />
+            </div>
           </div>
         </div>
       </div>
