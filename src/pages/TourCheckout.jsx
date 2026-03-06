@@ -185,22 +185,40 @@ export default function TourCheckout() {
   const handlePayment = async () => {
     setLoading(true);
     setError("");
+
+    // Block checkout in iframe (preview mode)
+    if (window.self !== window.top) {
+      setError("Checkout works only from the published app. Please open the live site to complete payment.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const { data } = await base44.functions.invoke("processUnifiedCheckout", {
-        product_type: "tour",
-        item_id: booking.tour_id,
-        item_name: tourTitle,
+      // Create booking record first
+      const bookingRecord = await base44.entities.Booking.create({
+        tour_id: booking.tour_id,
+        tour_title: tourTitle,
         customer_name: booking.client_name,
         customer_email: booking.client_email,
         customer_phone: booking.client_phone,
         number_of_travelers: booking.number_of_participants,
-        base_price: booking.base_price,
+        departure_date: booking.departure_date,
         total_price: booking.total_price,
-        addons: selectedAddons,
-        payment_method: "stripe",
+        status: "pending",
+        payment_status: "unpaid",
       });
-      setPnr(data.pnr);
-      setStep(4);
+
+      const { data } = await base44.functions.invoke("createTourCheckout", {
+        bookingId: bookingRecord.id,
+        amount: booking.total_price,
+        currency: "php",
+      });
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned.");
+      }
     } catch (err) {
       setError(err.message || "Payment processing failed");
     } finally {
