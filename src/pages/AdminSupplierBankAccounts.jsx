@@ -152,6 +152,22 @@ export default function AdminSupplierBankAccounts() {
                   <Label>Bank Name (for display)</Label>
                   <Input name="bank_name" defaultValue={editingAccount?.bank_name} required />
                 </div>
+                <div>
+                  <Label>ABA Routing Number</Label>
+                  <Input name="aba_routing" defaultValue={editingAccount?.aba_routing} placeholder="e.g. 021000089" />
+                </div>
+                <div>
+                  <Label>SWIFT / BIC Code</Label>
+                  <Input name="swift_code" defaultValue={editingAccount?.swift_code} placeholder="e.g. CITIUS33" />
+                </div>
+                <div>
+                  <Label>Bank Address</Label>
+                  <Input name="bank_address" defaultValue={editingAccount?.bank_address} placeholder="Full bank branch address" />
+                </div>
+                <div>
+                  <Label>Payment Reference</Label>
+                  <Input name="payment_reference" defaultValue={editingAccount?.payment_reference} placeholder="Must match exactly" />
+                </div>
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -161,6 +177,16 @@ export default function AdminSupplierBankAccounts() {
                     className="rounded"
                   />
                   <Label htmlFor="is_active" className="cursor-pointer">Active</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="is_autopay"
+                    name="is_autopay"
+                    defaultChecked={editingAccount?.is_autopay ?? false}
+                    className="rounded"
+                  />
+                  <Label htmlFor="is_autopay" className="cursor-pointer">Enable Auto-Pay after booking</Label>
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
