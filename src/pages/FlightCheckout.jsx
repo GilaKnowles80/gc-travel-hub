@@ -263,9 +263,9 @@ export default function FlightCheckout() {
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
            {/* Main Content */}
-           <div className="lg:col-span-2 space-y-6">
+           <div className="lg:col-span-2 space-y-4 md:space-y-6 order-2 lg:order-1">
              {step === 1 && <StepPassengerDetails />}
              {step === 2 && <StepAddons />}
              {step === 3 && <StepReview />}
@@ -273,20 +273,20 @@ export default function FlightCheckout() {
            </div>
 
           {/* Sidebar Summary */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 order-1 lg:order-2">
             <BookingSummary booking={booking} type="flight" addons={selectedAddons} />
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-4 mt-8 max-w-4xl mx-auto">
+        <div className="flex gap-3 mt-6 md:mt-8 max-w-4xl mx-auto">
           {step > 1 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">
+            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1 h-12">
               Back
             </Button>
           )}
           {step < 3 && (
-            <Button onClick={handleNext} className="flex-1 bg-amber-600 hover:bg-amber-700">
+            <Button onClick={handleNext} className="flex-1 h-12 bg-amber-600 hover:bg-amber-700 text-base font-semibold">
               Next
             </Button>
           )}
@@ -294,7 +294,7 @@ export default function FlightCheckout() {
             <Button
               onClick={handlePayment}
               disabled={loading}
-              className="flex-1 bg-green-600 hover:bg-green-700"
+              className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-base font-semibold"
             >
               {loading ? (
                 <>
@@ -302,7 +302,7 @@ export default function FlightCheckout() {
                   Processing...
                 </>
               ) : (
-                "Proceed to Payment"
+                "Proceed to Payment →"
               )}
             </Button>
           )}
