@@ -225,12 +225,15 @@ export default function AdminSupplierBankAccounts() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <CardTitle className="text-xl capitalize">{account.supplier_name}</CardTitle>
                         {account.is_active ? (
                           <Badge className="bg-green-500">Active</Badge>
                         ) : (
                           <Badge variant="outline">Inactive</Badge>
+                        )}
+                        {account.is_autopay && (
+                          <Badge className="bg-purple-500 gap-1"><Zap className="w-3 h-3" />Auto-Pay</Badge>
                         )}
                       </div>
                       <p className="text-sm text-slate-600">{account.bank_name}</p>
