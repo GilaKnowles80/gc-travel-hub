@@ -216,77 +216,61 @@ export default function HotelCheckout() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 md:py-8 px-3 md:px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-lg">
+        <div className="flex items-center gap-3 mb-6 md:mb-8">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-lg shrink-0">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-3xl font-bold text-slate-900">Complete Your Booking</h1>
+          <h1 className="text-xl md:text-3xl font-bold text-slate-900">Complete Your Booking</h1>
         </div>
 
-        <div className="flex gap-2 mb-8">
+        <div className="flex gap-2 mb-6 md:mb-8">
           {[1, 2, 3, 4].map((s) => (
-            <div
-              key={s}
-              className={`flex-1 h-2 rounded-full ${
-                s <= step ? "bg-amber-500" : "bg-slate-200"
-              }`}
-            />
+            <div key={s} className={`flex-1 h-2 rounded-full ${s <= step ? "bg-amber-500" : "bg-slate-200"}`} />
           ))}
         </div>
 
         {error && (
-          <Card className="mb-6 border-red-200 bg-red-50">
-            <CardContent className="flex gap-3 pt-6">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <p className="text-red-800">{error}</p>
+          <Card className="mb-4 border-red-200 bg-red-50">
+            <CardContent className="flex gap-3 pt-4 pb-4">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <p className="text-red-800 text-sm">{error}</p>
             </CardContent>
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             {step === 1 && <StepGuestDetails />}
             {step === 2 && <StepAddons />}
             {step === 3 && <StepReview />}
             {step === 4 && <StepConfirmation />}
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 order-1 lg:order-2">
             <BookingSummary booking={booking} type="hotel" addons={selectedAddons} />
           </div>
         </div>
 
-        <div className="flex gap-4 mt-8 max-w-4xl mx-auto">
+        <div className="flex gap-3 mt-6 md:mt-8">
           {step > 1 && step < 4 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">
+            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1 h-12">
               Back
             </Button>
           )}
           {step < 3 && (
-            <Button onClick={handleNext} className="flex-1 bg-amber-600 hover:bg-amber-700">
+            <Button onClick={handleNext} className="flex-1 h-12 bg-amber-600 hover:bg-amber-700 text-base font-semibold">
               Next
             </Button>
           )}
           {step === 3 && (
-            <Button
-              onClick={handlePayment}
-              disabled={loading}
-              className="flex-1 bg-green-600 hover:bg-green-700"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Complete Booking"
-              )}
+            <Button onClick={handlePayment} disabled={loading} className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-base font-semibold">
+              {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : "Proceed to Payment →"}
             </Button>
           )}
           {step === 4 && (
-            <Button onClick={() => navigate('/my-bookings')} className="flex-1 bg-blue-600 hover:bg-blue-700">
+            <Button onClick={() => navigate(createPageUrl("MyBookings"))} className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-base font-semibold">
               View My Bookings
             </Button>
           )}
