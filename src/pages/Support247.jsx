@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { Phone, Mail, MessageCircle, Clock, MapPin, ArrowLeft, Headphones } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CustomerCallButton from "@/components/support/CustomerCallButton";
 
 export default function Support247() {
   const contactMethods = [
