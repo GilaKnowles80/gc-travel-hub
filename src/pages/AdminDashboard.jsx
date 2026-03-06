@@ -30,7 +30,7 @@ import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDa
 import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
-import CustomersList from '@/components/admin/CustomersList';
+import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
 
 export default function AdminDashboard() {
   return (
@@ -59,10 +59,6 @@ export default function AdminDashboard() {
 
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid grid-cols-12 w-full max-w-6xl">
-            <TabsTrigger value="customers">
-              <Users className="w-4 h-4 mr-2" />
-              Customers
-            </TabsTrigger>
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
@@ -103,15 +99,15 @@ export default function AdminDashboard() {
               <DollarSign className="w-4 h-4 mr-2" />
               Revenue Split
             </TabsTrigger>
+            <TabsTrigger value="financials">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Financials
+            </TabsTrigger>
             <TabsTrigger value="manage">
               <Settings className="w-4 h-4 mr-2" />
               Manage
             </TabsTrigger>
           </TabsList>
-
-          <TabsContent value="customers" className="space-y-6">
-            <CustomersList />
-          </TabsContent>
 
           <TabsContent value="overview" className="space-y-6">
             <DashboardStats />
@@ -170,6 +166,10 @@ export default function AdminDashboard() {
             <OTAOperationsCenter />
             <SystemArchitectureDashboard />
             <RevenueSplitFlowDiagram />
+          </TabsContent>
+
+          <TabsContent value="financials" className="space-y-6">
+            <FinancialSpreadsheet />
           </TabsContent>
 
           <TabsContent value="manage" className="space-y-6">
