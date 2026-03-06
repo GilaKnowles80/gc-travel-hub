@@ -30,6 +30,7 @@ import SystemArchitectureDashboard from '@/components/admin/SystemArchitectureDa
 import EnterpriseOTADashboard from '@/components/admin/EnterpriseOTADashboard';
 import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
+import CustomersList from '@/components/admin/CustomersList';
 
 export default function AdminDashboard() {
   return (
