@@ -39,6 +39,7 @@ const navLinks = [
   { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Data Manager", page: "AdminDataManager", icon: Receipt, adminOnly: true },
   { name: "Advertisements", page: "AdminAdvertisements", icon: Receipt, adminOnly: true },
+  { name: "Ad Campaigns", page: "AdminAdCampaigns", icon: Megaphone, adminOnly: true },
 ];
 
 function LayoutContent({ children, currentPageName }) {
