@@ -231,18 +231,18 @@ export default function FlightCheckout() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 md:py-8 px-3 md:px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-lg">
+        <div className="flex items-center gap-3 mb-6 md:mb-8">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-lg shrink-0">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-3xl font-bold text-slate-900">Complete Your Booking</h1>
+          <h1 className="text-xl md:text-3xl font-bold text-slate-900">Complete Your Booking</h1>
         </div>
 
         {/* Progress */}
-        <div className="flex gap-2 mb-8">
+        <div className="flex gap-2 mb-6 md:mb-8">
           {[1, 2, 3, 4].map((s) => (
             <div
               key={s}
