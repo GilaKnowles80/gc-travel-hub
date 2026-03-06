@@ -287,24 +287,24 @@ export default function TourCheckout() {
           </div>
         </div>
 
-        <div className="flex gap-4 mt-8 max-w-4xl mx-auto">
+        <div className="flex gap-3 mt-6 md:mt-8">
           {step > 1 && step < 4 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">
+            <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1 h-12">
               Back
             </Button>
           )}
           {step < 3 && (
-            <Button onClick={handleNext} className="flex-1 bg-amber-600 hover:bg-amber-700">
+            <Button onClick={handleNext} className="flex-1 h-12 bg-amber-600 hover:bg-amber-700 text-base font-semibold">
               Next
             </Button>
           )}
           {step === 3 && (
-            <Button onClick={handlePayment} disabled={loading} className="flex-1 bg-green-600 hover:bg-green-700">
-              {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : "Complete Booking"}
+            <Button onClick={handlePayment} disabled={loading} className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-base font-semibold">
+              {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : "Proceed to Payment →"}
             </Button>
           )}
           {step === 4 && (
-            <Button onClick={() => navigate(createPageUrl("MyBookings"))} className="flex-1 bg-blue-600 hover:bg-blue-700">
+            <Button onClick={() => navigate(createPageUrl("MyBookings"))} className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-base font-semibold">
               View My Bookings
             </Button>
           )}
