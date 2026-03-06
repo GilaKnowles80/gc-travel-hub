@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdCampaignManager from "@/components/ads/AdCampaignManager";
-import AdCopyGenerator from "@/components/ads/AdCopyGenerator";
-import AdPixelManager from "@/components/ads/AdPixelManager";
+import AdCampaignManager from "@/components/ads/AdCampaignManager.jsx";
+import AdCopyGenerator from "@/components/ads/AdCopyGenerator.jsx";
+import AdPixelManager from "@/components/ads/AdPixelManager.jsx";
 import { AlertTriangle, Megaphone } from "lucide-react";
 
 export default function AdminAdCampaigns() {
