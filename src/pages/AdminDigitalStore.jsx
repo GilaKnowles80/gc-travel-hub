@@ -20,7 +20,7 @@ export default function AdminDigitalStore() {
   const [uploading, setUploading] = useState(false);
   const qc = useQueryClient();
 
-  React.useEffect(() => {
+  useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
