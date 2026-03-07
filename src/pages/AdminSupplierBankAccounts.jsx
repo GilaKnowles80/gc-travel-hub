@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -8,13 +8,76 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Plus, Pencil, Trash2, Zap } from "lucide-react";
+import { Building2, Plus, Pencil, Trash2, Zap, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+
+const SUPPLIER_PRESETS = {
+  "12go": {
+    account_name: "12Go Asia Co., Ltd.",
+    account_number: "",
+    bank_name: "Kasikornbank (Thailand)",
+    bank_code: "kasikornbank",
+    swift_code: "KASITHBK",
+    aba_routing: "",
+    bank_address: "Kasikornbank PCL, 1 Soi Ratburana 27/1, Ratburana Rd., Bangkok 10140, Thailand",
+    payment_reference: "",
+  },
+  duffel: {
+    account_name: "Duffel Travel US Incorporated",
+    account_number: "40048674",
+    bank_name: "Citibank N.A. New York",
+    bank_code: "CITIUS33",
+    aba_routing: "021000089",
+    swift_code: "CITIUS33",
+    bank_address: "Citibank N.A. New York, 388 Greenwich Street, New York, NY 10013, USA",
+    payment_reference: "GCTRILDS4R",
+  },
+};
+
+const SUPPLIERS = [
+  { value: "biyaheko", label: "Biyaheko" },
+  { value: "wanderlinx", label: "Wanderlinx" },
+  { value: "tripzynx", label: "Tripzynx" },
+  { value: "12go", label: "12Go Asia" },
+  { value: "duffel", label: "Duffel" },
+  { value: "direct", label: "Direct" },
+];
+
+const BANKS = [
+  { code: "bdo", name: "BDO Unibank" },
+  { code: "bpi", name: "Bank of the Philippine Islands" },
+  { code: "ubp", name: "Union Bank of the Philippines" },
+  { code: "mb", name: "Metrobank" },
+  { code: "rcbc", name: "RCBC" },
+  { code: "secb", name: "Security Bank" },
+  { code: "pnb", name: "Philippine National Bank" },
+  { code: "chinabank", name: "China Bank" },
+  { code: "aub", name: "Asia United Bank" },
+  { code: "gcash", name: "GCash" },
+  { code: "kasikornbank", name: "Kasikornbank (Thailand)" },
+  { code: "CITIUS33", name: "Citibank N.A." },
+  { code: "paypal", name: "PayPal" },
+  { code: "wise", name: "Wise (TransferWise)" },
+];
+
+const EMPTY_FORM = {
+  supplier_name: "",
+  account_name: "",
+  account_number: "",
+  bank_name: "",
+  bank_code: "",
+  aba_routing: "",
+  swift_code: "",
+  bank_address: "",
+  payment_reference: "",
+  is_active: true,
+  is_autopay: false,
+};
 
 export default function AdminSupplierBankAccounts() {
   const [editingAccount, setEditingAccount] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
-  const [formPreset, setFormPreset] = useState({});
+  const [form, setForm] = useState(EMPTY_FORM);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -51,22 +114,43 @@ export default function AdminSupplierBankAccounts() {
     },
   });
 
+  const openNew = () => {
+    setEditingAccount(null);
+    setForm(EMPTY_FORM);
+    setShowDialog(true);
+  };
+
+  const openEdit = (account) => {
+    setEditingAccount(account);
+    setForm({
+      supplier_name: account.supplier_name || "",
+      account_name: account.account_name || "",
+      account_number: account.account_number || "",
+      bank_name: account.bank_name || "",
+      bank_code: account.bank_code || "",
+      aba_routing: account.aba_routing || "",
+      swift_code: account.swift_code || "",
+      bank_address: account.bank_address || "",
+      payment_reference: account.payment_reference || "",
+      is_active: account.is_active ?? true,
+      is_autopay: account.is_autopay ?? false,
+    });
+    setShowDialog(true);
+  };
+
+  const handleSupplierChange = (value) => {
+    const preset = SUPPLIER_PRESETS[value];
+    if (preset) {
+      setForm(prev => ({ ...prev, supplier_name: value, ...preset }));
+      toast.success(`Auto-filled known details for ${SUPPLIERS.find(s => s.value === value)?.label}!`);
+    } else {
+      setForm(prev => ({ ...prev, supplier_name: value }));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    mutation.mutate({
-      supplier_name: formData.get("supplier_name"),
-      account_name: formData.get("account_name"),
-      account_number: formData.get("account_number"),
-      bank_code: formData.get("bank_code"),
-      bank_name: formData.get("bank_name"),
-      aba_routing: formData.get("aba_routing"),
-      swift_code: formData.get("swift_code"),
-      bank_address: formData.get("bank_address"),
-      payment_reference: formData.get("payment_reference"),
-      is_active: formData.get("is_active") === "on",
-      is_autopay: formData.get("is_autopay") === "on",
-    });
+    mutation.mutate(form);
   };
 
   if (user?.role !== "admin") {
@@ -76,31 +160,6 @@ export default function AdminSupplierBankAccounts() {
       </div>
     );
   }
-
-  const philippineBanks = [
-    { code: "bdo", name: "BDO Unibank" },
-    { code: "bpi", name: "Bank of the Philippine Islands" },
-    { code: "ubp", name: "Union Bank of the Philippines" },
-    { code: "mb", name: "Metrobank" },
-    { code: "rcbc", name: "RCBC" },
-    { code: "secb", name: "Security Bank" },
-    { code: "pnb", name: "Philippine National Bank" },
-    { code: "chinabank", name: "China Bank" },
-    { code: "aub", name: "Asia United Bank" },
-    { code: "gcash", name: "GCash" },
-    { code: "kasikornbank", name: "Kasikornbank (Thailand)" },
-    { code: "scb", name: "SCB (Siam Commercial Bank)" },
-    { code: "paypal", name: "PayPal" },
-    { code: "wise", name: "Wise (TransferWise)" },
-  ];
-
-  // Pre-filled details for known suppliers
-  const SUPPLIER_PRESETS = {
-
-  const handleSupplierChange = (value, setFieldValue) => {
-    const preset = SUPPLIER_PRESETS[value] || {};
-    setFormPreset(preset);
-  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
@@ -115,46 +174,57 @@ export default function AdminSupplierBankAccounts() {
           </div>
           <Dialog open={showDialog} onOpenChange={setShowDialog}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingAccount(null)} className="gap-2">
+              <Button onClick={openNew} className="gap-2">
                 <Plus className="w-4 h-4" />
                 Add Supplier Account
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingAccount ? "Edit" : "Add"} Supplier Bank Account</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label>Supplier</Label>
-                  <Select name="supplier_name" defaultValue={editingAccount?.supplier_name}>
+                  <Select value={form.supplier_name} onValueChange={handleSupplierChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select supplier" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="biyaheko">Biyaheko</SelectItem>
-                      <SelectItem value="wanderlinx">Wanderlinx</SelectItem>
-                      <SelectItem value="tripzynx">Tripzynx</SelectItem>
-                      <SelectItem value="direct">Direct</SelectItem>
+                      {SUPPLIERS.map(s => (
+                        <SelectItem key={s.value} value={s.value}>
+                          <span className="flex items-center gap-2">
+                            {s.label}
+                            {SUPPLIER_PRESETS[s.value] && (
+                              <span className="text-xs text-amber-500 font-medium">⚡ auto-fill</span>
+                            )}
+                          </span>
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
+                  {SUPPLIER_PRESETS[form.supplier_name] && (
+                    <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" /> Known supplier details auto-populated below
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Label>Account Name</Label>
-                  <Input name="account_name" defaultValue={editingAccount?.account_name} required />
+                  <Input value={form.account_name} onChange={e => setForm(p => ({ ...p, account_name: e.target.value }))} required />
                 </div>
                 <div>
                   <Label>Account Number</Label>
-                  <Input name="account_number" defaultValue={editingAccount?.account_number} required />
+                  <Input value={form.account_number} onChange={e => setForm(p => ({ ...p, account_number: e.target.value }))} required placeholder={form.supplier_name === "12go" ? "Enter your 12Go account/payment number" : ""} />
                 </div>
                 <div>
                   <Label>Bank</Label>
-                  <Select name="bank_code" defaultValue={editingAccount?.bank_code}>
+                  <Select value={form.bank_code} onValueChange={v => setForm(p => ({ ...p, bank_code: v }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select bank" />
                     </SelectTrigger>
                     <SelectContent>
-                      {philippineBanks.map((bank) => (
+                      {BANKS.map((bank) => (
                         <SelectItem key={bank.code} value={bank.code}>
                           {bank.name}
                         </SelectItem>
@@ -164,30 +234,30 @@ export default function AdminSupplierBankAccounts() {
                 </div>
                 <div>
                   <Label>Bank Name (for display)</Label>
-                  <Input name="bank_name" defaultValue={editingAccount?.bank_name} required />
+                  <Input value={form.bank_name} onChange={e => setForm(p => ({ ...p, bank_name: e.target.value }))} required />
                 </div>
                 <div>
                   <Label>ABA Routing Number</Label>
-                  <Input name="aba_routing" defaultValue={editingAccount?.aba_routing} placeholder="e.g. 021000089" />
+                  <Input value={form.aba_routing} onChange={e => setForm(p => ({ ...p, aba_routing: e.target.value }))} placeholder="e.g. 021000089" />
                 </div>
                 <div>
                   <Label>SWIFT / BIC Code</Label>
-                  <Input name="swift_code" defaultValue={editingAccount?.swift_code} placeholder="e.g. CITIUS33" />
+                  <Input value={form.swift_code} onChange={e => setForm(p => ({ ...p, swift_code: e.target.value }))} placeholder="e.g. CITIUS33" />
                 </div>
                 <div>
                   <Label>Bank Address</Label>
-                  <Input name="bank_address" defaultValue={editingAccount?.bank_address} placeholder="Full bank branch address" />
+                  <Input value={form.bank_address} onChange={e => setForm(p => ({ ...p, bank_address: e.target.value }))} placeholder="Full bank branch address" />
                 </div>
                 <div>
                   <Label>Payment Reference</Label>
-                  <Input name="payment_reference" defaultValue={editingAccount?.payment_reference} placeholder="Must match exactly" />
+                  <Input value={form.payment_reference} onChange={e => setForm(p => ({ ...p, payment_reference: e.target.value }))} placeholder={form.supplier_name === "12go" ? "Your 12Go Reseller ID" : "Must match exactly"} />
                 </div>
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="is_active"
-                    name="is_active"
-                    defaultChecked={editingAccount?.is_active ?? true}
+                    checked={form.is_active}
+                    onChange={e => setForm(p => ({ ...p, is_active: e.target.checked }))}
                     className="rounded"
                   />
                   <Label htmlFor="is_active" className="cursor-pointer">Active</Label>
@@ -196,8 +266,8 @@ export default function AdminSupplierBankAccounts() {
                   <input
                     type="checkbox"
                     id="is_autopay"
-                    name="is_autopay"
-                    defaultChecked={editingAccount?.is_autopay ?? false}
+                    checked={form.is_autopay}
+                    onChange={e => setForm(p => ({ ...p, is_autopay: e.target.checked }))}
                     className="rounded"
                   />
                   <Label htmlFor="is_autopay" className="cursor-pointer">Enable Auto-Pay after booking</Label>
@@ -226,7 +296,7 @@ export default function AdminSupplierBankAccounts() {
             <CardContent className="py-16 text-center">
               <Building2 className="w-12 h-12 mx-auto text-slate-300 mb-4" />
               <p className="text-slate-500 mb-4">No supplier bank accounts configured</p>
-              <Button onClick={() => setShowDialog(true)}>
+              <Button onClick={openNew}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add First Account
               </Button>
@@ -240,7 +310,9 @@ export default function AdminSupplierBankAccounts() {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <CardTitle className="text-xl capitalize">{account.supplier_name}</CardTitle>
+                        <CardTitle className="text-xl capitalize">
+                          {SUPPLIERS.find(s => s.value === account.supplier_name)?.label || account.supplier_name}
+                        </CardTitle>
                         {account.is_active ? (
                           <Badge className="bg-green-500">Active</Badge>
                         ) : (
@@ -253,21 +325,10 @@ export default function AdminSupplierBankAccounts() {
                       <p className="text-sm text-slate-600">{account.bank_name}</p>
                     </div>
                     <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setEditingAccount(account);
-                          setShowDialog(true);
-                        }}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(account)}>
                         <Pencil className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteMutation.mutate(account.id)}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(account.id)}>
                         <Trash2 className="w-4 h-4 text-red-500" />
                       </Button>
                     </div>
@@ -281,7 +342,7 @@ export default function AdminSupplierBankAccounts() {
                     </div>
                     <div>
                       <span className="text-slate-500">Account Number:</span>
-                      <p className="font-medium font-mono">{account.account_number}</p>
+                      <p className="font-medium font-mono">{account.account_number || "—"}</p>
                     </div>
                     {account.aba_routing && (
                       <div>
