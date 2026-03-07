@@ -422,12 +422,12 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
               <span>All payments are secure and encrypted</span>
             </div>
 
-            <Button variant="outline" onClick={() => setStep(0)} className="w-full">← Back</Button>
+            <Button variant="outline" onClick={() => setStep(1)} className="w-full">← Back</Button>
           </div>
         )}
 
-        {/* Step 2: Confirmation */}
-        {step === 2 && (
+        {/* Step 3: Confirmation */}
+        {step === 3 && (
           <div className="text-center space-y-4 py-4">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10 text-green-500" />
