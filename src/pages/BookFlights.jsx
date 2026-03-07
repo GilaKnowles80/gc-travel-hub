@@ -79,7 +79,22 @@ export default function BookFlights() {
     setSelectedDeal(deal);
   };
 
+  const PROVIDER_PAGES = {
+    duffel: "Flights",
+    amadeus: "FlightSearch",
+    wanderlinx: "WanderlinxPortal",
+    tripzynx: "TripzynxPortal",
+  };
+
   const handleSearchRedirect = () => {
+    if (searchProvider === "wanderlinx") {
+      window.location.href = createPageUrl("WanderlinxPortal");
+      return;
+    }
+    if (searchProvider === "tripzynx") {
+      window.location.href = createPageUrl("TripzynxPortal");
+      return;
+    }
     const params = new URLSearchParams({
       origin,
       destination,
@@ -89,7 +104,8 @@ export default function BookFlights() {
       cabin,
       tripType,
     });
-    window.location.href = createPageUrl("Flights") + "?" + params.toString();
+    const targetPage = searchProvider === "amadeus" ? "FlightSearch" : "Flights";
+    window.location.href = createPageUrl(targetPage) + "?" + params.toString();
   };
 
   const featuredDeals = deals.filter(d => d.is_featured);
