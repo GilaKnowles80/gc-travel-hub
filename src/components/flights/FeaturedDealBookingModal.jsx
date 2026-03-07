@@ -31,8 +31,15 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
   });
   const [paymentMethod, setPaymentMethod] = useState("gcash");
   const [showQR, setShowQR] = useState(false);
+  const [addOns, setAddOns] = useState({ insurance: null, luggage: [], pets: [] });
 
-  const totalPrice = deal.price_php * form.number_of_passengers;
+  const addOnsTotal = [
+    addOns.insurance ? addOns.insurance.price_php * form.number_of_passengers : 0,
+    ...(addOns.luggage || []).map(l => l.price_php * form.number_of_passengers),
+    ...(addOns.pets || []).map(p => p.price_php),
+  ].reduce((a, b) => a + b, 0);
+
+  const totalPrice = deal.price_php * form.number_of_passengers + addOnsTotal;
 
   const handleSubmitPassenger = (e) => {
     e.preventDefault();
