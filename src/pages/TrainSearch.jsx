@@ -14,6 +14,7 @@ import { useMarkup } from '@/components/markup/useMarkup';
 import TwelveGoCountryWidget from '@/components/twelvego/TwelveGoCountryWidget';
 import TwelveGoFormWidget from '@/components/twelvego/TwelveGoFormWidget';
 import TwelveGoTimetable from '@/components/twelvego/TwelveGoTimetable';
+import TrainlineSearchWidget from '@/components/trains/TrainlineSearchWidget';
 
 export default function TrainSearch() {
   const [filters, setFilters] = useState({
@@ -130,6 +131,9 @@ export default function TrainSearch() {
             )}
           </CardContent>
         </Card>
+
+        {/* Trainline Widget */}
+        <TrainlineSearchWidget />
 
         {/* 12Go Asia Country Widget */}
         <div className="mb-8">
