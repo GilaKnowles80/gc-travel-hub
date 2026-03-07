@@ -282,8 +282,16 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
                   className="w-56 mx-auto rounded-xl"
                 />
                 <p className="text-xs text-slate-600 mt-2 font-medium">Total: <span className="text-amber-600 font-bold">₱{totalPrice.toLocaleString()}</span></p>
-                <p className="text-xs text-slate-500 mt-1">Scan with your bank app or e-wallet. Send your payment screenshot to confirm.</p>
-                <p className="text-xs text-green-600 font-semibold mt-2">✓ No fees • Works with all Philippine banks & e-wallets</p>
+                <p className="text-xs text-slate-500 mt-1">Scan with your bank app or e-wallet, then tap the button below after paying.</p>
+                <p className="text-xs text-green-600 font-semibold mt-1">✓ No fees • Works with all Philippine banks & e-wallets</p>
+                <Button
+                  onClick={handlePayWithQR}
+                  disabled={loading}
+                  className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  I've Paid — Confirm Booking
+                </Button>
               </div>
             )}
 
