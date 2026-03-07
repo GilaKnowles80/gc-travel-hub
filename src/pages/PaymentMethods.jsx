@@ -60,6 +60,31 @@ export default function PaymentMethods() {
       ]
     },
     {
+      category: 'US Wire Transfer (International)',
+      icon: Globe,
+      color: 'bg-amber-50 border-amber-200',
+      badge: 'bg-amber-100 text-amber-800',
+      description: 'Send USD directly to our US virtual bank account via wire transfer',
+      methods: [
+        { name: 'SSB Bank', logo: null },
+        { name: 'GCash USD', logo: 'https://logos-world.net/wp-content/uploads/2023/09/GCash-Logo.png' },
+      ],
+      features: [
+        'Account Name: GILA KNOWLES',
+        'Routing Number: 043087080',
+        'Account Number: 500279542605',
+        'Bank: SSB Bank — Pittsburgh, PA 15237 US',
+      ],
+      bankDetails: {
+        accountName: 'GILA KNOWLES',
+        routingNumber: '043087080',
+        accountNumber: '500279542605',
+        bank: 'SSB Bank',
+        address: '8700 Perry Highway, Pittsburgh PA 15237 US',
+        note: 'USD only. Banks may charge a transfer fee.'
+      }
+    },
+    {
       category: 'Bank Transfer (Philippines)',
       icon: Building2,
       color: 'bg-purple-50 border-purple-200',
