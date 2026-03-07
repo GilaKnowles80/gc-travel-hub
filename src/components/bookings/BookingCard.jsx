@@ -128,7 +128,7 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-slate-900 truncate">{title}</h3>
-              <p className="text-sm text-slate-500 mt-1">Ref: {booking.id}</p>
+              <p className="text-sm text-slate-500 mt-1 font-mono tracking-wide">PRN: <span className="font-bold text-amber-700">{prn}</span></p>
               <div className="flex flex-wrap gap-3 mt-3 text-sm text-slate-600">
                 {date && (
                   <div className="flex items-center gap-1">
