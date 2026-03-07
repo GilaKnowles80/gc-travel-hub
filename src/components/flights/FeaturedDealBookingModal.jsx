@@ -396,10 +396,16 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
               }
             </p>
             {booking && (
-              <div className="bg-slate-50 rounded-lg p-3 text-xs text-slate-600">
+              <div className="bg-slate-50 rounded-lg p-3 text-xs text-slate-600 space-y-1 text-left">
                 <p>Booking Ref: <strong className="text-amber-600">{booking.id?.slice(-8).toUpperCase()}</strong></p>
                 <p>Route: <strong>{deal.origin_code} → {deal.destination_code}</strong></p>
+                <p>Trip Type: <strong className="capitalize">{(deal.trip_type || "roundtrip").replace("_", " ")}</strong></p>
+                <p>Departure: <strong>{form.departure_date ? moment(form.departure_date).format("MMM DD, YYYY") : "—"}</strong></p>
+                {deal.trip_type === "roundtrip" && form.return_date && (
+                  <p>Return: <strong>{moment(form.return_date).format("MMM DD, YYYY")}</strong></p>
+                )}
                 <p>Passenger: <strong>{form.passenger_name}</strong></p>
+                <p>Pax: <strong>{form.number_of_passengers}</strong> · Total: <strong className="text-amber-600">₱{totalPrice.toLocaleString()}</strong></p>
               </div>
             )}
             <Button onClick={onClose} className="w-full bg-amber-500 hover:bg-amber-600 text-white">
