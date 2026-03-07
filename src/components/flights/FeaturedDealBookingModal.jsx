@@ -318,13 +318,28 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
             </div>
 
             <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-white">
-              Continue to Payment →
+              Continue →
             </Button>
           </form>
         )}
 
-        {/* Step 1: Payment */}
+        {/* Step 1: Add-ons */}
         {step === 1 && (
+          <div className="space-y-4">
+            <BookingAddOns addOns={addOns} onChange={setAddOns} passengers={form.number_of_passengers} />
+            <div className="bg-slate-50 rounded-lg p-3 flex justify-between items-center">
+              <span className="text-sm text-slate-600">Total ({form.number_of_passengers} pax{addOnsTotal > 0 ? " + add-ons" : ""})</span>
+              <span className="text-xl font-bold text-amber-600">₱{totalPrice.toLocaleString()}</span>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setStep(0)} className="flex-1">← Back</Button>
+              <Button onClick={() => setStep(2)} className="flex-1 bg-amber-500 hover:bg-amber-600 text-white">Continue to Payment →</Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Payment */}
+        {step === 2 && (
           <div className="space-y-4">
             <div className="bg-slate-50 rounded-lg p-3 flex justify-between items-center mb-2">
               <span className="text-sm text-slate-600">Total Amount</span>
