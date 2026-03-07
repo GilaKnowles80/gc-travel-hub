@@ -29,6 +29,7 @@ const navLinks = [
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
+  { name: "Book Flights", page: "BookFlights", icon: Plane },
   { name: "Shop", page: "DigitalStore", icon: ShoppingBag },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
 
