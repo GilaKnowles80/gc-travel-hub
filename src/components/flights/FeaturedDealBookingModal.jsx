@@ -75,6 +75,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
         payment_status: "unpaid",
         supplier: deal.supplier || "biyaheko",
         supplier_reference: deal.supplier_reference || "",
+        price_comparison_notes: `Departure: ${form.departure_date}${deal.trip_type === "roundtrip" ? ` | Return: ${form.return_date}` : ""}`,
       });
 
       // Create PayMongo payment
