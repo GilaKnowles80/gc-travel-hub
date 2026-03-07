@@ -99,7 +99,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
       if (res.data?.success && res.data?.payment?.checkout_url) {
         setBooking(bookingRecord);
         window.open(res.data.payment.checkout_url, "_blank", "width=600,height=700");
-        setStep(2);
+        setStep(3);
         toast.success("GCash QR opened! Complete payment in the new window.");
       } else {
         toast.error("Failed to create GCash payment. Please try Stripe.");
