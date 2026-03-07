@@ -1,5 +1,5 @@
 import React from "react";
-import { Shield, Luggage, PawPrint, Check, Plus, Minus } from "lucide-react";
+import { Shield, Luggage, PawPrint, Check } from "lucide-react";
 
 const INSURANCE_OPTIONS = [
   {
