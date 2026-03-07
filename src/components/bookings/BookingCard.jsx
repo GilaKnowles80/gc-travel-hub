@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users, CreditCard, Plane, Compass, Hotel, Ship, Bus, Umbrella, Zap, Car, XCircle } from "lucide-react";
 import CancellationDialog from "./CancellationDialog";
 import CalendarEventButton from "./CalendarEventButton";
+import { generatePRN } from "./generatePRN";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
