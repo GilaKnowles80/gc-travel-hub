@@ -258,6 +258,35 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
               {loading && paymentMethod === "gcash" && <Loader2 className="w-5 h-5 animate-spin text-blue-600" />}
             </button>
 
+            {/* QR Ph / PayMongo Static QR */}
+            <button
+              onClick={() => setShowQR(!showQR)}
+              className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-green-200 bg-green-50 hover:bg-green-100 transition-all"
+            >
+              <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center shrink-0">
+                <QrCode className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-left flex-1">
+                <p className="font-bold text-slate-800">QR Ph — Scan to Pay</p>
+                <p className="text-xs text-slate-500">Banks, e-wallets & more • No fees • Powered by PayMongo</p>
+              </div>
+              <span className="text-xs text-green-600 font-semibold">{showQR ? "Hide" : "Show QR"}</span>
+            </button>
+
+            {showQR && (
+              <div className="bg-white border-2 border-green-200 rounded-2xl p-4 text-center">
+                <p className="text-xs font-semibold text-slate-500 mb-1">GC Travel and Tours Agency</p>
+                <img
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/c493ff053_PayMongoQRCode.jpg"
+                  alt="PayMongo QR Ph"
+                  className="w-56 mx-auto rounded-xl"
+                />
+                <p className="text-xs text-slate-600 mt-2 font-medium">Total: <span className="text-amber-600 font-bold">₱{totalPrice.toLocaleString()}</span></p>
+                <p className="text-xs text-slate-500 mt-1">Scan with your bank app or e-wallet. Send your payment screenshot to confirm.</p>
+                <p className="text-xs text-green-600 font-semibold mt-2">✓ No fees • Works with all Philippine banks & e-wallets</p>
+              </div>
+            )}
+
             {/* Stripe */}
             <button
               onClick={handlePayWithStripe}
