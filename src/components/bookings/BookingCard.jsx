@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users, CreditCard, Plane, Compass, Hotel, Ship, Bus, Umbrella, Zap, Car, XCircle } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import CancellationDialog from "./CancellationDialog";
 import CalendarEventButton from "./CalendarEventButton";
 import { generatePRN } from "./generatePRN";
@@ -35,15 +36,28 @@ const bookingIcons = {
 
 export default function BookingCard({ booking, index, type, onCancelled }) {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [airlineName, setAirlineName] = useState(null);
   const Icon = bookingIcons[type] || Compass;
   const prn = generatePRN(type, booking);
   let title = "";
   let details = [];
   let date = "";
 
+  // Fetch airline name for flight bookings
+  useEffect(() => {
+    if (type === "flight" && booking.flight_id) {
+      base44.entities.Flight.list().then(flights => {
+        const flight = flights.find(f => f.id === booking.flight_id);
+        if (flight) {
+          setAirlineName(flight.airline_name);
+        }
+      }).catch(err => console.log('Flight lookup:', err));
+    }
+  }, [type, booking.flight_id]);
+
   switch (type) {
     case "flight":
-      title = `${booking.route} - ${booking.flight_number}`;
+      title = airlineName ? `${airlineName} - ${booking.flight_number}` : `${booking.route} - ${booking.flight_number}`;
       date = booking.departure_time ? new Date(booking.departure_time).toLocaleDateString() : "TBD";
       details = [
         { icon: Plane, label: booking.cabin_class },
