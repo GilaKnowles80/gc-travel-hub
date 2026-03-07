@@ -292,8 +292,10 @@ export default function BookFlights() {
                 </div>
 
                 <Button onClick={handleSearchRedirect} disabled={!origin || !destination} className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold h-11">
-                  <Search className="w-4 h-4 mr-2" /> Search All Live Flights
+                  <Search className="w-4 h-4 mr-2" /> Search via {searchProvider === "amadeus" ? "Amadeus" : "Duffel"}
                 </Button>
+                </>
+                )}
               </div>
             </Card>
           )}
