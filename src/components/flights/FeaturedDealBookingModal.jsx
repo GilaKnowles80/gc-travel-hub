@@ -361,7 +361,10 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
             </div>
             <h3 className="text-xl font-bold text-slate-800">Booking Submitted!</h3>
             <p className="text-slate-600 text-sm">
-              Complete the payment in the window that opened. Once payment is confirmed, you'll receive your e-ticket via email at <strong>{form.passenger_email}</strong>.
+              {booking?.price_comparison_notes?.includes("QR Ph")
+                ? <>Your booking is recorded. Our team will verify your QR payment and send your e-ticket to <strong>{form.passenger_email}</strong> within a few hours.</>
+                : <>Complete the payment in the window that opened. Once confirmed, you'll receive your e-ticket via email at <strong>{form.passenger_email}</strong>.</>
+              }
             </p>
             {booking && (
               <div className="bg-slate-50 rounded-lg p-3 text-xs text-slate-600">
