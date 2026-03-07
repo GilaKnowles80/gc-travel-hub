@@ -234,6 +234,26 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
         {/* Step 0: Passenger Info */}
         {step === 0 && (
           <form onSubmit={handleSubmitPassenger} className="space-y-4">
+            {/* Trip Type Toggle */}
+            <div>
+              <Label>Trip Type</Label>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden mt-1">
+                <button
+                  type="button"
+                  onClick={() => setTripType("one_way")}
+                  className={`flex-1 py-2 text-sm font-medium transition-all ${tripType === "one_way" ? "bg-amber-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}
+                >
+                  One Way
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTripType("roundtrip")}
+                  className={`flex-1 py-2 text-sm font-medium transition-all ${tripType === "roundtrip" ? "bg-amber-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}
+                >
+                  Round Trip
+                </button>
+              </div>
+            </div>
             <div>
               <Label>Number of Passengers</Label>
               <Select value={String(form.number_of_passengers)} onValueChange={v => setForm(p => ({ ...p, number_of_passengers: Number(v) }))}>
