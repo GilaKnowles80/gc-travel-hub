@@ -40,6 +40,7 @@ const SUPPLIERS = [
   { value: "tripzynx", label: "Tripzynx" },
   { value: "12go", label: "12Go Asia" },
   { value: "duffel", label: "Duffel" },
+  { value: "trainline", label: "Trainline Business" },
   { value: "direct", label: "Direct" },
 ];
 
