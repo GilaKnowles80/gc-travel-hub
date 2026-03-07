@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AIItineraryPlanner from './pages/AIItineraryPlanner';
+import AdminAdCampaigns from './pages/AdminAdCampaigns';
 import AdminAds from './pages/AdminAds';
 import AdminAdvertisements from './pages/AdminAdvertisements';
 import AdminAffiliates from './pages/AdminAffiliates';
@@ -164,12 +165,13 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import AdminAdCampaigns from './pages/AdminAdCampaigns';
+import DigitalStore from './pages/DigitalStore';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AIItineraryPlanner": AIItineraryPlanner,
+    "AdminAdCampaigns": AdminAdCampaigns,
     "AdminAds": AdminAds,
     "AdminAdvertisements": AdminAdvertisements,
     "AdminAffiliates": AdminAffiliates,
@@ -286,7 +288,7 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "AdminAdCampaigns": AdminAdCampaigns,
+    "DigitalStore": DigitalStore,
 }
 
 export const pagesConfig = {
