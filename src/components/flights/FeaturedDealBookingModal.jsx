@@ -24,6 +24,8 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
     date_of_birth: "",
     special_requests: "",
     number_of_passengers: 1,
+    departure_date: deal.departure_date || "",
+    return_date: deal.return_date || "",
   });
   const [paymentMethod, setPaymentMethod] = useState("gcash");
   const [showQR, setShowQR] = useState(false);
