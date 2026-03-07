@@ -255,6 +255,18 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
                   <Input type="date" value={form.date_of_birth} onChange={e => setForm(p => ({ ...p, date_of_birth: e.target.value }))} />
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Departure Date *</Label>
+                  <Input type="date" value={form.departure_date} onChange={e => setForm(p => ({ ...p, departure_date: e.target.value }))} required min={new Date().toISOString().split("T")[0]} />
+                </div>
+                {deal.trip_type === "roundtrip" && (
+                  <div>
+                    <Label>Return Date *</Label>
+                    <Input type="date" value={form.return_date} onChange={e => setForm(p => ({ ...p, return_date: e.target.value }))} required min={form.departure_date || new Date().toISOString().split("T")[0]} />
+                  </div>
+                )}
+              </div>
               <div>
                 <Label>Special Requests</Label>
                 <Input value={form.special_requests} onChange={e => setForm(p => ({ ...p, special_requests: e.target.value }))} placeholder="Meal preference, wheelchair, etc." />
