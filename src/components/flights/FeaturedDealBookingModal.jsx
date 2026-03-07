@@ -55,7 +55,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
       toast.error("Please select a return date for roundtrip booking");
       return;
     }
-    setStep(1);
+    setStep(1); // go to add-ons
   };
 
   const handlePayWithGCash = async () => {
