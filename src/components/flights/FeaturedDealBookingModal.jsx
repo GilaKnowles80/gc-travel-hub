@@ -135,7 +135,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
         price_comparison_notes: `QR Ph payment — pending admin verification | Departure: ${form.departure_date}${tripType === "roundtrip" ? ` | Return: ${form.return_date}` : ""}`,
       });
       setBooking(bookingRecord);
-      setStep(2);
+      setStep(3);
       toast.success("Booking submitted! Our team will verify your QR payment shortly.");
     } catch (err) {
       toast.error(err.message || "Failed to record booking");
