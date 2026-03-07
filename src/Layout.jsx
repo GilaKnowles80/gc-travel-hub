@@ -29,6 +29,7 @@ const navLinks = [
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
+  { name: "Shop", page: "DigitalStore", icon: ShoppingBag },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
 
   { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
