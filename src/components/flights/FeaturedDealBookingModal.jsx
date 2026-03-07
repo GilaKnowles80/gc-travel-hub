@@ -206,7 +206,12 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
             <div>
               <p className="font-bold text-slate-800 text-lg">{deal.origin_code} → {deal.destination_code}</p>
               <p className="text-xs text-slate-500">{deal.airline} · {deal.cabin_class?.replace(/_/g, ' ')} · {deal.trip_type?.replace(/_/g, ' ')}</p>
-              {deal.departure_date && <p className="text-xs text-slate-500">{moment(deal.departure_date).format("MMM DD, YYYY")}</p>}
+              {deal.departure_date && (
+              <p className="text-xs text-slate-500">
+                {moment(deal.departure_date).format("MMM DD, YYYY")}
+                {deal.trip_type === "roundtrip" && deal.return_date && ` → ${moment(deal.return_date).format("MMM DD, YYYY")}`}
+              </p>
+            )}
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-amber-600">₱{deal.price_php.toLocaleString()}</p>
