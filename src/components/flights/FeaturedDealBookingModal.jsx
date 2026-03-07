@@ -91,6 +91,39 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
     }
   };
 
+  const handlePayWithQR = async () => {
+    setLoading(true);
+    try {
+      const bookingRecord = await base44.entities.FlightBooking.create({
+        flight_id: deal.id,
+        flight_number: deal.flight_number || deal.airline,
+        route: `${deal.origin_code} → ${deal.destination_code}`,
+        trip_type: deal.trip_type || "roundtrip",
+        passenger_name: form.passenger_name,
+        passenger_email: form.passenger_email,
+        passenger_phone: form.passenger_phone,
+        passport_number: form.passport_number,
+        date_of_birth: form.date_of_birth,
+        cabin_class: deal.cabin_class || "economy",
+        number_of_passengers: form.number_of_passengers,
+        total_price: totalPrice,
+        special_requests: form.special_requests,
+        status: "pending",
+        payment_status: "partial",
+        supplier: deal.supplier || "biyaheko",
+        supplier_reference: deal.supplier_reference || "",
+        price_comparison_notes: "QR Ph payment — pending admin verification",
+      });
+      setBooking(bookingRecord);
+      setStep(2);
+      toast.success("Booking submitted! Our team will verify your QR payment shortly.");
+    } catch (err) {
+      toast.error(err.message || "Failed to record booking");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePayWithStripe = async () => {
     if (window.self !== window.top) {
       toast.error("Payment must be completed from the published app, not inside an iframe.");
