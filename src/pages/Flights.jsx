@@ -159,12 +159,12 @@ export default function Flights() {
     queryFn: async () => {
       try {
         const response = await base44.functions.invoke('searchFlightsDuffel', {
-          origin: searchParams.origin,
-          destination: searchParams.destination,
-          departureDate: searchParams.departureDate,
-          returnDate: searchParams.returnDate,
-          adults: searchParams.adults,
-          cabin: searchParams.cabin
+          origin: submittedParams.origin,
+          destination: submittedParams.destination,
+          departureDate: submittedParams.departureDate,
+          returnDate: submittedParams.returnDate,
+          adults: submittedParams.adults,
+          cabin: submittedParams.cabin
         });
         
         // Transform offers to app format with real-time availability
