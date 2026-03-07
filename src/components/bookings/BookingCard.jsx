@@ -179,7 +179,7 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
             </div>
             
             <div className="flex gap-2">
-              <CalendarEventButton booking={booking} type={type} />
+              <CalendarEventButton booking={booking} type={type} airlineName={airlineName} />
               {(type === 'flight' || type === 'hotel') && booking.status !== 'cancelled' && booking.status !== 'completed' && (
                 <Button
                   variant="ghost"
