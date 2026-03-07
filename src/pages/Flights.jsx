@@ -142,12 +142,6 @@ export default function Flights() {
   // Validate if search can be executed
   const canSearch = !!(searchParams.origin && searchParams.destination && searchParams.departureDate && moment(searchParams.departureDate).isValid());
 
-  const handleSearch = () => {
-    if (!canSearch) return;
-    setSearchTriggered(true);
-    queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
-  };
-
   // Submitted search params — only updated when user clicks Search
   const [submittedParams, setSubmittedParams] = useState(null);
 
