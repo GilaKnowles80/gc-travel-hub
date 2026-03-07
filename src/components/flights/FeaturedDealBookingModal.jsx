@@ -9,8 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Plane, CreditCard, Wallet, CheckCircle2, Loader2, Lock, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import moment from "moment";
+import BookingAddOns from "./BookingAddOns";
 
-const STEPS = ["Passenger Info", "Payment", "Confirmed"];
+const STEPS = ["Passenger Info", "Add-ons", "Payment", "Confirmed"];
 
 export default function FeaturedDealBookingModal({ deal, user, onClose }) {
   const [step, setStep] = useState(0);
