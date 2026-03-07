@@ -123,7 +123,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
         payment_status: "partial",
         supplier: deal.supplier || "biyaheko",
         supplier_reference: deal.supplier_reference || "",
-        price_comparison_notes: "QR Ph payment — pending admin verification",
+        price_comparison_notes: `QR Ph payment — pending admin verification | Departure: ${form.departure_date}${deal.trip_type === "roundtrip" ? ` | Return: ${form.return_date}` : ""}`,
       });
       setBooking(bookingRecord);
       setStep(2);
