@@ -86,7 +86,40 @@ export default function AdminSupplierBankAccounts() {
     { code: "pnb", name: "Philippine National Bank" },
     { code: "chinabank", name: "China Bank" },
     { code: "aub", name: "Asia United Bank" },
+    { code: "gcash", name: "GCash" },
+    { code: "kasikornbank", name: "Kasikornbank (Thailand)" },
+    { code: "scb", name: "SCB (Siam Commercial Bank)" },
+    { code: "paypal", name: "PayPal" },
+    { code: "wise", name: "Wise (TransferWise)" },
   ];
+
+  // Pre-filled details for known suppliers
+  const SUPPLIER_PRESETS = {
+    "12go": {
+      account_name: "12Go Asia Co., Ltd.",
+      bank_name: "Kasikornbank (Thailand)",
+      bank_code: "kasikornbank",
+      swift_code: "KASITHBK",
+      bank_address: "Kasikornbank PCL, 1 Soi Ratburana 27/1, Ratburana Rd., Bangkok 10140, Thailand",
+      payment_reference: "Your 12Go Reseller ID",
+    },
+    duffel: {
+      account_name: "Duffel Travel US Incorporated",
+      bank_name: "Citibank N.A. New York",
+      bank_code: "CITIUS33",
+      aba_routing: "021000089",
+      swift_code: "CITIUS33",
+      bank_address: "Citibank N.A. New York, 388 Greenwich Street, New York, NY 10013, USA",
+      payment_reference: "GCTRILDS4R",
+    },
+  };
+
+  const [formPreset, setFormPreset] = useState({});
+
+  const handleSupplierChange = (value, setFieldValue) => {
+    const preset = SUPPLIER_PRESETS[value] || {};
+    setFormPreset(preset);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">

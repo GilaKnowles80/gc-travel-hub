@@ -90,6 +90,7 @@ import AdminVisas from './pages/AdminVisas';
 import AffiliateDashboard from './pages/AffiliateDashboard';
 import BestPriceGuarantee from './pages/BestPriceGuarantee';
 import BiyahekoPortal from './pages/BiyahekoPortal';
+import BookFlights from './pages/BookFlights';
 import BookingConfirmation from './pages/BookingConfirmation';
 import BusCheckout from './pages/BusCheckout';
 import BusSearch from './pages/BusSearch';
@@ -168,7 +169,6 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import BookFlights from './pages/BookFlights';
 import __Layout from './Layout.jsx';
 
 
@@ -216,6 +216,7 @@ export const PAGES = {
     "AffiliateDashboard": AffiliateDashboard,
     "BestPriceGuarantee": BestPriceGuarantee,
     "BiyahekoPortal": BiyahekoPortal,
+    "BookFlights": BookFlights,
     "BookingConfirmation": BookingConfirmation,
     "BusCheckout": BusCheckout,
     "BusSearch": BusSearch,
@@ -294,7 +295,6 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "BookFlights": BookFlights,
 }
 
 export const pagesConfig = {
