@@ -96,26 +96,6 @@ export default function AdminSupplierBankAccounts() {
 
   // Pre-filled details for known suppliers
   const SUPPLIER_PRESETS = {
-    "12go": {
-      account_name: "12Go Asia Co., Ltd.",
-      bank_name: "Kasikornbank (Thailand)",
-      bank_code: "kasikornbank",
-      swift_code: "KASITHBK",
-      bank_address: "Kasikornbank PCL, 1 Soi Ratburana 27/1, Ratburana Rd., Bangkok 10140, Thailand",
-      payment_reference: "Your 12Go Reseller ID",
-    },
-    duffel: {
-      account_name: "Duffel Travel US Incorporated",
-      bank_name: "Citibank N.A. New York",
-      bank_code: "CITIUS33",
-      aba_routing: "021000089",
-      swift_code: "CITIUS33",
-      bank_address: "Citibank N.A. New York, 388 Greenwich Street, New York, NY 10013, USA",
-      payment_reference: "GCTRILDS4R",
-    },
-  };
-
-  const [formPreset, setFormPreset] = useState({});
 
   const handleSupplierChange = (value, setFieldValue) => {
     const preset = SUPPLIER_PRESETS[value] || {};
