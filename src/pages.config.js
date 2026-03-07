@@ -166,6 +166,7 @@ import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
 import DigitalStore from './pages/DigitalStore';
+import AdminDigitalStore from './pages/AdminDigitalStore';
 import __Layout from './Layout.jsx';
 
 
@@ -289,6 +290,7 @@ export const PAGES = {
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
     "DigitalStore": DigitalStore,
+    "AdminDigitalStore": AdminDigitalStore,
 }
 
 export const pagesConfig = {
