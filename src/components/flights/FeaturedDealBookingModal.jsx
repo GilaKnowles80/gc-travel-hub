@@ -26,6 +26,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
     number_of_passengers: 1,
   });
   const [paymentMethod, setPaymentMethod] = useState("gcash");
+  const [showQR, setShowQR] = useState(false);
 
   const totalPrice = deal.price_php * form.number_of_passengers;
 
