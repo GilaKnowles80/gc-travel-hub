@@ -51,6 +51,7 @@ import AIItineraryPlanner from './pages/AIItineraryPlanner';
 import AdminAdCampaigns from './pages/AdminAdCampaigns';
 import AdminAds from './pages/AdminAds';
 import AdminAdvertisements from './pages/AdminAdvertisements';
+import AdminAffiliateAnalytics from './pages/AdminAffiliateAnalytics';
 import AdminAffiliates from './pages/AdminAffiliates';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminAuditLogs from './pages/AdminAuditLogs';
@@ -62,6 +63,7 @@ import AdminCorporateClients from './pages/AdminCorporateClients';
 import AdminCtripIntegration from './pages/AdminCtripIntegration';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDataManager from './pages/AdminDataManager';
+import AdminDigitalStore from './pages/AdminDigitalStore';
 import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
@@ -98,6 +100,7 @@ import CorporateBooking from './pages/CorporateBooking';
 import CruiseCheckout from './pages/CruiseCheckout';
 import CruiseSearch from './pages/CruiseSearch';
 import DatabaseSchema from './pages/DatabaseSchema';
+import DigitalStore from './pages/DigitalStore';
 import FerryCheckout from './pages/FerryCheckout';
 import FerrySearch from './pages/FerrySearch';
 import FinitechArchitecture from './pages/FinitechArchitecture';
@@ -165,9 +168,7 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import DigitalStore from './pages/DigitalStore';
-import AdminDigitalStore from './pages/AdminDigitalStore';
-import AdminAffiliateAnalytics from './pages/AdminAffiliateAnalytics';
+import BookFlights from './pages/BookFlights';
 import __Layout from './Layout.jsx';
 
 
@@ -176,6 +177,7 @@ export const PAGES = {
     "AdminAdCampaigns": AdminAdCampaigns,
     "AdminAds": AdminAds,
     "AdminAdvertisements": AdminAdvertisements,
+    "AdminAffiliateAnalytics": AdminAffiliateAnalytics,
     "AdminAffiliates": AdminAffiliates,
     "AdminAnalytics": AdminAnalytics,
     "AdminAuditLogs": AdminAuditLogs,
@@ -187,6 +189,7 @@ export const PAGES = {
     "AdminCtripIntegration": AdminCtripIntegration,
     "AdminDashboard": AdminDashboard,
     "AdminDataManager": AdminDataManager,
+    "AdminDigitalStore": AdminDigitalStore,
     "AdminEmailClients": AdminEmailClients,
     "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
@@ -223,6 +226,7 @@ export const PAGES = {
     "CruiseCheckout": CruiseCheckout,
     "CruiseSearch": CruiseSearch,
     "DatabaseSchema": DatabaseSchema,
+    "DigitalStore": DigitalStore,
     "FerryCheckout": FerryCheckout,
     "FerrySearch": FerrySearch,
     "FinitechArchitecture": FinitechArchitecture,
@@ -290,9 +294,7 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "DigitalStore": DigitalStore,
-    "AdminDigitalStore": AdminDigitalStore,
-    "AdminAffiliateAnalytics": AdminAffiliateAnalytics,
+    "BookFlights": BookFlights,
 }
 
 export const pagesConfig = {
