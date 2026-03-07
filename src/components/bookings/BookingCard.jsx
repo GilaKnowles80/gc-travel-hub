@@ -60,6 +60,7 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
       title = airlineName ? `${airlineName} - ${booking.flight_number}` : `${booking.route} - ${booking.flight_number}`;
       date = booking.departure_time ? new Date(booking.departure_time).toLocaleDateString() : "TBD";
       details = [
+        { icon: MapPin, label: booking.route || "Route N/A" },
         { icon: Plane, label: booking.cabin_class },
         { icon: Users, label: `${booking.number_of_passengers || 1} passenger${booking.number_of_passengers > 1 ? "s" : ""}` },
         { icon: CreditCard, label: `₱${booking.total_price?.toLocaleString()}` },
@@ -143,6 +144,9 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-slate-900 truncate">{title}</h3>
               <p className="text-sm text-slate-500 mt-1 font-mono tracking-wide">PRN: <span className="font-bold text-amber-700">{prn}</span></p>
+              {type === "flight" && booking.supplier_reference && (
+                <p className="text-sm text-slate-500 mt-0.5 font-mono tracking-wide">Ref: <span className="font-bold text-blue-700">{booking.supplier_reference}</span></p>
+              )}
               <div className="flex flex-wrap gap-3 mt-3 text-sm text-slate-600">
                 {date && (
                   <div className="flex items-center gap-1">
