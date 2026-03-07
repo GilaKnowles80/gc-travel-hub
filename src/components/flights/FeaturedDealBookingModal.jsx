@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plane, CreditCard, Wallet, CheckCircle2, Loader2, Lock } from "lucide-react";
+import { Plane, CreditCard, Wallet, CheckCircle2, Loader2, Lock, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import moment from "moment";
 
