@@ -43,7 +43,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
       toast.error("Please select a departure date");
       return;
     }
-    if (deal.trip_type === "roundtrip" && !form.return_date) {
+    if (tripType === "roundtrip" && !form.return_date) {
       toast.error("Please select a return date for roundtrip booking");
       return;
     }
