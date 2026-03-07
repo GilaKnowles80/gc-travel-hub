@@ -36,6 +36,7 @@ const bookingIcons = {
 export default function BookingCard({ booking, index, type, onCancelled }) {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const Icon = bookingIcons[type] || Compass;
+  const prn = generatePRN(type, booking);
   let title = "";
   let details = [];
   let date = "";
