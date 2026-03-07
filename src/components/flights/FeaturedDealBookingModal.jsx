@@ -291,7 +291,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
                   <Label>Departure Date *</Label>
                   <Input type="date" value={form.departure_date} onChange={e => setForm(p => ({ ...p, departure_date: e.target.value }))} required min={new Date().toISOString().split("T")[0]} />
                 </div>
-                {deal.trip_type === "roundtrip" && (
+                {tripType === "roundtrip" && (
                   <div>
                     <Label>Return Date *</Label>
                     <Input type="date" value={form.return_date} onChange={e => setForm(p => ({ ...p, return_date: e.target.value }))} required min={form.departure_date || new Date().toISOString().split("T")[0]} />
