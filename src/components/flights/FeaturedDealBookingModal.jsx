@@ -16,6 +16,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [booking, setBooking] = useState(null);
+  const [tripType, setTripType] = useState(deal.trip_type || "roundtrip");
   const [form, setForm] = useState({
     passenger_name: user?.full_name || "",
     passenger_email: user?.email || "",
