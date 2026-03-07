@@ -167,6 +167,7 @@ import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
 import DigitalStore from './pages/DigitalStore';
 import AdminDigitalStore from './pages/AdminDigitalStore';
+import AdminAffiliateAnalytics from './pages/AdminAffiliateAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -291,6 +292,7 @@ export const PAGES = {
     "utils": utils,
     "DigitalStore": DigitalStore,
     "AdminDigitalStore": AdminDigitalStore,
+    "AdminAffiliateAnalytics": AdminAffiliateAnalytics,
 }
 
 export const pagesConfig = {
