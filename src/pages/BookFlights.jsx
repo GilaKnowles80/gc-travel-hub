@@ -38,6 +38,7 @@ export default function BookFlights() {
   const [departMonth, setDepartMonth] = useState(moment().add(14, "days"));
   const [returnMonth, setReturnMonth] = useState(moment().add(21, "days"));
   const [activeTab, setActiveTab] = useState("deals"); // "deals" | "search"
+  const [searchProvider, setSearchProvider] = useState("duffel"); // "duffel" | "amadeus" | "wanderlinx" | "tripzynx"
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [loginRequired, setLoginRequired] = useState(false);
 
