@@ -142,7 +142,7 @@ export default function Flights() {
   // Validate if search can be executed
   const canSearch = !!(searchParams.origin && searchParams.destination && searchParams.departureDate && moment(searchParams.departureDate).isValid());
 
-  // Submitted search params — only updated when user clicks Search
+  // Submitted search params — only updated when user explicitly clicks Search
   const [submittedParams, setSubmittedParams] = useState(null);
 
   const handleSearch = () => {
