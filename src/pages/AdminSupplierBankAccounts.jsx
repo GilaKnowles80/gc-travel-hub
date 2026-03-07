@@ -14,6 +14,7 @@ import { toast } from "sonner";
 export default function AdminSupplierBankAccounts() {
   const [editingAccount, setEditingAccount] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
+  const [formPreset, setFormPreset] = useState({});
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
