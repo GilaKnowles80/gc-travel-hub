@@ -157,6 +157,35 @@ export default function BookFlights() {
           {activeTab === "search" && (
             <Card className="p-5 bg-white/95 backdrop-blur rounded-2xl max-w-4xl mx-auto">
               <div className="space-y-3">
+                {/* Provider Selector */}
+                <div className="flex flex-wrap gap-2 pb-3 border-b border-slate-100">
+                  <span className="text-xs text-slate-500 font-medium self-center">Search via:</span>
+                  {[
+                    { id: "duffel", label: "Duffel", emoji: "🌐" },
+                    { id: "amadeus", label: "Amadeus", emoji: "✈️" },
+                    { id: "wanderlinx", label: "Wanderlinx", emoji: "🧳" },
+                    { id: "tripzynx", label: "Tripzynx", emoji: "🗺️" },
+                  ].map(p => (
+                    <button key={p.id} onClick={() => setSearchProvider(p.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${searchProvider === p.id ? "bg-amber-500 text-white shadow" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>
+                      <span>{p.emoji}</span>{p.label}
+                    </button>
+                  ))}
+                </div>
+
+                {(searchProvider === "wanderlinx" || searchProvider === "tripzynx") ? (
+                  <div className="text-center py-6">
+                    <p className="text-slate-600 text-sm mb-4">
+                      {searchProvider === "wanderlinx"
+                        ? "Search flights directly on the Wanderlinx portal with your agency credentials."
+                        : "Search flights directly on the Tripzynx portal with your agency credentials."}
+                    </p>
+                    <Button onClick={handleSearchRedirect} className="bg-amber-500 hover:bg-amber-600 text-white px-8">
+                      Open {searchProvider === "wanderlinx" ? "Wanderlinx" : "Tripzynx"} Portal →
+                    </Button>
+                  </div>
+                ) : (
+                <>
                 <div className="flex gap-2">
                   {["oneway", "roundtrip"].map(t => (
                     <button key={t} onClick={() => setTripType(t)} className={`px-4 py-1.5 rounded-lg text-sm font-medium ${tripType === t ? "bg-amber-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>
