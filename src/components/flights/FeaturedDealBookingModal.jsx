@@ -84,7 +84,7 @@ export default function FeaturedDealBookingModal({ deal, user, onClose }) {
         payment_status: "unpaid",
         supplier: deal.supplier || "biyaheko",
         supplier_reference: deal.supplier_reference || "",
-        price_comparison_notes: `Departure: ${form.departure_date}${deal.trip_type === "roundtrip" ? ` | Return: ${form.return_date}` : ""}`,
+        price_comparison_notes: `Departure: ${form.departure_date}${deal.trip_type === "roundtrip" ? ` | Return: ${form.return_date}` : ""} | Add-ons: ${[addOns.insurance?.name, ...(addOns.luggage||[]).map(l=>l.name), ...(addOns.pets||[]).map(p=>p.name)].filter(Boolean).join(", ") || "None"}`,
       });
 
       // Create PayMongo payment
