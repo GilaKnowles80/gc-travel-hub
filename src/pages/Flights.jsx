@@ -188,7 +188,7 @@ export default function Flights() {
             stops: offer.stops || 0,
             price: offer.price,
             currency: offer.currency,
-            cabin_classes: [{ class: searchParams.cabin, price: offer.price, seats_available: seatsAvailable }],
+            cabin_classes: [{ class: submittedParams.cabin, price: offer.price, seats_available: seatsAvailable }],
             baggage_allowance: '1 checked bag, 1 carry-on',
             amenities: ['Seat selection', 'Online check-in'],
             status: isSoldOut ? 'sold_out' : 'active',
