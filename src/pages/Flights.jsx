@@ -148,10 +148,20 @@ export default function Flights() {
     queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
   };
 
-  // Fetch real-time flights from multiple providers (Duffel + Aviation Edge)
+  // Submitted search params — only updated when user clicks Search
+  const [submittedParams, setSubmittedParams] = useState(null);
+
+  const handleSearch = () => {
+    if (!canSearch) return;
+    setSubmittedParams({ ...searchParams });
+    setSearchTriggered(true);
+    queryClient.invalidateQueries({ queryKey: ["realtime-flights"] });
+  };
+
+  // Fetch real-time flights from Duffel
   const { data: flightData, isLoading, error } = useQuery({
-    queryKey: ["realtime-flights", searchParams],
-    enabled: canSearch && searchTriggered,
+    queryKey: ["realtime-flights", submittedParams],
+    enabled: !!(submittedParams && searchTriggered),
     queryFn: async () => {
       try {
         const response = await base44.functions.invoke('searchFlightsDuffel', {
