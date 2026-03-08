@@ -579,10 +579,22 @@ export default function Flights() {
         ) : error ? (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
             <h3 className="text-lg font-semibold text-red-700 mb-2">Search Error</h3>
-            <p className="text-red-600 text-sm">{error.message || "Failed to search flights. Please try again."}</p>
-            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })} variant="outline" className="mt-4 rounded-xl">
+            <p className="text-red-600 text-sm mb-4">{error.message || "Failed to search flights. Please try again."}</p>
+            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })} variant="outline" className="rounded-xl mb-4">
               Retry Search
             </Button>
+            <p className="text-slate-500 text-sm mb-3">Or book directly via our supplier portals:</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href="https://biyaheko.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Biyaheko
+              </a>
+              <a href="https://wanderlinx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Wanderlinx
+              </a>
+              <a href="https://tripzynx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Tripzynx
+              </a>
+            </div>
           </div>
         ) : filteredFlights.length === 0 ? (
           <div className="text-center py-16">
