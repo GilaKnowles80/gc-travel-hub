@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Upload, Download, Database, RefreshCw, FileJson, FileSpreadsheet, Plane, Hotel as HotelIcon, FileText, Ship, Bus as BusIcon, Car, Shield } from 'lucide-react';
+import { Upload, Download, Database, RefreshCw, FileJson, FileSpreadsheet, Plane, Hotel as HotelIcon, FileText, Ship, Bus as BusIcon, Car, Shield, BookOpen } from 'lucide-react';
 import { toast } from 'sonner';
+import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
 
 export default function AdminDataManager() {
   const [importing, setImporting] = useState(false);
