@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, MapPin, Calendar, ArrowLeftRight, Plane, Hotel, Compass, Ship, Bus, Umbrella, Car, Train } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/components/utils";
+import { createPageUrl } from "@/pages/utils";
 import PriceCalendar from "@/components/shared/PriceCalendar";
 
 const heroImages = [
