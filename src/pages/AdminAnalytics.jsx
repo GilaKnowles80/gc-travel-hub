@@ -232,7 +232,7 @@ export default function AdminAnalytics() {
         conversionRate,
         avgBookingValue,
         revenueGrowth,
-        totalBookings: recentPayments.length + recentPackages.length,
+        totalBookings: recentBookings.length,
         salesFunnel,
         topProducts,
         salesTrend
