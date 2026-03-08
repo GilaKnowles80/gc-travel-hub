@@ -81,33 +81,34 @@ export default function UnifiedBookingsTable() {
 
   const pendingCount = allBookings.filter(b => b.status === 'pending').length;
 
+  const generateBookingRef = async () => {
+    if (!selectedBooking || selectedBooking.type !== 'flight') return;
+    setGeneratingRef(true);
+    try {
+      const origin = selectedBooking.route?.split(/[→\-]/)[0]?.trim().split(' ').pop() || '';
+      const destination = selectedBooking.route?.split(/[→\-]/)[1]?.trim().split(' ')[0] || '';
+      const refRes = await base44.functions.invoke('generateFlightBookingRef', {
+        origin,
+        destination,
+        trip_type: selectedBooking.trip_type || 'one_way',
+      });
+      const ref = refRes?.data?.booking_ref;
+      if (ref) setBookingRef(ref);
+    } catch (e) {
+      console.error('Could not generate booking ref', e);
+    }
+    setGeneratingRef(false);
+  };
+
   const handleUpdateStatus = async () => {
     if (!selectedBooking || !newStatus) return;
     
-    let booking_ref = selectedBooking.booking_ref;
-
-    // Auto-generate booking_ref if missing (only for flight bookings)
-    if (!booking_ref && selectedBooking.type === 'flight') {
-      try {
-        const origin = selectedBooking.route?.split(/[→\-]/)[0]?.trim().split(' ').pop() || '';
-        const destination = selectedBooking.route?.split(/[→\-]/)[1]?.trim().split(' ')[0] || '';
-        const refRes = await base44.functions.invoke('generateFlightBookingRef', {
-          origin,
-          destination,
-          trip_type: selectedBooking.trip_type || 'one_way',
-        });
-        booking_ref = refRes?.data?.booking_ref || null;
-      } catch (e) {
-        console.error('Could not generate booking ref', e);
-      }
-    }
-
     const updateData = {
       status: newStatus,
       ...(supplierRef && { supplier_reference: supplierRef }),
       ...(supplierUsed && { supplier: supplierUsed }),
       ...(priceNotes && { price_comparison_notes: priceNotes }),
-      ...(booking_ref && !selectedBooking.booking_ref && { booking_ref }),
+      ...(bookingRef && { booking_ref: bookingRef }),
     };
 
     updateBookingMutation.mutate({
