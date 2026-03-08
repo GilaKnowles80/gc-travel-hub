@@ -105,6 +105,7 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="gcewallet">🟢 GC eWallet (QR Ph / GCash / Maya)</SelectItem>
                 <SelectItem value="stripe">Stripe (Card)</SelectItem>
                 <SelectItem value="paypal">PayPal</SelectItem>
                 <SelectItem value="paymongo">PayMongo</SelectItem>
