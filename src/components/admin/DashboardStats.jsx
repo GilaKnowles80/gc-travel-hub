@@ -8,33 +8,50 @@ export default function DashboardStats() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [flights, hotels, tours, bookings, payments, packages] = await Promise.all([
+      const [flights, hotels, tours, flightBookings, hotelBookings, tourBookings, trainBookings, ferryBookings, busBookings, carBookings, packages] = await Promise.all([
         base44.entities.Flight.list(),
         base44.entities.Hotel.list(),
         base44.entities.Tour.list(),
         base44.entities.FlightBooking.list(),
-        base44.entities.Payment.filter({ status: 'completed' }),
-        base44.entities.PackageBooking.filter({ status: 'paid' })
+        base44.entities.HotelBooking.list(),
+        base44.entities.TourBooking.list(),
+        base44.entities.TrainBooking.list(),
+        base44.entities.FerryBooking.list(),
+        base44.entities.BusBooking.list(),
+        base44.entities.CarRentalBooking.list(),
+        base44.entities.PackageBooking.list()
       ]);
 
-      const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
-      const packageRevenue = packages.reduce((sum, p) => sum + (p.final_price || p.total_price || 0), 0);
-      const pendingBookings = bookings.filter(b => b.status === 'pending').length;
-      const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
-      const totalProfit = (totalRevenue + packageRevenue) * 0.12;
+      const allBookings = [
+        ...flightBookings,
+        ...hotelBookings,
+        ...tourBookings,
+        ...trainBookings,
+        ...ferryBookings,
+        ...busBookings,
+        ...carBookings,
+        ...packages
+      ];
+
+      const totalRevenue = allBookings
+        .filter(b => b.payment_status === 'paid' || b.status === 'confirmed')
+        .reduce((sum, b) => sum + (b.total_price || b.final_price || 0), 0);
+
+      const pendingBookings = allBookings.filter(b => b.status === 'pending').length;
+      const confirmedBookings = allBookings.filter(b => b.status === 'confirmed').length;
+      const totalProfit = totalRevenue * 0.12;
 
       return {
         totalFlights: flights.length,
         totalHotels: hotels.length,
         totalTours: tours.length,
-        totalBookings: bookings.length,
-        totalPackages: packages.length,
-        totalRevenue: totalRevenue + packageRevenue,
-        packageRevenue,
+        totalBookings: allBookings.length,
+        confirmedBookings,
+        totalRevenue,
         totalProfit,
         pendingBookings,
-        confirmedBookings,
-        activeListings: flights.length + hotels.length + tours.length
+        activeListings: flights.length + hotels.length + tours.length,
+        flightBookings: flightBookings.length
       };
     }
   });
@@ -52,14 +69,14 @@ export default function DashboardStats() {
   }
 
   const statCards = [
-    { title: 'Total Revenue', value: `$${stats?.totalRevenue?.toLocaleString() || 0}`, icon: DollarSign, color: 'green', change: '+12.5%' },
-    { title: 'Total Profit', value: `$${stats?.totalProfit?.toLocaleString() || 0}`, icon: TrendingUp, color: 'emerald', change: '+15.3%' },
-    { title: 'Package Revenue', value: `$${stats?.packageRevenue?.toLocaleString() || 0}`, icon: MapPin, color: 'amber', change: '+24.1%' },
-    { title: 'Total Bookings', value: stats?.totalBookings || 0, icon: CheckCircle, color: 'blue', change: '+8.2%' },
-    { title: 'Custom Packages', value: stats?.totalPackages || 0, icon: MapPin, color: 'purple' },
-    { title: 'Active Flights', value: stats?.totalFlights || 0, icon: Plane, color: 'sky' },
+    { title: 'Total Revenue', value: `₱${(stats?.totalRevenue || 0).toLocaleString()}`, icon: DollarSign, color: 'green' },
+    { title: 'Est. Profit (12%)', value: `₱${(stats?.totalProfit || 0).toLocaleString()}`, icon: TrendingUp, color: 'emerald' },
+    { title: 'Total Bookings', value: stats?.totalBookings || 0, icon: CheckCircle, color: 'blue' },
+    { title: 'Confirmed Bookings', value: stats?.confirmedBookings || 0, icon: Users, color: 'teal' },
     { title: 'Pending Bookings', value: stats?.pendingBookings || 0, icon: Clock, color: 'orange' },
-    { title: 'Active Listings', value: stats?.activeListings || 0, icon: TrendingUp, color: 'indigo' }
+    { title: 'Flight Bookings', value: stats?.flightBookings || 0, icon: Plane, color: 'sky' },
+    { title: 'Active Flights', value: stats?.totalFlights || 0, icon: Plane, color: 'indigo' },
+    { title: 'Active Listings', value: stats?.activeListings || 0, icon: TrendingUp, color: 'purple' }
   ];
 
   return (
