@@ -88,37 +88,81 @@ export default function DashboardStats() {
     </div>;
   }
 
-  const statCards = [
-    { title: 'Total Revenue', value: `₱${(stats?.totalRevenue || 0).toLocaleString()}`, icon: DollarSign, color: 'green' },
-    { title: 'Est. Profit (12%)', value: `₱${(stats?.totalProfit || 0).toLocaleString()}`, icon: TrendingUp, color: 'emerald' },
-    { title: 'Total Bookings', value: stats?.totalBookings || 0, icon: CheckCircle, color: 'blue' },
-    { title: 'Confirmed Bookings', value: stats?.confirmedBookings || 0, icon: Users, color: 'teal' },
-    { title: 'Pending Bookings', value: stats?.pendingBookings || 0, icon: Clock, color: 'orange' },
-    { title: 'Flight Bookings', value: stats?.flightBookings || 0, icon: Plane, color: 'sky' },
-    { title: 'Active Flights', value: stats?.totalFlights || 0, icon: Plane, color: 'indigo' },
-    { title: 'Active Listings', value: stats?.activeListings || 0, icon: TrendingUp, color: 'purple' }
-  ];
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-      {statCards.map((stat, idx) => (
-        <Card key={idx}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
-                {stat.change && (
-                  <p className="text-xs text-green-600 mt-1">{stat.change}</p>
-                )}
+    <div className="space-y-6">
+      {/* Overall Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[
+          { title: 'Total Revenue', value: `₱${(stats?.totalRevenue || 0).toLocaleString()}`, icon: DollarSign, color: 'green' },
+          { title: 'Est. Profit (12%)', value: `₱${(stats?.totalProfit || 0).toLocaleString()}`, icon: TrendingUp, color: 'emerald' },
+          { title: 'Total Bookings', value: stats?.totalBookings || 0, icon: CheckCircle, color: 'blue' },
+          { title: 'Pending Bookings', value: stats?.pendingBookings || 0, icon: Clock, color: 'orange' },
+        ].map((stat, idx) => (
+          <Card key={idx}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">{stat.title}</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
+                </div>
+                <div className={`w-12 h-12 rounded-full bg-${stat.color}-100 flex items-center justify-center`}>
+                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+                </div>
               </div>
-              <div className={`w-12 h-12 rounded-full bg-${stat.color}-100 flex items-center justify-center`}>
-                <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Domestic vs International Flight Sales */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Flight Sales Breakdown</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Domestic */}
+          <Card className="border-l-4 border-l-blue-500">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Home className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700">Domestic Flights</p>
+                    <p className="text-xs text-slate-400">Philippines routes</p>
+                  </div>
+                </div>
+                <span className="text-2xl font-bold text-slate-900">{stats?.domesticFlightCount || 0}</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+              <div className="bg-blue-50 rounded-lg p-3">
+                <p className="text-xs text-blue-600 font-medium">Total Sales</p>
+                <p className="text-xl font-bold text-blue-700">₱{(stats?.domesticRevenue || 0).toLocaleString()}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* International */}
+          <Card className="border-l-4 border-l-amber-500">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                    <Globe className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700">International Flights</p>
+                    <p className="text-xs text-slate-400">Overseas routes</p>
+                  </div>
+                </div>
+                <span className="text-2xl font-bold text-slate-900">{stats?.internationalFlightCount || 0}</span>
+              </div>
+              <div className="bg-amber-50 rounded-lg p-3">
+                <p className="text-xs text-amber-600 font-medium">Total Sales</p>
+                <p className="text-xl font-bold text-amber-700">₱{(stats?.internationalRevenue || 0).toLocaleString()}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
