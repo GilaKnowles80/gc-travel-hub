@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Shield, Headphones, Wallet, Award } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/components/utils";
+import { createPageUrl } from "@/pages/utils";
 
 const features = [
   {
