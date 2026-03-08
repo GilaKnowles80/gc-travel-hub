@@ -127,51 +127,66 @@ export default function DashboardStats() {
       {/* Domestic vs International Flight Sales */}
       <div>
         <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Flight Sales Breakdown</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Domestic */}
-          <Card className="border-l-4 border-l-blue-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Home className="w-5 h-5 text-blue-600" />
-                  </div>
+        <Card>
+          <CardContent className="p-0">
+            {/* Tab switcher */}
+            <div className="flex border-b">
+              <button
+                onClick={() => handleFlightTabSwitch('domestic')}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
+                  flightTab === 'domestic'
+                    ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
+                    : 'text-slate-500 hover:bg-slate-50'
+                }`}
+              >
+                <Home className="w-4 h-4" />
+                Domestic
+              </button>
+              <button
+                onClick={() => handleFlightTabSwitch('international')}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
+                  flightTab === 'international'
+                    ? 'border-b-2 border-amber-500 text-amber-600 bg-amber-50'
+                    : 'text-slate-500 hover:bg-slate-50'
+                }`}
+              >
+                <Globe className="w-4 h-4" />
+                International
+              </button>
+            </div>
+
+            {/* Tab content */}
+            {flightTab === 'domestic' ? (
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-semibold text-slate-700">Domestic Flights</p>
                     <p className="text-xs text-slate-400">Philippines routes</p>
                   </div>
+                  <span className="text-2xl font-bold text-slate-900">{stats?.domesticFlightCount || 0} bookings</span>
                 </div>
-                <span className="text-2xl font-bold text-slate-900">{stats?.domesticFlightCount || 0}</span>
+                <div className="bg-blue-50 rounded-lg p-3">
+                  <p className="text-xs text-blue-600 font-medium">Total Sales</p>
+                  <p className="text-2xl font-bold text-blue-700">₱{(stats?.domesticRevenue || 0).toLocaleString()}</p>
+                </div>
               </div>
-              <div className="bg-blue-50 rounded-lg p-3">
-                <p className="text-xs text-blue-600 font-medium">Total Sales</p>
-                <p className="text-xl font-bold text-blue-700">₱{(stats?.domesticRevenue || 0).toLocaleString()}</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* International */}
-          <Card className="border-l-4 border-l-amber-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                    <Globe className="w-5 h-5 text-amber-600" />
-                  </div>
+            ) : (
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-semibold text-slate-700">International Flights</p>
                     <p className="text-xs text-slate-400">Overseas routes</p>
                   </div>
+                  <span className="text-2xl font-bold text-slate-900">{stats?.internationalFlightCount || 0} bookings</span>
                 </div>
-                <span className="text-2xl font-bold text-slate-900">{stats?.internationalFlightCount || 0}</span>
+                <div className="bg-amber-50 rounded-lg p-3">
+                  <p className="text-xs text-amber-600 font-medium">Total Sales</p>
+                  <p className="text-2xl font-bold text-amber-700">₱{(stats?.internationalRevenue || 0).toLocaleString()}</p>
+                </div>
               </div>
-              <div className="bg-amber-50 rounded-lg p-3">
-                <p className="text-xs text-amber-600 font-medium">Total Sales</p>
-                <p className="text-xl font-bold text-amber-700">₱{(stats?.internationalRevenue || 0).toLocaleString()}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
