@@ -11,7 +11,7 @@ import UnifiedBookingsTable from '@/components/admin/UnifiedBookingsTable';
 
 export default function AdminDataManager() {
   const [importing, setImporting] = useState(false);
-  const [activeTab, setActiveTab] = useState('flights');
+  const [activeTab, setActiveTab] = useState('bookings');
 
   const dataTypes = [
     { id: 'flights', label: 'Flights', icon: Plane, entity: 'Flight', color: 'blue' },
