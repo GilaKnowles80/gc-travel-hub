@@ -20,14 +20,26 @@ export default function AdminAnalytics() {
       const daysBack = parseInt(timeRange);
       const startDate = moment().subtract(daysBack, "days").toISOString();
 
-      const [payments, packages, affiliates, affiliateCommissions, premiumMembers, allUsers, bookings] = await Promise.all([
+      const [
+        payments, packages, affiliates, affiliateCommissions, premiumMembers, allUsers,
+        tourBookings, flightBookings, hotelBookings, carBookings, ferryBookings,
+        busBookings, trainBookings, cruiseBookings, visaBookings
+      ] = await Promise.all([
         base44.entities.Payment.filter({ status: "completed" }),
         base44.entities.PackageBooking.filter({ status: "paid" }),
         base44.entities.Affiliate.list(),
         base44.entities.AffiliateCommission.list(),
         base44.entities.PremiumMembership.filter({ status: "active" }),
         base44.entities.User.list(),
-        base44.entities.Booking.list()
+        base44.entities.Booking.list(),
+        base44.entities.FlightBooking.list(),
+        base44.entities.HotelBooking.list(),
+        base44.entities.CarRentalBooking.list(),
+        base44.entities.FerryBooking.list(),
+        base44.entities.BusBooking.list(),
+        base44.entities.TrainBooking.list(),
+        base44.entities.CruiseBooking.list(),
+        base44.entities.TourBooking.list(),
       ]);
 
       // Filter by time range
@@ -38,12 +50,27 @@ export default function AdminAnalytics() {
       const recentPayments = filterByDate(payments);
       const recentPackages = filterByDate(packages);
       const recentUsers = filterByDate(allUsers);
-      const recentBookings = filterByDate(bookings);
 
-      // Calculate total revenue
+      // Normalize all booking types into a unified list
+      const allBookingItems = [
+        ...tourBookings.map(b => ({ ...b, _type: 'Tour', _price: b.total_price || 0, _email: b.customer_email || b.client_email })),
+        ...flightBookings.map(b => ({ ...b, _type: 'Flight', _price: b.total_price || 0, _email: b.passenger_email })),
+        ...hotelBookings.map(b => ({ ...b, _type: 'Hotel', _price: b.total_price || 0, _email: b.guest_email })),
+        ...carBookings.map(b => ({ ...b, _type: 'Car Rental', _price: b.total_price || 0, _email: b.driver_email })),
+        ...ferryBookings.map(b => ({ ...b, _type: 'Ferry', _price: b.total_price || 0, _email: b.passenger_email })),
+        ...busBookings.map(b => ({ ...b, _type: 'Bus', _price: b.total_price || 0, _email: b.passenger_email })),
+        ...trainBookings.map(b => ({ ...b, _type: 'Train', _price: b.total_price || 0, _email: b.passenger_email })),
+        ...cruiseBookings.map(b => ({ ...b, _type: 'Cruise', _price: b.total_price || 0, _email: b.passenger_email || b.guest_email })),
+        ...visaBookings.map(b => ({ ...b, _type: 'Visa', _price: b.total_price || 0, _email: b.applicant_email || b.passenger_email })),
+        ...packages.map(b => ({ ...b, _type: 'Package', _price: b.final_price || b.total_price || 0, _email: b.user_email })),
+      ];
+
+      const recentBookings = filterByDate(allBookingItems);
+
+      // Calculate total revenue from ALL booking types
       const paymentRevenue = recentPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-      const packageRevenue = recentPackages.reduce((sum, p) => sum + (p.final_price || p.total_price || 0), 0);
-      const totalRevenue = paymentRevenue + packageRevenue;
+      const bookingRevenue = recentBookings.reduce((sum, b) => sum + b._price, 0);
+      const totalRevenue = Math.max(paymentRevenue, bookingRevenue); // use whichever is higher (avoid double-counting)
 
       // Calculate profit (12% average margin)
       const totalProfit = totalRevenue * 0.12;
