@@ -35,7 +35,14 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
   const totalPrice = cabinPrice * form.number_of_passengers + (selectedInsurance ? selectedInsurance.premium * form.number_of_passengers : 0);
 
   const createBookingMutation = useMutation({
-    mutationFn: (data) => base44.entities.FerryBooking.create(data),
+    mutationFn: async (data) => {
+      let booking_ref = null;
+      try {
+        const refRes = await base44.functions.invoke('generateBookingRef', { product_type: 'ferry' });
+        booking_ref = refRes?.data?.booking_ref || null;
+      } catch (e) { console.error('Could not generate booking ref', e); }
+      return base44.entities.FerryBooking.create({ ...data, ...(booking_ref && { booking_ref }) });
+    },
     onSuccess: (booking) => {
       setBookingId(booking.id);
       setStep(2);
