@@ -32,6 +32,7 @@ import OTAOperationsCenter from '@/components/admin/OTAOperationsCenter';
 import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
 import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
 import AdminCallReceiver from '@/components/support/AdminCallReceiver';
+import UnifiedSupportCenter from '@/components/support/UnifiedSupportCenter';
 
 export default function AdminDashboard() {
   return (
@@ -149,10 +150,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="support" className="space-y-6">
-            <div className="flex justify-end">
-              <AdminCallReceiver />
-            </div>
-            <SupportTicketsPanel />
+            <UnifiedSupportCenter />
           </TabsContent>
 
           <TabsContent value="wallet" className="space-y-6">
