@@ -21,6 +21,7 @@ import GoogleAdsTracking from "@/components/tracking/GoogleAdsTracking";
 import GoogleTagManager from "@/components/tracking/GoogleTagManager";
 import { AdminModeProvider, useAdminMode } from "@/components/admin/AdminModeContext";
 import AdminSearchSoundAlert from "@/components/admin/AdminSearchSoundAlert";
+import ViewModeSwitcher from "@/components/admin/ViewModeSwitcher";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Home },
@@ -211,6 +212,11 @@ function LayoutContent({ children, currentPageName }) {
                   <Shield className="w-4 h-4" />
                   Admin
                 </button>
+              )}
+
+              {/* View Mode Switcher */}
+              {user?.role === "admin" && adminMode && (
+                <ViewModeSwitcher />
               )}
 
               {/* Admin links in a dropdown */}
