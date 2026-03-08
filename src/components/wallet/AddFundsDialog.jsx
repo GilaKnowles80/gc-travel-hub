@@ -88,6 +88,7 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
