@@ -202,7 +202,7 @@ export default function AdminAnalytics() {
 
       // Conversion metrics
       const conversionRate = totalCustomers > 0 ? (activeCustomers / totalCustomers) * 100 : 0;
-      const avgBookingValue = (recentPayments.length + recentPackages.length) > 0 ? totalRevenue / (recentPayments.length + recentPackages.length) : 0;
+      const avgBookingValue = recentBookings.length > 0 ? totalRevenue / recentBookings.length : 0;
 
       // Growth calculations
       const halfwayPoint = Math.floor(daysBack / 2);
