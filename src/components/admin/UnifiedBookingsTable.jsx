@@ -358,6 +358,30 @@ export default function UnifiedBookingsTable() {
             </div>
             
             <div>
+              <label className="text-sm font-medium">Booking Reference</label>
+              <div className="flex gap-2 mt-1">
+                <Input
+                  placeholder="e.g., DOWT0000001"
+                  value={bookingRef}
+                  onChange={(e) => setBookingRef(e.target.value)}
+                  className="font-mono"
+                />
+                {selectedBooking?.type === 'flight' && !bookingRef && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={generateBookingRef}
+                    disabled={generatingRef}
+                    className="whitespace-nowrap"
+                  >
+                    {generatingRef ? <><RefreshCw className="w-3.5 h-3.5 animate-spin mr-1" />Generating...</> : "Auto-Generate"}
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div>
               <label className="text-sm font-medium">Supplier Reference</label>
               <Input
                 placeholder="e.g., BIYA-12345"
