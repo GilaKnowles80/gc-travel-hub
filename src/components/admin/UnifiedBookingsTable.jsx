@@ -235,6 +235,7 @@ export default function UnifiedBookingsTable() {
                           setSupplierRef(booking.supplier_reference || '');
                           setSupplierUsed(booking.supplier || '');
                           setPriceNotes(booking.price_comparison_notes || '');
+                          setBookingRef(booking.booking_ref || '');
                         }}
                       >
                         Update Status
