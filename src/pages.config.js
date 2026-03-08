@@ -107,16 +107,13 @@ import FerrySearch from './pages/FerrySearch';
 import FinitechArchitecture from './pages/FinitechArchitecture';
 import FlightCheckout from './pages/FlightCheckout';
 import FlightDetail from './pages/FlightDetail';
-import FlightSearch from './pages/FlightSearch';
 import FlightTicket from './pages/FlightTicket';
-import Flights from './pages/Flights';
 import GDPRSettings from './pages/GDPRSettings';
 import Helpdesk from './pages/Helpdesk';
 import Home from './pages/Home';
 import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
 import HotelCheckout from './pages/HotelCheckout';
 import HotelDetail from './pages/HotelDetail';
-import HotelSearch from './pages/HotelSearch';
 import Hotels from './pages/Hotels';
 import Itineraries from './pages/Itineraries';
 import ItineraryView from './pages/ItineraryView';
@@ -152,7 +149,6 @@ import TawkSupport from './pages/TawkSupport';
 import TermsOfService from './pages/TermsOfService';
 import TourCheckout from './pages/TourCheckout';
 import TourDetail from './pages/TourDetail';
-import Tours from './pages/Tours';
 import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
 import TrainCheckout from './pages/TrainCheckout';
 import TrainSearch from './pages/TrainSearch';
@@ -233,16 +229,13 @@ export const PAGES = {
     "FinitechArchitecture": FinitechArchitecture,
     "FlightCheckout": FlightCheckout,
     "FlightDetail": FlightDetail,
-    "FlightSearch": FlightSearch,
     "FlightTicket": FlightTicket,
-    "Flights": Flights,
     "GDPRSettings": GDPRSettings,
     "Helpdesk": Helpdesk,
     "Home": Home,
     "HotelBookingConfirmation": HotelBookingConfirmation,
     "HotelCheckout": HotelCheckout,
     "HotelDetail": HotelDetail,
-    "HotelSearch": HotelSearch,
     "Hotels": Hotels,
     "Itineraries": Itineraries,
     "ItineraryView": ItineraryView,
@@ -278,7 +271,6 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "TourCheckout": TourCheckout,
     "TourDetail": TourDetail,
-    "Tours": Tours,
     "TrainBookingConfirmation": TrainBookingConfirmation,
     "TrainCheckout": TrainCheckout,
     "TrainSearch": TrainSearch,
