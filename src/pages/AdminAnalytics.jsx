@@ -180,11 +180,11 @@ export default function AdminAnalytics() {
         monthlySales[month] = { month, sales: 0, revenue: 0 };
       }
 
-      [...recentPayments, ...recentPackages].forEach(item => {
+      recentBookings.forEach(item => {
         const month = moment(item.created_date).format('MMM YY');
         if (monthlySales[month]) {
           monthlySales[month].sales += 1;
-          monthlySales[month].revenue += item.amount || item.final_price || item.total_price || 0;
+          monthlySales[month].revenue += item._price;
         }
       });
 
