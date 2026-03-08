@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { createPageUrl } from "@/pages/utils";
+import { createPageUrl } from "@/components/utils";
 import { Home, MapPin, Plane, BookOpen, User } from "lucide-react";
 
 const navItems = [
