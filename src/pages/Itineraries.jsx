@@ -75,30 +75,68 @@ export default function Itineraries() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {itineraries.map((itinerary) => (
-              <Link key={itinerary.id} to={createPageUrl(`ItineraryView?id=${itinerary.id}`)}>
-                <Card className="rounded-2xl hover:shadow-lg transition-shadow h-full">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-lg text-slate-900 mb-2">{itinerary.title}</h3>
-                    <div className="space-y-2 text-sm text-slate-600">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-amber-500" />
-                        {itinerary.destination}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-amber-500" />
-                        {moment(itinerary.start_date).format("MMM D")} - {moment(itinerary.end_date).format("MMM D, YYYY")}
-                      </div>
-                      <div className="mt-4 pt-4 border-t border-slate-100">
-                        <span className="text-slate-500">{itinerary.items?.length || 0} items</span>
-                      </div>
+          <Tabs defaultValue="all">
+            <TabsList className="mb-6">
+              <TabsTrigger value="all">All ({itineraries.length})</TabsTrigger>
+              <TabsTrigger value="domestic">
+                <Home className="w-4 h-4 mr-1" />
+                Domestic ({itineraries.filter(isDomesticItinerary).length})
+              </TabsTrigger>
+              <TabsTrigger value="international">
+                <Globe className="w-4 h-4 mr-1" />
+                International ({itineraries.filter(i => !isDomesticItinerary(i)).length})
+              </TabsTrigger>
+            </TabsList>
+
+            {['all', 'domestic', 'international'].map(tab => {
+              const list = tab === 'all' ? itineraries
+                : tab === 'domestic' ? itineraries.filter(isDomesticItinerary)
+                : itineraries.filter(i => !isDomesticItinerary(i));
+
+              return (
+                <TabsContent key={tab} value={tab}>
+                  {list.length === 0 ? (
+                    <Card className="rounded-2xl">
+                      <CardContent className="py-12 text-center text-slate-500">
+                        No {tab === 'domestic' ? 'domestic' : 'international'} itineraries found.
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {list.map((itinerary) => (
+                        <Link key={itinerary.id} to={createPageUrl(`ItineraryView?id=${itinerary.id}`)}>
+                          <Card className="rounded-2xl hover:shadow-lg transition-shadow h-full">
+                            <CardContent className="p-6">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-bold text-lg text-slate-900">{itinerary.title}</h3>
+                                {isDomesticItinerary(itinerary)
+                                  ? <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-1"><Home className="w-3 h-3" /> Domestic</span>
+                                  : <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full flex items-center gap-1"><Globe className="w-3 h-3" /> International</span>
+                                }
+                              </div>
+                              <div className="space-y-2 text-sm text-slate-600">
+                                <div className="flex items-center gap-2">
+                                  <MapPin className="w-4 h-4 text-amber-500" />
+                                  {itinerary.destination}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4 text-amber-500" />
+                                  {moment(itinerary.start_date).format("MMM D")} - {moment(itinerary.end_date).format("MMM D, YYYY")}
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-slate-100">
+                                  <span className="text-slate-500">{itinerary.items?.length || 0} items</span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                  )}
+                </TabsContent>
+              );
+            })}
+          </Tabs>
         )}
 
         <CreateItineraryDialog open={showCreate} onClose={() => setShowCreate(false)} />
