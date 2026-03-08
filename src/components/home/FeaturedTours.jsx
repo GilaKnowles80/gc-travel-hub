@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/pages/utils";
+import { createPageUrl } from "@/components/utils";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import { useMarkup } from "@/components/markup/useMarkup";
 
