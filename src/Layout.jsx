@@ -33,10 +33,12 @@ const navLinks = [
   { name: "Shop", page: "DigitalStore", icon: ShoppingBag },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
 
-  { name: "Biyaheko", page: "BiyahekoPortal", icon: Globe, adminOnly: true },
-  { name: "Tripzynx", page: "TripzynxPortal", icon: Globe, adminOnly: true },
-  { name: "Wanderlinx", page: "WanderlinxPortal", icon: Globe, adminOnly: true },
-  { name: "12Go Asia", page: "TwelveGoPortal", icon: Globe, adminOnly: true },
+  { name: "Supplier Portals", icon: Globe, adminOnly: true, hasSubmenu: true, submenu: [
+    { name: "Biyaheko", page: "BiyahekoPortal" },
+    { name: "Tripzynx", page: "TripzynxPortal" },
+    { name: "Wanderlinx", page: "WanderlinxPortal" },
+    { name: "12Go Asia", page: "TwelveGoPortal" },
+  ]},
   { name: "Reservations", page: "ManageReservations", icon: BookOpen, adminOnly: true },
   { name: "Analytics", page: "AdminAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Data Manager", page: "AdminDataManager", icon: Receipt, adminOnly: true },
@@ -63,6 +65,7 @@ function LayoutContent({ children, currentPageName }) {
     // Hook not available, use defaults
   }
   const adminMenuRef = React.useRef(null);
+  const [supplierSubMenuOpen, setSupplierSubMenuOpen] = useState(false);
   const [navigationStack, setNavigationStack] = useState({
     Home: ["/"],
     Tours: [createPageUrl("Tours")],
@@ -154,11 +157,11 @@ function LayoutContent({ children, currentPageName }) {
 
             
             {/* Logo */}
-            <Link to={createPageUrl("Home")} className="flex items-center">
+            <Link to={createPageUrl("Home")} className="flex items-center shrink-0">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
                 alt="GC Travel and Tours Agency"
-                className="h-16 w-auto"
+                className="h-12 w-auto"
               />
             </Link>
 
@@ -232,19 +235,42 @@ function LayoutContent({ children, currentPageName }) {
                   </button>
                   {adminMenuOpen && (
                     <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[200px] z-50">
-                      {navLinks.filter(link => link.adminOnly).map((link) => (
-                        <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
-                           {(() => {
-                             const IconComponent = link.icon;
-                             return (
-                               <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
-                                 <IconComponent className="w-4 h-4" />
-                                 {link.name}
-                               </div>
-                             );
-                           })()}
-                         </Link>
-                        ))}
+                      {navLinks.filter(link => link.adminOnly).map((link) => {
+                        const IconComponent = link.icon;
+                        if (link.hasSubmenu) {
+                          return (
+                            <div key={link.name} className="relative">
+                              <button
+                                onClick={() => setSupplierSubMenuOpen(!supplierSubMenuOpen)}
+                                className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer text-slate-600`}
+                              >
+                                <IconComponent className="w-4 h-4" />
+                                {link.name}
+                                <span className={`text-xs ml-auto transition-transform ${supplierSubMenuOpen ? 'rotate-180' : ''}`}>▾</span>
+                              </button>
+                              {supplierSubMenuOpen && (
+                                <div className="bg-amber-50 border-t border-slate-100">
+                                  {link.submenu.map((item) => (
+                                    <Link key={item.page} to={createPageUrl(item.page)} onClick={() => { setSupplierSubMenuOpen(false); setAdminMenuOpen(false); }} className="block">
+                                      <div className={`w-full px-8 py-2 text-left text-xs font-medium transition-all hover:bg-amber-100 cursor-pointer text-slate-600`}>
+                                        {item.name}
+                                      </div>
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+                        return (
+                          <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setAdminMenuOpen(false)} className="block">
+                            <div className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer ${currentPageName === link.page ? "bg-amber-100 text-amber-800 border-l-3 border-amber-600" : "text-slate-600"}`}>
+                              <IconComponent className="w-4 h-4" />
+                              {link.name}
+                            </div>
+                          </Link>
+                        );
+                      })}
                         </div>
                   )}
                 </div>
