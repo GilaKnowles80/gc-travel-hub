@@ -18,6 +18,16 @@ function isDomestic(booking) {
 }
 
 export default function DashboardStats() {
+  const [flightTab, setFlightTab] = useState('domestic');
+
+  const handleFlightTabSwitch = (tab) => {
+    setFlightTab(tab);
+    base44.analytics.track({
+      eventName: 'flight_sales_tab_switched',
+      properties: { tab, previous_tab: flightTab },
+    });
+  };
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
