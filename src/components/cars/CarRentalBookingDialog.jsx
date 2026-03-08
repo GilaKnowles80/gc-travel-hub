@@ -34,7 +34,14 @@ export default function CarRentalBookingDialog({ car, open, onOpenChange }) {
   const totalPrice = car.price_per_day * form.rental_days + (selectedInsurance ? selectedInsurance.premium : 0);
 
   const createBookingMutation = useMutation({
-    mutationFn: (data) => base44.entities.CarRentalBooking.create(data),
+    mutationFn: async (data) => {
+      let booking_ref = null;
+      try {
+        const refRes = await base44.functions.invoke('generateBookingRef', { product_type: 'car' });
+        booking_ref = refRes?.data?.booking_ref || null;
+      } catch (e) { console.error('Could not generate booking ref', e); }
+      return base44.entities.CarRentalBooking.create({ ...data, ...(booking_ref && { booking_ref }) });
+    },
     onSuccess: (booking) => {
       setBookingId(booking.id);
       setStep(2);
