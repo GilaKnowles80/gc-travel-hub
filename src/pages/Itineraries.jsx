@@ -3,11 +3,19 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Loader2, Calendar, MapPin } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Plus, Loader2, Calendar, MapPin, Home, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import moment from "moment";
 import CreateItineraryDialog from "../components/itinerary/CreateItineraryDialog";
+
+const PH_KEYWORDS = ['philippines','manila','cebu','davao','palawan','boracay','iloilo','bohol','batangas','cavite','laguna','quezon','pampanga','bulacan','bataan','rizal','zambales','pangasinan','la union','baguio','vigan','leyte','samar','zamboanga','cagayan','misamis','bukidnon','agusan','surigao','lanao','cotabato','imus','bacoor','tagaytay','lipa','antipolo','marikina','pasay','parañaque','taguig','makati','pasig'];
+
+function isDomesticItinerary(itinerary) {
+  const dest = (itinerary.destination || '').toLowerCase();
+  return PH_KEYWORDS.some(k => dest.includes(k));
+}
 
 export default function Itineraries() {
   const [showCreate, setShowCreate] = useState(false);
