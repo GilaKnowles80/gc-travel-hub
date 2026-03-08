@@ -215,10 +215,10 @@ export default function AdminPayouts() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-semibold text-slate-700">Account Type</label>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Account Type</label>
               <Select value={formData.account_type} onValueChange={(value) => setFormData({ ...formData, account_type: value })}>
-                <SelectTrigger>
-                  <SelectValue />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select account type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="paymongo">PayMongo</SelectItem>
@@ -228,10 +228,10 @@ export default function AdminPayouts() {
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-slate-700">Payment Method</label>
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">Payment Method</label>
               <Select value={formData.payment_method} onValueChange={(value) => setFormData({ ...formData, payment_method: value })}>
-                <SelectTrigger>
-                  <SelectValue />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select payment method" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="stripe_to_gcash">Stripe → GCash (International)</SelectItem>
