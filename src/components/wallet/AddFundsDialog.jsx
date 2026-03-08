@@ -173,5 +173,6 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
       bookingType="wallet_deposit"
       bookingId={`WALLET-DEPOSIT-₱${amount}`}
     />
+    </>
   );
 }
