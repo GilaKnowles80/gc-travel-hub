@@ -744,7 +744,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   // ── STEP 5: Confirmation + Itinerary ──────────────────────────────
   if (step === 5) {
-    const pnr = bookingResult?.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
+    const pnr = bookingResult?.booking_ref || bookingResult?.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
     return (
       <div className="space-y-4">
         {progressBar}
