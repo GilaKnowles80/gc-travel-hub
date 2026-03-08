@@ -3,10 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import { LanguageProvider } from "@/components/language/LanguageContext";
@@ -157,14 +158,25 @@ function LayoutContent({ children, currentPageName }) {
           <div className="flex items-center justify-between h-16 md:h-20 gap-4">
 
             
-            {/* Logo */}
-            <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
-                alt="GC Travel and Tours Agency"
-                className="h-10 w-auto"
-              />
-            </Link>
+            {/* Logo + Back Button */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {currentPageName !== "Home" && (
+                <button
+                  onClick={() => window.history.back()}
+                  className="md:hidden p-2 hover:bg-slate-100/50 rounded-lg transition-colors"
+                  title="Go back"
+                >
+                  <ChevronLeft className={`w-5 h-5 ${isHome && !scrolled ? "text-white" : "text-slate-700"}`} />
+                </button>
+              )}
+              <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
+                  alt="GC Travel and Tours Agency"
+                  className="h-10 w-auto"
+                />
+              </Link>
+            </div>
 
 
 
@@ -289,17 +301,19 @@ function LayoutContent({ children, currentPageName }) {
         {/* Top Ad Banner */}
         {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
         
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentPageName}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <PullToRefresh>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPageName}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </PullToRefresh>
         
         {/* Bottom Ad Banner */}
         {!isHome && <AdBanner placement="banner_bottom" currentPage={currentPageName.toLowerCase()} />}
