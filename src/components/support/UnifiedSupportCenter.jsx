@@ -371,16 +371,49 @@ export default function UnifiedSupportCenter() {
 
               {/* Metadata */}
               <div className="text-xs text-slate-500 pt-2 border-t space-y-1">
-                <p>Type: {selectedMessage.type === 'lead' ? 'Sales Lead' : 'Support Ticket'}</p>
-                <p>Created: {format(new Date(selectedMessage.created_date), "PPpp")}</p>
-                {selectedMessage.assigned_to && <p>Assigned to: {selectedMessage.assigned_to}</p>}
-                {selectedMessage.booking_reference && <p>Booking Ref: {selectedMessage.booking_reference}</p>}
+               <p>Type: {selectedMessage.type === 'lead' ? 'Sales Lead' : 'Support Ticket'}</p>
+               <p>Created: {format(new Date(selectedMessage.created_date), "PPpp")}</p>
+               {selectedMessage.assigned_to && <p>Assigned to: {selectedMessage.assigned_to}</p>}
+               {selectedMessage.booking_reference && <p>Booking Ref: {selectedMessage.booking_reference}</p>}
               </div>
-            </div>
 
-            <div className="flex gap-2">
+              {/* Action Buttons */}
+              <div className="pt-4 border-t grid grid-cols-3 gap-3">
+               <Button
+                 variant="outline"
+                 size="sm"
+                 onClick={() => window.location.href = `mailto:${selectedMessage.inquiryEmail}`}
+                 className="text-xs"
+               >
+                 Open in Email Client
+               </Button>
+               <Button
+                 variant="outline"
+                 size="sm"
+                 onClick={() => {
+                   // Open full thread view (you can customize this)
+                   alert(`Full thread for ${selectedMessage.inquirySubject}`);
+                 }}
+                 className="text-xs"
+               >
+                 View Full Thread
+               </Button>
+               <Button
+                 size="sm"
+                 className="bg-blue-600 hover:bg-blue-700 text-xs"
+                 onClick={() => {
+                   // Focus on reply box
+                   document.querySelector('textarea[placeholder*="Type your reply"]')?.focus();
+                 }}
+               >
+                 Reply
+               </Button>
+              </div>
+              </div>
+
+              <div className="flex gap-2">
               <Button variant="outline" onClick={() => setIsDetailOpen(false)} className="flex-1">
-                Close
+               Close
               </Button>
               <Button 
                 onClick={() => {
