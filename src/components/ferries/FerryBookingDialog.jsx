@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Ship, Users, CreditCard, CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -141,7 +142,7 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Number of Passengers</Label>
-                  <Select value={String(form.number_of_passengers)} onValueChange={(v) => setForm({...form, number_of_passengers: Number(v)})}>
+                  <MobileSelect value={String(form.number_of_passengers)} onValueChange={(v) => setForm({...form, number_of_passengers: Number(v)})} placeholder="Select passengers">
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -150,11 +151,11 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
                         <SelectItem key={n} value={String(n)}>{n} {n === 1 ? 'passenger' : 'passengers'}</SelectItem>
                       ))}
                     </SelectContent>
-                  </Select>
+                  </MobileSelect>
                 </div>
                 <div className="space-y-2">
                   <Label>Cabin Type</Label>
-                  <Select value={form.cabin_type} onValueChange={(v) => setForm({...form, cabin_type: v})}>
+                  <MobileSelect value={form.cabin_type} onValueChange={(v) => setForm({...form, cabin_type: v})} placeholder="Select cabin">
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -165,7 +166,7 @@ export default function FerryBookingDialog({ ferry, open, onOpenChange }) {
                         </SelectItem>
                       ))}
                     </SelectContent>
-                  </Select>
+                  </MobileSelect>
                 </div>
               </div>
             </div>
