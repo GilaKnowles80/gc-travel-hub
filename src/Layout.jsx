@@ -235,8 +235,9 @@ function LayoutContent({ children, currentPageName }) {
                         const IconComponent = link.icon;
                         if (link.hasSubmenu) {
                           return (
-                            <div key={link.name} className="relative">
+                            <div key={link.name} className="relative group">
                               <button
+                                type="button"
                                 onClick={() => setSupplierSubMenuOpen(!supplierSubMenuOpen)}
                                 className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-all flex items-center gap-2 hover:bg-amber-50 cursor-pointer text-slate-600`}
                               >
@@ -245,10 +246,10 @@ function LayoutContent({ children, currentPageName }) {
                                 <span className={`text-xs ml-auto transition-transform ${supplierSubMenuOpen ? 'rotate-180' : ''}`}>▾</span>
                               </button>
                               {supplierSubMenuOpen && (
-                                <div className="bg-amber-50 border-t border-slate-100">
+                                <div className="absolute left-0 right-0 top-full bg-amber-50 border-t border-slate-100 z-40">
                                   {link.submenu.map((item) => (
-                                    <Link key={item.page} to={createPageUrl(item.page)} onClick={() => { setSupplierSubMenuOpen(false); setAdminMenuOpen(false); }} className="block">
-                                      <div className={`w-full px-8 py-2 text-left text-xs font-medium transition-all hover:bg-amber-100 cursor-pointer text-slate-600`}>
+                                    <Link key={item.page} to={createPageUrl(item.page)} onClick={() => { setSupplierSubMenuOpen(false); setAdminMenuOpen(false); }}>
+                                      <div className={`w-full px-8 py-2.5 text-left text-sm font-medium transition-all hover:bg-amber-100 cursor-pointer text-slate-700`}>
                                         {item.name}
                                       </div>
                                     </Link>
