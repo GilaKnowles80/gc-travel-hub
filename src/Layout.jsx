@@ -197,26 +197,28 @@ function LayoutContent({ children, currentPageName }) {
                 </Link>
                 <LanguageSelector showLabel={false} />
               </div>
-              {/* Public links - always visible */}
-              {navLinks.filter(link => !link.adminOnly).map((link) => {
-                const IconComponent = link.icon;
-                return (
-                  <Link key={link.page} to={createPageUrl(link.page)} className="shrink-0">
-                    <button
-                      className={`px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all flex items-center gap-1 md:gap-1.5 whitespace-nowrap ${
-                        currentPageName === link.page
-                          ? isHome && !scrolled
-                            ? "bg-white/20 text-white"
-                            : "bg-amber-50 text-amber-700"
-                          : `${textColor} hover:bg-slate-100/50`
-                      }`}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      <span className="hidden md:inline">{link.name}</span>
-                    </button>
-                  </Link>
-                );
-              })}
+              {/* Public links - scrollable on mobile */}
+              <div className="flex items-center gap-1 overflow-x-auto flex-1 md:flex-none md:gap-2">
+                {navLinks.filter(link => !link.adminOnly).map((link) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <Link key={link.page} to={createPageUrl(link.page)} className="flex-shrink-0">
+                      <button
+                        className={`px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all flex items-center gap-1 md:gap-1.5 whitespace-nowrap ${
+                          currentPageName === link.page
+                            ? isHome && !scrolled
+                              ? "bg-white/20 text-white"
+                              : "bg-amber-50 text-amber-700"
+                            : `${textColor} hover:bg-slate-100/50`
+                        }`}
+                      >
+                        <IconComponent className="w-4 h-4" />
+                        <span className="hidden md:inline">{link.name}</span>
+                      </button>
+                    </Link>
+                  );
+                })}
+              </div>
               {/* Admin mode toggle */}
               {user?.role === "admin" && !adminMode && (
                 <button
