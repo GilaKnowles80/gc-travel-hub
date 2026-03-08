@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plane, Clock, Zap, TrendingDown, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { createPageUrl } from '@/pages/utils';
+import { createPageUrl } from '@/components/utils';
 import moment from 'moment';
 import PriceDisplay from '@/components/currency/PriceDisplay';
 import { useCurrency } from '@/components/currency/CurrencyContext';
