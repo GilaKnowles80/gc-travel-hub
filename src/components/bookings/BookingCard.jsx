@@ -7,6 +7,7 @@ import { Calendar, MapPin, Users, CreditCard, Plane, Compass, Hotel, Ship, Bus, 
 import { base44 } from "@/api/base44Client";
 import CancellationDialog from "./CancellationDialog";
 import CalendarEventButton from "./CalendarEventButton";
+import PaymentDetailsModal from "./PaymentDetailsModal";
 import { generatePRN } from "./generatePRN";
 
 const statusColors = {
@@ -36,6 +37,7 @@ const bookingIcons = {
 
 export default function BookingCard({ booking, index, type, onCancelled }) {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [airlineName, setAirlineName] = useState(null);
   const Icon = bookingIcons[type] || Compass;
   const prn = generatePRN(type, booking);
@@ -179,6 +181,15 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
             </div>
             
             <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                onClick={() => setShowPaymentModal(true)}
+              >
+                <CreditCard className="w-4 h-4 mr-1" />
+                Payment
+              </Button>
               <CalendarEventButton booking={booking} type={type} airlineName={airlineName} />
               {(type === 'flight' || type === 'hotel') && booking.status !== 'cancelled' && booking.status !== 'completed' && (
                 <Button
@@ -195,6 +206,13 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
           </div>
         </div>
       </Card>
+
+      <PaymentDetailsModal
+        booking={booking}
+        bookingType={type}
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+      />
 
       {(type === 'flight' || type === 'hotel') && (
         <CancellationDialog
