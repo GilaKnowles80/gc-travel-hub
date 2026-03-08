@@ -163,11 +163,14 @@ export default function UnifiedBookingsTable() {
                 <Card key={`${booking.type}-${booking.id}`} className="p-4">
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                     <div className="lg:col-span-6 space-y-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <Icon className="w-5 h-5 text-slate-600" />
                         <span className="font-semibold text-slate-900">
                           {booking.route || booking.hotel_name || booking.car_type}
                         </span>
+                        {booking.booking_ref && (
+                          <span className="font-mono text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{booking.booking_ref}</span>
+                        )}
                         <StatusBadge status={booking.status} />
                         <SupplierBadge supplier={booking.supplier} />
                       </div>
