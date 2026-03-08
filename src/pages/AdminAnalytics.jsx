@@ -80,8 +80,8 @@ export default function AdminAnalytics() {
       const totalCustomers = allUsers.length;
       const newCustomers = recentUsers.length;
       const activeCustomers = new Set([
-        ...recentPayments.map(p => p.user_email),
-        ...recentPackages.map(p => p.user_email)
+        ...recentBookings.map(b => b._email).filter(Boolean),
+        ...recentPayments.map(p => p.user_email).filter(Boolean),
       ]).size;
 
       // Customer Acquisition Cost (CAC) - simplified estimate
