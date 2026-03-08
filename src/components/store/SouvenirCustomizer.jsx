@@ -30,6 +30,16 @@ const CUSTOMIZATION_OPTIONS = {
     hasEngraving: true,
     engravingCharge: 75,
   },
+  thermostat_bottle: {
+    colors: ["Silver", "Black", "Rose Gold"],
+    hasEngraving: true,
+    engravingCharge: 100,
+  },
+  travel_bottle: {
+    colors: ["Clear", "Frosted", "Colored"],
+    hasEngraving: true,
+    engravingCharge: 75,
+  },
 };
 
 export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCart }) {
@@ -45,6 +55,10 @@ export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCa
     ? "tshirt"
     : product.title.toLowerCase().includes("cap")
     ? "cap"
+    : product.title.toLowerCase().includes("thermostat")
+    ? "thermostat_bottle"
+    : product.title.toLowerCase().includes("travel bottle")
+    ? "travel_bottle"
     : "mug";
 
   const options = CUSTOMIZATION_OPTIONS[productType];
