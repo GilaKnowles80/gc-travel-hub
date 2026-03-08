@@ -585,10 +585,28 @@ export default function Flights() {
             </Button>
           </div>
         ) : filteredFlights.length === 0 ? (
-          <div className="text-center py-20">
+          <div className="text-center py-16">
             <PackageOpen className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-            <h3 className="text-xl font-semibold text-slate-600">No flights found</h3>
-            <p className="text-slate-400 mt-2">Try different dates or destinations, or adjust your filters</p>
+            <h3 className="text-xl font-semibold text-slate-600">
+              {searchTriggered ? "No flights found" : "Search for flights above"}
+            </h3>
+            <p className="text-slate-400 mt-2 mb-8">
+              {searchTriggered ? "Try different dates or destinations, or book directly via our supplier portals:" : "Or book directly through our supplier portals:"}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href="https://biyaheko.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Biyaheko
+              </a>
+              <a href="https://wanderlinx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Wanderlinx
+              </a>
+              <a href="https://tripzynx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-sm">
+                🌐 Tripzynx
+              </a>
+              <Link to={createPageUrl("BiyahekoPortal")} className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-semibold rounded-xl transition-colors text-sm">
+                🖥️ Admin Portals
+              </Link>
+            </div>
           </div>
         ) : (
           <>
