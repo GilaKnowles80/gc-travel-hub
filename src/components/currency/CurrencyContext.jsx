@@ -67,28 +67,24 @@ export function CurrencyProvider({ children }) {
 
   // On mount: fetch user preference AND geo-location together, then decide
   useEffect(() => {
+    let isMounted = true;
     const init = async () => {
-      // Run both in parallel
-      const [userResult, geoResult] = await Promise.allSettled([
-        base44.auth.me().catch(() => null),
-        fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => null),
-      ]);
-
-      const user = userResult.value;
-      const geo = geoResult.value;
-
-      if (geo?.country_code) setCountryCode(geo.country_code);
-
-      // User saved preference takes priority
-      if (user?.preferred_currency) {
-        setSelectedCurrency(user.preferred_currency);
-      } else if (geo?.country_code) {
-        // Fall back to geo-detected currency
-        const detected = countryCurrencyMap[geo.country_code] || 'PHP';
-        setSelectedCurrency(detected);
+      const userData = await base44.auth.me().catch(() => null);
+      
+      // Use geo-detection only if no user preference
+      if (!userData?.preferred_currency) {
+        const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => null);
+        if (isMounted && geo?.country_code) {
+          setCountryCode(geo.country_code);
+          const detected = countryCurrencyMap[geo.country_code] || 'PHP';
+          setSelectedCurrency(detected);
+        }
+      } else if (isMounted && userData.preferred_currency) {
+        setSelectedCurrency(userData.preferred_currency);
       }
     };
     init();
+    return () => { isMounted = false; };
   }, []);
 
   // Fetch all exchange rates
