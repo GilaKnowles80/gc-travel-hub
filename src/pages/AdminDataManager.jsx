@@ -118,7 +118,11 @@ export default function AdminDataManager() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 mb-6">
+          <TabsList className="grid grid-cols-5 lg:grid-cols-9 mb-6">
+            <TabsTrigger value="bookings">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Bookings
+            </TabsTrigger>
             {dataTypes.map(type => (
               <TabsTrigger key={type.id} value={type.id}>
                 <type.icon className="w-4 h-4 mr-2" />
@@ -126,6 +130,20 @@ export default function AdminDataManager() {
               </TabsTrigger>
             ))}
           </TabsList>
+
+          <TabsContent value="bookings">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-blue-600" />
+                  All Bookings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <UnifiedBookingsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {dataTypes.map(type => (
             <TabsContent key={type.id} value={type.id}>
