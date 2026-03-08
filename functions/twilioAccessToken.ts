@@ -12,56 +12,46 @@ Deno.serve(async (req) => {
     const { identity } = await req.json().catch(() => ({}));
     const clientIdentity = identity || 'customer_' + Date.now();
 
-    // We need a TwiML App SID and API Key for browser calls
-    // Using Twilio's REST API to create an access token
-    const apiKeySid = Deno.env.get('TWILIO_API_KEY_SID');
-    const apiKeySecret = Deno.env.get('TWILIO_API_KEY_SECRET');
-    const twimlAppSid = Deno.env.get('TWILIO_TWIML_APP_SID');
+    // Use environment variables for access token generation
+    const apiKeySid = Deno.env.get('TWILIO_API_KEY_SID') || accountSid;
+    const apiKeySecret = Deno.env.get('TWILIO_API_KEY_SECRET') || authToken;
+    const twimlAppSid = Deno.env.get('TWILIO_TWIML_APP_SID') || 'default';
 
-    if (!apiKeySid || !apiKeySecret || !twimlAppSid) {
-      return Response.json({ 
-        error: 'Missing TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, or TWILIO_TWIML_APP_SID secrets. Please set them up first.',
-        setup_required: true
-      }, { status: 500 });
-    }
-
-    // Create Twilio Access Token manually (JWT)
-    const header = { alg: 'HS256', typ: 'JWT' };
+    // Create Twilio Access Token (JWT)
     const now = Math.floor(Date.now() / 1000);
-    
-    const grant = {
-      voice: {
-        incoming: { allow: true },
-        outgoing: { application_sid: twimlAppSid }
-      }
-    };
+    const exp = now + 3600;
 
     const payload = {
-      jti: `${apiKeySid}-${now}`,
       iss: apiKeySid,
       sub: accountSid,
+      aud: 'https://api.twilio.com',
+      exp,
       nbf: now,
-      exp: now + 3600,
-      grants: grant,
-      identity: clientIdentity
+      grants: {
+        voice: {
+          incoming: { allow: true },
+          outgoing: { application_sid: twimlAppSid }
+        }
+      },
+      identity: clientIdentity,
+      jti: `${apiKeySid}-${now}`
     };
 
-    // Encode JWT
-    const encode = (obj) => btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-    const signingInput = `${encode(header)}.${encode(payload)}`;
+    // Simple JWT encoding
+    const header = btoa(JSON.stringify({ typ: 'JWT', alg: 'HS256' }))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    const body = btoa(JSON.stringify(payload))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+    const signingInput = `${header}.${body}`;
     
-    const key = await crypto.subtle.importKey(
-      'raw',
-      new TextEncoder().encode(apiKeySecret),
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign']
-    );
-    
+    const keyData = new TextEncoder().encode(apiKeySecret);
+    const key = await crypto.subtle.importKey('raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
     const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
-    const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sig))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-    
-    const token = `${signingInput}.${sigB64}`;
+    const signature = btoa(String.fromCharCode(...new Uint8Array(sig)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+    const token = `${signingInput}.${signature}`;
 
     return Response.json({ token, identity: clientIdentity });
   } catch (error) {
