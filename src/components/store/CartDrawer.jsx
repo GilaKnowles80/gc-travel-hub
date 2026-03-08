@@ -63,8 +63,8 @@ export default function CartDrawer({ open, onClose }) {
               <p>Your cart is empty</p>
             </div>
           ) : (
-            items.map(item => (
-              <div key={item.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+            items.map((item, idx) => (
+              <div key={item.cartId || item.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
                 {item.image_url ? (
                   <img src={item.image_url} alt={item.title} className="w-14 h-14 object-cover rounded-lg flex-shrink-0" />
                 ) : (
@@ -74,9 +74,15 @@ export default function CartDrawer({ open, onClose }) {
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-800 truncate">{item.title}</p>
-                  <p className="text-sm text-amber-600 font-bold">₱{item.price?.toLocaleString()}</p>
+                  {item.customization && (
+                    <div className="text-xs text-slate-500 mt-0.5">
+                      {item.customization.color && <div>Color: {item.customization.color}</div>}
+                      {item.customization.engraving && <div>Engraved: "{item.customization.engraving}"</div>}
+                    </div>
+                  )}
+                  <p className="text-sm text-amber-600 font-bold mt-1">₱{item.price?.toLocaleString()}</p>
                 </div>
-                <button onClick={() => removeFromCart(item.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-colors">
+                <button onClick={() => removeFromCart(item.cartId || item.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
