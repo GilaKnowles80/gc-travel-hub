@@ -153,22 +153,22 @@ function LayoutContent({ children, currentPageName }) {
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-8" style={{ paddingTop: 0 }}>
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-16 md:h-20 gap-4">
 
             
             {/* Logo */}
-            <Link to={createPageUrl("Home")} className="flex items-center shrink-0">
+            <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
                 alt="GC Travel and Tours Agency"
-                className="h-12 w-auto"
+                className="h-10 w-auto"
               />
             </Link>
 
 
 
             {/* Navigation */}
-            <nav className="flex items-center gap-1 flex-1 justify-end overflow-x-auto">
+            <nav className="flex items-center gap-1 justify-end overflow-x-auto flex-1 min-w-0">
               <div className="flex items-center gap-1 shrink-0 md:flex hidden">
                 <Link to={createPageUrl("Wallet")} className="px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap">
                   <DollarSign className="w-4 h-4 inline mr-1" />
@@ -202,18 +202,14 @@ function LayoutContent({ children, currentPageName }) {
                 );
               })}
               {/* Admin mode toggle */}
-              {user?.role === "admin" && (
+              {user?.role === "admin" && !adminMode && (
                 <button
                   onClick={toggleAdminMode}
-                  className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
-                    adminMode
-                      ? "bg-purple-100 text-purple-700 shadow-md"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
-                  title={adminMode ? "Switch to user view" : "Switch to admin view"}
+                  className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 shrink-0 bg-slate-100 text-slate-600 hover:bg-slate-200`}
+                  title="Switch to admin view"
                 >
                   <Shield className="w-4 h-4" />
-                  {adminMode ? "Admin" : "User"}
+                  Admin
                 </button>
               )}
 
