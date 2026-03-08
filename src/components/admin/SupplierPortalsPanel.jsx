@@ -91,7 +91,26 @@ const supplierPortals = [
   }
 ];
 
+const categoryColors = {
+  "Flights & Tours": "bg-blue-100 text-blue-700",
+  "Ground & Sea": "bg-teal-100 text-teal-700",
+  "Trains": "bg-cyan-100 text-cyan-700",
+  "Flights": "bg-violet-100 text-violet-700",
+  "Hotels": "bg-yellow-100 text-yellow-700",
+  "General": "bg-slate-100 text-slate-700",
+  "Payments": "bg-pink-100 text-pink-700",
+  "API": "bg-indigo-100 text-indigo-700",
+};
+
 export default function SupplierPortalsPanel() {
+  const [search, setSearch] = useState("");
+
+  const filtered = supplierPortals.filter(s =>
+    s.name.toLowerCase().includes(search.toLowerCase()) ||
+    s.description.toLowerCase().includes(search.toLowerCase()) ||
+    s.category.toLowerCase().includes(search.toLowerCase())
+  );
+
   const handleOpenPortal = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -101,29 +120,44 @@ export default function SupplierPortalsPanel() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Globe className="w-5 h-5" />
-          Supplier Portals - Quick Access
+          Supplier Portals — Quick Access
         </CardTitle>
+        <div className="relative mt-2">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search supplier..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {supplierPortals.map((supplier) => (
-            <Button
+          {filtered.map((supplier) => (
+            <button
               key={supplier.name}
               onClick={() => handleOpenPortal(supplier.url)}
-              variant="outline"
-              className="h-auto py-4 flex flex-col items-start gap-2 hover:bg-slate-50"
+              className="group text-left border border-slate-200 rounded-xl p-4 hover:border-amber-400 hover:shadow-md transition-all bg-white"
             >
-              <div className="flex items-center gap-2 w-full">
-                <div className={`w-2 h-2 rounded-full ${supplier.color}`} />
-                <span className="font-semibold">{supplier.name}</span>
-                <ExternalLink className="w-4 h-4 ml-auto text-slate-400" />
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`w-3 h-3 rounded-full ${supplier.color} shrink-0`} />
+                <span className="font-bold text-slate-800 group-hover:text-amber-700 flex-1">{supplier.name}</span>
+                <ExternalLink className="w-4 h-4 text-slate-300 group-hover:text-amber-500 shrink-0" />
               </div>
-              <span className="text-xs text-slate-500">{supplier.description}</span>
-            </Button>
+              <p className="text-xs text-slate-500 mb-2">{supplier.description}</p>
+              <Badge className={`text-xs ${categoryColors[supplier.category] || 'bg-slate-100 text-slate-600'}`}>
+                {supplier.category}
+              </Badge>
+            </button>
           ))}
         </div>
-        <p className="text-xs text-slate-500 mt-4">
-          Click any supplier to open their portal in a new tab for manual bookings
+        {filtered.length === 0 && (
+          <p className="text-center text-slate-400 text-sm py-6">No supplier found.</p>
+        )}
+        <p className="text-xs text-slate-400 mt-4">
+          Click any supplier to open their portal in a new tab.
         </p>
       </CardContent>
     </Card>
