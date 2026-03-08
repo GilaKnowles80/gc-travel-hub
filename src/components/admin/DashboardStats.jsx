@@ -46,25 +46,32 @@ export default function DashboardStats() {
         ...packages
       ];
 
-      const totalRevenue = allBookings
-        .filter(b => b.payment_status === 'paid' || b.status === 'confirmed')
-        .reduce((sum, b) => sum + (b.total_price || b.final_price || 0), 0);
+      const paidFilter = b => b.payment_status === 'paid' || b.status === 'confirmed';
 
+      const domesticFlights = flightBookings.filter(isDomestic);
+      const internationalFlights = flightBookings.filter(b => !isDomestic(b));
+
+      const domesticRevenue = domesticFlights.filter(paidFilter).reduce((sum, b) => sum + (b.total_price || 0), 0);
+      const internationalRevenue = internationalFlights.filter(paidFilter).reduce((sum, b) => sum + (b.total_price || 0), 0);
+      const otherRevenue = [...hotelBookings, ...tourBookings, ...trainBookings, ...ferryBookings, ...busBookings, ...carBookings, ...packages]
+        .filter(paidFilter).reduce((sum, b) => sum + (b.total_price || b.final_price || 0), 0);
+
+      const totalRevenue = domesticRevenue + internationalRevenue + otherRevenue;
       const pendingBookings = allBookings.filter(b => b.status === 'pending').length;
       const confirmedBookings = allBookings.filter(b => b.status === 'confirmed').length;
       const totalProfit = totalRevenue * 0.12;
 
       return {
         totalFlights: flights.length,
-        totalHotels: hotels.length,
-        totalTours: tours.length,
         totalBookings: allBookings.length,
         confirmedBookings,
         totalRevenue,
         totalProfit,
         pendingBookings,
-        activeListings: flights.length + hotels.length + tours.length,
-        flightBookings: flightBookings.length
+        domesticFlightCount: domesticFlights.length,
+        internationalFlightCount: internationalFlights.length,
+        domesticRevenue,
+        internationalRevenue,
       };
     }
   });
