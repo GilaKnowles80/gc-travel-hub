@@ -152,20 +152,21 @@ export default function AdminAnalytics() {
         { stage: 'Completed', count: completedPayments, percentage: (completedPayments / totalVisitors) * 100 }
       ];
 
-      // Top selling products
+      // Top selling products (by booking type)
       const productSales = {};
       recentBookings.forEach(b => {
-        const key = `${b.booking_type}_${b.tour_title || b.flight_id || b.hotel_name || 'Other'}`;
+        const name = b.tour_title || b.hotel_name || b.route || b.flight_number || b._type;
+        const key = `${b._type}_${name}`;
         if (!productSales[key]) {
           productSales[key] = { 
-            name: b.tour_title || b.hotel_name || `${b.booking_type} Booking`,
-            type: b.booking_type,
+            name: name || `${b._type} Booking`,
+            type: b._type,
             sales: 0,
             revenue: 0
           };
         }
         productSales[key].sales += 1;
-        productSales[key].revenue += b.total_price || 0;
+        productSales[key].revenue += b._price;
       });
 
       const topProducts = Object.values(productSales)
