@@ -23,16 +23,18 @@ export default function TikTokAnalyticsDashboard() {
       setError(null);
     },
     onError: (err) => {
-      setError(err.message || 'Failed to fetch TikTok data');
+      setError(err.response?.data?.error || err.message || 'Failed to fetch TikTok data');
+      setRefreshing(false);
     }
   });
 
   const handleRefresh = async () => {
     setRefreshing(true);
+    setError(null);
     try {
       await refreshMutation.mutateAsync();
-    } finally {
-      setRefreshing(false);
+    } catch (err) {
+      console.error('Refresh error:', err);
     }
   };
 
