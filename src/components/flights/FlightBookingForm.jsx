@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe, ScanLine, XCircle } from "lucide-react";
@@ -476,13 +477,13 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
       <div className="space-y-2">
         <Label>Trip Type</Label>
-        <Select value={formData.trip_type} onValueChange={(v) => setFormData({ ...formData, trip_type: v })}>
+        <MobileSelect value={formData.trip_type} onValueChange={(v) => setFormData({ ...formData, trip_type: v })} placeholder="Select trip type">
           <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="one_way">One Way</SelectItem>
             <SelectItem value="round_trip">Round Trip</SelectItem>
           </SelectContent>
-        </Select>
+        </MobileSelect>
       </div>
 
       <div className="space-y-2">
@@ -562,7 +563,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
         <div className="space-y-1">
           <Label className="text-xs text-slate-500">ID Type</Label>
-          <Select value={idType} onValueChange={handleIdTypeChange}>
+          <MobileSelect value={idType} onValueChange={handleIdTypeChange} placeholder="Select ID type">
             <SelectTrigger className="rounded-xl bg-white">
               <SelectValue />
             </SelectTrigger>
@@ -571,7 +572,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
                 <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </MobileSelect>
         </div>
 
         <div className="space-y-1">
