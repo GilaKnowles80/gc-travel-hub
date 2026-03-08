@@ -41,7 +41,14 @@ export default function BookingForm({ tour, onClose }) {
   const totalPrice = (form.number_of_travelers || 1) * (tour.price_per_person || 0) * tripMultiplier;
 
   const mutation = useMutation({
-    mutationFn: (data) => base44.entities.Booking.create(data),
+    mutationFn: async (data) => {
+      let booking_ref = null;
+      try {
+        const refRes = await base44.functions.invoke('generateBookingRef', { product_type: 'tour' });
+        booking_ref = refRes?.data?.booking_ref || null;
+      } catch (e) { console.error('Could not generate booking ref', e); }
+      return base44.entities.Booking.create({ ...data, ...(booking_ref && { booking_ref }) });
+    },
     onSuccess: (booking) => {
       setBookingId(booking.id);
       setStep(4);
