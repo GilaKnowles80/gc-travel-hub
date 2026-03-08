@@ -78,6 +78,7 @@ import AdminMonetization from './pages/AdminMonetization';
 import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
 import AdminPackageSales from './pages/AdminPackageSales';
 import AdminPackages from './pages/AdminPackages';
+import AdminPayouts from './pages/AdminPayouts';
 import AdminPricing from './pages/AdminPricing';
 import AdminPromotions from './pages/AdminPromotions';
 import AdminReviews from './pages/AdminReviews';
@@ -170,7 +171,6 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
-import AdminPayouts from './pages/AdminPayouts';
 import __Layout from './Layout.jsx';
 
 
@@ -206,6 +206,7 @@ export const PAGES = {
     "AdminPackagePromoCodes": AdminPackagePromoCodes,
     "AdminPackageSales": AdminPackageSales,
     "AdminPackages": AdminPackages,
+    "AdminPayouts": AdminPayouts,
     "AdminPricing": AdminPricing,
     "AdminPromotions": AdminPromotions,
     "AdminReviews": AdminReviews,
@@ -298,7 +299,6 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
-    "AdminPayouts": AdminPayouts,
 }
 
 export const pagesConfig = {
