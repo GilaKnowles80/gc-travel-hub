@@ -14,6 +14,7 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
   const [accountName, setAccountName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
