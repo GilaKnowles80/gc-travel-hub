@@ -317,7 +317,17 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
 
   const bookFlightMutation = useMutation({
     mutationFn: async () => {
+      // Generate sequential booking ref
+      let booking_ref = null;
+      try {
+        const refRes = await base44.functions.invoke('generateFlightBookingRef', {});
+        booking_ref = refRes?.data?.booking_ref || null;
+      } catch (e) {
+        console.error('Could not generate booking ref', e);
+      }
+
       const booking = await base44.entities.FlightBooking.create({
+        ...(booking_ref && { booking_ref }),
         flight_id: flight.id || "api_flight",
         flight_number: flight.flight_number,
         route: `${flight.origin} - ${flight.destination}`,
