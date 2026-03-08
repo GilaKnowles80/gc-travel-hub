@@ -50,13 +50,20 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
 
     const bookingMutation = useMutation({
         mutationFn: async () => {
+            let booking_ref = null;
+            try {
+                const refRes = await base44.functions.invoke('generateBookingRef', { product_type: 'hotel' });
+                booking_ref = refRes?.data?.booking_ref || null;
+            } catch (e) { console.error('Could not generate booking ref', e); }
+
             try {
                 const response = await base44.functions.invoke('createHotelCheckout', {
                     hotel,
                     offer,
                     guestDetails: {
                         guests: guestDetails
-                    }
+                    },
+                    booking_ref
                 });
                 return response.data;
             } catch (error) {
