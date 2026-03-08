@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Loader2, User, CreditCard, Copy } from "lucide-react";
 import { toast } from "sonner";
 import PriceDisplay from "@/components/currency/PriceDisplay";
@@ -183,7 +184,7 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <Label>Title *</Label>
-                                    <Select value={guest.name.title} onValueChange={(val) => updateGuest(idx, 'name.title', val)}>
+                                    <MobileSelect value={guest.name.title} onValueChange={(val) => updateGuest(idx, 'name.title', val)} placeholder="Select title">
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
@@ -192,7 +193,7 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                                             <SelectItem value="MRS">Mrs.</SelectItem>
                                             <SelectItem value="MS">Ms.</SelectItem>
                                         </SelectContent>
-                                    </Select>
+                                    </MobileSelect>
                                 </div>
                                 <div>
                                     <Label>First Name *</Label>
@@ -275,12 +276,13 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label>Government ID *</Label>
-                                    <Select 
+                                    <MobileSelect 
                                         value={guest.governmentId.type} 
                                         onValueChange={(val) => {
                                             const updated = { ...guest.governmentId, type: val };
                                             updateGuest(idx, 'governmentId', updated);
                                         }}
+                                        placeholder="Select ID type"
                                     >
                                         <SelectTrigger>
                                             <SelectValue />
@@ -292,7 +294,7 @@ export default function HotelBookingDialog({ isOpen, onClose, hotel, offer, gues
                                             <SelectItem value="SSS">SSS ID</SelectItem>
                                             <SelectItem value="UMID">UMID</SelectItem>
                                         </SelectContent>
-                                    </Select>
+                                    </MobileSelect>
                                 </div>
                                 <div>
                                     <Label>Government ID Number *</Label>
