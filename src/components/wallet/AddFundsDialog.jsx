@@ -160,5 +160,17 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
         </form>
       </DialogContent>
     </Dialog>
+
+    <PayMongoQRModal
+      open={showQRModal}
+      onClose={() => {
+        setShowQRModal(false);
+        onOpenChange(false);
+        onSuccess?.();
+      }}
+      amount={parseFloat(amount) || 0}
+      bookingType="wallet_deposit"
+      bookingId={`WALLET-DEPOSIT-₱${amount}`}
+    />
   );
 }
