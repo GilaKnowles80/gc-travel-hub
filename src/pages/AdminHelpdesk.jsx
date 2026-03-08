@@ -62,7 +62,9 @@ export default function AdminHelpdesk() {
     queryFn: async () => {
       const result = await base44.entities.HelpdeskTicket.list('-created_date', 100);
       return result || [];
-    }
+    },
+    refetchInterval: 30000,
+    refetchIntervalInBackground: true
   });
 
   const updateMutation = useMutation({
