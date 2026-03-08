@@ -357,6 +357,32 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
       });
       queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
 
+      // Record SalesActivity and SalesCommission
+      const currentUser = await base44.auth.me().catch(() => null);
+      const salesPerson = currentUser?.email || "system";
+      const commissionRate = 25; // GC Travel's markup is 25%
+      const commissionAmount = +(totalPrice * 0.25).toFixed(2);
+
+      base44.entities.SalesActivity.create({
+        lead_id: booking.id, // use booking id as reference since no lead
+        sales_person: salesPerson,
+        activity_type: "status_change",
+        subject: `Flight Booking Confirmed — ${flight.origin} → ${flight.destination}`,
+        description: `Booking ${booking.booking_ref || booking.id?.slice(-8)} for ${formData.passenger_name} (${formData.passenger_email}). ${totalPassengers} pax, ${cabinClass?.replace(/_/g, " ")}, Total: $${totalPrice.toLocaleString()}`,
+        outcome: "positive",
+      }).catch(console.error);
+
+      base44.entities.SalesCommission.create({
+        sales_person: salesPerson,
+        booking_id: booking.id,
+        booking_type: "flight",
+        booking_value: totalPrice,
+        commission_rate: commissionRate,
+        commission_amount: commissionAmount,
+        status: "pending",
+        notes: `${flight.airline_name} ${flight.flight_number} | ${flight.origin}→${flight.destination} | ${formData.passenger_name} | Ref: ${booking.booking_ref || booking.id?.slice(-8)}`,
+      }).catch(console.error);
+
       // Send booking confirmation email automatically
       const pnr = booking.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
       base44.functions.invoke("sendBookingConfirmation", {
