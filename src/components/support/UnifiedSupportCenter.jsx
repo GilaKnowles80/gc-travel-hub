@@ -43,10 +43,37 @@ export default function UnifiedSupportCenter() {
     queryKey: ["unified-support"],
     queryFn: async () => {
       try {
-        const result = await base44.entities.HelpdeskTicket.list('-created_date', 200);
-        return result || [];
+        const [helpdeskTickets, leads] = await Promise.all([
+          base44.entities.HelpdeskTicket.list('-created_date', 200),
+          base44.entities.Lead.list('-created_date', 200).catch(() => [])
+        ]);
+        
+        // Combine and normalize data
+        const normalized = [
+          ...(helpdeskTickets || []).map(t => ({
+            ...t,
+            type: 'helpdesk',
+            inquiryEmail: t.email,
+            inquiryName: t.name,
+            inquiryMessage: t.message || t.subject,
+            inquirySubject: t.subject
+          })),
+          ...(leads || []).map(l => ({
+            ...l,
+            type: 'lead',
+            id: l.id,
+            inquiryEmail: l.email,
+            inquiryName: l.full_name,
+            inquiryMessage: l.message || l.notes || '',
+            inquirySubject: l.travel_type || 'Travel Inquiry',
+            status: l.status || 'open',
+            priority: l.priority || 'medium'
+          }))
+        ];
+        
+        return normalized.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
       } catch (e) {
-        console.error('Error fetching tickets:', e);
+        console.error('Error fetching inquiries:', e);
         return [];
       }
     },
@@ -55,11 +82,14 @@ export default function UnifiedSupportCenter() {
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
+      if (selectedMessage.type === 'lead') {
+        return await base44.entities.Lead.update(selectedMessage.id, data);
+      }
       return await base44.entities.HelpdeskTicket.update(selectedMessage.id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["unified-support"] });
-      toast.success("Message updated");
+      toast.success("Inquiry updated");
     },
     onError: (error) => toast.error(error.message || "Failed to update")
   });
@@ -82,9 +112,9 @@ export default function UnifiedSupportCenter() {
 
   const filteredMessages = tickets.filter(ticket => {
     const matchesSearch = 
-      ticket.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      ticket.inquirySubject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.inquiryName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.inquiryEmail?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === "all" || ticket.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -179,11 +209,11 @@ export default function UnifiedSupportCenter() {
             <div className="space-y-3">
               {filteredMessages.map(ticket => (
                 <div
-                  key={ticket.id}
+                  key={`${ticket.type}-${ticket.id}`}
                   onClick={() => {
                     setSelectedMessage(ticket);
                     setReplyText("");
-                    setInternalNotes(ticket.internal_notes || "");
+                    setInternalNotes(ticket.internal_notes || ticket.notes || "");
                     setIsDetailOpen(true);
                   }}
                   className="p-4 border rounded-lg hover:bg-amber-50/30 cursor-pointer transition-colors"
@@ -191,6 +221,9 @@ export default function UnifiedSupportCenter() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <span className="text-xs font-semibold px-2 py-1 rounded bg-slate-100 text-slate-700">
+                          {ticket.type === 'lead' ? '🎯 Lead' : '📧 Support'}
+                        </span>
                         <span className={`text-xs font-semibold px-2 py-1 rounded ${STATUS_COLORS[ticket.status]}`}>
                           {ticket.status}
                         </span>
@@ -198,9 +231,9 @@ export default function UnifiedSupportCenter() {
                           {ticket.priority?.toUpperCase() || 'MEDIUM'}
                         </span>
                       </div>
-                      <h3 className="font-semibold text-slate-900 truncate">{ticket.subject}</h3>
-                      <p className="text-sm text-slate-600 mt-1">{ticket.name} • {ticket.email}</p>
-                      <p className="text-sm text-slate-500 mt-1 line-clamp-2">{ticket.message}</p>
+                      <h3 className="font-semibold text-slate-900 truncate">{ticket.inquirySubject}</h3>
+                      <p className="text-sm text-slate-600 mt-1">{ticket.inquiryName} • {ticket.inquiryEmail}</p>
+                      <p className="text-sm text-slate-500 mt-1 line-clamp-2">{ticket.inquiryMessage}</p>
                     </div>
                     <div className="text-right text-xs text-slate-500 flex-shrink-0">
                       {format(new Date(ticket.created_date), "MMM d")}
@@ -232,23 +265,28 @@ export default function UnifiedSupportCenter() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-slate-500">From</p>
-                    <p className="font-semibold">{selectedMessage.name}</p>
-                    <p className="text-sm text-slate-600">{selectedMessage.email}</p>
+                    <p className="font-semibold">{selectedMessage.inquiryName}</p>
+                    <p className="text-sm text-slate-600">{selectedMessage.inquiryEmail}</p>
                   </div>
-                  {selectedMessage.phone && (
+                  {(selectedMessage.phone || selectedMessage.phone_number) && (
                     <div>
                       <p className="text-xs text-slate-500">Phone</p>
-                      <p className="font-semibold">{selectedMessage.phone}</p>
+                      <p className="font-semibold">{selectedMessage.phone || selectedMessage.phone_number}</p>
                     </div>
                   )}
                 </div>
+                {selectedMessage.type === 'lead' && selectedMessage.travel_type && (
+                  <div className="text-xs text-slate-600">
+                    <span className="font-semibold">Interested In:</span> {selectedMessage.travel_type}
+                  </div>
+                )}
               </div>
 
               {/* Message Content */}
               <div>
-                <p className="text-xs text-slate-500 font-semibold mb-2">Message</p>
+                <p className="text-xs text-slate-500 font-semibold mb-2">Inquiry</p>
                 <div className="bg-slate-50 p-4 rounded-lg whitespace-pre-wrap text-sm">
-                  {selectedMessage.message}
+                  {selectedMessage.inquiryMessage || selectedMessage.notes || 'No message'}
                 </div>
               </div>
 
@@ -333,6 +371,7 @@ export default function UnifiedSupportCenter() {
 
               {/* Metadata */}
               <div className="text-xs text-slate-500 pt-2 border-t space-y-1">
+                <p>Type: {selectedMessage.type === 'lead' ? 'Sales Lead' : 'Support Ticket'}</p>
                 <p>Created: {format(new Date(selectedMessage.created_date), "PPpp")}</p>
                 {selectedMessage.assigned_to && <p>Assigned to: {selectedMessage.assigned_to}</p>}
                 {selectedMessage.booking_reference && <p>Booking Ref: {selectedMessage.booking_reference}</p>}
