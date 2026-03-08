@@ -47,7 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AdminHome from './pages/AdminHome';
 import AIItineraryPlanner from './pages/AIItineraryPlanner';
 import AdminAdCampaigns from './pages/AdminAdCampaigns';
 import AdminAds from './pages/AdminAds';
@@ -69,6 +68,7 @@ import AdminEmailClients from './pages/AdminEmailClients';
 import AdminFerries from './pages/AdminFerries';
 import AdminFlights from './pages/AdminFlights';
 import AdminHelpdesk from './pages/AdminHelpdesk';
+import AdminHome from './pages/AdminHome';
 import AdminHotels from './pages/AdminHotels';
 import AdminInsurance from './pages/AdminInsurance';
 import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
@@ -174,7 +174,6 @@ import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AdminHome": AdminHome,
     "AIItineraryPlanner": AIItineraryPlanner,
     "AdminAdCampaigns": AdminAdCampaigns,
     "AdminAds": AdminAds,
@@ -196,6 +195,7 @@ export const PAGES = {
     "AdminFerries": AdminFerries,
     "AdminFlights": AdminFlights,
     "AdminHelpdesk": AdminHelpdesk,
+    "AdminHome": AdminHome,
     "AdminHotels": AdminHotels,
     "AdminInsurance": AdminInsurance,
     "AdminInsuranceProviders": AdminInsuranceProviders,

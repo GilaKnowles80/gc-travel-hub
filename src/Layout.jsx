@@ -159,21 +159,21 @@ function LayoutContent({ children, currentPageName }) {
 
             
             {/* Logo + Back Button */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
               {currentPageName !== "Home" && (
                 <button
                   onClick={() => window.history.back()}
-                  className="md:hidden p-2 hover:bg-slate-100/50 rounded-lg transition-colors"
+                  className="md:hidden p-2 hover:bg-slate-100/50 rounded-lg transition-colors flex-shrink-0"
                   title="Go back"
                 >
                   <ChevronLeft className={`w-5 h-5 ${isHome && !scrolled ? "text-white" : "text-slate-700"}`} />
                 </button>
               )}
-              <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0">
+              <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
                   alt="GC Travel and Tours Agency"
-                  className="h-10 w-auto"
+                  className="h-8 md:h-10 w-auto"
                 />
               </Link>
             </div>
