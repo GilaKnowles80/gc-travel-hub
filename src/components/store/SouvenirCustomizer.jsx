@@ -40,6 +40,11 @@ const CUSTOMIZATION_OPTIONS = {
     hasEngraving: true,
     engravingCharge: 75,
   },
+  umbrella: {
+    colors: ["Black", "Navy Blue", "Red", "White"],
+    hasEngraving: true,
+    engravingCharge: 50,
+  },
 };
 
 export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCart }) {
@@ -59,6 +64,8 @@ export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCa
     ? "thermostat_bottle"
     : product.title.toLowerCase().includes("travel bottle")
     ? "travel_bottle"
+    : product.title.toLowerCase().includes("umbrella")
+    ? "umbrella"
     : "mug";
 
   const options = CUSTOMIZATION_OPTIONS[productType];
