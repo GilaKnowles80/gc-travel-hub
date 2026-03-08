@@ -169,13 +169,15 @@ function LayoutContent({ children, currentPageName }) {
                   <ChevronLeft className={`w-5 h-5 ${isHome && !scrolled ? "text-white" : "text-slate-700"}`} />
                 </button>
               )}
-              <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
-                  alt="GC Travel and Tours Agency"
-                  className="h-8 md:h-10 w-auto"
-                />
-              </Link>
+              {currentPageName !== "Home" && (
+                <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
+                    alt="GC Travel and Tours Agency"
+                    className="h-8 md:h-10 w-auto"
+                  />
+                </Link>
+              )}
             </div>
 
 
