@@ -15,6 +15,7 @@ const CATEGORIES = [
   { value: "budget_spreadsheet", label: "Budget Sheets" },
   { value: "checklist", label: "Checklists" },
   { value: "ebook", label: "eBooks" },
+  { value: "souvenir", label: "GC Souvenirs" },
 ];
 
 function StoreContent() {
@@ -52,16 +53,16 @@ function StoreContent() {
         <div className="max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm mb-4">
             <Download className="w-4 h-4" />
-            Instant Digital Downloads
+            Digital Products & Premium Souvenirs
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold mb-3">GC Travel Digital Store</h1>
           <p className="text-lg text-amber-100 max-w-xl mx-auto">
-            Expert travel guides, visa checklists, and budget tools crafted by our travel specialists.
+            Expert travel guides, visa checklists, budget tools, and premium GC branded souvenirs. Door-to-door delivery in 2-3 weeks.
           </p>
-          <div className="flex items-center justify-center gap-6 mt-8 text-sm">
-            <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Instant delivery</div>
+          <div className="flex items-center justify-center gap-6 mt-8 text-sm flex-wrap justify-center">
+            <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Instant digital delivery</div>
+            <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Premium souvenirs</div>
             <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Secure checkout</div>
-            <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Expert-crafted</div>
           </div>
         </div>
       </div>
