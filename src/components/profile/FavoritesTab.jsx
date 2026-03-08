@@ -19,9 +19,29 @@ export default function FavoritesTab({ user }) {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => await base44.entities.Favorite.delete(id),
+    onMutate: async (id) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["user-favorites"] });
+      
+      // Snapshot previous data
+      const prevFavorites = queryClient.getQueryData(["user-favorites"]);
+      
+      // Optimistically update the cache
+      queryClient.setQueryData(["user-favorites"], (old) =>
+        old?.filter((fav) => fav.id !== id) || []
+      );
+      
+      return { prevFavorites };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-favorites"] });
       toast.success("Removed from favorites");
+    },
+    onError: (error, id, context) => {
+      // Rollback on error
+      if (context?.prevFavorites) {
+        queryClient.setQueryData(["user-favorites"], context.prevFavorites);
+      }
+      toast.error("Failed to remove favorite");
     },
   });
 
