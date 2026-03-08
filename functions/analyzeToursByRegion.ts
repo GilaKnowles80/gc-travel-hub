@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
@@ -9,73 +9,43 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlebigquery');
+    // Fetch all tours and bookings from local entities
+    const tours = await base44.asServiceRole.entities.Tour.list();
+    const bookings = await base44.asServiceRole.entities.Booking.list();
 
-    const query = `
-      SELECT
-        t.destination as region,
-        t.title as package_name,
-        COUNT(b.id) as total_bookings,
-        SUM(b.total_price) as total_revenue,
-        AVG(t.rating) as avg_rating,
-        COUNT(DISTINCT b.customer_email) as unique_customers
-      FROM
-        \`gc-travel-tours.Travel.Tour\` t
-      LEFT JOIN
-        \`gc-travel-tours.Travel.Booking\` b
-      ON
-        t.id = b.tour_id
-      WHERE
-        t.status = 'active'
-      GROUP BY
-        t.destination, t.title
-      ORDER BY
-        total_bookings DESC,
-        total_revenue DESC
-      LIMIT 50
-    `;
-
-    const response = await fetch('https://bigquery.googleapis.com/bigquery/v2/projects/gc-travel-tours/queries', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: query,
-        useLegacySql: false,
-        maxResults: 50
-      })
+    // Group bookings by tour
+    const bookingsByTour = {};
+    bookings.forEach(booking => {
+      if (!bookingsByTour[booking.tour_id]) {
+        bookingsByTour[booking.tour_id] = [];
+      }
+      bookingsByTour[booking.tour_id].push(booking);
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('BigQuery API error:', error);
-      return Response.json({ error: 'Failed to query BigQuery' }, { status: 500 });
-    }
+    // Analyze tours by region
+    const results = tours
+      .filter(t => t.status === 'active')
+      .map(tour => {
+        const tourBookings = bookingsByTour[tour.id] || [];
+        const confirmedBookings = tourBookings.filter(b => 
+          b.status === 'confirmed' || b.payment_status === 'paid'
+        );
 
-    const data = await response.json();
-
-    if (data.rows && data.rows.length > 0) {
-      const results = data.rows.map(row => ({
-        region: row.f[0]?.v || 'Unknown',
-        packageName: row.f[1]?.v || 'Unknown',
-        bookings: parseInt(row.f[2]?.v || '0'),
-        revenue: parseFloat(row.f[3]?.v || '0'),
-        rating: parseFloat(row.f[4]?.v || '0'),
-        customers: parseInt(row.f[5]?.v || '0')
-      }));
-
-      return Response.json({
-        status: 'success',
-        data: results,
-        timestamp: new Date().toISOString()
-      });
-    }
+        return {
+          region: tour.destination || 'Unknown',
+          packageName: tour.title,
+          bookings: confirmedBookings.length,
+          revenue: confirmedBookings.reduce((sum, b) => sum + (b.total_price || 0), 0),
+          rating: tour.rating || 0,
+          customers: new Set(confirmedBookings.map(b => b.customer_email)).size
+        };
+      })
+      .filter(t => t.bookings > 0)
+      .sort((a, b) => b.bookings - a.bookings || b.revenue - a.revenue);
 
     return Response.json({
       status: 'success',
-      data: [],
+      data: results,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
