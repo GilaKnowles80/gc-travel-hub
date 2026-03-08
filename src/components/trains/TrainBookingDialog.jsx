@@ -41,6 +41,12 @@ export default function TrainBookingDialog({ train, open, onClose }) {
       const selectedClass = train.class_types.find(c => c.class === data.class_type);
       const totalPrice = (selectedClass?.price || 0) * data.number_of_passengers;
 
+      let booking_ref = null;
+      try {
+        const refRes = await base44.functions.invoke('generateBookingRef', { product_type: 'train' });
+        booking_ref = refRes?.data?.booking_ref || null;
+      } catch (e) { console.error('Could not generate booking ref', e); }
+
       return base44.entities.TrainBooking.create({
         train_id: train.id,
         train_number: train.train_number,
@@ -48,7 +54,8 @@ export default function TrainBookingDialog({ train, open, onClose }) {
         total_price: totalPrice,
         status: 'pending',
         payment_status: 'unpaid',
-        supplier: train.operator
+        supplier: train.operator,
+        ...(booking_ref && { booking_ref })
       });
     },
     onSuccess: (booking) => {
