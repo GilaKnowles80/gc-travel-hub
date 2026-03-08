@@ -265,8 +265,9 @@ export default function UnifiedBookingsTable() {
                 <h3 className="font-semibold text-slate-800 text-sm uppercase tracking-wide">📋 Booking Details</h3>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                   {[
-                    ['Booking ID', selectedBooking.id],
-                    ['Type', selectedBooking.type?.toUpperCase()],
+                   ['Booking Ref', selectedBooking.booking_ref || '—'],
+                   ['Booking ID', selectedBooking.id],
+                   ['Type', selectedBooking.type?.toUpperCase()],
                     ['Route / Service', selectedBooking.route || selectedBooking.hotel_name || selectedBooking.car_type || '—'],
                     ['Flight Number', selectedBooking.flight_number || '—'],
                     ['Passenger / Guest', selectedBooking.passenger_name || selectedBooking.guest_name || selectedBooking.driver_name || '—'],
