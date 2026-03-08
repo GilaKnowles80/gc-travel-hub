@@ -251,11 +251,50 @@ export default function UnifiedBookingsTable() {
       </Tabs>
 
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Update Booking & Price Comparison</DialogTitle>
+            <DialogTitle>Booking Details & Update</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Booking Details Section */}
+            {selectedBooking && (
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+                <h3 className="font-semibold text-slate-800 text-sm uppercase tracking-wide">📋 Booking Details</h3>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                  {[
+                    ['Booking ID', selectedBooking.id],
+                    ['Type', selectedBooking.type?.toUpperCase()],
+                    ['Route / Service', selectedBooking.route || selectedBooking.hotel_name || selectedBooking.car_type || '—'],
+                    ['Flight Number', selectedBooking.flight_number || '—'],
+                    ['Passenger / Guest', selectedBooking.passenger_name || selectedBooking.guest_name || selectedBooking.driver_name || '—'],
+                    ['Email', selectedBooking.passenger_email || selectedBooking.guest_email || selectedBooking.driver_email || '—'],
+                    ['Phone', selectedBooking.passenger_phone || selectedBooking.guest_phone || selectedBooking.driver_phone || '—'],
+                    ['Passport No.', selectedBooking.passport_number || '—'],
+                    ['Date of Birth', selectedBooking.date_of_birth || '—'],
+                    ['Pax / Guests', selectedBooking.number_of_passengers || selectedBooking.number_of_guests || selectedBooking.number_of_travelers || 1],
+                    ['Cabin Class', selectedBooking.cabin_class || selectedBooking.class_type || selectedBooking.seat_type || selectedBooking.accommodation_type || '—'],
+                    ['Trip Type', selectedBooking.trip_type || '—'],
+                    ['Check-in', selectedBooking.check_in_date || selectedBooking.departure_date || '—'],
+                    ['Check-out / Return', selectedBooking.check_out_date || '—'],
+                    ['Total Price', selectedBooking.total_price ? `₱${Number(selectedBooking.total_price).toLocaleString()}` : '—'],
+                    ['Payment Status', selectedBooking.payment_status || '—'],
+                    ['Status', selectedBooking.status || '—'],
+                    ['Supplier', selectedBooking.supplier || '—'],
+                    ['Supplier Reference', selectedBooking.supplier_reference || '—'],
+                    ['Special Requests', selectedBooking.special_requests || '—'],
+                    ['Notes', selectedBooking.price_comparison_notes || '—'],
+                    ['Booked On', selectedBooking.created_date ? moment(selectedBooking.created_date).format('MMM D, YYYY h:mm A') : '—'],
+                    ['Booked By', selectedBooking.created_by || '—'],
+                  ].filter(([, v]) => v && v !== '—' || true).map(([label, value]) => (
+                    <React.Fragment key={label}>
+                      <span className="text-slate-500 font-medium">{label}</span>
+                      <span className="text-slate-800 font-semibold break-all">{value}</span>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            )}
+            <hr />
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
               <strong>Price Check Workflow:</strong> Check prices on all 3 suppliers → Choose best rate → Update booking
             </div>
