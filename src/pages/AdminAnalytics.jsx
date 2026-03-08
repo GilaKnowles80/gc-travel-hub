@@ -123,18 +123,18 @@ export default function AdminAnalytics() {
         customers: d.customers.size
       }));
 
-      // Revenue by booking type
+      // Revenue by booking type (using normalized list)
       const bookingTypes = {};
       recentBookings.forEach(b => {
-        const type = b.booking_type || "other";
+        const type = b._type || "Other";
         if (!bookingTypes[type]) {
           bookingTypes[type] = { name: type, value: 0, count: 0 };
         }
-        bookingTypes[type].value += b.total_price || 0;
+        bookingTypes[type].value += b._price;
         bookingTypes[type].count += 1;
       });
 
-      const revenueByType = Object.values(bookingTypes);
+      const revenueByType = Object.values(bookingTypes).filter(t => t.value > 0 || t.count > 0);
 
       // Sales funnel data
       const totalVisitors = allUsers.length * 3; // Estimate
