@@ -181,18 +181,21 @@ function LayoutContent({ children, currentPageName }) {
 
 
             {/* Navigation */}
-            <nav className="flex items-center gap-1 justify-end overflow-x-auto flex-1 min-w-0">
-              <div className="flex items-center gap-1 shrink-0 md:flex hidden">
-                <Link to={createPageUrl("Wallet")} className="px-2 md:px-3 py-1.5 rounded-xl text-xs md:text-sm font-medium transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap">
+            <nav className="flex items-center gap-1 justify-end flex-1 min-w-0">
+              {/* Wallet + Language (Desktop) */}
+              <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+                <Link to={createPageUrl("Wallet")} className="px-3 py-1.5 rounded-xl text-sm font-medium transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap">
                   <DollarSign className="w-4 h-4 inline mr-1" />
-                  <span className="hidden md:inline">Wallet</span>
+                  Wallet
                 </Link>
                 <LanguageSelector showLabel />
               </div>
-              <div className="md:hidden flex items-center gap-1">
-                <Link to={createPageUrl("Wallet")} className="p-2 rounded-xl text-xs font-medium transition-all hover:bg-amber-100">
+              {/* Wallet + Language (Mobile) */}
+              <div className="flex md:hidden items-center gap-1 flex-shrink-0">
+                <Link to={createPageUrl("Wallet")} className="p-2 rounded-xl transition-all hover:bg-amber-100 flex-shrink-0">
                   <DollarSign className="w-4 h-4" />
                 </Link>
+                <LanguageSelector showLabel={false} />
               </div>
               {/* Public links - always visible */}
               {navLinks.filter(link => !link.adminOnly).map((link) => {
