@@ -25,6 +25,11 @@ const CUSTOMIZATION_OPTIONS = {
     hasEngraving: true,
     engravingCharge: 75,
   },
+  cap: {
+    colors: ["White", "Black", "Navy Blue", "Khaki"],
+    hasEngraving: true,
+    engravingCharge: 75,
+  },
 };
 
 export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCart }) {
@@ -38,6 +43,8 @@ export default function SouvenirCustomizer({ product, isOpen, onClose, onAddToCa
     ? "magnet"
     : product.title.toLowerCase().includes("t-shirt")
     ? "tshirt"
+    : product.title.toLowerCase().includes("cap")
+    ? "cap"
     : "mug";
 
   const options = CUSTOMIZATION_OPTIONS[productType];
