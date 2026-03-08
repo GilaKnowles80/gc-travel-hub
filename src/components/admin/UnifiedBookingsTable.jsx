@@ -20,6 +20,8 @@ export default function UnifiedBookingsTable() {
   const [newStatus, setNewStatus] = React.useState("");
   const [supplierUsed, setSupplierUsed] = React.useState("");
   const [priceNotes, setPriceNotes] = React.useState("");
+  const [bookingRef, setBookingRef] = React.useState("");
+  const [generatingRef, setGeneratingRef] = React.useState(false);
   const queryClient = useQueryClient();
 
   const { data: flightBookings = [] } = useQuery({
