@@ -109,12 +109,13 @@ export default function AdminAnalytics() {
         }
       });
 
-      recentPackages.forEach(p => {
-        const date = moment(p.created_date).format("MMM DD");
+      // Add all booking types to daily trend
+      recentBookings.forEach(b => {
+        const date = moment(b.created_date).format("MMM DD");
         if (dailyData[date]) {
-          dailyData[date].revenue += p.final_price || p.total_price || 0;
+          dailyData[date].revenue += b._price;
           dailyData[date].bookings += 1;
-          dailyData[date].customers.add(p.user_email);
+          if (b._email) dailyData[date].customers.add(b._email);
         }
       });
 
