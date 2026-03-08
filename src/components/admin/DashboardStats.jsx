@@ -1,8 +1,21 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plane, Hotel as HotelIcon, MapPin, DollarSign, Users, TrendingUp, CheckCircle, Clock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Plane, MapPin, DollarSign, Users, TrendingUp, CheckCircle, Clock, Globe, Home } from 'lucide-react';
+
+// Domestic PH airports (IATA codes)
+const PH_AIRPORTS = ['MNL','CEB','DVO','ILO','BCD','KLO','LGP','MXI','CGY','ZAM','BXU','GES','TAG','CYP','TUG','CRK','LAO','MPH','PPS','RXS','SJI','TAC','VRC','WNP','DPL','ENI','MBO','OZC','MLP','SFE','TWT','USU','VIS','ZAM'];
+
+function isDomestic(booking) {
+  // Check route field (e.g. "CEB → DVO" or notes for domestic indicators)
+  const route = (booking.route || booking.price_comparison_notes || '').toUpperCase();
+  // If both origin and destination are PH airports or route contains common PH city names
+  const phCities = ['CEB','DVO','MNL','ILO','ZAM','DAV','CGY','BAC','TAG','LGA','LGP','ILO','BCD','KLO'];
+  const hasPh = phCities.some(c => route.includes(c));
+  const hasIntl = ['LAX','HKG','SIN','KUL','BKK','HND','NRT','ICN','LHR','CDG','DXB','SYD','JFK','SFO','ORD','AMS','FRA','DOH','MEL','AUH','PVG','PEK','TPE','HAN','SGN'].some(c => route.includes(c));
+  return hasPh && !hasIntl;
+}
 
 export default function DashboardStats() {
   const { data: stats, isLoading } = useQuery({
