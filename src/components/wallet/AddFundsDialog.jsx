@@ -31,6 +31,13 @@ export default function AddFundsDialog({ open, onOpenChange, user, onSuccess }) 
         throw new Error("Amount must be greater than 0");
       }
 
+      // GC eWallet — show QR modal directly
+      if (paymentMethod === "gcewallet") {
+        setIsLoading(false);
+        setShowQRModal(true);
+        return;
+      }
+
       let response;
 
       if (paymentMethod === "stripe") {
