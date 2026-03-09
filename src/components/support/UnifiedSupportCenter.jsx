@@ -215,6 +215,7 @@ export default function UnifiedSupportCenter() {
                   onClick={() => {
                     setSelectedMessage(ticket);
                     setReplyText("");
+                    setShowThread(false);
                     setInternalNotes(ticket.internal_notes || ticket.notes || "");
                     setIsDetailOpen(true);
                   }}
