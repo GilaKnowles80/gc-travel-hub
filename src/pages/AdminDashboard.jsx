@@ -33,6 +33,7 @@ import MasterWorkflowDiagram from '@/components/admin/MasterWorkflowDiagram';
 import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
 import AdminCallReceiver from '@/components/support/AdminCallReceiver';
 import UnifiedSupportCenter from '@/components/support/UnifiedSupportCenter';
+import AdminSnapshotTrend from '@/components/admin/AdminSnapshotTrend';
 
 export default function AdminDashboard() {
   return (
