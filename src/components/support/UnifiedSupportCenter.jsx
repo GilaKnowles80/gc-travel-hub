@@ -383,35 +383,70 @@ export default function UnifiedSupportCenter() {
               {/* Action Buttons */}
               <div className="pt-4 border-t grid grid-cols-3 gap-3">
                <Button
-                 variant="outline"
+                 variant="default"
                  size="sm"
-                 onClick={() => window.location.href = `mailto:${selectedMessage.inquiryEmail}`}
-                 className="text-xs"
+                 onClick={() => {
+                   const subject = encodeURIComponent(`Re: ${selectedMessage.inquirySubject || 'Your Inquiry'}`);
+                   const body = encodeURIComponent(`\n\n---\nOriginal message from ${selectedMessage.inquiryName}:\n${selectedMessage.inquiryMessage || ''}`);
+                   window.open(`mailto:${selectedMessage.inquiryEmail}?subject=${subject}&body=${body}`, '_blank');
+                 }}
+                 className="text-xs bg-slate-900 hover:bg-slate-700"
                >
                  Open in Email Client
                </Button>
                <Button
                  variant="outline"
                  size="sm"
-                 onClick={() => {
-                   // Open full thread view (you can customize this)
-                   alert(`Full thread for ${selectedMessage.inquirySubject}`);
-                 }}
+                 onClick={() => setShowThread(true)}
                  className="text-xs"
                >
                  View Full Thread
                </Button>
                <Button
                  size="sm"
-                 className="bg-blue-600 hover:bg-blue-700 text-xs"
+                 variant="outline"
+                 className="text-xs"
                  onClick={() => {
-                   // Focus on reply box
-                   document.querySelector('textarea[placeholder*="Type your reply"]')?.focus();
+                   setTimeout(() => replyRef.current?.focus(), 50);
+                   replyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                  }}
                >
                  Reply
                </Button>
               </div>
+
+              {/* Full Thread View */}
+              {showThread && (
+                <div className="border rounded-lg bg-slate-50 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-700">Full Thread</p>
+                    <Button size="sm" variant="ghost" onClick={() => setShowThread(false)} className="text-xs h-6 px-2">✕ Close</Button>
+                  </div>
+                  <div className="space-y-3">
+                    {/* Original message */}
+                    <div className="bg-white border rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold text-slate-700">{selectedMessage.inquiryName} &lt;{selectedMessage.inquiryEmail}&gt;</span>
+                        <span className="text-xs text-slate-400">{format(new Date(selectedMessage.created_date), "MMM d, yyyy h:mm a")}</span>
+                      </div>
+                      <p className="text-sm text-slate-600 whitespace-pre-wrap">{selectedMessage.inquiryMessage || 'No message'}</p>
+                    </div>
+                    {/* Admin replies stored in replies array if exists */}
+                    {selectedMessage.replies?.map((reply, i) => (
+                      <div key={i} className="bg-blue-50 border border-blue-100 rounded-lg p-3 ml-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-semibold text-blue-700">Support Team</span>
+                          <span className="text-xs text-slate-400">{reply.date ? format(new Date(reply.date), "MMM d, yyyy h:mm a") : ''}</span>
+                        </div>
+                        <p className="text-sm text-slate-600 whitespace-pre-wrap">{reply.message}</p>
+                      </div>
+                    ))}
+                    {(!selectedMessage.replies || selectedMessage.replies.length === 0) && (
+                      <p className="text-xs text-slate-400 italic text-center py-2">No replies yet</p>
+                    )}
+                  </div>
+                </div>
+              )}
               </div>
 
               <div className="flex gap-2">
