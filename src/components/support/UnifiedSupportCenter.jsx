@@ -34,7 +34,7 @@ export default function UnifiedSupportCenter() {
   const [replyText, setReplyText] = useState("");
   const [internalNotes, setInternalNotes] = useState("");
   const [showThread, setShowThread] = useState(false);
-  const replyRef = React.useRef(null);
+  const replyRef = useRef(null);
 
   const { data: user } = useQuery({
     queryKey: ["current-user"],
