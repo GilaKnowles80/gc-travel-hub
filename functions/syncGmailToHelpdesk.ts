@@ -1,12 +1,12 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-// Syncs unread emails from all 3 GC Travel inboxes to HelpdeskTickets
-// info@ → general | sales@ → sales inquiries | helpdesk@ → support
-
+// Syncs unread emails from all 5 GC Travel inboxes to HelpdeskTickets
 const INBOX_CATEGORY_MAP = {
-  'info':     'general',
-  'sales':    'flights',
-  'helpdesk': 'complaint',
+  'info':      'general',
+  'sales':     'flights',
+  'helpdesk':  'complaint',
+  'support':   'general',
+  'bookings':  'booking',
 };
 
 Deno.serve(async (req) => {
