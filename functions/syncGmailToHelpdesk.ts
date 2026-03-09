@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 
     // Fetch unread emails from any of the 3 inboxes
-    const query = 'is:unread (to:info@gctravelandtours.com OR to:sales@gctravelandtours.com OR to:helpdesk@gctravelandtours.com)';
+    const query = 'is:unread (to:info@gctravelandtours.com OR to:sales@gctravelandtours.com OR to:helpdesk@gctravelandtours.com OR to:support@gctravelandtours.com OR to:bookings@gctravelandtours.com)';
     const searchResponse = await fetch(
       `https://www.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(query)}&maxResults=50`,
       { headers: { 'Authorization': `Bearer ${accessToken}` } }
