@@ -334,10 +334,11 @@ export default function UnifiedSupportCenter() {
                   <Mail className="w-3 h-3" /> Quick Reply
                 </p>
                 <Textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Type your reply to ${selectedMessage.name}...`}
-                  className="min-h-24 resize-none bg-white mb-3"
+                 ref={replyRef}
+                 value={replyText}
+                 onChange={(e) => setReplyText(e.target.value)}
+                 placeholder={`Type your reply to ${selectedMessage.inquiryName}...`}
+                 className="min-h-24 resize-none bg-white mb-3"
                 />
                 <div className="flex gap-2">
                   <Button
