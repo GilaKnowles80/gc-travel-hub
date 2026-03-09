@@ -139,6 +139,8 @@ export default function AdminBuses() {
                         <SelectItem value="biyaheko">Biyaheko</SelectItem>
                         <SelectItem value="wanderlinx">Wanderlinx</SelectItem>
                         <SelectItem value="tripzynx">Tripzynx</SelectItem>
+                        <SelectItem value="12go">12Go Asia</SelectItem>
+                        <SelectItem value="trainline">Trainline</SelectItem>
                         <SelectItem value="direct">Direct</SelectItem>
                       </SelectContent>
                     </Select>
