@@ -57,6 +57,8 @@ Deno.serve(async (req) => {
         let inboxPrefix = 'info';
         if (toHeader.includes('sales@')) inboxPrefix = 'sales';
         else if (toHeader.includes('helpdesk@')) inboxPrefix = 'helpdesk';
+        else if (toHeader.includes('support@')) inboxPrefix = 'support';
+        else if (toHeader.includes('bookings@')) inboxPrefix = 'bookings';
 
         return {
           id: messageId,
