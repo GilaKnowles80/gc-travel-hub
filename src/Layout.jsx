@@ -101,6 +101,14 @@ function LayoutContent({ children, currentPageName }) {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  // Auto-track page visits on every navigation
+  React.useEffect(() => {
+    base44.functions.invoke('trackVisitor', {
+      page: currentPageName,
+      referrer: document.referrer || '',
+    }).catch(() => {});
+  }, [currentPageName]);
+
   React.useEffect(() => {
     const handler = (e) => {
       if (adminMenuRef.current && !adminMenuRef.current.contains(e.target)) setAdminMenuOpen(false);
