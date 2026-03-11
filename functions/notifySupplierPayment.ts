@@ -3,13 +3,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { supplier_payment_id } = await req.json();
+    const body = await req.json().catch(() => ({}));
+
+    // Support both entity automation payload and direct invocation
+    const supplier_payment_id = body.supplier_payment_id || body.event?.entity_id;
 
     if (!supplier_payment_id) {
       return Response.json({ error: 'Payment ID required' }, { status: 400 });
     }
 
-    const payment = await base44.asServiceRole.entities.SupplierPayment.get(supplier_payment_id);
+    const payment = body.data || await base44.asServiceRole.entities.SupplierPayment.get(supplier_payment_id);
     if (!payment) {
       return Response.json({ error: 'Payment not found' }, { status: 404 });
     }
