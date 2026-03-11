@@ -52,17 +52,19 @@ Deno.serve(async (req) => {
     if (mode === 'weekly' || mode === 'all') {
       const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-      // Refund rate
-      const allPayments = await base44.asServiceRole.entities.Payment.filter({ status: 'completed' });
-      const refundedPayments = await base44.asServiceRole.entities.Payment.filter({ status: 'refunded' });
+      // Refund rate – limit to last 500 records each to avoid timeout
+      const [allPayments, refundedPayments, chargebacks] = await Promise.all([
+        base44.asServiceRole.entities.Payment.filter({ status: 'completed' }, '-created_date', 500),
+        base44.asServiceRole.entities.Payment.filter({ status: 'refunded' }, '-created_date', 500),
+        base44.asServiceRole.entities.AuditLog.filter({ action: 'chargeback_opened' }, '-created_date', 200),
+      ]);
       const refundRate = allPayments.length > 0 ? ((refundedPayments.length / allPayments.length) * 100).toFixed(1) : 0;
 
       if (parseFloat(refundRate) > 5) {
         report.alerts.push(`⚠️ High refund rate: ${refundRate}% (target: <5%)`);
       }
 
-      // Chargeback audit from AuditLog
-      const chargebacks = await base44.asServiceRole.entities.AuditLog.filter({ action: 'chargeback_opened' });
+      // Chargeback audit from AuditLog (already fetched above)
       const chargebackRate = allPayments.length > 0 ? ((chargebacks.length / allPayments.length) * 100).toFixed(2) : 0;
 
       if (parseFloat(chargebackRate) > 1) {
