@@ -35,10 +35,30 @@ const bookingIcons = {
   car_rental: Car,
 };
 
+const paymentMethodLabels = {
+  stripe: "Card (Stripe)",
+  paymongo: "PayMongo",
+  bank_transfer: "Bank Transfer",
+  cash: "Cash",
+  wallet: "GC Wallet",
+  gcash: "GCash",
+};
+
 export default function BookingCard({ booking, index, type, onCancelled }) {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [airlineName, setAirlineName] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(null);
+
+  useEffect(() => {
+    if (booking?.id) {
+      base44.entities.Payment.filter({ booking_id: booking.id })
+        .then(results => {
+          if (results[0]?.payment_method) setPaymentMethod(results[0].payment_method);
+        })
+        .catch(() => {});
+    }
+  }, [booking?.id]);
   const Icon = bookingIcons[type] || Compass;
   const prn = generatePRN(type, booking);
   let title = "";
