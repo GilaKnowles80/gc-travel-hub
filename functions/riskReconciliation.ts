@@ -138,7 +138,7 @@ Deno.serve(async (req) => {
       entity_type: 'system',
       entity_id: 'risk_engine',
       details: JSON.stringify(report),
-      user_email: user.email,
+      user_email: 'system-automation',
       timestamp: now.toISOString()
     }).catch(console.error);
 
