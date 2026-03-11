@@ -198,6 +198,11 @@ export default function BookingCard({ booking, index, type, onCancelled }) {
               <Badge className="bg-slate-100 text-slate-700 border-slate-200 border capitalize text-xs">
                 {type.replace("_", " ")}
               </Badge>
+              {paymentMethod && (
+                <Badge className="bg-indigo-50 text-indigo-700 border-indigo-200 border text-xs">
+                  {paymentMethodLabels[paymentMethod] || paymentMethod.replace(/_/g, ' ')}
+                </Badge>
+              )}
             </div>
             
             <div className="flex gap-2">
