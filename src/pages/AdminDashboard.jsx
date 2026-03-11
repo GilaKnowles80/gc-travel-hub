@@ -57,6 +57,12 @@ export default function AdminDashboard() {
                 Security
               </Button>
             </Link>
+            <Link to={createPageUrl('AdminIntegrations')}>
+              <Button variant="outline" className="bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100">
+                <Plug className="w-4 h-4 mr-2" />
+                Integrations
+              </Button>
+            </Link>
           </div>
         </div>
 
