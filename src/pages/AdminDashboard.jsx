@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, Settings, Users, Receipt, TrendingUp, DollarSign } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, Receipt, TrendingUp, DollarSign, Plug } from 'lucide-react';
 import DashboardStats from '@/components/admin/DashboardStats';
 import QuickActions from '@/components/admin/QuickActions';
 import SalesReports from '@/components/admin/SalesReports';
