@@ -113,19 +113,23 @@ Deno.serve(async (req) => {
 
     // ── Send admin alert email if issues found ────────────────────────────
     if (report.alerts.length > 0) {
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        from_name: 'GC Travel Risk System',
-        to: 'info@gctravelandtours.com',
-        subject: `⚠️ Risk Alert – ${mode.charAt(0).toUpperCase() + mode.slice(1)} Reconciliation`,
-        body: `
-          <h2>Risk Management Report – ${mode}</h2>
-          <p><strong>Date:</strong> ${now.toISOString()}</p>
-          <h3>🚨 Alerts</h3>
-          <ul>${report.alerts.map(a => `<li>${a}</li>`).join('')}</ul>
-          <h3>📊 Findings</h3>
-          <pre>${JSON.stringify(report.findings, null, 2)}</pre>
-        `
-      });
+      // Get admin users to send email to (SendEmail only works for registered app users)
+      const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
+      for (const admin of admins) {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          from_name: 'GC Travel Risk System',
+          to: admin.email,
+          subject: `⚠️ Risk Alert – ${mode.charAt(0).toUpperCase() + mode.slice(1)} Reconciliation`,
+          body: `
+            <h2>Risk Management Report – ${mode}</h2>
+            <p><strong>Date:</strong> ${now.toISOString()}</p>
+            <h3>🚨 Alerts</h3>
+            <ul>${report.alerts.map(a => `<li>${a}</li>`).join('')}</ul>
+            <h3>📊 Findings</h3>
+            <pre>${JSON.stringify(report.findings, null, 2)}</pre>
+          `
+        }).catch(e => console.error(`[RISK] Email to ${admin.email} failed:`, e.message));
+      }
     }
 
     // ── Log to audit ──────────────────────────────────────────────────────
