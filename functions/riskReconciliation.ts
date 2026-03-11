@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
     if (mode === 'monthly' || mode === 'all') {
       const monthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
 
-      const splits = await base44.asServiceRole.entities.PaymentSplit.filter({ status: 'settled' });
+      const splits = await base44.asServiceRole.entities.PaymentSplit.filter({ status: 'settled' }, '-created_date', 500);
       const totalGross    = splits.reduce((s, r) => s + (r.gross_amount || 0), 0);
       const totalAgency   = splits.reduce((s, r) => s + (r.agency_amount || 0), 0);
       const totalNetProfit = splits.reduce((s, r) => s + (r.net_profit || 0), 0);
