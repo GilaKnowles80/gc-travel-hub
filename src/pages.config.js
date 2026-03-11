@@ -171,6 +171,7 @@ import Visas from './pages/Visas';
 import Wallet from './pages/Wallet';
 import WanderlinxPortal from './pages/WanderlinxPortal';
 import utils from './pages/utils';
+import AdminIntegrations from './pages/AdminIntegrations';
 import __Layout from './Layout.jsx';
 
 
@@ -299,6 +300,7 @@ export const PAGES = {
     "Wallet": Wallet,
     "WanderlinxPortal": WanderlinxPortal,
     "utils": utils,
+    "AdminIntegrations": AdminIntegrations,
 }
 
 export const pagesConfig = {
