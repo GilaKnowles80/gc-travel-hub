@@ -29,8 +29,8 @@ Deno.serve(async (req) => {
         report.stripe_balance = { available, pending };
         console.log('[DAILY] Stripe balance:', JSON.stringify({ available, pending }));
 
-        // Check pending supplier payments
-        const pendingPayments = await base44.asServiceRole.entities.SupplierPayment.filter({ payment_status: 'pending' });
+        // Check pending supplier payments (limit to avoid timeout)
+        const pendingPayments = await base44.asServiceRole.entities.SupplierPayment.filter({ payment_status: 'pending' }, '-created_date', 200);
         const totalPendingSupplier = pendingPayments.reduce((s, p) => s + (p.supplier_amount || 0), 0);
 
         if (pendingPayments.length > 5) {
