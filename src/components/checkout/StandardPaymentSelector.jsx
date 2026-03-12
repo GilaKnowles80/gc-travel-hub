@@ -16,11 +16,15 @@ export default function StandardPaymentSelector({
   isProcessing,
   onPayment,
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("stripe");
+  const [selectedMethod, setSelectedMethod] = useState("xendit");
   const [isLoading, setIsLoading] = useState(false);
   const [paymongoQROpen, setPaymongoQROpen] = useState(false);
 
   const handlePayment = async () => {
+    if (selectedMethod === "xendit") {
+      // Handled by XenditPayment component directly
+      return;
+    }
     if (selectedMethod === "paymongo_qr") {
       setPaymongoQROpen(true);
       return;
