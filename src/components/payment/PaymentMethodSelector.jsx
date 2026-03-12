@@ -103,6 +103,17 @@ export default function PaymentMethodSelector({
 
       {/* Payment Forms */}
       <div>
+        {selectedMethod === "xendit" && (
+          <XenditPayment
+            amount={amount}
+            currency={currency}
+            description={bookingData?.description || bookingData?.tourTitle || "Travel Booking"}
+            bookingRef={bookingData?.bookingId || bookingData?.id}
+            onSuccess={onSuccess}
+            onError={onError}
+          />
+        )}
+
         {selectedMethod === "stripe" && (
           <StripeCheckout
             amount={amount}
