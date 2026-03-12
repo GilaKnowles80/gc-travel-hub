@@ -6,6 +6,7 @@ import StripeCheckout from "./StripeCheckout";
 import PayMongoPayment from "./PayMongoPayment";
 import PayPalPayment from "./PayPalPayment";
 import BankTransferPayment from "./BankTransferPayment";
+import XenditPayment from "./XenditPayment";
 
 export default function PaymentMethodSelector({ 
   amount, 

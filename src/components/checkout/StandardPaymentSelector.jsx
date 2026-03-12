@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CreditCard, DollarSign, Building2, Loader2, CheckCircle2, Info, Phone, QrCode } from "lucide-react";
+import { CreditCard, DollarSign, Building2, Loader2, CheckCircle2, Info, Phone, QrCode, Zap } from "lucide-react";
 import PayMongoQRModal from "@/components/payment/PayMongoQRModal";
+import XenditPayment from "@/components/payment/XenditPayment";
 
 /**
  * StandardPaymentSelector - Unified payment method selection
