@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Smartphone, Building2, Globe } from "lucide-react";
+import { CreditCard, Smartphone, Building2, Globe, Zap } from "lucide-react";
 import StripeCheckout from "./StripeCheckout";
 import PayMongoPayment from "./PayMongoPayment";
 import PayPalPayment from "./PayPalPayment";
