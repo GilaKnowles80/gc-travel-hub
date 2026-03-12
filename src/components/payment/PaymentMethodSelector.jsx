@@ -16,21 +16,21 @@ export default function PaymentMethodSelector({
   onSuccess,
   onError 
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("stripe");
+  const [selectedMethod, setSelectedMethod] = useState("xendit");
 
   const paymentMethods = [
     {
-      id: "stripe",
-      name: "Credit/Debit Card",
-      icon: CreditCard,
-      description: "Visa, Mastercard, Amex",
+      id: "xendit",
+      name: "Xendit ⭐ Recommended",
+      icon: Zap,
+      description: "GCash, Maya, Cards, OTC, Online Banking",
       available: true,
     },
     {
-      id: "paymongo",
-      name: "E-Wallets",
-      icon: Smartphone,
-      description: "GCash, PayMaya, GrabPay",
+      id: "stripe",
+      name: "Credit/Debit Card (Stripe)",
+      icon: CreditCard,
+      description: "Visa, Mastercard, Amex — International",
       available: true,
     },
     {
