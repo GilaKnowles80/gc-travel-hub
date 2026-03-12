@@ -128,24 +128,33 @@ export default function StandardPaymentSelector({
         </RadioGroup>
       </div>
 
-      {/* Payment Button */}
-      <Button
-        onClick={handlePayment}
-        disabled={isLoading || isProcessing || !customerInfo.email}
-        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold h-12 rounded-xl gap-2 text-lg"
-      >
-        {isLoading || isProcessing ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            Processing...
-          </>
-        ) : (
-          <>
-            <CreditCard className="w-5 h-5" />
-            Pay ₱{total?.toLocaleString() || "0.00"}
-          </>
-        )}
-      </Button>
+      {/* Xendit inline payment (primary) */}
+      {selectedMethod === "xendit" ? (
+        <XenditPayment
+          amount={total}
+          currency="PHP"
+          description={bookingData?.description || bookingData?.tourTitle || bookingData?.type || "Travel Booking"}
+          bookingRef={bookingData?.bookingRef || bookingData?.id}
+        />
+      ) : (
+        <Button
+          onClick={handlePayment}
+          disabled={isLoading || isProcessing || !customerInfo.email}
+          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold h-12 rounded-xl gap-2 text-lg"
+        >
+          {isLoading || isProcessing ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <CreditCard className="w-5 h-5" />
+              Pay ₱{total?.toLocaleString() || "0.00"}
+            </>
+          )}
+        </Button>
+      )}
 
       {/* What happens next */}
       <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-2">
