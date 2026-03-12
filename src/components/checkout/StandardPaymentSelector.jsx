@@ -111,12 +111,16 @@ export default function StandardPaymentSelector({
                 <RadioGroupItem value={method.id} id={method.id} />
                 <Icon className="w-5 h-5 text-amber-600 shrink-0" />
                 <div className="flex-1">
-                  <Label
-                    htmlFor={method.id}
-                    className="font-semibold text-slate-900 cursor-pointer block"
-                  >
-                    {method.name}
-                  </Label>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Label htmlFor={method.id} className="font-semibold text-slate-900 cursor-pointer">
+                      {method.name}
+                    </Label>
+                    {method.badge && (
+                      <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">
+                        {method.badge}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-slate-600">{method.description}</p>
                 </div>
                 <span className="text-xs font-medium text-slate-600 whitespace-nowrap">
