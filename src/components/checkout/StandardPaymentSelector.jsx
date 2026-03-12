@@ -45,25 +45,19 @@ export default function StandardPaymentSelector({
 
   const paymentMethods = [
     {
+      id: "xendit",
+      name: "Xendit — GCash, Maya, Cards & More ⭐",
+      description: "GCash, Maya, Credit/Debit Cards, OTC, Online Banking",
+      icon: Zap,
+      fee: "Primary",
+      badge: "RECOMMENDED",
+    },
+    {
       id: "stripe",
-      name: "Credit/Debit Card",
-      description: "Visa, Mastercard, American Express",
+      name: "Credit/Debit Card (Stripe)",
+      description: "Visa, Mastercard, American Express — International",
       icon: CreditCard,
       fee: "2.9% + $0.30",
-    },
-    {
-      id: "paymongo_qr",
-      name: "QR Ph (PayMongo) — No Fees!",
-      description: "Scan QR · GCash, Maya, BDO, BPI & all QR Ph-enabled banks",
-      icon: QrCode,
-      fee: "Free",
-    },
-    {
-      id: "paymongo",
-      name: "PayMongo (E-wallets)",
-      description: "GCash, Debit Cards, Online Banking",
-      icon: DollarSign,
-      fee: "Free",
     },
     {
       id: "paypal",
