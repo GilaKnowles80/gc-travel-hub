@@ -21,7 +21,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required parameters: origin, destination, departureDate' }, { status: 400 });
     }
 
-    const markupPct = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '20') / 100;
+    // Detect domestic PH route
+    const PH_AIRPORTS = ['MNL','CEB','DVO','ILO','BCD','KLO','GES','CYP','LGP','TAG','ZAM','MPH','USU','CGY','DPL','ENI','MBT','OMC','OZC','PPS','RXS','SFE','SUG','TDG','TUG','VRC','WNP','XMA','CRM','GNI','MLP','SGS'];
+    const isDomestic = PH_AIRPORTS.includes(origin.toUpperCase()) && PH_AIRPORTS.includes(destination.toUpperCase());
+    const intlMarkup = parseFloat(Deno.env.get('FLIGHT_MARKUP_PERCENTAGE') || '20') / 100;
+    const domesticMarkup = parseFloat(Deno.env.get('DOMESTIC_FLIGHT_MARKUP_PERCENTAGE') || '20') / 100;
+    const markupPct = isDomestic ? domesticMarkup : intlMarkup;
+    console.log(`[MARKUP] Route ${origin}-${destination} is ${isDomestic ? 'DOMESTIC' : 'INTERNATIONAL'}, applying ${(markupPct*100).toFixed(0)}% markup`);
     const allFlights = [];
     const flightMap = new Map(); // Deduplication by route + price
 

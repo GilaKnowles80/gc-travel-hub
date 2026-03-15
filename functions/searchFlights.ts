@@ -65,9 +65,16 @@ Deno.serve(async (req) => {
 
         const flightData = await flightResponse.json();
 
+        // Detect domestic PH route
+        const PH_AIRPORTS = ['MNL','CEB','DVO','ILO','BCD','KLO','GES','CYP','LGP','TAG','ZAM','MPH','USU','CGY','DPL','ENI','MBT','OMC','OZC','PPS','RXS','SFE','SUG','TDG','TUG','VRC','WNP','XMA','CRM','GNI','MLP','SGS'];
+        const isDomestic = PH_AIRPORTS.includes(origin.toUpperCase()) && PH_AIRPORTS.includes(destination.toUpperCase());
+
         // Get markup from admin settings
         const markupResponse = await base44.asServiceRole.functions.invoke('getAdminMarkup');
-        const markup = markupResponse.data.markup / 100;
+        const baseMarkup = markupResponse.data.markup / 100;
+        const domesticMarkup = parseFloat(Deno.env.get('DOMESTIC_FLIGHT_MARKUP_PERCENTAGE') || '20') / 100;
+        const markup = isDomestic ? domesticMarkup : baseMarkup;
+        console.log(`[MARKUP] Route ${origin}-${destination} is ${isDomestic ? 'DOMESTIC' : 'INTERNATIONAL'}, applying ${(markup*100).toFixed(0)}% markup`);
 
         const processedOffers = flightData.data.map(offer => {
             const basePrice = parseFloat(offer.price.total);
