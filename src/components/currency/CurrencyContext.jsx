@@ -5,61 +5,57 @@ import { detectGeo } from '@/lib/geoDetect';
 
 const CurrencyContext = createContext();
 
-// Map country codes to currencies
+// Map country codes to currencies (comprehensive global coverage)
 const countryCurrencyMap = {
   // Philippines
   'PH': 'PHP',
   // Europe (EUR)
   'BE': 'EUR', 'FR': 'EUR', 'DE': 'EUR', 'ES': 'EUR', 'IT': 'EUR',
   'NL': 'EUR', 'AT': 'EUR', 'PT': 'EUR', 'IE': 'EUR', 'GR': 'EUR',
-  'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
+  'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR', 'FI': 'EUR',
   'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR', 'HR': 'EUR',
-  // UK
-  'GB': 'GBP',
-  // North, Central & South America
-  'US': 'USD', 'CA': 'CAD', 'MX': 'USD',
-  'GT': 'USD', 'BZ': 'USD', 'HN': 'USD', 'SV': 'USD', 'NI': 'USD',
-  'CR': 'USD', 'PA': 'USD', 'CU': 'USD', 'JM': 'USD', 'HT': 'USD',
-  'DO': 'USD', 'PR': 'USD', 'CO': 'USD', 'VE': 'USD', 'GY': 'USD',
-  'SR': 'USD', 'EC': 'USD', 'PE': 'USD', 'BO': 'USD', 'BR': 'USD',
-  'PY': 'USD', 'UY': 'USD', 'AR': 'USD', 'CL': 'USD',
+  'AD': 'EUR', 'MC': 'EUR', 'SM': 'EUR', 'VA': 'EUR', 'ME': 'EUR', 'XK': 'EUR',
+  // UK & Crown Dependencies
+  'GB': 'GBP', 'GG': 'GBP', 'JE': 'GBP', 'IM': 'GBP',
+  // North America
+  'US': 'USD', 'CA': 'CAD', 'MX': 'MXN',
+  // Central America & Caribbean
+  'GT': 'GTQ', 'BZ': 'BZD', 'HN': 'HNL', 'SV': 'USD', 'NI': 'NIO',
+  'CR': 'CRC', 'PA': 'USD', 'CU': 'CUP', 'JM': 'JMD', 'HT': 'HTG',
+  'DO': 'DOP', 'PR': 'USD', 'TT': 'TTD', 'BB': 'BBD', 'BS': 'BSD',
+  // South America
+  'CO': 'COP', 'VE': 'VES', 'GY': 'GYD', 'SR': 'SRD',
+  'EC': 'USD', 'PE': 'PEN', 'BO': 'BOB', 'BR': 'BRL',
+  'PY': 'PYG', 'UY': 'UYU', 'AR': 'ARS', 'CL': 'CLP',
   // Asia Pacific
-  'JP': 'JPY', 'SG': 'SGD', 'AU': 'AUD',
-  // China (Yuan/CNY)
-  'CN': 'CNY',
-  // South Korea
-  'KR': 'KRW',
-  // Thailand
-  'TH': 'THB',
+  'JP': 'JPY', 'SG': 'SGD', 'AU': 'AUD', 'NZ': 'NZD',
+  'CN': 'CNY', 'HK': 'HKD', 'TW': 'TWD',
+  'KR': 'KRW', 'TH': 'THB', 'ID': 'IDR', 'MY': 'MYR',
+  'VN': 'VND', 'MM': 'MMK', 'KH': 'KHR', 'LA': 'LAK',
+  'IN': 'INR', 'PK': 'PKR', 'BD': 'BDT', 'LK': 'LKR', 'NP': 'NPR',
+  'AF': 'AFN', 'MV': 'MVR', 'BT': 'BTN',
+  'MN': 'MNT', 'KZ': 'KZT', 'UZ': 'UZS', 'TM': 'TMT', 'TJ': 'TJS', 'KG': 'KGS',
   // Middle East
-  'AE': 'AED', // UAE Dirham
-  'BH': 'BHD', // Bahraini Dinar
-  'KW': 'KWD', // Kuwaiti Dinar
-  'IQ': 'IQD', // Iraqi Dinar
-  'JO': 'JOD', // Jordanian Dinar
-  'SA': 'SAR', // Saudi Riyal
-  'QA': 'QAR', // Qatari Riyal
-  'OM': 'OMR', // Omani Riyal
-  'YE': 'YER', // Yemeni Riyal
+  'AE': 'AED', 'BH': 'BHD', 'KW': 'KWD', 'IQ': 'IQD',
+  'JO': 'JOD', 'SA': 'SAR', 'QA': 'QAR', 'OM': 'OMR', 'YE': 'YER',
+  'IR': 'IRR', 'IL': 'ILS', 'LB': 'LBP', 'SY': 'SYP', 'TR': 'TRY',
   // Scandinavia
-  'NO': 'NOK', // Norwegian Krone
-  'SE': 'SEK', // Swedish Krona
-  'DK': 'DKK', // Danish Krone
-  // Finland uses EUR
-  'FI': 'EUR',
-  // Switzerland
-  'CH': 'CHF',
+  'NO': 'NOK', 'SE': 'SEK', 'DK': 'DKK', 'IS': 'ISK',
+  // Other Europe
+  'CH': 'CHF', 'LI': 'CHF',
+  'PL': 'PLN', 'CZ': 'CZK', 'HU': 'HUF', 'RO': 'RON', 'BG': 'BGN',
+  'RS': 'RSD', 'BA': 'BAM', 'MK': 'MKD', 'AL': 'ALL',
+  'RU': 'RUB', 'UA': 'UAH', 'BY': 'BYN', 'MD': 'MDL',
+  'GE': 'GEL', 'AM': 'AMD', 'AZ': 'AZN',
   // Africa
-  'NG': 'NGN', // Nigerian Naira
-  'ZA': 'ZAR', // South African Rand
-  'KE': 'KES', // Kenyan Shilling
-  'GH': 'GHS', // Ghanaian Cedi
-  'EG': 'EGP', // Egyptian Pound
-  'ET': 'ETB', // Ethiopian Birr
-  'TZ': 'TZS', // Tanzanian Shilling
-  'UG': 'UGX', // Ugandan Shilling
-  'MA': 'MAD', // Moroccan Dirham
-  'DZ': 'DZD', // Algerian Dinar
+  'NG': 'NGN', 'ZA': 'ZAR', 'KE': 'KES', 'GH': 'GHS',
+  'EG': 'EGP', 'ET': 'ETB', 'TZ': 'TZS', 'UG': 'UGX',
+  'MA': 'MAD', 'DZ': 'DZD', 'TN': 'TND', 'LY': 'LYD',
+  'SD': 'SDG', 'AO': 'AOA', 'MZ': 'MZN', 'ZW': 'ZWL',
+  'CM': 'XAF', 'SN': 'XOF', 'CI': 'XOF', 'MG': 'MGA',
+  'ZM': 'ZMW', 'BW': 'BWP', 'NA': 'NAD', 'MU': 'MUR', 'RW': 'RWF',
+  // Pacific Islands
+  'FJ': 'FJD', 'PG': 'PGK', 'TO': 'TOP', 'WS': 'WST', 'VU': 'VUV',
 };
 
 export function CurrencyProvider({ children }) {
