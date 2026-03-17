@@ -96,15 +96,29 @@ export function CurrencyProvider({ children }) {
   });
 
   const symbols = {
-    PHP: '₱', USD: '$', EUR: '€', GBP: '£',
-    JPY: '¥', SGD: 'S$', AUD: 'A$', CAD: 'C$',
-    CNY: '¥', KRW: '₩', THB: '฿',
+    // Southeast Asia
+    PHP: '₱', SGD: 'S$', IDR: 'Rp', MYR: 'RM', THB: '฿',
+    VND: '₫', MMK: 'K', KHR: '៛',
+    // Major
+    USD: '$', EUR: '€', GBP: '£', JPY: '¥', CNY: '¥',
+    AUD: 'A$', CAD: 'C$', NZD: 'NZ$', HKD: 'HK$', TWD: 'NT$',
+    KRW: '₩', INR: '₹', PKR: '₨', BDT: '৳',
+    // Middle East
     AED: 'د.إ', BHD: 'BD', KWD: 'KD', IQD: 'IQD',
     JOD: 'JD', SAR: '﷼', QAR: 'QR', OMR: 'OMR', YER: '﷼',
-    NOK: 'kr', SEK: 'kr', DKK: 'kr', CHF: 'Fr',
+    ILS: '₪', TRY: '₺', IRR: '﷼',
+    // Europe
+    NOK: 'kr', SEK: 'kr', DKK: 'kr', ISK: 'kr', CHF: 'Fr',
+    PLN: 'zł', CZK: 'Kč', HUF: 'Ft', RON: 'lei', BGN: 'лв',
+    RUB: '₽', UAH: '₴', RSD: 'din', HRK: 'kn',
+    GEL: '₾', AMD: '֏', AZN: '₼',
+    // Americas
+    MXN: 'MX$', BRL: 'R$', ARS: '$', CLP: 'CL$', COP: 'CO$',
+    PEN: 'S/', UYU: '$U', PYG: '₲',
+    // Africa
     NGN: '₦', ZAR: 'R', KES: 'KSh', GHS: '₵',
     EGP: '£', ETB: 'Br', TZS: 'TSh', UGX: 'USh',
-    MAD: 'MAD', DZD: 'DA',
+    MAD: 'MAD', DZD: 'DA', TND: 'DT', ZMW: 'ZK', BWP: 'P', MUR: '₨',
   };
 
   // Convert from PHP base to target currency
