@@ -74,10 +74,11 @@ export function CurrencyProvider({ children }) {
       
       // Use geo-detection only if no user preference
       if (!userData?.preferred_currency) {
-        const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => null);
-        if (isMounted && geo?.country_code) {
-          setCountryCode(geo.country_code);
-          const detected = countryCurrencyMap[geo.country_code] || 'PHP';
+        const geo = await detectGeo();
+        if (isMounted && geo?.countryCode) {
+          setCountryCode(geo.countryCode);
+          // ip-api returns currency directly, fallback to map
+          const detected = geo.currency || countryCurrencyMap[geo.countryCode] || 'PHP';
           setSelectedCurrency(detected);
         }
       } else if (isMounted && userData.preferred_currency) {

@@ -13,12 +13,25 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('app_language') || 'en';
+    return localStorage.getItem('app_language') || null;
   });
 
   useEffect(() => {
-    localStorage.setItem('app_language', language);
-    document.documentElement.lang = language;
+    // If no stored preference, auto-detect from IP geo
+    if (!language) {
+      detectGeo().then(geo => {
+        const detected = (geo?.countryCode && countryLanguageMap[geo.countryCode]) || 
+                         navigator.language?.split('-')[0] || 'en';
+        setLanguage(detected);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (language) {
+      localStorage.setItem('app_language', language);
+      document.documentElement.lang = language;
+    }
   }, [language]);
 
   return (
