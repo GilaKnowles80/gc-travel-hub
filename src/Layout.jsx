@@ -16,7 +16,6 @@ import FloatingContactWidget from "@/components/support/FloatingContactWidget";
 import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import CookieConsent from "@/components/gdpr/CookieConsent";
-import BottomNavigation from "@/components/mobile/BottomNavigation";
 import AdBanner from "@/components/ads/AdBanner";
 import GoogleAdsTracking from "@/components/tracking/GoogleAdsTracking";
 import GoogleTagManager from "@/components/tracking/GoogleTagManager";
