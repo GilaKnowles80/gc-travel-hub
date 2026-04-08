@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Smartphone, Building2, Globe, Zap } from "lucide-react";
-import StripeCheckout from "./StripeCheckout";
+import { Smartphone, Zap } from "lucide-react";
 import PayMongoPayment from "./PayMongoPayment";
-import PayPalPayment from "./PayPalPayment";
-import BankTransferPayment from "./BankTransferPayment";
 import XenditPayment from "./XenditPayment";
 
 export default function PaymentMethodSelector({ 
   amount, 
   currency = "PHP", 
   bookingData,
-  bankAccount,
   onSuccess,
   onError 
 }) {
@@ -27,32 +23,13 @@ export default function PaymentMethodSelector({
       available: true,
     },
     {
-      id: "stripe",
-      name: "Credit/Debit Card (Stripe)",
-      icon: CreditCard,
-      description: "Visa, Mastercard, Amex — International",
+      id: "paymongo",
+      name: "PayMongo",
+      icon: Smartphone,
+      description: "GCash, Maya, Credit/Debit Cards",
       available: true,
-    },
-    {
-      id: "paypal",
-      name: "PayPal",
-      icon: Globe,
-      description: "PayPal balance or card",
-      available: true,
-    },
-    {
-      id: "bank",
-      name: "Bank Transfer",
-      icon: Building2,
-      description: "Philippine banks",
-      available: !!bankAccount,
     },
   ];
-
-  const convertToUSD = (phpAmount) => {
-    // Convert PHP to USD (approximate rate: 1 USD = 56 PHP)
-    return (phpAmount / 56).toFixed(2);
-  };
 
   return (
     <div className="space-y-6">
@@ -114,36 +91,11 @@ export default function PaymentMethodSelector({
           />
         )}
 
-        {selectedMethod === "stripe" && (
-          <StripeCheckout
-            amount={amount}
-            bookingData={bookingData}
-            onSuccess={onSuccess}
-          />
-        )}
-
         {selectedMethod === "paymongo" && (
           <PayMongoPayment
             amount={amount}
             bookingData={bookingData}
             onSuccess={onSuccess}
-          />
-        )}
-
-        {selectedMethod === "paypal" && (
-          <PayPalPayment
-            amount={parseFloat(convertToUSD(amount))}
-            currency="USD"
-            bookingData={bookingData}
-            onSuccess={onSuccess}
-            onError={onError}
-          />
-        )}
-
-        {selectedMethod === "bank" && bankAccount && (
-          <BankTransferPayment
-            bankAccount={bankAccount}
-            bookingReference={bookingData?.bookingId || "N/A"}
           />
         )}
       </div>

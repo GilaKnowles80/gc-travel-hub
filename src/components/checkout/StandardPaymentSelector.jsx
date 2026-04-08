@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import { CreditCard, Building2, Loader2, CheckCircle2, Zap, Globe } from "lucide-react";
+import { CheckCircle2, Zap, Smartphone } from "lucide-react";
 import XenditPayment from "@/components/payment/XenditPayment";
-import StripeCheckout from "@/components/payment/StripeCheckout";
-import PayMongoQRModal from "@/components/payment/PayMongoQRModal";
+import PayMongoPayment from "@/components/payment/PayMongoPayment";
 
 /**
  * StandardPaymentSelector
@@ -19,23 +17,9 @@ export default function StandardPaymentSelector({
   onPayment,
 }) {
   const [selectedMethod, setSelectedMethod] = useState("xendit");
-  const [isLoading, setIsLoading] = useState(false);
-  const [paymongoQROpen, setPaymongoQROpen] = useState(false);
-
-  const handlePayment = async () => {
-    if (selectedMethod === "bank_transfer") {
-      setIsLoading(true);
-      try {
-        await onPayment(selectedMethod, { booking: bookingData, customer: customerInfo });
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
-
   const total = bookingData?.totalPrice || 0;
 
-  const localMethods = [
+  const paymentMethods = [
     {
       id: "xendit",
       name: "Xendit",
@@ -44,21 +28,10 @@ export default function StandardPaymentSelector({
       badge: "RECOMMENDED",
     },
     {
-      id: "bank_transfer",
-      name: "Bank Transfer",
-      description: "Direct bank transfer with manual confirmation",
-      icon: Building2,
-      fee: "Free",
-    },
-  ];
-
-  const intlMethods = [
-    {
-      id: "stripe",
-      name: "Credit / Debit Card",
-      description: "Visa, Mastercard, Amex — Powered by Stripe",
-      icon: CreditCard,
-      fee: "2.9% + $0.30",
+      id: "paymongo",
+      name: "PayMongo",
+      description: "GCash, Maya, Credit/Debit Cards",
+      icon: Smartphone,
     },
   ];
 
@@ -108,23 +81,11 @@ export default function StandardPaymentSelector({
         </div>
       </div>
 
-      <RadioGroup value={selectedMethod} onValueChange={setSelectedMethod} className="space-y-4">
-        {/* Local PH Gateway */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">🇵🇭 Local Payment (Philippines)</span>
-          </div>
-          {localMethods.map(renderMethodCard)}
+      <RadioGroup value={selectedMethod} onValueChange={setSelectedMethod} className="space-y-3">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">🇵🇭 Payment Options</span>
         </div>
-
-        {/* International Gateway */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 mb-1">
-            <Globe className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">International Payment</span>
-          </div>
-          {intlMethods.map(renderMethodCard)}
-        </div>
+        {paymentMethods.map(renderMethodCard)}
       </RadioGroup>
 
       {/* Payment Action */}
@@ -137,27 +98,11 @@ export default function StandardPaymentSelector({
         />
       )}
 
-      {selectedMethod === "stripe" && (
-        <StripeCheckout
-          bookingType={bookingData?.type}
-          bookingId={bookingData?.id || bookingData?.bookingRef}
+      {selectedMethod === "paymongo" && (
+        <PayMongoPayment
           amount={total}
-          currency="PHP"
+          bookingData={bookingData}
         />
-      )}
-
-      {selectedMethod === "bank_transfer" && (
-        <Button
-          onClick={handlePayment}
-          disabled={isLoading || isProcessing}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold h-12 rounded-xl text-lg"
-        >
-          {isLoading || isProcessing ? (
-            <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
-          ) : (
-            <><Building2 className="w-5 h-5" /> Pay via Bank Transfer</>
-          )}
-        </Button>
       )}
 
       {/* After payment info */}
@@ -175,7 +120,7 @@ export default function StandardPaymentSelector({
         <p className="text-xs text-blue-700">🔒 Your payment is encrypted and secure. We never store your card details.</p>
         <div className="flex items-center justify-center gap-3 mt-2 flex-wrap text-xs text-slate-500 font-semibold">
           <span>Xendit</span><span className="text-slate-300">|</span>
-          <span>Stripe</span><span className="text-slate-300">|</span>
+          <span>PayMongo</span><span className="text-slate-300">|</span>
           <span>GCash</span><span className="text-slate-300">|</span>
           <span>Maya</span>
         </div>
@@ -184,13 +129,7 @@ export default function StandardPaymentSelector({
         </p>
       </div>
 
-      <PayMongoQRModal
-        open={paymongoQROpen}
-        onClose={() => setPaymongoQROpen(false)}
-        amount={total}
-        bookingType={bookingData?.type}
-        bookingId={bookingData?.id}
-      />
+
     </div>
   );
 }
