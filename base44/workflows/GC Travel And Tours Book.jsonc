@@ -1,0 +1,36 @@
+{
+  "name": "GC Travel And Tours Book",
+  "description": "",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update",
+        "delete"
+      ],
+      "entity_name": "Booking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "gc_travel_and_tours_book",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "generateBookingPdf",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

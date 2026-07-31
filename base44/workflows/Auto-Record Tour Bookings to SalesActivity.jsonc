@@ -1,0 +1,35 @@
+{
+  "name": "Auto-Record Tour Bookings to SalesActivity",
+  "description": "",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update"
+      ],
+      "entity_name": "Booking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_record_tour_bookings_to_salesactivity",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "recordBookingToSalesActivity",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Phase 13: Monthly Profit Review",
+  "description": "Phase 13 Risk Management Loop \u2013 Monthly profit review and risk reserve allocation on 1st of each month",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 23 1 * *",
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "phase_13_monthly_profit_review",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "riskReconciliation",
+            "args": {
+              "mode": "monthly"
+            }
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

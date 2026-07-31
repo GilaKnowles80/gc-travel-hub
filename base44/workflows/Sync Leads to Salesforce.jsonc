@@ -1,0 +1,34 @@
+{
+  "name": "Sync Leads to Salesforce",
+  "description": "Automatically sync new GC Travel leads to Salesforce CRM",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "Lead"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "sync_leads_to_salesforce",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncLeadToSalesforce",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Auto-Audit: Package Bookings",
+  "description": "",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update",
+        "delete"
+      ],
+      "entity_name": "PackageBooking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_audit_package_bookings",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "autoAuditEntity",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}
