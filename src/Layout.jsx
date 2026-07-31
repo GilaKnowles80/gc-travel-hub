@@ -179,9 +179,9 @@ function LayoutContent({ children, currentPageName }) {
               )}
               {currentPageName !== "Home" && (
                 <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
-                  <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/bddaaee95_GC-logojpg.jpeg"
-                    alt="GC Travel and Tours Agency"
+                  <img
+                    src="https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/3818d130c_Argie-CLogo2.jpg"
+                    alt="ArGie-C Travel and Tours Agency"
                     className="h-8 md:h-10 w-auto"
                   />
                 </Link>
