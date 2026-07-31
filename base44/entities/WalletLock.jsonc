@@ -1,0 +1,86 @@
+{
+  "name": "WalletLock",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User whose funds are locked"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Associated booking ID"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "bus",
+        "ferry",
+        "car_rental"
+      ],
+      "description": "Type of booking"
+    },
+    "locked_amount": {
+      "type": "number",
+      "description": "Amount locked in wallet"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "confirmed",
+        "released",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Lock status"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When lock was created"
+    },
+    "expiry_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When lock expires (auto-release)"
+    },
+    "confirmed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When lock was confirmed to debit"
+    },
+    "released_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When lock was released"
+    },
+    "reason_for_release": {
+      "type": "string",
+      "enum": [
+        "booking_confirmed",
+        "booking_failed",
+        "user_cancelled",
+        "expired"
+      ],
+      "description": "Reason lock was released"
+    },
+    "ledger_entry_id": {
+      "type": "string",
+      "description": "Associated wallet_ledger entry"
+    }
+  },
+  "required": [
+    "user_email",
+    "booking_id",
+    "locked_amount",
+    "expiry_time"
+  ]
+}

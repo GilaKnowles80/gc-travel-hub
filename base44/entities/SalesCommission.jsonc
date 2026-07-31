@@ -1,0 +1,78 @@
+{
+  "name": "SalesCommission",
+  "type": "object",
+  "properties": {
+    "sales_person": {
+      "type": "string",
+      "description": "Sales person email"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Related booking"
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "Original lead"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "package",
+        "visa",
+        "insurance",
+        "car",
+        "bus",
+        "train",
+        "ferry",
+        "cruise"
+      ],
+      "description": "Type of booking"
+    },
+    "booking_value": {
+      "type": "number",
+      "description": "Total booking value"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "Commission percentage"
+    },
+    "commission_amount": {
+      "type": "number",
+      "description": "Calculated commission"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "paid",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Commission payment status"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When commission was paid"
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Payment reference number"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "sales_person",
+    "booking_id",
+    "booking_value",
+    "commission_rate",
+    "commission_amount"
+  ]
+}

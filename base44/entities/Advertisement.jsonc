@@ -1,0 +1,110 @@
+{
+  "name": "Advertisement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Ad title/heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "Ad description text"
+    },
+    "ad_type": {
+      "type": "string",
+      "enum": [
+        "internal_promotion",
+        "external_ad"
+      ],
+      "description": "Type of advertisement"
+    },
+    "placement": {
+      "type": "string",
+      "enum": [
+        "banner_top",
+        "banner_bottom",
+        "sidebar",
+        "popup",
+        "inline"
+      ],
+      "description": "Where the ad appears"
+    },
+    "target_pages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "all",
+          "home",
+          "flights",
+          "hotels",
+          "tours",
+          "bookings"
+        ]
+      },
+      "description": "Pages where ad should appear"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Ad banner image"
+    },
+    "link_url": {
+      "type": "string",
+      "description": "Click destination URL"
+    },
+    "link_text": {
+      "type": "string",
+      "description": "Call-to-action button text"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#f59e0b",
+      "description": "Background color (hex)"
+    },
+    "text_color": {
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color (hex)"
+    },
+    "external_code": {
+      "type": "string",
+      "description": "External ad code (Google AdSense, etc.)"
+    },
+    "priority": {
+      "type": "number",
+      "default": 0,
+      "description": "Display priority (higher = shown first)"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Times shown"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Times clicked"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start showing date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Stop showing date"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Ad is active"
+    }
+  },
+  "required": [
+    "title",
+    "ad_type",
+    "placement",
+    "target_pages"
+  ]
+}

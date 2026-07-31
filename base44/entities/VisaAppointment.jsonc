@@ -1,0 +1,115 @@
+{
+  "name": "VisaAppointment",
+  "type": "object",
+  "properties": {
+    "visa_id": {
+      "type": "string",
+      "description": "Reference to visa"
+    },
+    "country": {
+      "type": "string",
+      "description": "Visa destination country"
+    },
+    "visa_type": {
+      "type": "string",
+      "description": "Type of visa"
+    },
+    "applicant_name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "applicant_email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "applicant_phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "passport_number": {
+      "type": "string",
+      "description": "Passport number"
+    },
+    "nationality": {
+      "type": "string",
+      "description": "Nationality"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth"
+    },
+    "appointment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled appointment"
+    },
+    "travel_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Intended travel date"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "tourism",
+        "business",
+        "study",
+        "work",
+        "family_visit",
+        "medical",
+        "transit"
+      ],
+      "description": "Purpose of travel"
+    },
+    "documents_submitted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of submitted documents"
+    },
+    "service_fee": {
+      "type": "number",
+      "description": "Service fee charged"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total cost including visa fee"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "documents_submitted",
+        "processing",
+        "approved",
+        "rejected",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Appointment status"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "visa_id",
+    "country",
+    "applicant_name",
+    "applicant_email",
+    "appointment_date"
+  ]
+}

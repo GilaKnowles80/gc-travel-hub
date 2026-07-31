@@ -1,0 +1,34 @@
+{
+  "name": "LoyaltyAccount",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User's email"
+    },
+    "points_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Current points balance"
+    },
+    "lifetime_points": {
+      "type": "number",
+      "default": 0,
+      "description": "Total points earned all-time"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "bronze",
+        "silver",
+        "gold",
+        "platinum"
+      ],
+      "default": "bronze",
+      "description": "Current loyalty tier"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

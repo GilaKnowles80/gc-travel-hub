@@ -1,0 +1,150 @@
+{
+  "name": "TravelPackage",
+  "type": "object",
+  "properties": {
+    "package_name": {
+      "type": "string",
+      "description": "Package name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Package description"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Main destination"
+    },
+    "duration_days": {
+      "type": "number",
+      "description": "Package duration in days"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Package image"
+    },
+    "gallery_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Gallery images"
+    },
+    "included_flights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "flight_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Included flights"
+    },
+    "included_hotels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hotel_id": {
+            "type": "string"
+          },
+          "nights": {
+            "type": "number"
+          },
+          "room_type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Included hotels"
+    },
+    "included_tours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tour_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Included tours"
+    },
+    "inclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's included"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's not included"
+    },
+    "price_per_person": {
+      "type": "number",
+      "description": "Base price per person"
+    },
+    "max_participants": {
+      "type": "number",
+      "description": "Maximum group size"
+    },
+    "available_dates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "date"
+      },
+      "description": "Available departure dates"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show on homepage"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Package status"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "beach",
+        "adventure",
+        "cultural",
+        "honeymoon",
+        "family",
+        "luxury",
+        "budget"
+      ],
+      "description": "Package category"
+    },
+    "bookings_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Total bookings"
+    }
+  },
+  "required": [
+    "package_name",
+    "destination",
+    "duration_days",
+    "price_per_person"
+  ]
+}

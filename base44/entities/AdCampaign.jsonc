@@ -1,0 +1,95 @@
+{
+  "name": "AdCampaign",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Campaign name"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "x_twitter",
+        "google",
+        "pinterest",
+        "reddit",
+        "microsoft_bing",
+        "yahoo",
+        "discord",
+        "opera",
+        "tumblr",
+        "youtube",
+        "other"
+      ],
+      "description": "Advertising platform"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused",
+        "completed"
+      ],
+      "default": "draft"
+    },
+    "objective": {
+      "type": "string",
+      "enum": [
+        "brand_awareness",
+        "traffic",
+        "conversions",
+        "lead_generation",
+        "engagement"
+      ],
+      "description": "Campaign objective"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Total budget in PHP"
+    },
+    "spent": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount spent so far"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "target_audience": {
+      "type": "string",
+      "description": "Target audience description"
+    },
+    "ad_url": {
+      "type": "string",
+      "description": "Link to ad on platform"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "platform"
+  ]
+}

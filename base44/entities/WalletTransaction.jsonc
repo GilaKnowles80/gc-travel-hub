@@ -1,0 +1,63 @@
+{
+  "name": "WalletTransaction",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": [
+        "deposit",
+        "withdrawal",
+        "booking_payment",
+        "refund",
+        "adjustment"
+      ],
+      "description": "Type of transaction"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Transaction amount"
+    },
+    "description": {
+      "type": "string",
+      "description": "Transaction description"
+    },
+    "reference_id": {
+      "type": "string",
+      "description": "Related booking/payment ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Transaction status"
+    },
+    "withdrawal_method": {
+      "type": "string",
+      "enum": [
+        "bank_transfer",
+        "paypal",
+        "stripe",
+        "none"
+      ],
+      "description": "Method for withdrawal"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes"
+    }
+  },
+  "required": [
+    "user_email",
+    "transaction_type",
+    "amount"
+  ]
+}

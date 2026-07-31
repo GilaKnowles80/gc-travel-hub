@@ -1,0 +1,107 @@
+{
+  "name": "DiscountCode",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Unique discount code"
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the offer"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "description": "Type of discount"
+    },
+    "discount_value": {
+      "type": "number",
+      "description": "Percentage (0-100) or fixed amount"
+    },
+    "max_discount": {
+      "type": "number",
+      "description": "Maximum discount cap for percentage discounts"
+    },
+    "min_purchase": {
+      "type": "number",
+      "description": "Minimum purchase amount required"
+    },
+    "applicable_to": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "flight",
+          "hotel",
+          "tour",
+          "ferry",
+          "bus",
+          "car_rental",
+          "all"
+        ]
+      },
+      "description": "Which services this applies to"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date and time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Expiry date and time"
+    },
+    "usage_limit": {
+      "type": "number",
+      "description": "Total number of times this code can be used"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Current usage count"
+    },
+    "per_user_limit": {
+      "type": "number",
+      "default": 1,
+      "description": "Times each user can use this code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Discount code status"
+    },
+    "is_flash_sale": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as flash sale for special promotion"
+    },
+    "excluded_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Blackout dates where code doesn't apply"
+    }
+  },
+  "required": [
+    "code",
+    "title",
+    "discount_type",
+    "discount_value",
+    "applicable_to"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "name": "PremiumMembership",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Premium member email"
+    },
+    "plan_type": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "annual"
+      ],
+      "description": "Subscription plan"
+    },
+    "plan_price": {
+      "type": "number",
+      "description": "Subscription price paid"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Membership start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Membership end date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID"
+    },
+    "benefits": {
+      "type": "object",
+      "properties": {
+        "service_fee_discount": {
+          "type": "number",
+          "default": 50,
+          "description": "50% off service fees"
+        },
+        "priority_support": {
+          "type": "boolean",
+          "default": true
+        },
+        "exclusive_deals": {
+          "type": "boolean",
+          "default": true
+        },
+        "free_cancellation": {
+          "type": "boolean",
+          "default": true
+        },
+        "loyalty_points_multiplier": {
+          "type": "number",
+          "default": 2,
+          "description": "2x loyalty points"
+        }
+      },
+      "default": {}
+    },
+    "total_savings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount saved"
+    }
+  },
+  "required": [
+    "user_email",
+    "plan_type",
+    "start_date",
+    "end_date"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "DynamicPrice",
+  "type": "object",
+  "properties": {
+    "item_id": {
+      "type": "string",
+      "description": "ID of flight or hotel"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel"
+      ],
+      "description": "Type of item"
+    },
+    "base_price": {
+      "type": "number",
+      "description": "Original base price"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Current dynamic price"
+    },
+    "price_multiplier": {
+      "type": "number",
+      "description": "Applied multiplier"
+    },
+    "discount_percent": {
+      "type": "number",
+      "description": "Discount percentage if applicable"
+    },
+    "applicable_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of rules applied"
+    },
+    "calculation_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this price was calculated"
+    },
+    "next_price_change": {
+      "type": "string",
+      "format": "date",
+      "description": "Next date when price will be recalculated"
+    }
+  },
+  "required": [
+    "item_id",
+    "item_type",
+    "base_price",
+    "current_price"
+  ]
+}

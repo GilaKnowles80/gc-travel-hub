@@ -1,0 +1,42 @@
+{
+  "name": "AffiliateClick",
+  "type": "object",
+  "properties": {
+    "affiliate_link_id": {
+      "type": "string",
+      "description": "Reference to AffiliateLink entity"
+    },
+    "link_name": {
+      "type": "string",
+      "description": "Name of the affiliate link (cached)"
+    },
+    "platform": {
+      "type": "string",
+      "description": "Platform name (cached for quick analytics)"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category (cached for quick analytics)"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the logged-in user who clicked (if available)"
+    },
+    "referring_page": {
+      "type": "string",
+      "description": "Page on your site where the click happened"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "Browser/device info"
+    },
+    "clicked_at": {
+      "type": "string",
+      "description": "Timestamp of the click"
+    }
+  },
+  "required": [
+    "affiliate_link_id",
+    "platform"
+  ]
+}

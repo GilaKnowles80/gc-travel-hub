@@ -1,0 +1,79 @@
+{
+  "name": "FeaturedListing",
+  "type": "object",
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "tour",
+        "hotel",
+        "flight",
+        "package"
+      ],
+      "description": "Type of listing"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the tour/hotel/etc"
+    },
+    "supplier_id": {
+      "type": "string",
+      "description": "Supplier who paid for featured placement"
+    },
+    "placement": {
+      "type": "string",
+      "enum": [
+        "homepage_top",
+        "category_top",
+        "search_results"
+      ],
+      "description": "Where to feature"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Feature start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Feature end date"
+    },
+    "price_paid": {
+      "type": "number",
+      "description": "Amount paid for featured placement"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Times shown"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Times clicked"
+    },
+    "bookings": {
+      "type": "number",
+      "default": 0,
+      "description": "Bookings generated"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "paused"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "entity_type",
+    "entity_id",
+    "placement",
+    "start_date",
+    "end_date",
+    "price_paid"
+  ]
+}

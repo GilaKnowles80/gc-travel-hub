@@ -1,0 +1,78 @@
+{
+  "name": "CruiseBooking",
+  "type": "object",
+  "properties": {
+    "cruise_id": {
+      "type": "string",
+      "description": "Reference to cruise"
+    },
+    "cruise_name": {
+      "type": "string",
+      "description": "Cruise name for reference"
+    },
+    "guest_name": {
+      "type": "string",
+      "description": "Lead guest name"
+    },
+    "guest_email": {
+      "type": "string",
+      "description": "Guest email"
+    },
+    "guest_phone": {
+      "type": "string",
+      "description": "Guest phone"
+    },
+    "number_of_guests": {
+      "type": "number",
+      "description": "Total guests"
+    },
+    "cabin_category": {
+      "type": "string",
+      "enum": [
+        "interior",
+        "oceanview",
+        "balcony",
+        "suite"
+      ],
+      "description": "Selected cabin type"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total booking price"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Dietary, accessibility requests"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Supplier used"
+    }
+  },
+  "required": [
+    "cruise_id",
+    "guest_name",
+    "guest_email",
+    "cabin_category"
+  ]
+}

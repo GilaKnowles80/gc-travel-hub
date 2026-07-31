@@ -1,0 +1,43 @@
+{
+  "name": "Wallet",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email address"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Current wallet balance"
+    },
+    "total_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount earned/credited"
+    },
+    "total_withdrawn": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount withdrawn"
+    },
+    "total_used": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount used for bookings"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "frozen",
+        "closed"
+      ],
+      "default": "active",
+      "description": "Wallet status"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

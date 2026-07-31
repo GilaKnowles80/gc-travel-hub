@@ -1,0 +1,49 @@
+{
+  "name": "AffiliateReferral",
+  "type": "object",
+  "properties": {
+    "affiliate_id": {
+      "type": "string",
+      "description": "Affiliate ID"
+    },
+    "affiliate_code": {
+      "type": "string",
+      "description": "Affiliate code used"
+    },
+    "referred_email": {
+      "type": "string",
+      "description": "Referred customer email"
+    },
+    "referral_source": {
+      "type": "string",
+      "description": "Source of referral (link, QR, etc.)"
+    },
+    "first_booking_id": {
+      "type": "string",
+      "description": "First booking made by referral"
+    },
+    "total_bookings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total bookings from this referral"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0,
+      "description": "Total revenue from this referral"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "affiliate_id",
+    "affiliate_code",
+    "referred_email"
+  ]
+}

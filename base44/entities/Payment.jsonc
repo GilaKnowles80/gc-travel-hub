@@ -1,0 +1,122 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who made the payment"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "bulk",
+        "ferry",
+        "bus",
+        "car_rental",
+        "digital_product"
+      ],
+      "description": "Type of booking"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to the booking"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount received from customer"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency code"
+    },
+    "cost_basis": {
+      "type": "number",
+      "description": "Supplier/base cost of the booking"
+    },
+    "markup_amount": {
+      "type": "number",
+      "description": "Your profit (amount - cost_basis)"
+    },
+    "markup_percentage": {
+      "type": "number",
+      "description": "Markup as percentage"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "paymongo",
+        "bank_transfer",
+        "cash",
+        "wallet"
+      ],
+      "description": "Payment method used"
+    },
+    "payment_provider_id": {
+      "type": "string",
+      "description": "Transaction ID from payment provider"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    },
+    "stripe_payment_intent": {
+      "type": "string",
+      "description": "Stripe payment intent ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "refunded",
+        "cancelled",
+        "partial"
+      ],
+      "default": "pending",
+      "description": "Payment status"
+    },
+    "partial_amount_paid": {
+      "type": "number",
+      "description": "Amount paid if partial payment"
+    },
+    "remaining_amount": {
+      "type": "number",
+      "description": "Amount still due if partial payment"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional payment details"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date payment was completed"
+    },
+    "refund_amount": {
+      "type": "number",
+      "description": "Amount refunded (if any)"
+    },
+    "refund_reason": {
+      "type": "string",
+      "description": "Reason for refund"
+    },
+    "receipt_url": {
+      "type": "string",
+      "description": "URL to payment receipt"
+    }
+  },
+  "required": [
+    "user_email",
+    "booking_type",
+    "booking_id",
+    "amount",
+    "payment_method"
+  ]
+}

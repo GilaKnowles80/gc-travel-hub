@@ -1,0 +1,103 @@
+{
+  "name": "BusBooking",
+  "type": "object",
+  "properties": {
+    "booking_ref": {
+      "type": "string",
+      "description": "Human-readable booking reference (e.g. BUS0000001)"
+    },
+    "route": {
+      "type": "string",
+      "description": "Bus route (e.g., Manila - Baguio)"
+    },
+    "bus_company": {
+      "type": "string",
+      "description": "Bus company name"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Departure date"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure time"
+    },
+    "passenger_name": {
+      "type": "string",
+      "description": "Passenger name"
+    },
+    "passenger_email": {
+      "type": "string",
+      "description": "Passenger email"
+    },
+    "passenger_phone": {
+      "type": "string",
+      "description": "Passenger phone"
+    },
+    "number_of_passengers": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of passengers"
+    },
+    "seat_type": {
+      "type": "string",
+      "enum": [
+        "regular",
+        "premium",
+        "sleeper"
+      ],
+      "description": "Seat type"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total booking price"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requests"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "12go",
+        "trainline",
+        "direct"
+      ],
+      "description": "Supplier used for booking"
+    },
+    "supplier_reference": {
+      "type": "string",
+      "description": "Reference number from supplier"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    }
+  },
+  "required": [
+    "route",
+    "passenger_name",
+    "passenger_email",
+    "departure_date"
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "name": "AdminSnapshot",
+  "type": "object",
+  "properties": {
+    "snapshot_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the snapshot (YYYY-MM-DD)"
+    },
+    "total_revenue": {
+      "type": "number",
+      "description": "Total revenue on this date"
+    },
+    "total_profit": {
+      "type": "number",
+      "description": "Estimated profit (12% margin)"
+    },
+    "total_bookings": {
+      "type": "number",
+      "description": "Total bookings recorded"
+    },
+    "confirmed_bookings": {
+      "type": "number",
+      "description": "Confirmed bookings"
+    },
+    "pending_bookings": {
+      "type": "number",
+      "description": "Pending bookings"
+    },
+    "total_customers": {
+      "type": "number",
+      "description": "Total registered users"
+    },
+    "new_customers_today": {
+      "type": "number",
+      "description": "New users registered today"
+    },
+    "active_customers": {
+      "type": "number",
+      "description": "Customers who booked in last 30 days"
+    },
+    "flight_bookings": {
+      "type": "number"
+    },
+    "hotel_bookings": {
+      "type": "number"
+    },
+    "tour_bookings": {
+      "type": "number"
+    },
+    "ferry_bookings": {
+      "type": "number"
+    },
+    "bus_bookings": {
+      "type": "number"
+    },
+    "train_bookings": {
+      "type": "number"
+    },
+    "car_bookings": {
+      "type": "number"
+    },
+    "cruise_bookings": {
+      "type": "number"
+    },
+    "visa_bookings": {
+      "type": "number"
+    },
+    "package_bookings": {
+      "type": "number"
+    },
+    "domestic_flight_count": {
+      "type": "number"
+    },
+    "international_flight_count": {
+      "type": "number"
+    },
+    "domestic_revenue": {
+      "type": "number"
+    },
+    "international_revenue": {
+      "type": "number"
+    },
+    "active_affiliates": {
+      "type": "number"
+    },
+    "affiliate_commissions": {
+      "type": "number"
+    },
+    "premium_members": {
+      "type": "number"
+    },
+    "premium_revenue": {
+      "type": "number"
+    },
+    "avg_booking_value": {
+      "type": "number"
+    },
+    "conversion_rate": {
+      "type": "number"
+    },
+    "open_support_tickets": {
+      "type": "number"
+    },
+    "resolved_support_tickets": {
+      "type": "number"
+    },
+    "wallet_balance_total": {
+      "type": "number",
+      "description": "Sum of all wallet balances"
+    },
+    "revenue_by_type": {
+      "type": "object",
+      "description": "Revenue breakdown by booking type"
+    }
+  },
+  "required": [
+    "snapshot_date"
+  ]
+}

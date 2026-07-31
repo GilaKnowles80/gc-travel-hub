@@ -1,0 +1,98 @@
+{
+  "name": "AIPricingSuggestion",
+  "type": "object",
+  "properties": {
+    "supplier_id": {
+      "type": "string",
+      "description": "Reference to supplier"
+    },
+    "inventory_id": {
+      "type": "string",
+      "description": "Reference to inventory item"
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Item name for reference"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "car"
+      ],
+      "description": "Type of item"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Current price"
+    },
+    "suggested_price": {
+      "type": "number",
+      "description": "AI suggested price"
+    },
+    "price_change_percentage": {
+      "type": "number",
+      "description": "Percentage change"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "AI confidence (0-100)"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "AI reasoning for suggestion"
+    },
+    "demand_forecast": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "very_high"
+      ],
+      "description": "Predicted demand level"
+    },
+    "seasonality_factor": {
+      "type": "string",
+      "description": "Seasonal insights"
+    },
+    "competitor_insights": {
+      "type": "string",
+      "description": "Competitor pricing analysis"
+    },
+    "revenue_impact": {
+      "type": "number",
+      "description": "Expected revenue change"
+    },
+    "booking_impact": {
+      "type": "number",
+      "description": "Expected booking volume change"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected",
+        "applied"
+      ],
+      "default": "pending",
+      "description": "Suggestion status"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Suggestion expiry"
+    }
+  },
+  "required": [
+    "supplier_id",
+    "inventory_id",
+    "current_price",
+    "suggested_price"
+  ]
+}

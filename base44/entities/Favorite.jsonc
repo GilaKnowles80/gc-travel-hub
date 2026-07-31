@@ -1,0 +1,36 @@
+{
+  "name": "Favorite",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who saved this"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "tour",
+        "hotel"
+      ],
+      "description": "Type of item saved"
+    },
+    "item_id": {
+      "type": "string",
+      "description": "ID of the saved item"
+    },
+    "item_title": {
+      "type": "string",
+      "description": "Title/name for quick reference"
+    },
+    "item_data": {
+      "type": "object",
+      "description": "Snapshot of item details"
+    }
+  },
+  "required": [
+    "user_email",
+    "item_type",
+    "item_id"
+  ]
+}

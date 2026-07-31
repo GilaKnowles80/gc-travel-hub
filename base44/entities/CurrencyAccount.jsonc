@@ -1,0 +1,59 @@
+{
+  "name": "CurrencyAccount",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "PHP",
+        "USD",
+        "EUR",
+        "GBP",
+        "JPY",
+        "CNY",
+        "AUD",
+        "SGD"
+      ],
+      "default": "PHP",
+      "description": "Currency code"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Account balance in specified currency"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Primary account for transactions"
+    },
+    "iban": {
+      "type": "string",
+      "description": "IBAN for bank transfers (international)"
+    },
+    "swift_code": {
+      "type": "string",
+      "description": "SWIFT/BIC code for international transfers"
+    },
+    "last_exchange_rate": {
+      "type": "number",
+      "description": "Last used exchange rate to PHP"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "user_email",
+    "currency"
+  ]
+}

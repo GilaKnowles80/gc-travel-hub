@@ -1,0 +1,103 @@
+{
+  "name": "PaymentSplit",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "Associated booking ID"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "bus",
+        "ferry",
+        "car_rental"
+      ],
+      "description": "Type of booking"
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "Total booking amount"
+    },
+    "wallet_debit": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount paid from user wallet"
+    },
+    "card_debit": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount paid from credit/debit card"
+    },
+    "supplier_payout": {
+      "type": "number",
+      "description": "Amount owed to supplier"
+    },
+    "gc_commission": {
+      "type": "number",
+      "default": 0,
+      "description": "GC Travel commission/markup"
+    },
+    "service_fee": {
+      "type": "number",
+      "default": 0,
+      "description": "Platform service fee"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "wallet",
+        "card",
+        "split"
+      ],
+      "description": "Primary payment method used"
+    },
+    "supplier_id": {
+      "type": "string",
+      "description": "Supplier ID"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "settled",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Payment split status"
+    },
+    "ledger_entries": {
+      "type": "array",
+      "description": "Related wallet_ledger entry IDs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reconciliation_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "matched",
+        "variance",
+        "exception"
+      ],
+      "default": "pending",
+      "description": "Reconciliation status"
+    }
+  },
+  "required": [
+    "booking_id",
+    "booking_type",
+    "total_amount",
+    "supplier_payout"
+  ]
+}

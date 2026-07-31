@@ -1,0 +1,47 @@
+{
+  "name": "TikTokAnalytics",
+  "type": "object",
+  "properties": {
+    "follower_count": {
+      "type": "number",
+      "description": "Number of TikTok followers"
+    },
+    "video_count": {
+      "type": "number",
+      "description": "Number of videos posted"
+    },
+    "heart_count": {
+      "type": "number",
+      "description": "Total likes received"
+    },
+    "username": {
+      "type": "string",
+      "description": "TikTok username"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "TikTok display name"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Profile avatar URL"
+    },
+    "bio": {
+      "type": "string",
+      "description": "TikTok bio"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "description": "Whether account is verified"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this snapshot was taken"
+    }
+  },
+  "required": [
+    "follower_count",
+    "recorded_at"
+  ]
+}

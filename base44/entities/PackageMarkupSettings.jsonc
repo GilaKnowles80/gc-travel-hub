@@ -1,0 +1,36 @@
+{
+  "name": "PackageMarkupSettings",
+  "type": "object",
+  "properties": {
+    "flight_markup_percentage": {
+      "type": "number",
+      "default": 8,
+      "description": "Markup % for flights"
+    },
+    "hotel_markup_percentage": {
+      "type": "number",
+      "default": 12,
+      "description": "Markup % for hotels"
+    },
+    "tour_markup_percentage": {
+      "type": "number",
+      "default": 15,
+      "description": "Markup % for tours"
+    },
+    "package_bundle_discount_2_items": {
+      "type": "number",
+      "default": 10,
+      "description": "Discount % for 2 items"
+    },
+    "package_bundle_discount_3_items": {
+      "type": "number",
+      "default": 15,
+      "description": "Discount % for 3+ items"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": []
+}

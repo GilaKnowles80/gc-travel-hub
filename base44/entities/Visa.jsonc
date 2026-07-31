@@ -1,0 +1,72 @@
+{
+  "name": "Visa",
+  "type": "object",
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "Destination country"
+    },
+    "visa_type": {
+      "type": "string",
+      "enum": [
+        "tourist",
+        "business",
+        "student",
+        "work",
+        "transit"
+      ],
+      "description": "Type of visa"
+    },
+    "processing_time_days": {
+      "type": "number",
+      "description": "Processing time in days"
+    },
+    "validity_months": {
+      "type": "number",
+      "description": "Visa validity in months"
+    },
+    "price": {
+      "type": "number",
+      "description": "Visa processing fee"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required documents"
+    },
+    "description": {
+      "type": "string",
+      "description": "Visa details and conditions"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "direct"
+      ],
+      "description": "Supplier used"
+    },
+    "supplier_price": {
+      "type": "number",
+      "description": "Cost from supplier"
+    }
+  },
+  "required": [
+    "country",
+    "visa_type",
+    "processing_time_days",
+    "price"
+  ]
+}

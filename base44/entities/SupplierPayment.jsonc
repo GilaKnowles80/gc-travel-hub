@@ -1,0 +1,112 @@
+{
+  "name": "SupplierPayment",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to the booking"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "visa",
+        "car_rental"
+      ],
+      "description": "Type of booking"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "direct"
+      ],
+      "description": "Supplier name"
+    },
+    "supplier_amount": {
+      "type": "number",
+      "description": "Amount to pay to supplier"
+    },
+    "customer_paid_amount": {
+      "type": "number",
+      "description": "Total amount customer paid"
+    },
+    "markup_retained": {
+      "type": "number",
+      "description": "Your profit/markup kept"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "paid",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Payment status to supplier"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date payment was sent to supplier"
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Payment reference/transaction ID"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "paymongo_payout"
+      ],
+      "description": "How payment was sent"
+    },
+    "payout_id": {
+      "type": "string",
+      "description": "PayMongo payout ID"
+    },
+    "payout_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "paid",
+        "failed"
+      ],
+      "description": "Automated payout status"
+    },
+    "payout_error": {
+      "type": "string",
+      "description": "Error message if payout failed"
+    },
+    "supplier_bank_account": {
+      "type": "string",
+      "description": "Supplier bank account number"
+    },
+    "supplier_bank_code": {
+      "type": "string",
+      "description": "Supplier bank code"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "booking_id",
+    "booking_type",
+    "supplier",
+    "supplier_amount",
+    "customer_paid_amount",
+    "markup_retained"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name": "BankTransfer",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Sender email"
+    },
+    "transfer_type": {
+      "type": "string",
+      "enum": [
+        "wallet_to_bank",
+        "bank_to_wallet",
+        "wallet_to_wallet"
+      ],
+      "description": "Type of transfer"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Transfer amount"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency code"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Recipient name"
+    },
+    "recipient_bank": {
+      "type": "string",
+      "description": "Recipient bank name"
+    },
+    "recipient_account": {
+      "type": "string",
+      "description": "Recipient account number"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Recipient email (for wallet-to-wallet)"
+    },
+    "reference_number": {
+      "type": "string",
+      "description": "Transfer reference/transaction ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "fee": {
+      "type": "number",
+      "default": 0,
+      "description": "Transfer fee charged"
+    },
+    "exchange_rate": {
+      "type": "number",
+      "description": "Exchange rate applied (if multi-currency)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Transfer notes/remarks"
+    },
+    "processed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When transfer was processed"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if transfer failed"
+    }
+  },
+  "required": [
+    "user_email",
+    "transfer_type",
+    "amount",
+    "recipient_name"
+  ]
+}

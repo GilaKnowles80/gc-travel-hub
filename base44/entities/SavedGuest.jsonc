@@ -1,0 +1,44 @@
+{
+  "name": "SavedGuest",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email who saved this guest"
+    },
+    "label": {
+      "type": "string",
+      "description": "Label for quick identification (e.g., 'Myself', 'Family')"
+    },
+    "title": {
+      "type": "string",
+      "enum": [
+        "MR",
+        "MRS",
+        "MS"
+      ],
+      "description": "Title"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "First name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Last name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    }
+  },
+  "required": [
+    "user_email",
+    "first_name",
+    "last_name"
+  ]
+}

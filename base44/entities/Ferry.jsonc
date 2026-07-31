@@ -1,0 +1,92 @@
+{
+  "name": "Ferry",
+  "type": "object",
+  "properties": {
+    "operator": {
+      "type": "string",
+      "enum": [
+        "2Go",
+        "Starlite Ferries",
+        "Cokaliong",
+        "Other"
+      ],
+      "description": "Ferry operator"
+    },
+    "vessel_name": {
+      "type": "string",
+      "description": "Name of the ferry/vessel"
+    },
+    "route": {
+      "type": "string",
+      "description": "Route (e.g., Manila - Cebu)"
+    },
+    "origin_port": {
+      "type": "string",
+      "description": "Departure port"
+    },
+    "destination_port": {
+      "type": "string",
+      "description": "Arrival port"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure date and time"
+    },
+    "arrival_time": {
+      "type": "string",
+      "description": "Arrival date and time"
+    },
+    "duration_hours": {
+      "type": "number",
+      "description": "Journey duration in hours"
+    },
+    "cabin_types": {
+      "type": "array",
+      "description": "Available cabin classes with prices",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "economy",
+              "tourist",
+              "cabin",
+              "suite",
+              "vip"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "seats_available": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Onboard amenities"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "operator",
+    "vessel_name",
+    "origin_port",
+    "destination_port",
+    "departure_time"
+  ]
+}

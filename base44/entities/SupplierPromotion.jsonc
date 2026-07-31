@@ -1,0 +1,71 @@
+{
+  "name": "SupplierPromotion",
+  "type": "object",
+  "properties": {
+    "supplier_id": {
+      "type": "string",
+      "description": "Reference to supplier"
+    },
+    "promo_title": {
+      "type": "string",
+      "description": "Promotion title"
+    },
+    "promo_code": {
+      "type": "string",
+      "description": "Promo code"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "description": "Type of discount"
+    },
+    "discount_value": {
+      "type": "number",
+      "description": "Discount value"
+    },
+    "applicable_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Inventory item IDs this applies to"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date"
+    },
+    "usage_limit": {
+      "type": "number",
+      "description": "Max uses"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Times used"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "expired"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "supplier_id",
+    "promo_title",
+    "discount_type",
+    "discount_value"
+  ]
+}

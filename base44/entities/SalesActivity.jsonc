@@ -1,0 +1,59 @@
+{
+  "name": "SalesActivity",
+  "type": "object",
+  "properties": {
+    "lead_id": {
+      "type": "string",
+      "description": "Related lead"
+    },
+    "sales_person": {
+      "type": "string",
+      "description": "Sales person email"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "call",
+        "email",
+        "meeting",
+        "proposal",
+        "follow_up",
+        "note",
+        "status_change"
+      ],
+      "description": "Type of activity"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Activity subject/title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Activity details"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "negative",
+        "no_response"
+      ],
+      "description": "Activity outcome"
+    },
+    "next_action": {
+      "type": "string",
+      "description": "Next action to take"
+    },
+    "next_action_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When to follow up"
+    }
+  },
+  "required": [
+    "lead_id",
+    "sales_person",
+    "activity_type"
+  ]
+}

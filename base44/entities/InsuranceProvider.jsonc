@@ -1,0 +1,67 @@
+{
+  "name": "InsuranceProvider",
+  "type": "object",
+  "properties": {
+    "provider_name": {
+      "type": "string",
+      "description": "Insurance provider name"
+    },
+    "provider_code": {
+      "type": "string",
+      "description": "Unique provider code"
+    },
+    "api_endpoint": {
+      "type": "string",
+      "description": "API endpoint for quotes"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Provider logo"
+    },
+    "coverage_types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "basic",
+              "standard",
+              "premium",
+              "comprehensive"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "base_price": {
+            "type": "number"
+          },
+          "coverage_amount": {
+            "type": "number"
+          },
+          "benefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 15,
+      "description": "Commission percentage"
+    }
+  },
+  "required": [
+    "provider_name",
+    "provider_code"
+  ]
+}

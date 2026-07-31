@@ -1,0 +1,102 @@
+{
+  "name": "TravelAlert",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Recipient email"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "price_drop",
+        "price_increase",
+        "flight_delay",
+        "flight_cancellation",
+        "gate_change",
+        "last_minute_deal",
+        "destination_deal",
+        "booking_reminder",
+        "check_in_reminder"
+      ],
+      "description": "Type of alert"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "urgent",
+        "critical"
+      ],
+      "default": "info",
+      "description": "Alert severity level"
+    },
+    "title": {
+      "type": "string",
+      "description": "Alert title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Alert message"
+    },
+    "related_entity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "flight",
+            "hotel",
+            "booking",
+            "tour"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Related entity reference"
+    },
+    "data": {
+      "type": "object",
+      "description": "Additional alert data (prices, times, etc.)"
+    },
+    "action_url": {
+      "type": "string",
+      "description": "Link to take action"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When alert becomes irrelevant"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_acted_upon": {
+      "type": "boolean",
+      "default": false,
+      "description": "User took action on this alert"
+    },
+    "sent_via": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "in_app",
+          "email",
+          "sms"
+        ]
+      },
+      "description": "Channels alert was sent through"
+    }
+  },
+  "required": [
+    "user_email",
+    "alert_type",
+    "title",
+    "message"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Recipient email"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "booking_created",
+        "payment_confirmed",
+        "supplier_payment_done",
+        "booking_cancelled",
+        "info"
+      ],
+      "description": "Notification type"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Related booking ID if applicable"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether notification has been read"
+    },
+    "link": {
+      "type": "string",
+      "description": "Link to related page"
+    }
+  },
+  "required": [
+    "user_email",
+    "title",
+    "message",
+    "type"
+  ]
+}

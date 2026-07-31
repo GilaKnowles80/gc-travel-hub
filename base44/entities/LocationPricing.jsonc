@@ -1,0 +1,49 @@
+{
+  "name": "LocationPricing",
+  "type": "object",
+  "properties": {
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "country_name": {
+      "type": "string",
+      "description": "Country name"
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "asia_pacific",
+        "europe",
+        "north_america",
+        "south_america",
+        "middle_east",
+        "africa"
+      ],
+      "description": "Geographic region"
+    },
+    "price_multiplier": {
+      "type": "number",
+      "default": 1.0,
+      "description": "Price multiplier for this location (1.0 = base price, 1.2 = 20% increase)"
+    },
+    "currency_code": {
+      "type": "string",
+      "default": "USD",
+      "description": "Local currency code"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether location-based pricing is active"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes about pricing strategy for this location"
+    }
+  },
+  "required": [
+    "country_code",
+    "price_multiplier"
+  ]
+}

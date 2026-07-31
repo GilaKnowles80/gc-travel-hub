@@ -1,0 +1,57 @@
+{
+  "name": "SupplierBankAccount",
+  "type": "object",
+  "properties": {
+    "supplier_name": {
+      "type": "string",
+      "description": "Supplier identifier"
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Account holder name"
+    },
+    "account_number": {
+      "type": "string",
+      "description": "Bank account number"
+    },
+    "bank_name": {
+      "type": "string",
+      "description": "Bank name"
+    },
+    "bank_code": {
+      "type": "string",
+      "description": "Bank code or SWIFT/BIC"
+    },
+    "aba_routing": {
+      "type": "string",
+      "description": "ABA routing number (for US wire transfers)"
+    },
+    "swift_code": {
+      "type": "string",
+      "description": "SWIFT/BIC code for international transfers"
+    },
+    "bank_address": {
+      "type": "string",
+      "description": "Bank branch address"
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Payment reference (must match exactly)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether account is active"
+    },
+    "is_autopay": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable auto-pay after successful booking"
+    }
+  },
+  "required": [
+    "supplier_name",
+    "account_name",
+    "account_number"
+  ]
+}

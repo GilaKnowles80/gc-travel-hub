@@ -32,6 +32,7 @@ const navLinks = [
   { name: "Support", page: "Helpdesk", icon: Mail },
   { name: "Book Flights", page: "BookFlights", icon: Plane },
   { name: "Shop", page: "DigitalStore", icon: ShoppingBag },
+  { name: "Earnings", page: "Earnings", icon: TrendingUp },
   { name: "Admin", page: "AdminDashboard", icon: Shield, adminOnly: true },
 
   { name: "Supplier Portals", icon: Globe, adminOnly: true, hasSubmenu: true, submenu: [

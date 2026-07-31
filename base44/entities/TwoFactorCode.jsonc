@@ -1,0 +1,33 @@
+{
+  "name": "TwoFactorCode",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "code": {
+      "type": "string",
+      "description": "6-digit verification code"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Expiration time"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether code was verified"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address of request"
+    }
+  },
+  "required": [
+    "user_email",
+    "code",
+    "expires_at"
+  ]
+}

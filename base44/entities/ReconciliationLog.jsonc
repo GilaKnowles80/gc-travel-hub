@@ -1,0 +1,114 @@
+{
+  "name": "ReconciliationLog",
+  "type": "object",
+  "properties": {
+    "reconciliation_batch_id": {
+      "type": "string",
+      "description": "Unique batch ID for this reconciliation run"
+    },
+    "supplier_id": {
+      "type": "string",
+      "description": "Supplier being reconciled"
+    },
+    "supplier_name": {
+      "type": "string",
+      "description": "Supplier name"
+    },
+    "settlement_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Settlement period date"
+    },
+    "expected_amount": {
+      "type": "number",
+      "description": "Amount expected from supplier statement"
+    },
+    "actual_amount": {
+      "type": "number",
+      "description": "Actual amount calculated from ledger"
+    },
+    "variance": {
+      "type": "number",
+      "description": "Difference (actual - expected)"
+    },
+    "variance_percentage": {
+      "type": "number",
+      "description": "Variance as percentage"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "variance",
+        "exception",
+        "pending_investigation"
+      ],
+      "description": "Reconciliation status"
+    },
+    "expected_booking_count": {
+      "type": "number",
+      "description": "Expected number of bookings"
+    },
+    "actual_booking_count": {
+      "type": "number",
+      "description": "Actual number of bookings found"
+    },
+    "missing_bookings": {
+      "type": "array",
+      "description": "Booking IDs not found in ledger",
+      "items": {
+        "type": "string"
+      }
+    },
+    "extra_bookings": {
+      "type": "array",
+      "description": "Unexpected bookings in ledger",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reconciliation_method": {
+      "type": "string",
+      "enum": [
+        "automated",
+        "manual",
+        "hybrid"
+      ],
+      "default": "automated",
+      "description": "How reconciliation was performed"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Investigator notes"
+    },
+    "investigator_email": {
+      "type": "string",
+      "description": "Admin who investigated variance"
+    },
+    "investigated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When investigation completed"
+    },
+    "resolution_status": {
+      "type": "string",
+      "enum": [
+        "unresolved",
+        "resolved",
+        "escalated"
+      ],
+      "default": "unresolved",
+      "description": "Resolution status for variances"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "How variance was resolved"
+    }
+  },
+  "required": [
+    "supplier_id",
+    "settlement_date",
+    "expected_amount",
+    "actual_amount"
+  ]
+}

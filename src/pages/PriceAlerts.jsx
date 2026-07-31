@@ -106,7 +106,7 @@ export default function PriceAlerts() {
               <div>
                 <h2 className="text-xl font-bold text-slate-900 mb-4">Active Alerts</h2>
                 <div className="grid gap-4">
-                  {activeAlerts.map((alert) => (
+                  {activeFlightAlerts.map((alert) => (
                     <motion.div
                       key={alert.id}
                       initial={{ opacity: 0, y: 20 }}
@@ -162,7 +162,7 @@ export default function PriceAlerts() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => deleteAlertMutation.mutate(alert.id)}
+                            onClick={() => deleteFlightAlertMutation.mutate(alert.id)}
                             className="text-red-500 hover:text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />

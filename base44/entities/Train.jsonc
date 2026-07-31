@@ -1,0 +1,121 @@
+{
+  "name": "Train",
+  "type": "object",
+  "properties": {
+    "operator": {
+      "type": "string",
+      "enum": [
+        "Eurail",
+        "NS (Dutch Railways)",
+        "NMBS/SNCB (Belgian Railways)",
+        "SBB (Swiss Railways)",
+        "VR (Finnish Railways)",
+        "SJ (Swedish Railways)",
+        "DB (Deutsche Bahn)",
+        "SNCF",
+        "Renfe",
+        "Trenitalia",
+        "Amtrak",
+        "JR Pass",
+        "VIA Rail",
+        "Brightline",
+        "Other"
+      ],
+      "description": "Train operator"
+    },
+    "train_number": {
+      "type": "string",
+      "description": "Train number/code"
+    },
+    "train_type": {
+      "type": "string",
+      "enum": [
+        "high_speed",
+        "intercity",
+        "regional",
+        "express",
+        "sleeper"
+      ],
+      "description": "Type of train"
+    },
+    "origin_station": {
+      "type": "string",
+      "description": "Departure station"
+    },
+    "destination_station": {
+      "type": "string",
+      "description": "Arrival station"
+    },
+    "country": {
+      "type": "string",
+      "description": "Operating country"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure date and time"
+    },
+    "arrival_time": {
+      "type": "string",
+      "description": "Arrival date and time"
+    },
+    "duration_hours": {
+      "type": "number",
+      "description": "Journey duration in hours"
+    },
+    "class_types": {
+      "type": "array",
+      "description": "Available classes with prices",
+      "items": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "type": "string",
+            "enum": [
+              "economy",
+              "first_class",
+              "business",
+              "sleeper"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "seats_available": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Onboard amenities"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Intermediate stations"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "cancelled",
+        "delayed"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "operator",
+    "train_number",
+    "origin_station",
+    "destination_station",
+    "departure_time"
+  ]
+}

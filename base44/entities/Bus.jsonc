@@ -1,0 +1,104 @@
+{
+  "name": "Bus",
+  "type": "object",
+  "properties": {
+    "operator": {
+      "type": "string",
+      "enum": [
+        "Victory Liner",
+        "Genesis",
+        "Partas",
+        "Five Star",
+        "Ceres",
+        "Philtranco",
+        "FlixBus",
+        "Megabus",
+        "Greyhound",
+        "Eurolines",
+        "Other"
+      ],
+      "description": "Bus operator"
+    },
+    "bus_number": {
+      "type": "string",
+      "description": "Bus number/code"
+    },
+    "bus_type": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "deluxe",
+        "sleeper",
+        "express"
+      ],
+      "description": "Type of bus service"
+    },
+    "origin_terminal": {
+      "type": "string",
+      "description": "Departure terminal/station"
+    },
+    "destination_terminal": {
+      "type": "string",
+      "description": "Arrival terminal/station"
+    },
+    "route": {
+      "type": "string",
+      "description": "Route description"
+    },
+    "country": {
+      "type": "string",
+      "description": "Operating country"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure date and time"
+    },
+    "arrival_time": {
+      "type": "string",
+      "description": "Arrival date and time"
+    },
+    "duration_hours": {
+      "type": "number",
+      "description": "Journey duration in hours"
+    },
+    "price": {
+      "type": "number",
+      "description": "Ticket price"
+    },
+    "seats_available": {
+      "type": "number",
+      "description": "Available seats"
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Bus amenities (WiFi, AC, restroom, etc.)"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Intermediate stops"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "cancelled",
+        "delayed"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "operator",
+    "origin_terminal",
+    "destination_terminal",
+    "departure_time",
+    "price"
+  ]
+}

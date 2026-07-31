@@ -1,0 +1,76 @@
+{
+  "name": "Itinerary",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Owner of the itinerary"
+    },
+    "title": {
+      "type": "string",
+      "description": "Itinerary title"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Main destination"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Trip start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Trip end date"
+    },
+    "items": {
+      "type": "array",
+      "description": "Bookings included in itinerary",
+      "items": {
+        "type": "object",
+        "properties": {
+          "booking_type": {
+            "type": "string",
+            "enum": [
+              "flight",
+              "tour",
+              "hotel"
+            ]
+          },
+          "booking_id": {
+            "type": "string"
+          },
+          "booking_data": {
+            "type": "object"
+          },
+          "start_date": {
+            "type": "string"
+          },
+          "end_date": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "share_token": {
+      "type": "string",
+      "description": "Token for sharing itinerary"
+    },
+    "is_shared": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether itinerary is publicly shareable"
+    }
+  },
+  "required": [
+    "user_email",
+    "title",
+    "start_date",
+    "end_date"
+  ]
+}

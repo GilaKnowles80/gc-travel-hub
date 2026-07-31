@@ -1,0 +1,28 @@
+{
+  "name": "CurrencyRate",
+  "type": "object",
+  "properties": {
+    "base_currency": {
+      "type": "string",
+      "description": "Base currency code (PHP)"
+    },
+    "target_currency": {
+      "type": "string",
+      "description": "Target currency code (USD, EUR, etc.)"
+    },
+    "rate": {
+      "type": "number",
+      "description": "Exchange rate from base to target"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this rate was last fetched"
+    }
+  },
+  "required": [
+    "base_currency",
+    "target_currency",
+    "rate"
+  ]
+}

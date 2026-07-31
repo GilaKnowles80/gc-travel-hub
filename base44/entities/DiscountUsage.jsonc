@@ -1,0 +1,50 @@
+{
+  "name": "DiscountUsage",
+  "type": "object",
+  "properties": {
+    "discount_code_id": {
+      "type": "string",
+      "description": "Reference to discount code"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User who used the code"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "car_rental"
+      ],
+      "description": "Type of booking"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to booking"
+    },
+    "original_price": {
+      "type": "number",
+      "description": "Price before discount"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Amount discounted"
+    },
+    "final_price": {
+      "type": "number",
+      "description": "Price after discount"
+    }
+  },
+  "required": [
+    "discount_code_id",
+    "user_email",
+    "booking_type",
+    "original_price",
+    "discount_amount",
+    "final_price"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "name": "CarRentalBooking",
+  "type": "object",
+  "properties": {
+    "booking_ref": {
+      "type": "string",
+      "description": "Human-readable booking reference (e.g. CAR0000001)"
+    },
+    "pickup_location": {
+      "type": "string",
+      "description": "Pickup location"
+    },
+    "dropoff_location": {
+      "type": "string",
+      "description": "Drop-off location"
+    },
+    "car_type": {
+      "type": "string",
+      "description": "Car type (e.g., Sedan, SUV, Van)"
+    },
+    "pickup_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Pickup date"
+    },
+    "pickup_time": {
+      "type": "string",
+      "description": "Pickup time"
+    },
+    "dropoff_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Drop-off date"
+    },
+    "dropoff_time": {
+      "type": "string",
+      "description": "Drop-off time"
+    },
+    "driver_name": {
+      "type": "string",
+      "description": "Driver name"
+    },
+    "driver_email": {
+      "type": "string",
+      "description": "Driver email"
+    },
+    "driver_phone": {
+      "type": "string",
+      "description": "Driver phone"
+    },
+    "driver_license": {
+      "type": "string",
+      "description": "Driver's license number"
+    },
+    "with_driver": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include driver service"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total rental price"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requests"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "direct"
+      ],
+      "description": "Supplier used for booking"
+    },
+    "supplier_reference": {
+      "type": "string",
+      "description": "Reference number from supplier"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    }
+  },
+  "required": [
+    "pickup_location",
+    "car_type",
+    "pickup_date",
+    "driver_name",
+    "driver_email"
+  ]
+}

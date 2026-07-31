@@ -1,0 +1,92 @@
+{
+  "name": "VelocityLimit",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "limit_type": {
+      "type": "string",
+      "enum": [
+        "daily_load",
+        "daily_transaction",
+        "monthly_load",
+        "monthly_transaction"
+      ],
+      "description": "Type of limit"
+    },
+    "daily_load_limit": {
+      "type": "number",
+      "default": 100000,
+      "description": "Daily wallet loading limit in PHP"
+    },
+    "daily_transaction_limit": {
+      "type": "number",
+      "default": 500000,
+      "description": "Daily transaction limit in PHP"
+    },
+    "monthly_load_limit": {
+      "type": "number",
+      "default": 1000000,
+      "description": "Monthly loading limit in PHP"
+    },
+    "monthly_transaction_limit": {
+      "type": "number",
+      "default": 5000000,
+      "description": "Monthly transaction limit in PHP"
+    },
+    "loaded_today": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount loaded today"
+    },
+    "transacted_today": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount transacted today"
+    },
+    "loaded_this_month": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount loaded this month"
+    },
+    "transacted_this_month": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount transacted this month"
+    },
+    "last_reset_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Last daily reset date"
+    },
+    "kyc_tier": {
+      "type": "string",
+      "enum": [
+        "unverified",
+        "basic",
+        "verified"
+      ],
+      "default": "unverified",
+      "description": "User KYC verification tier"
+    },
+    "is_suspended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether velocity limits are suspended"
+    },
+    "suspension_reason": {
+      "type": "string",
+      "description": "Reason for suspension"
+    },
+    "suspension_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When suspension ends"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

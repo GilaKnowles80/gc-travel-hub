@@ -1,0 +1,88 @@
+{
+  "name": "Airport",
+  "type": "object",
+  "properties": {
+    "iata_code": {
+      "type": "string",
+      "description": "3-letter IATA code"
+    },
+    "icao_code": {
+      "type": "string",
+      "description": "4-letter ICAO code"
+    },
+    "airport_name": {
+      "type": "string",
+      "description": "Full airport name"
+    },
+    "city": {
+      "type": "string",
+      "description": "City name"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country name"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude"
+    },
+    "terminals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "terminal_name": {
+            "type": "string"
+          },
+          "terminal_type": {
+            "type": "string",
+            "enum": [
+              "domestic",
+              "international",
+              "both"
+            ]
+          },
+          "airlines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Terminal information"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "domestic",
+        "international",
+        "both"
+      ],
+      "description": "Airport type"
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Timezone"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "iata_code",
+    "airport_name",
+    "city",
+    "country_code",
+    "type"
+  ]
+}

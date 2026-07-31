@@ -1,0 +1,198 @@
+{
+  "name": "Flight",
+  "type": "object",
+  "properties": {
+    "airline_name": {
+      "type": "string",
+      "description": "Name of the airline"
+    },
+    "flight_number": {
+      "type": "string",
+      "description": "Flight number"
+    },
+    "origin": {
+      "type": "string",
+      "description": "Departure city/airport"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Arrival city/airport"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure date and time"
+    },
+    "arrival_time": {
+      "type": "string",
+      "description": "Arrival date and time"
+    },
+    "duration_hours": {
+      "type": "number",
+      "description": "Flight duration in hours"
+    },
+    "aircraft_type": {
+      "type": "string",
+      "description": "Type of aircraft"
+    },
+    "departure_gate": {
+      "type": "string",
+      "description": "Departure gate number"
+    },
+    "departure_terminal": {
+      "type": "string",
+      "description": "Departure terminal"
+    },
+    "arrival_gate": {
+      "type": "string",
+      "description": "Arrival gate number"
+    },
+    "arrival_terminal": {
+      "type": "string",
+      "description": "Arrival terminal"
+    },
+    "flight_status": {
+      "type": "string",
+      "enum": [
+        "on_time",
+        "delayed",
+        "boarding",
+        "departed",
+        "arrived",
+        "cancelled"
+      ],
+      "default": "on_time",
+      "description": "Real-time flight status"
+    },
+    "cabin_classes": {
+      "type": "array",
+      "description": "Available cabin classes with prices",
+      "items": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "type": "string",
+            "enum": [
+              "economy",
+              "premium_economy",
+              "business",
+              "first_class"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "seats_available": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "airport_offers": {
+      "type": "array",
+      "description": "Real-time airline and airport offers",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "discount": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "lounge",
+              "upgrade",
+              "meal",
+              "baggage",
+              "priority_boarding",
+              "partner"
+            ]
+          }
+        }
+      }
+    },
+    "baggage_allowance": {
+      "type": "string",
+      "description": "Baggage allowance details"
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Flight amenities"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "is_direct": {
+      "type": "boolean",
+      "default": true,
+      "description": "Direct flight or with stops"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Layover cities if not direct"
+    },
+    "price_tracking": {
+      "type": "object",
+      "description": "Price tracking across suppliers",
+      "properties": {
+        "last_checked": {
+          "type": "string",
+          "description": "Last time prices were checked"
+        },
+        "price_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "supplier": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "checked_at": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "best_price": {
+          "type": "object",
+          "properties": {
+            "supplier": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "airline_name",
+    "flight_number",
+    "origin",
+    "destination",
+    "departure_time",
+    "arrival_time"
+  ]
+}

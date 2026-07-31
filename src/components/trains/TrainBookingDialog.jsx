@@ -163,7 +163,12 @@ export default function TrainBookingDialog({ train, open, onClose }) {
                     <Button
                       key={traveler.id}
                       variant="outline"
-                      onClick={() => useSavedTraveler(traveler)}
+                      onClick={() => setBookingData(prev => ({
+                        ...prev,
+                        passenger_name: `${traveler.first_name || ''} ${traveler.last_name || ''}`.trim(),
+                        passenger_email: traveler.email || prev.passenger_email,
+                        passenger_phone: traveler.phone || prev.passenger_phone,
+                      }))}
                       className="text-left justify-start"
                     >
                       {traveler.label || `${traveler.first_name} ${traveler.last_name}`}

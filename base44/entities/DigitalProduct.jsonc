@@ -1,0 +1,89 @@
+{
+  "name": "DigitalProduct",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the product"
+    },
+    "long_description": {
+      "type": "string",
+      "description": "Detailed product description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "travel_guide",
+        "visa_template",
+        "budget_spreadsheet",
+        "checklist",
+        "ebook",
+        "other"
+      ],
+      "description": "Product category"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price in PHP"
+    },
+    "price_usd": {
+      "type": "number",
+      "description": "Price in USD for Stripe"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product cover image URL"
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private file URI for secure download"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original filename for download"
+    },
+    "preview_url": {
+      "type": "string",
+      "description": "Public preview/sample URL"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for searchability"
+    },
+    "sales_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times sold"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "draft",
+        "unavailable"
+      ],
+      "default": "available",
+      "description": "Product availability"
+    },
+    "stripe_price_id": {
+      "type": "string",
+      "description": "Stripe price ID for this product"
+    },
+    "stripe_product_id": {
+      "type": "string",
+      "description": "Stripe product ID"
+    }
+  },
+  "required": [
+    "title",
+    "price",
+    "category"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Review",
+  "type": "object",
+  "properties": {
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel"
+      ],
+      "description": "Type of item being reviewed"
+    },
+    "item_id": {
+      "type": "string",
+      "description": "ID of the flight or hotel"
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Name/identifier for display"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to the booking"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the reviewer"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Rating from 1-5 stars"
+    },
+    "title": {
+      "type": "string",
+      "description": "Review title"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Review text"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "approved",
+      "description": "Moderation status"
+    },
+    "is_verified_booking": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether reviewer actually booked through the platform"
+    }
+  },
+  "required": [
+    "item_type",
+    "item_id",
+    "user_email",
+    "rating",
+    "comment"
+  ]
+}

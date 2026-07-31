@@ -1,0 +1,57 @@
+{
+  "name": "ServiceFeeSettings",
+  "type": "object",
+  "properties": {
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "package",
+        "cruise",
+        "ferry",
+        "train",
+        "bus",
+        "car"
+      ],
+      "description": "Type of booking"
+    },
+    "fee_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed"
+      ],
+      "default": "percentage",
+      "description": "Fee calculation type"
+    },
+    "fee_value": {
+      "type": "number",
+      "description": "Fee percentage or fixed amount"
+    },
+    "minimum_fee": {
+      "type": "number",
+      "default": 0,
+      "description": "Minimum fee amount"
+    },
+    "maximum_fee": {
+      "type": "number",
+      "description": "Maximum fee amount (optional)"
+    },
+    "premium_discount": {
+      "type": "number",
+      "default": 50,
+      "description": "Discount % for premium members"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "booking_type",
+    "fee_type",
+    "fee_value"
+  ]
+}

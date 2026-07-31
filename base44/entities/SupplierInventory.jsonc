@@ -1,0 +1,75 @@
+{
+  "name": "SupplierInventory",
+  "type": "object",
+  "properties": {
+    "supplier_id": {
+      "type": "string",
+      "description": "Reference to supplier"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "car"
+      ],
+      "description": "Type of inventory"
+    },
+    "item_id": {
+      "type": "string",
+      "description": "Reference to Flight/Hotel/Tour entity"
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Name/title for quick reference"
+    },
+    "availability": {
+      "type": "number",
+      "description": "Available quantity/seats/rooms"
+    },
+    "total_capacity": {
+      "type": "number",
+      "description": "Total capacity"
+    },
+    "date_range_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Availability start date"
+    },
+    "date_range_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Availability end date"
+    },
+    "blocked_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dates when inventory is unavailable"
+    },
+    "auto_accept_bookings": {
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically accept bookings"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "sold_out"
+      ],
+      "default": "available"
+    }
+  },
+  "required": [
+    "supplier_id",
+    "item_type",
+    "item_id",
+    "availability"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "name": "MarkupPayout",
+  "type": "object",
+  "properties": {
+    "payout_number": {
+      "type": "string",
+      "description": "Unique payout reference (e.g., PAYOUT-20260308-001)"
+    },
+    "payout_account_id": {
+      "type": "string",
+      "description": "Reference to PayoutAccount"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "stripe_to_gcash",
+        "paymongo_to_paymongo",
+        "paymongo_to_gcash"
+      ],
+      "description": "Payout method"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of payout period"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of payout period"
+    },
+    "total_markup": {
+      "type": "number",
+      "description": "Total markup earned in period"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency of payout"
+    },
+    "markup_payments": {
+      "type": "array",
+      "description": "Payment IDs included in payout",
+      "items": {
+        "type": "string"
+      }
+    },
+    "payment_count": {
+      "type": "number",
+      "description": "Number of bookings in this payout"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Payout status"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "PayMongo or provider transaction ID"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When payout was processed"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if failed"
+    }
+  },
+  "required": [
+    "payout_account_id",
+    "payment_method",
+    "period_start",
+    "period_end",
+    "total_markup"
+  ]
+}

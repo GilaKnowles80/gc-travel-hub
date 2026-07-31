@@ -1,0 +1,76 @@
+{
+  "name": "WalletCard",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "card_type": {
+      "type": "string",
+      "enum": [
+        "virtual",
+        "physical_visa",
+        "physical_mastercard"
+      ],
+      "description": "Type of card"
+    },
+    "card_number": {
+      "type": "string",
+      "description": "Masked card number (last 4 digits)"
+    },
+    "card_holder_name": {
+      "type": "string",
+      "description": "Name on the card"
+    },
+    "expiry_date": {
+      "type": "string",
+      "description": "Card expiry date (MM/YY)"
+    },
+    "cvv": {
+      "type": "string",
+      "description": "CVV (encrypted in backend)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "blocked",
+        "expired"
+      ],
+      "default": "active"
+    },
+    "daily_limit": {
+      "type": "number",
+      "default": 50000,
+      "description": "Daily spending limit in PHP"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Card balance"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Primary card for transactions"
+    },
+    "last_used": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last transaction timestamp"
+    },
+    "kyc_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "KYC verification status"
+    }
+  },
+  "required": [
+    "user_email",
+    "card_type",
+    "card_number",
+    "card_holder_name"
+  ]
+}

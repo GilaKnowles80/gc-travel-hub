@@ -1,0 +1,92 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user or actor who triggered the event"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "admin",
+        "system",
+        "automation"
+      ],
+      "default": "system",
+      "description": "Who or what triggered this event"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "login",
+        "logout",
+        "payment",
+        "export",
+        "import",
+        "admin_action"
+      ],
+      "description": "Type of action performed"
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "The data record type affected (e.g. FlightBooking, Payment)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "The unique ID of the affected record"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable plain-English summary of what happened"
+    },
+    "changes": {
+      "type": "object",
+      "description": "Field-level before/after values for update events"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address of the actor, or system-automation for automated events"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "Browser/device info or system identifier"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "low",
+      "description": "Compliance severity level"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "default": "success",
+      "description": "Whether the action succeeded or failed"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Browser session ID if applicable"
+    },
+    "compliance_note": {
+      "type": "string",
+      "description": "Regulatory/compliance reference for this event"
+    }
+  },
+  "required": [
+    "user_email",
+    "action"
+  ]
+}

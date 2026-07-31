@@ -1,0 +1,113 @@
+{
+  "name": "Cruise",
+  "type": "object",
+  "properties": {
+    "cruise_line": {
+      "type": "string",
+      "enum": [
+        "Royal Caribbean",
+        "Carnival",
+        "Norwegian",
+        "Princess Cruises",
+        "MSC Cruises",
+        "Disney Cruise",
+        "Celebrity Cruises",
+        "Costa Cruises",
+        "Holland America",
+        "Other"
+      ],
+      "description": "Cruise line operator"
+    },
+    "ship_name": {
+      "type": "string",
+      "description": "Name of the cruise ship"
+    },
+    "itinerary_name": {
+      "type": "string",
+      "description": "Cruise itinerary name"
+    },
+    "departure_port": {
+      "type": "string",
+      "description": "Starting port city"
+    },
+    "ports_of_call": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ports visited during cruise"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Cruise start date"
+    },
+    "return_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Cruise end date"
+    },
+    "duration_nights": {
+      "type": "number",
+      "description": "Number of nights"
+    },
+    "cabin_categories": {
+      "type": "array",
+      "description": "Available cabin types with prices",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "interior",
+              "oceanview",
+              "balcony",
+              "suite"
+            ]
+          },
+          "price_per_person": {
+            "type": "number"
+          },
+          "available": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ship amenities and activities"
+    },
+    "dining_options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dining venues"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Ship image"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "cruise_line",
+    "ship_name",
+    "departure_port",
+    "departure_date",
+    "duration_nights"
+  ]
+}

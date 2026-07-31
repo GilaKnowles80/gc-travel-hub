@@ -1,0 +1,90 @@
+{
+  "name": "Supplier",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Supplier company name"
+    },
+    "supplier_type": {
+      "type": "string",
+      "enum": [
+        "hotel",
+        "airline",
+        "tour_operator",
+        "ferry",
+        "bus",
+        "car_rental"
+      ],
+      "description": "Type of supplier"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person"
+    },
+    "email": {
+      "type": "string",
+      "description": "Supplier email (login)"
+    },
+    "password_hash": {
+      "type": "string",
+      "description": "Hashed password"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone"
+    },
+    "address": {
+      "type": "string",
+      "description": "Business address"
+    },
+    "tax_id": {
+      "type": "string",
+      "description": "Tax identification number"
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 15,
+      "description": "Commission percentage charged by platform"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "suspended"
+      ],
+      "default": "active",
+      "description": "Supplier account status"
+    },
+    "bank_account_id": {
+      "type": "string",
+      "description": "Reference to bank account for payments"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0,
+      "description": "Total revenue earned"
+    },
+    "total_bookings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of bookings"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Average supplier rating"
+    },
+    "last_login": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last login timestamp"
+    }
+  },
+  "required": [
+    "company_name",
+    "supplier_type",
+    "email",
+    "password_hash"
+  ]
+}

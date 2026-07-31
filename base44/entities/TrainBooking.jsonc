@@ -1,0 +1,108 @@
+{
+  "name": "TrainBooking",
+  "type": "object",
+  "properties": {
+    "booking_ref": {
+      "type": "string",
+      "description": "Human-readable booking reference (e.g. TRN0000001)"
+    },
+    "train_id": {
+      "type": "string",
+      "description": "Reference to train"
+    },
+    "train_number": {
+      "type": "string",
+      "description": "Train number for reference"
+    },
+    "route": {
+      "type": "string",
+      "description": "Origin - Destination route"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Departure date"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure time"
+    },
+    "passenger_name": {
+      "type": "string",
+      "description": "Passenger name"
+    },
+    "passenger_email": {
+      "type": "string",
+      "description": "Passenger email"
+    },
+    "passenger_phone": {
+      "type": "string",
+      "description": "Passenger phone"
+    },
+    "number_of_passengers": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of passengers"
+    },
+    "class_type": {
+      "type": "string",
+      "enum": [
+        "economy",
+        "first_class",
+        "business",
+        "sleeper"
+      ],
+      "description": "Selected class"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total booking price"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requirements"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "12go",
+        "trainline",
+        "direct"
+      ],
+      "description": "Supplier used for booking"
+    },
+    "supplier_reference": {
+      "type": "string",
+      "description": "Reference number from supplier"
+    }
+  },
+  "required": [
+    "train_id",
+    "passenger_name",
+    "passenger_email",
+    "class_type"
+  ]
+}

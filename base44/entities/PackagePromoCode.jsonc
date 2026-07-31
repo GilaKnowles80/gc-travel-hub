@@ -1,0 +1,55 @@
+{
+  "name": "PackagePromoCode",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Promo code (e.g., SUMMER2024)"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "description": "Type of discount"
+    },
+    "discount_value": {
+      "type": "number",
+      "description": "Discount value"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date"
+    },
+    "usage_limit": {
+      "type": "number",
+      "description": "Max uses (null = unlimited)"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Times used"
+    },
+    "min_package_value": {
+      "type": "number",
+      "default": 0,
+      "description": "Minimum package value to use code"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "code",
+    "discount_type",
+    "discount_value"
+  ]
+}

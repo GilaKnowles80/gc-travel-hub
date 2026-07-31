@@ -1,0 +1,80 @@
+{
+  "name": "WalletLedger",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": [
+        "load",
+        "charge",
+        "unlock",
+        "lock",
+        "refund",
+        "withdrawal"
+      ],
+      "description": "Type of ledger transaction"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Transaction amount"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Associated booking ID (if applicable)"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "bus",
+        "ferry",
+        "car_rental"
+      ],
+      "description": "Type of booking"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Transaction status"
+    },
+    "reference_id": {
+      "type": "string",
+      "description": "Reference to wallet lock, payment split, or disbursement ID"
+    },
+    "balance_before": {
+      "type": "number",
+      "description": "Balance before transaction"
+    },
+    "balance_after": {
+      "type": "number",
+      "description": "Balance after transaction"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Transaction notes/description"
+    },
+    "currency": {
+      "type": "string",
+      "default": "PHP",
+      "description": "Currency code"
+    }
+  },
+  "required": [
+    "user_email",
+    "transaction_type",
+    "amount",
+    "status"
+  ]
+}

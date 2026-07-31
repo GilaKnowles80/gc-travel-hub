@@ -1,0 +1,94 @@
+{
+  "name": "Disbursement",
+  "type": "object",
+  "properties": {
+    "disbursement_number": {
+      "type": "string",
+      "description": "Unique disbursement reference number"
+    },
+    "settlement_account_id": {
+      "type": "string",
+      "description": "Settlement account being paid"
+    },
+    "supplier_id": {
+      "type": "string",
+      "description": "Supplier ID"
+    },
+    "supplier_name": {
+      "type": "string",
+      "description": "Supplier name for reference"
+    },
+    "source_account": {
+      "type": "string",
+      "enum": [
+        "revenue_account",
+        "liability_account"
+      ],
+      "description": "Source GL account"
+    },
+    "destination_account": {
+      "type": "string",
+      "description": "Destination bank account (supplier)"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Disbursement amount in PHP"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Disbursement status"
+    },
+    "bank_reference": {
+      "type": "string",
+      "description": "Bank transaction reference/confirmation number"
+    },
+    "processed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date disbursement was processed"
+    },
+    "next_retry_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Next retry date if failed"
+    },
+    "retry_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of retry attempts"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if failed"
+    },
+    "approver_email": {
+      "type": "string",
+      "description": "Admin who approved the disbursement"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Approval timestamp"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes"
+    }
+  },
+  "required": [
+    "settlement_account_id",
+    "supplier_id",
+    "amount",
+    "source_account",
+    "destination_account"
+  ]
+}

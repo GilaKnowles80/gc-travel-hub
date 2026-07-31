@@ -1,0 +1,49 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "Conversation ID"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Sender email"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Sender name"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "customer",
+        "agent",
+        "admin"
+      ],
+      "description": "Sender role"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Attachment URLs"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Message read status"
+    }
+  },
+  "required": [
+    "conversation_id",
+    "sender_email",
+    "sender_role",
+    "message"
+  ]
+}

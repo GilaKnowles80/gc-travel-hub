@@ -1,0 +1,75 @@
+{
+  "name": "TourBooking",
+  "type": "object",
+  "properties": {
+    "tour_id": {
+      "type": "string",
+      "description": "Reference to the tour"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client full name"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Client email address"
+    },
+    "client_phone": {
+      "type": "string",
+      "description": "Client phone number"
+    },
+    "number_of_participants": {
+      "type": "number",
+      "description": "Number of tour participants"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Tour departure date"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requests or notes"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total booking price"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "paid",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Booking status"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "calendar_event_id": {
+      "type": "string",
+      "description": "Google Calendar event ID for tracking"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    }
+  },
+  "required": [
+    "tour_id",
+    "client_name",
+    "client_email",
+    "number_of_participants"
+  ]
+}

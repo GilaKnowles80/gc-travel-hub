@@ -1,0 +1,61 @@
+{
+  "name": "DigitalOrder",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Buyer email"
+    },
+    "product_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of purchased DigitalProducts"
+    },
+    "product_titles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Titles of purchased products for quick reference"
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "Total amount paid in USD"
+    },
+    "currency": {
+      "type": "string",
+      "default": "usd"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "download_links_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether download links were emailed to user"
+    },
+    "download_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times files were downloaded"
+    }
+  },
+  "required": [
+    "user_email",
+    "product_ids",
+    "total_amount"
+  ]
+}

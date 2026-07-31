@@ -1,0 +1,117 @@
+{
+  "name": "WalletKYC",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "kyc_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "rejected",
+        "expired"
+      ],
+      "default": "pending",
+      "description": "KYC verification status"
+    },
+    "identity_type": {
+      "type": "string",
+      "enum": [
+        "passport",
+        "drivers_license",
+        "national_id",
+        "tin"
+      ],
+      "description": "Type of identity document"
+    },
+    "identity_number": {
+      "type": "string",
+      "description": "Identity document number"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full legal name"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth"
+    },
+    "nationality": {
+      "type": "string",
+      "description": "Nationality"
+    },
+    "address": {
+      "type": "string",
+      "description": "Residential address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "postal_code": {
+      "type": "string",
+      "description": "Postal code"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country"
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "Phone number for verification"
+    },
+    "document_front_url": {
+      "type": "string",
+      "description": "Front side of ID document"
+    },
+    "document_back_url": {
+      "type": "string",
+      "description": "Back side of ID document"
+    },
+    "selfie_url": {
+      "type": "string",
+      "description": "Selfie for facial verification"
+    },
+    "verification_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When KYC was verified"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "KYC expiry date (usually 5 years)"
+    },
+    "verification_notes": {
+      "type": "string",
+      "description": "Admin notes on verification"
+    },
+    "aml_check_status": {
+      "type": "string",
+      "enum": [
+        "clear",
+        "flagged",
+        "under_review"
+      ],
+      "default": "clear",
+      "description": "AML/Sanctions check status"
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Risk assessment score (0-100)"
+    }
+  },
+  "required": [
+    "user_email",
+    "identity_type",
+    "identity_number",
+    "full_name",
+    "date_of_birth"
+  ]
+}

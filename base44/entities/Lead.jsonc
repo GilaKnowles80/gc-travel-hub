@@ -1,0 +1,131 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "lead_source": {
+      "type": "string",
+      "enum": [
+        "website",
+        "referral",
+        "social_media",
+        "walk_in",
+        "phone_inquiry",
+        "email",
+        "advertisement",
+        "partner",
+        "other"
+      ],
+      "description": "Where the lead came from"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Lead's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country of origin"
+    },
+    "interested_in": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "flights",
+          "hotels",
+          "tours",
+          "packages",
+          "visas",
+          "insurance",
+          "cruises",
+          "car_rental"
+        ]
+      },
+      "description": "Services they're interested in"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Intended destination"
+    },
+    "travel_dates": {
+      "type": "string",
+      "description": "Planned travel dates"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Budget range"
+    },
+    "group_size": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of travelers"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "proposal_sent",
+        "negotiating",
+        "won",
+        "lost",
+        "unresponsive"
+      ],
+      "default": "new",
+      "description": "Lead status"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Sales person email assigned to this lead"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Lead priority"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about the lead"
+    },
+    "last_contacted": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last contact date"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled follow-up date"
+    },
+    "conversion_value": {
+      "type": "number",
+      "description": "Estimated or actual booking value"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Linked booking if converted"
+    },
+    "lost_reason": {
+      "type": "string",
+      "description": "Reason if lead was lost"
+    }
+  },
+  "required": [
+    "full_name",
+    "lead_source"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user",
+        "sales",
+        "sales_manager"
+      ],
+      "default": "user",
+      "description": "User role with permissions"
+    },
+    "preferred_currency": {
+      "type": "string",
+      "enum": [
+        "PHP",
+        "USD",
+        "EUR",
+        "JPY",
+        "SGD",
+        "AUD"
+      ],
+      "default": "PHP",
+      "description": "User's preferred currency for displaying prices"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth"
+    },
+    "passport_number": {
+      "type": "string",
+      "description": "Passport number"
+    },
+    "nationality": {
+      "type": "string",
+      "description": "Nationality"
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "Profile picture URL"
+    },
+    "sales_team_id": {
+      "type": "string",
+      "description": "Sales person ID if this is a sales staff member"
+    },
+    "sales_commission_rate": {
+      "type": "number",
+      "default": 2,
+      "description": "Commission percentage for sales staff"
+    }
+  },
+  "required": []
+}

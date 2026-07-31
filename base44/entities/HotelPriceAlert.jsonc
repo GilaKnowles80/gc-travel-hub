@@ -1,0 +1,64 @@
+{
+  "name": "HotelPriceAlert",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who created the alert"
+    },
+    "hotel_id": {
+      "type": "string",
+      "description": "Hotel being monitored"
+    },
+    "hotel_name": {
+      "type": "string",
+      "description": "Hotel name for reference"
+    },
+    "location": {
+      "type": "string",
+      "description": "Hotel location"
+    },
+    "room_type": {
+      "type": "string",
+      "description": "Room type to monitor"
+    },
+    "check_in_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Check-in date"
+    },
+    "check_out_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Check-out date"
+    },
+    "target_price": {
+      "type": "number",
+      "description": "Alert when price drops to or below this"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Last known price"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether alert is active"
+    },
+    "last_checked": {
+      "type": "string",
+      "description": "Last time price was checked"
+    },
+    "notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has been notified of price drop"
+    }
+  },
+  "required": [
+    "user_email",
+    "hotel_id",
+    "target_price",
+    "current_price"
+  ]
+}

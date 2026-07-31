@@ -1,0 +1,75 @@
+{
+  "name": "TravelInsurance",
+  "type": "object",
+  "properties": {
+    "insurance_name": {
+      "type": "string",
+      "description": "Name of insurance plan"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Insurance provider/company"
+    },
+    "coverage_type": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "standard",
+        "premium",
+        "comprehensive"
+      ],
+      "description": "Coverage level"
+    },
+    "coverage_amount": {
+      "type": "number",
+      "description": "Maximum coverage amount in USD"
+    },
+    "price_per_day": {
+      "type": "number",
+      "description": "Daily rate"
+    },
+    "description": {
+      "type": "string",
+      "description": "Plan description"
+    },
+    "coverage_details": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's covered"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's not covered"
+    },
+    "max_age": {
+      "type": "number",
+      "description": "Maximum age for coverage"
+    },
+    "destinations_covered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Covered regions/countries"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "insurance_name",
+    "provider",
+    "coverage_type",
+    "price_per_day"
+  ]
+}

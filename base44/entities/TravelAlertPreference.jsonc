@@ -1,0 +1,110 @@
+{
+  "name": "TravelAlertPreference",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "alert_types": {
+      "type": "object",
+      "properties": {
+        "price_drops": {
+          "type": "boolean",
+          "default": true,
+          "description": "Alert on price drops"
+        },
+        "price_increases": {
+          "type": "boolean",
+          "default": false,
+          "description": "Alert on price increases"
+        },
+        "flight_delays": {
+          "type": "boolean",
+          "default": true,
+          "description": "Alert on flight delays"
+        },
+        "flight_cancellations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Alert on cancellations"
+        },
+        "gate_changes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Alert on gate changes"
+        },
+        "last_minute_deals": {
+          "type": "boolean",
+          "default": true,
+          "description": "Alert on last-minute deals"
+        },
+        "destination_deals": {
+          "type": "boolean",
+          "default": true,
+          "description": "Deals for preferred destinations"
+        }
+      },
+      "default": {}
+    },
+    "notification_channels": {
+      "type": "object",
+      "properties": {
+        "in_app": {
+          "type": "boolean",
+          "default": true
+        },
+        "email": {
+          "type": "boolean",
+          "default": true
+        },
+        "sms": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "price_drop_threshold": {
+      "type": "number",
+      "default": 10,
+      "description": "Minimum % price drop to alert"
+    },
+    "advance_notice_hours": {
+      "type": "number",
+      "default": 24,
+      "description": "Hours before departure to start urgent alerts"
+    },
+    "deal_max_days_advance": {
+      "type": "number",
+      "default": 30,
+      "description": "Show deals for trips within X days"
+    },
+    "quiet_hours": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "start_time": {
+          "type": "string",
+          "default": "22:00"
+        },
+        "end_time": {
+          "type": "string",
+          "default": "08:00"
+        }
+      },
+      "default": {}
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Master switch for all alerts"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

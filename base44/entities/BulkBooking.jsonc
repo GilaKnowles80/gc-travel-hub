@@ -1,0 +1,157 @@
+{
+  "name": "BulkBooking",
+  "type": "object",
+  "properties": {
+    "corporate_client_id": {
+      "type": "string",
+      "description": "Reference to corporate client"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour"
+      ],
+      "description": "Type of booking"
+    },
+    "item_id": {
+      "type": "string",
+      "description": "Flight/Hotel/Tour ID"
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Name for reference"
+    },
+    "number_of_passengers": {
+      "type": "number",
+      "description": "Total number of passengers"
+    },
+    "passengers": {
+      "type": "array",
+      "description": "Array of passenger details",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "middle_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "suffix": {
+            "type": "string"
+          },
+          "birthdate": {
+            "type": "string"
+          },
+          "contact_number": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "government_id_type": {
+            "type": "string"
+          },
+          "government_id_number": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "passport_number": {
+            "type": "string"
+          },
+          "passport_expiry": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "base_price": {
+      "type": "number",
+      "description": "Base price per person"
+    },
+    "total_base_price": {
+      "type": "number",
+      "description": "Total before discounts"
+    },
+    "discount_percentage": {
+      "type": "number",
+      "description": "Discount applied"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Total discount amount"
+    },
+    "final_price": {
+      "type": "number",
+      "description": "Final price after discount"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "amadeus",
+        "direct"
+      ],
+      "description": "Supplier used"
+    },
+    "supplier_cost": {
+      "type": "number",
+      "description": "Cost from supplier"
+    },
+    "supplier_promotion": {
+      "type": "string",
+      "description": "Supplier promotion code applied"
+    },
+    "amadeus_offer_id": {
+      "type": "string",
+      "description": "Amadeus flight offer ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "invoiced"
+      ],
+      "default": "unpaid"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requests"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Invoice reference"
+    }
+  },
+  "required": [
+    "booking_type",
+    "item_id",
+    "number_of_passengers",
+    "passengers",
+    "final_price"
+  ]
+}

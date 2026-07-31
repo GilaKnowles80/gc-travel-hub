@@ -1,0 +1,79 @@
+{
+  "name": "UserFlightPreferences",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Travel interests (beach, adventure, culture, etc.)"
+    },
+    "preferred_destinations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Favorite destinations"
+    },
+    "dream_destinations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Bucket list destinations"
+    },
+    "budget_range": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "description": "Budget range for flights"
+    },
+    "preferred_cabin_class": {
+      "type": "string",
+      "enum": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first_class"
+      ],
+      "default": "economy",
+      "description": "Preferred cabin class"
+    },
+    "flexible_dates": {
+      "type": "boolean",
+      "default": true,
+      "description": "Willing to travel on flexible dates"
+    },
+    "preferred_airlines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Preferred airlines"
+    },
+    "avoid_layovers": {
+      "type": "boolean",
+      "default": false,
+      "description": "Prefer direct flights"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

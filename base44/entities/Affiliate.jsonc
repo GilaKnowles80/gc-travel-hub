@@ -1,0 +1,92 @@
+{
+  "name": "Affiliate",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Affiliate user email"
+    },
+    "affiliate_code": {
+      "type": "string",
+      "description": "Unique affiliate code"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Company or individual name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "suspended",
+        "inactive"
+      ],
+      "default": "pending",
+      "description": "Affiliate status"
+    },
+    "total_referrals": {
+      "type": "number",
+      "default": 0,
+      "description": "Total referred customers"
+    },
+    "total_bookings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total bookings from referrals"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0,
+      "description": "Total revenue generated"
+    },
+    "total_commission_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total commission earned"
+    },
+    "total_commission_paid": {
+      "type": "number",
+      "default": 0,
+      "description": "Total commission paid out"
+    },
+    "commission_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Unpaid commission balance"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "bank_transfer",
+        "gcash",
+        "paymaya",
+        "paypal"
+      ],
+      "description": "Preferred payment method"
+    },
+    "payment_details": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "bank_name": {
+          "type": "string"
+        }
+      },
+      "description": "Payment details"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes"
+    }
+  },
+  "required": [
+    "user_email",
+    "affiliate_code"
+  ]
+}

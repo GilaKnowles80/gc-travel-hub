@@ -1,0 +1,49 @@
+{
+  "name": "LoyaltyTransaction",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User's email"
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": [
+        "earn",
+        "redeem",
+        "expire",
+        "adjustment"
+      ],
+      "description": "Type of transaction"
+    },
+    "points": {
+      "type": "number",
+      "description": "Points amount (positive for earn, negative for redeem)"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Related booking ID if applicable"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "visa"
+      ],
+      "description": "Type of booking"
+    },
+    "description": {
+      "type": "string",
+      "description": "Transaction description"
+    }
+  },
+  "required": [
+    "user_email",
+    "transaction_type",
+    "points"
+  ]
+}

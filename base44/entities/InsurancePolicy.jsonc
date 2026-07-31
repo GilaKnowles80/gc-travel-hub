@@ -1,0 +1,135 @@
+{
+  "name": "InsurancePolicy",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Policy holder email"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Associated booking ID"
+    },
+    "provider_id": {
+      "type": "string",
+      "description": "Insurance provider"
+    },
+    "provider_policy_number": {
+      "type": "string",
+      "description": "External policy number"
+    },
+    "coverage_type": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "standard",
+        "premium",
+        "comprehensive"
+      ],
+      "description": "Coverage level"
+    },
+    "coverage_amount": {
+      "type": "number",
+      "description": "Maximum coverage amount"
+    },
+    "premium": {
+      "type": "number",
+      "description": "Insurance premium paid"
+    },
+    "trip_details": {
+      "type": "object",
+      "properties": {
+        "destination": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "trip_cost": {
+          "type": "number"
+        }
+      }
+    },
+    "travelers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          },
+          "date_of_birth": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of covered benefits"
+    },
+    "policy_document_url": {
+      "type": "string",
+      "description": "Policy document link"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "cancelled",
+        "claimed"
+      ],
+      "default": "active"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "claim_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "claim_amount": {
+            "type": "number"
+          },
+          "claim_status": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "user_email",
+    "provider_id",
+    "coverage_type",
+    "premium"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "name": "SupplierOnboarding",
+  "type": "object",
+  "properties": {
+    "supplier_id": {
+      "type": "string",
+      "description": "Reference to supplier"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 1,
+      "description": "Current onboarding step (1-5)"
+    },
+    "completed_steps": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "default": [],
+      "description": "Completed step numbers"
+    },
+    "profile_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "inventory_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "pricing_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "features_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "skipped_steps": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "default": []
+    },
+    "ai_tips_viewed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "supplier_id"
+  ]
+}

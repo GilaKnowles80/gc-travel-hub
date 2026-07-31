@@ -1,0 +1,119 @@
+{
+  "name": "Hotel",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Hotel name"
+    },
+    "location": {
+      "type": "string",
+      "description": "City and country"
+    },
+    "description": {
+      "type": "string",
+      "description": "Hotel description"
+    },
+    "star_rating": {
+      "type": "number",
+      "description": "Star rating (1-5)"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Main hotel image"
+    },
+    "gallery_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Gallery images"
+    },
+    "room_types": {
+      "type": "array",
+      "description": "Available room types",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "price_per_night": {
+            "type": "number"
+          },
+          "capacity": {
+            "type": "number"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Hotel amenities"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full address"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "price_tracking": {
+      "type": "object",
+      "description": "Price tracking across suppliers",
+      "properties": {
+        "last_checked": {
+          "type": "string",
+          "description": "Last time prices were checked"
+        },
+        "price_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "supplier": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "checked_at": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "best_price": {
+          "type": "object",
+          "properties": {
+            "supplier": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name",
+    "location",
+    "star_rating"
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "name": "PricingRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the pricing rule (e.g., 'High Season', 'Flash Sale')"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel"
+      ],
+      "description": "Type of item this rule applies to"
+    },
+    "rule_type": {
+      "type": "string",
+      "enum": [
+        "seasonality",
+        "demand",
+        "promotion"
+      ],
+      "description": "Type of pricing rule"
+    },
+    "multiplier": {
+      "type": "number",
+      "description": "Price multiplier (e.g., 1.5 = 50% increase, 0.8 = 20% discount)",
+      "minimum": 0.1,
+      "maximum": 3
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When this rule becomes active"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When this rule expires"
+    },
+    "conditions": {
+      "type": "object",
+      "description": "Conditions that must be met for this rule",
+      "properties": {
+        "min_booking_window_days": {
+          "type": "number",
+          "description": "Minimum days before departure"
+        },
+        "max_booking_window_days": {
+          "type": "number",
+          "description": "Maximum days before departure"
+        },
+        "day_of_week": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "0=Sun, 1=Mon, etc."
+        },
+        "destinations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific destinations (empty = all)"
+        },
+        "occupancy_threshold": {
+          "type": "number",
+          "description": "Percentage of capacity booked to trigger rule (0-100)"
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this rule is currently active"
+    },
+    "badge_text": {
+      "type": "string",
+      "description": "Text to display on badge (e.g., 'High Demand', 'Flash Sale')"
+    },
+    "badge_color": {
+      "type": "string",
+      "enum": [
+        "red",
+        "orange",
+        "green",
+        "blue"
+      ],
+      "description": "Color of the badge"
+    }
+  },
+  "required": [
+    "name",
+    "item_type",
+    "rule_type",
+    "multiplier",
+    "start_date",
+    "end_date"
+  ]
+}

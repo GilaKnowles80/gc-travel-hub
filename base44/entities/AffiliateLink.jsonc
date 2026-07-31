@@ -1,0 +1,79 @@
+{
+  "name": "AffiliateLink",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Descriptive name for this affiliate link"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "klook",
+        "agoda",
+        "booking_com",
+        "airbnb",
+        "expedia",
+        "viator",
+        "tripadvisor",
+        "12go",
+        "traveloka",
+        "other"
+      ],
+      "description": "Affiliate platform"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tours",
+        "hotels",
+        "flights",
+        "activities",
+        "transport",
+        "insurance",
+        "other"
+      ],
+      "description": "Product/service category"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Target destination (e.g., Boracay, Japan)"
+    },
+    "base_url": {
+      "type": "string",
+      "description": "The full affiliate URL with tracking parameters"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the offer"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Display image for this affiliate offer"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "Expected commission rate in % (for reference)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this link is active"
+    },
+    "total_clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Cached total click count"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to feature this link prominently"
+    }
+  },
+  "required": [
+    "name",
+    "platform",
+    "base_url"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "GDPRConsent",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "consent_type": {
+      "type": "string",
+      "enum": [
+        "essential",
+        "analytics",
+        "marketing"
+      ],
+      "description": "Type of consent"
+    },
+    "granted": {
+      "type": "boolean",
+      "description": "Whether consent was granted"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address when consent given"
+    },
+    "consent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When consent was given"
+    }
+  },
+  "required": [
+    "user_email",
+    "consent_type",
+    "granted"
+  ]
+}

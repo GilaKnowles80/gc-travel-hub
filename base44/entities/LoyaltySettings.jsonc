@@ -1,0 +1,62 @@
+{
+  "name": "LoyaltySettings",
+  "type": "object",
+  "properties": {
+    "points_per_peso": {
+      "type": "number",
+      "default": 1,
+      "description": "Points earned per peso spent"
+    },
+    "peso_per_point": {
+      "type": "number",
+      "default": 0.5,
+      "description": "Peso value when redeeming 1 point"
+    },
+    "bronze_threshold": {
+      "type": "number",
+      "default": 0,
+      "description": "Lifetime points for Bronze tier"
+    },
+    "silver_threshold": {
+      "type": "number",
+      "default": 5000,
+      "description": "Lifetime points for Silver tier"
+    },
+    "gold_threshold": {
+      "type": "number",
+      "default": 15000,
+      "description": "Lifetime points for Gold tier"
+    },
+    "platinum_threshold": {
+      "type": "number",
+      "default": 30000,
+      "description": "Lifetime points for Platinum tier"
+    },
+    "bronze_bonus": {
+      "type": "number",
+      "default": 0,
+      "description": "Bonus percentage for Bronze (0 = no bonus)"
+    },
+    "silver_bonus": {
+      "type": "number",
+      "default": 10,
+      "description": "Bonus percentage for Silver"
+    },
+    "gold_bonus": {
+      "type": "number",
+      "default": 25,
+      "description": "Bonus percentage for Gold"
+    },
+    "platinum_bonus": {
+      "type": "number",
+      "default": 50,
+      "description": "Bonus percentage for Platinum"
+    },
+    "min_redemption_points": {
+      "type": "number",
+      "default": 100,
+      "description": "Minimum points required to redeem"
+    }
+  },
+  "required": []
+}

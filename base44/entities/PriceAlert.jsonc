@@ -1,0 +1,61 @@
+{
+  "name": "PriceAlert",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who created the alert"
+    },
+    "flight_id": {
+      "type": "string",
+      "description": "Flight being monitored"
+    },
+    "flight_number": {
+      "type": "string",
+      "description": "Flight number for reference"
+    },
+    "route": {
+      "type": "string",
+      "description": "Route (origin - destination)"
+    },
+    "cabin_class": {
+      "type": "string",
+      "enum": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first_class"
+      ],
+      "description": "Cabin class to monitor"
+    },
+    "target_price": {
+      "type": "number",
+      "description": "Alert when price drops to or below this"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Last known price"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether alert is active"
+    },
+    "last_checked": {
+      "type": "string",
+      "description": "Last time price was checked"
+    },
+    "notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has been notified of price drop"
+    }
+  },
+  "required": [
+    "user_email",
+    "flight_id",
+    "cabin_class",
+    "target_price",
+    "current_price"
+  ]
+}

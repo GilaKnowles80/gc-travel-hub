@@ -1,0 +1,49 @@
+{
+  "name": "BankAccount",
+  "type": "object",
+  "properties": {
+    "bank_name": {
+      "type": "string",
+      "description": "Name of the bank"
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Account holder name"
+    },
+    "account_number": {
+      "type": "string",
+      "description": "Bank account number"
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "savings",
+        "checking",
+        "current"
+      ],
+      "description": "Type of account"
+    },
+    "swift_code": {
+      "type": "string",
+      "description": "SWIFT/BIC code (for international)"
+    },
+    "branch": {
+      "type": "string",
+      "description": "Bank branch"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": true,
+      "description": "Primary account for receiving payments"
+    },
+    "payment_instructions": {
+      "type": "string",
+      "description": "Additional instructions for customers"
+    }
+  },
+  "required": [
+    "bank_name",
+    "account_name",
+    "account_number"
+  ]
+}

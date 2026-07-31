@@ -1,0 +1,55 @@
+{
+  "name": "Conversation",
+  "type": "object",
+  "properties": {
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Assigned sales agent email"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Conversation subject"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "assigned",
+        "closed"
+      ],
+      "default": "open",
+      "description": "Conversation status"
+    },
+    "related_lead_id": {
+      "type": "string",
+      "description": "Related lead ID if applicable"
+    },
+    "related_booking_id": {
+      "type": "string",
+      "description": "Related booking ID if applicable"
+    },
+    "last_message_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last message timestamp"
+    },
+    "unread_customer": {
+      "type": "number",
+      "default": 0,
+      "description": "Unread count for customer"
+    },
+    "unread_agent": {
+      "type": "number",
+      "default": 0,
+      "description": "Unread count for agent"
+    }
+  },
+  "required": [
+    "customer_email",
+    "subject"
+  ]
+}

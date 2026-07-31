@@ -1,0 +1,117 @@
+{
+  "name": "HotelBooking",
+  "type": "object",
+  "properties": {
+    "booking_ref": {
+      "type": "string",
+      "description": "Human-readable booking reference (e.g. HTL0000001)"
+    },
+    "hotel_id": {
+      "type": "string",
+      "description": "Reference to the hotel"
+    },
+    "hotel_name": {
+      "type": "string",
+      "description": "Hotel name for reference"
+    },
+    "trip_type": {
+      "type": "string",
+      "enum": [
+        "one_way",
+        "roundtrip"
+      ],
+      "default": "roundtrip",
+      "description": "Trip type"
+    },
+    "room_type": {
+      "type": "string",
+      "description": "Selected room type"
+    },
+    "check_in_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Check-in date"
+    },
+    "check_out_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Check-out date"
+    },
+    "number_of_rooms": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of rooms"
+    },
+    "number_of_guests": {
+      "type": "number",
+      "description": "Total number of guests"
+    },
+    "guest_name": {
+      "type": "string",
+      "description": "Primary guest name"
+    },
+    "guest_email": {
+      "type": "string",
+      "description": "Guest email"
+    },
+    "guest_phone": {
+      "type": "string",
+      "description": "Guest phone"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total booking price"
+    },
+    "special_requests": {
+      "type": "string",
+      "description": "Special requests"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "partial",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "supplier": {
+      "type": "string",
+      "enum": [
+        "biyaheko",
+        "wanderlinx",
+        "tripzynx",
+        "direct"
+      ],
+      "description": "Supplier used for booking"
+    },
+    "supplier_reference": {
+      "type": "string",
+      "description": "Reference number from supplier"
+    },
+    "price_comparison_notes": {
+      "type": "string",
+      "description": "Notes on price comparison across suppliers"
+    }
+  },
+  "required": [
+    "hotel_id",
+    "guest_name",
+    "guest_email",
+    "room_type",
+    "check_in_date",
+    "check_out_date",
+    "trip_type"
+  ]
+}

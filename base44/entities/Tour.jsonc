@@ -1,0 +1,164 @@
+{
+  "name": "Tour",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Tour name"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Destination city/country"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the tour"
+    },
+    "long_description": {
+      "type": "string",
+      "description": "Detailed tour description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "beach",
+        "adventure",
+        "cultural",
+        "cruise",
+        "wildlife",
+        "city_tour",
+        "pilgrimage",
+        "honeymoon"
+      ],
+      "description": "Tour category"
+    },
+    "duration_days": {
+      "type": "number",
+      "description": "Duration in days"
+    },
+    "price_per_person": {
+      "type": "number",
+      "description": "Price per person in USD"
+    },
+    "group_size_max": {
+      "type": "number",
+      "description": "Maximum group size"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Main tour image URL"
+    },
+    "gallery_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Gallery image URLs"
+    },
+    "itinerary": {
+      "type": "array",
+      "description": "Day-by-day itinerary",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's included"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What's not included"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Average rating out of 5"
+    },
+    "reviews_count": {
+      "type": "number",
+      "description": "Number of reviews"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether tour is featured on homepage"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold_out",
+        "draft"
+      ],
+      "default": "active"
+    },
+    "departure_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available departure dates"
+    },
+    "price_tracking": {
+      "type": "object",
+      "description": "Price tracking across suppliers",
+      "properties": {
+        "last_checked": {
+          "type": "string",
+          "description": "Last time prices were checked"
+        },
+        "price_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "supplier": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "checked_at": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "best_price": {
+          "type": "object",
+          "properties": {
+            "supplier": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "title",
+    "destination",
+    "price_per_person",
+    "duration_days"
+  ]
+}

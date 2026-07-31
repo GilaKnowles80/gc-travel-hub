@@ -1,0 +1,123 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email address"
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Customer name"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Ticket subject"
+    },
+    "description": {
+      "type": "string",
+      "description": "Initial inquiry description"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Related booking ID if applicable"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "general"
+      ],
+      "description": "Type of booking related to this ticket"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "booking_question",
+        "payment_issue",
+        "cancellation",
+        "modification",
+        "complaint",
+        "other"
+      ],
+      "description": "Support ticket category"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Ticket priority"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "waiting_customer",
+        "resolved",
+        "closed"
+      ],
+      "default": "open",
+      "description": "Current ticket status"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Staff member email assigned to this ticket"
+    },
+    "messages": {
+      "type": "array",
+      "description": "Chat messages in this ticket",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "support"
+            ]
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "attachment_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "response_time_minutes": {
+      "type": "number",
+      "description": "Time taken to respond to first message"
+    },
+    "resolution_time_minutes": {
+      "type": "number",
+      "description": "Time taken to resolve the ticket"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes for support staff"
+    }
+  },
+  "required": [
+    "customer_email",
+    "customer_name",
+    "subject",
+    "description"
+  ]
+}

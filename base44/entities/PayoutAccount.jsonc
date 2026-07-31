@@ -1,0 +1,66 @@
+{
+  "name": "PayoutAccount",
+  "type": "object",
+  "properties": {
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "paymongo",
+        "gcash"
+      ],
+      "description": "Payment provider"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "international_stripe",
+        "domestic_paymongo",
+        "domestic_gcash"
+      ],
+      "description": "Payment method type"
+    },
+    "account_identifier": {
+      "type": "string",
+      "description": "Phone number or account identifier for GCash/PayMongo"
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Account holder name"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether account is active for payouts"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Primary payout account for this method"
+    },
+    "total_received": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount received in this account"
+    },
+    "pending_payout": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount pending payout"
+    },
+    "last_payout_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date of last payout"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "account_type",
+    "payment_method",
+    "account_identifier",
+    "account_name"
+  ]
+}

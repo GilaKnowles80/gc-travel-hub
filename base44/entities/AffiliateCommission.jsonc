@@ -1,0 +1,79 @@
+{
+  "name": "AffiliateCommission",
+  "type": "object",
+  "properties": {
+    "affiliate_id": {
+      "type": "string",
+      "description": "Affiliate ID"
+    },
+    "affiliate_code": {
+      "type": "string",
+      "description": "Affiliate code used"
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Customer who booked"
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "Booking ID"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "package",
+        "cruise",
+        "ferry",
+        "train",
+        "bus",
+        "car"
+      ],
+      "description": "Type of booking"
+    },
+    "booking_amount": {
+      "type": "number",
+      "description": "Total booking amount in PHP"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "Commission rate applied (5, 8, or 10)"
+    },
+    "commission_amount": {
+      "type": "number",
+      "description": "Commission earned"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "paid",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Commission status"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date commission was paid"
+    },
+    "payment_reference": {
+      "type": "string",
+      "description": "Payment reference number"
+    }
+  },
+  "required": [
+    "affiliate_id",
+    "affiliate_code",
+    "customer_email",
+    "booking_id",
+    "booking_type",
+    "booking_amount",
+    "commission_rate",
+    "commission_amount"
+  ]
+}

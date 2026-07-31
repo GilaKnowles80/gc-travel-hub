@@ -1,0 +1,42 @@
+{
+  "name": "UserSession",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "session_token": {
+      "type": "string",
+      "description": "Unique session identifier"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "Browser/device info"
+    },
+    "last_activity": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last activity timestamp"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Session expiration"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Session status"
+    }
+  },
+  "required": [
+    "user_email",
+    "session_token",
+    "expires_at"
+  ]
+}
