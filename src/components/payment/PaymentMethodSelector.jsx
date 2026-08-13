@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Smartphone, Zap } from "lucide-react";
+import { Smartphone } from "lucide-react";
 import PayMongoPayment from "./PayMongoPayment";
-import XenditPayment from "./XenditPayment";
 
 export default function PaymentMethodSelector({ 
   amount, 
@@ -12,16 +11,9 @@ export default function PaymentMethodSelector({
   onSuccess,
   onError 
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("xendit");
+  const [selectedMethod, setSelectedMethod] = useState("paymongo");
 
   const paymentMethods = [
-    {
-      id: "xendit",
-      name: "Xendit ⭐ Recommended",
-      icon: Zap,
-      description: "GCash, Maya, Cards, OTC, Online Banking",
-      available: true,
-    },
     {
       id: "paymongo",
       name: "PayMongo",
@@ -80,17 +72,6 @@ export default function PaymentMethodSelector({
 
       {/* Payment Forms */}
       <div>
-        {selectedMethod === "xendit" && (
-          <XenditPayment
-            amount={amount}
-            currency={currency}
-            description={bookingData?.description || bookingData?.tourTitle || "Travel Booking"}
-            bookingRef={bookingData?.bookingId || bookingData?.id}
-            onSuccess={onSuccess}
-            onError={onError}
-          />
-        )}
-
         {selectedMethod === "paymongo" && (
           <PayMongoPayment
             amount={amount}

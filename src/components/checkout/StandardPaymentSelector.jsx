@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2, Zap, Smartphone } from "lucide-react";
-import XenditPayment from "@/components/payment/XenditPayment";
+import { CheckCircle2, Smartphone } from "lucide-react";
 import PayMongoPayment from "@/components/payment/PayMongoPayment";
 
 /**
  * StandardPaymentSelector
- * - Xendit: Local PH gateway (GCash, Maya, Cards, OTC, Online Banking)
- * - Stripe: International gateway (Visa, Mastercard, Amex, global cards)
+ * - PayMongo: Local PH gateway (GCash, Maya, Credit/Debit Cards)
  */
 export default function StandardPaymentSelector({
   bookingData,
@@ -16,17 +14,10 @@ export default function StandardPaymentSelector({
   isProcessing,
   onPayment,
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("xendit");
+  const [selectedMethod, setSelectedMethod] = useState("paymongo");
   const total = bookingData?.totalPrice || 0;
 
   const paymentMethods = [
-    {
-      id: "xendit",
-      name: "Xendit",
-      description: "GCash, Maya, Credit/Debit Cards, OTC, Online Banking",
-      icon: Zap,
-      badge: "RECOMMENDED",
-    },
     {
       id: "paymongo",
       name: "PayMongo",
@@ -89,15 +80,6 @@ export default function StandardPaymentSelector({
       </RadioGroup>
 
       {/* Payment Action */}
-      {selectedMethod === "xendit" && (
-        <XenditPayment
-          amount={total}
-          currency="PHP"
-          description={bookingData?.description || bookingData?.tourTitle || bookingData?.type || "Travel Booking"}
-          bookingRef={bookingData?.bookingRef || bookingData?.id}
-        />
-      )}
-
       {selectedMethod === "paymongo" && (
         <PayMongoPayment
           amount={total}
@@ -119,7 +101,6 @@ export default function StandardPaymentSelector({
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
         <p className="text-xs text-blue-700">🔒 Your payment is encrypted and secure. We never store your card details.</p>
         <div className="flex items-center justify-center gap-3 mt-2 flex-wrap text-xs text-slate-500 font-semibold">
-          <span>Xendit</span><span className="text-slate-300">|</span>
           <span>PayMongo</span><span className="text-slate-300">|</span>
           <span>GCash</span><span className="text-slate-300">|</span>
           <span>Maya</span>
