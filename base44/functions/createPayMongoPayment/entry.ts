@@ -17,9 +17,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Amount and description are required' }, { status: 400 });
     }
 
-    const apiKey = Deno.env.get('PayMongo_API_KEY');
+    const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PayMongo_API_KEY');
     if (!apiKey) {
-      console.error('PayMongo_API_KEY not set');
+      console.error('PayMongo_Secret_Key not set');
       return Response.json({ error: 'Payment gateway not configured' }, { status: 500 });
     }
 

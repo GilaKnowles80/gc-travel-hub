@@ -154,12 +154,46 @@ async function processStripeToGCash(account, amount) {
 }
 
 async function processPayMongoDirectPayout(account, amount) {
-  // Placeholder: In production, integrate with PayMongo API
-  const apiKey = Deno.env.get('PayMongo_API_KEY');
-  console.log(`Processing PayMongo payout of ₱${amount} to ${account.account_identifier}`);
-  
+  const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PayMongo_API_KEY');
+  if (!apiKey) {
+    return { success: false, error: 'PayMongo secret key not configured' };
+  }
+
+  // Map PayoutAccount type to PayMongo payout channel
+  const channel = account.account_type === 'gcash' ? 'gcash'
+    : account.account_type === 'maya' ? 'maya'
+    : 'gcash';
+
+  const payoutResponse = await fetch('https://api.paymongo.com/v1/payouts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${btoa(apiKey + ':')}`
+    },
+    body: JSON.stringify({
+      data: {
+        attributes: {
+          amount: Math.round(amount * 100), // centavos
+          currency: 'PHP',
+          channel,
+          recipient: {
+            name: account.account_name,
+            account_number: account.account_identifier
+          },
+          description: `Weekly markup payout - ${account.account_identifier}`,
+          remarks: `Markup payout ${new Date().toISOString().split('T')[0]}`
+        }
+      }
+    })
+  });
+
+  const payoutData = await payoutResponse.json();
+  if (!payoutResponse.ok) {
+    return { success: false, error: payoutData?.errors?.[0]?.detail || 'Payout creation failed' };
+  }
+
   return {
     success: true,
-    transaction_id: `PAYMONGO-${Date.now()}`
+    transaction_id: payoutData.data.id
   };
 }

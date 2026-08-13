@@ -3,12 +3,22 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const signature = req.headers.get('paymongo-signature');
+    const signatureHeader = req.headers.get('paymongo-signature');
     const payload = await req.text();
 
-    // Verify webhook signature (optional but recommended)
-    // const webhookSecret = Deno.env.get('PAYMONGO_WEBHOOK_SECRET');
-    
+    // Verify webhook signature using PayMongo_Webhook_Details (signing secret)
+    const webhookSecret = resolveWebhookSecret(Deno.env.get('PayMongo_Webhook_Details'));
+    if (!webhookSecret) {
+      console.error('PayMongo webhook: PayMongo_Webhook_Details signing secret not set');
+      return Response.json({ error: 'Webhook signing secret not configured' }, { status: 500 });
+    }
+
+    const isValid = await verifyPayMongoSignature(payload, signatureHeader, webhookSecret);
+    if (!isValid) {
+      console.warn('PayMongo webhook: signature verification failed');
+      return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    }
+
     const event = JSON.parse(payload);
     console.log('PayMongo webhook event:', event.data.attributes.type);
 
@@ -146,4 +156,48 @@ function getEntityName(bookingType) {
     insurance: 'InsurancePolicy'
   };
   return mapping[bookingType] || 'Booking';
+}
+
+function resolveWebhookSecret(raw) {
+  if (!raw) return null;
+  try {
+    const obj = JSON.parse(raw);
+    if (typeof obj === 'string') return obj;
+    return obj.secret || obj.signing_secret || obj.webhook_secret || obj.webhookSecret || null;
+  } catch {
+    return raw;
+  }
+}
+
+async function verifyPayMongoSignature(rawPayload, signatureHeader, secret) {
+  if (!signatureHeader || !secret) return false;
+  let timestamp, signature;
+  for (const part of signatureHeader.split(',')) {
+    const idx = part.indexOf('=');
+    if (idx === -1) continue;
+    const key = part.slice(0, idx);
+    const value = part.slice(idx + 1);
+    if (key === 't') timestamp = value;
+    if (key === 'v1') signature = value;
+  }
+  if (!timestamp || !signature) return false;
+
+  // Reject replayed webhooks older than 5 minutes
+  const age = Math.abs(Date.now() / 1000 - parseInt(timestamp));
+  if (age > 300) return false;
+
+  const signedPayload = `${timestamp}.${rawPayload}`;
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sigBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(signedPayload));
+  const expected = Array.from(new Uint8Array(sigBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return expected === signature;
 }

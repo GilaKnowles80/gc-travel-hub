@@ -49,10 +49,10 @@ Deno.serve(async (req) => {
 
         try {
             // Create PayMongo payout
-            const paymongoApiKey = Deno.env.get('PayMongo_API_KEY');
+            const paymongoApiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PayMongo_API_KEY');
             
             if (!paymongoApiKey) {
-                throw new Error('PayMongo API key not configured');
+                throw new Error('PayMongo secret key not configured');
             }
 
             const payoutResponse = await fetch('https://api.paymongo.com/v1/payouts', {

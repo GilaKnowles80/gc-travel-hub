@@ -23,9 +23,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // PayMongo requires the SECRET key (sk_live_... or sk_test_...)
-    // Check both possible secret names
-    const apiKey = Deno.env.get('PAYMONGO_SECRET_KEY') || Deno.env.get('PayMongo_API_KEY');
+    // PayMongo SECRET key (sk_live_... or sk_test_...)
+    const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PAYMONGO_SECRET_KEY') || Deno.env.get('PayMongo_API_KEY');
     if (!apiKey) {
       return Response.json({ error: 'PayMongo not configured' }, { status: 500 });
     }
