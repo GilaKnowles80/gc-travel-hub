@@ -154,7 +154,7 @@ async function processStripeToGCash(account, amount) {
 }
 
 async function processPayMongoDirectPayout(account, amount) {
-  const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PayMongo_API_KEY');
+  const apiKey = Deno.env.get('PayMongo_Secret_Key');
   if (!apiKey) {
     return { success: false, error: 'PayMongo secret key not configured' };
   }

@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid amount' }, { status: 400 });
     }
 
-    const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PayMongo_API_KEY');
+    const apiKey = Deno.env.get('PayMongo_Secret_Key');
     const auth = btoa(`${apiKey}:`);
 
     // Create PayMongo checkout session

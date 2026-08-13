@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     }
 
     // PayMongo SECRET key (sk_live_... or sk_test_...)
-    const apiKey = Deno.env.get('PayMongo_Secret_Key') || Deno.env.get('PAYMONGO_SECRET_KEY') || Deno.env.get('PayMongo_API_KEY');
+    const apiKey = Deno.env.get('PayMongo_Secret_Key');
     if (!apiKey) {
       return Response.json({ error: 'PayMongo not configured' }, { status: 500 });
     }
