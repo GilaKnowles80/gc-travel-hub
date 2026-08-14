@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe, ScanLine, XCircle } from "lucide-react";
 import { useCurrency } from "@/components/currency/CurrencyContext";
 
-const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment", "Confirmation"];
+const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment"];
 
 // Rules data keyed by country code (PH = Philippines, US, GB, AU, SG, JP, etc.)
 const COUNTRY_RULES = {
@@ -678,54 +678,26 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         <span className="text-amber-600">${totalPrice.toLocaleString()}</span>
       </div>
 
-      {/* Option 1 — Wallet (handles failures safely) */}
-      <div
-        onClick={() => setPaymentMethod("wallet")}
-        className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "wallet" ? "border-amber-500 bg-amber-50" : "border-slate-200 hover:border-slate-300"}`}
-      >
+      {/* Secure payment via PayMongo */}
+      <div className="border-2 border-amber-500 bg-amber-50 rounded-xl p-4">
         <div className="flex items-start gap-3">
-          <Wallet className={`w-6 h-6 mt-0.5 ${paymentMethod === "wallet" ? "text-amber-500" : "text-slate-400"}`} />
+          <CreditCard className="w-6 h-6 mt-0.5 text-amber-500" />
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="font-semibold text-slate-900">GC Travel Wallet (Recommended)</p>
-              <Badge className="bg-amber-100 text-amber-700 text-xs">Safe</Badge>
-            </div>
+            <p className="font-semibold text-slate-900 mb-1">Secure Payment via PayMongo</p>
             <p className="text-sm text-slate-600">
-              Payment is held securely in your wallet while we confirm your booking with the airline.
+              You'll be redirected to PayMongo to complete payment (GCash, Maya, GrabPay, credit/debit card, or QRPh). <strong>Your seat is only confirmed after payment is received and the airline accepts the booking.</strong>
             </p>
             <div className="mt-2 space-y-1">
               <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 rounded-lg px-2 py-1">
                 <CheckCircle className="w-3 h-3" />
-                <span><strong>If booking succeeds:</strong> Airline Base Fare (75%) + Service, Taxes & Fees (25%).</span>
+                <span><strong>On success:</strong> Airline ticket issued instantly with your booking reference.</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 rounded-lg px-2 py-1">
-                <Wallet className="w-3 h-3" />
-                <span><strong>If booking fails:</strong> Full amount remains in your Wallet. Withdraw anytime via GCash, bank, or card.</span>
+              <div className="flex items-center gap-2 text-xs text-orange-700 bg-orange-50 rounded-lg px-2 py-1">
+                <AlertTriangle className="w-3 h-3" />
+                <span><strong>If the airline can't confirm:</strong> a full refund is processed automatically within 3–7 business days.</span>
               </div>
             </div>
           </div>
-          {paymentMethod === "wallet" && <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0"><div className="w-2.5 h-2.5 bg-white rounded-full" /></div>}
-        </div>
-      </div>
-
-      {/* Option 2 — Card / External */}
-      <div
-        onClick={() => setPaymentMethod("card")}
-        className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${paymentMethod === "card" ? "border-amber-500 bg-amber-50" : "border-slate-200 hover:border-slate-300"}`}
-      >
-        <div className="flex items-start gap-3">
-          <CreditCard className={`w-6 h-6 mt-0.5 ${paymentMethod === "card" ? "text-amber-500" : "text-slate-400"}`} />
-          <div className="flex-1">
-            <p className="font-semibold text-slate-900 mb-1">Credit / Debit Card or GCash (Direct)</p>
-            <p className="text-sm text-slate-600">
-              Pay directly via Stripe or GCash. If booking fails, a refund will be processed within 3–7 business days.
-            </p>
-            <div className="mt-2 flex items-center gap-2 text-xs text-orange-700 bg-orange-50 rounded-lg px-2 py-1">
-              <AlertTriangle className="w-3 h-3" />
-              <span>Refunds for failed bookings take 3–7 banking days.</span>
-            </div>
-          </div>
-          {paymentMethod === "card" && <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0"><div className="w-2.5 h-2.5 bg-white rounded-full" /></div>}
         </div>
       </div>
 
@@ -753,73 +725,6 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
       </div>
     </div>
   );
-
-  // ── STEP 5: Confirmation + Itinerary ──────────────────────────────
-  if (step === 5) {
-    const pnr = bookingResult?.booking_ref || bookingResult?.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
-    return (
-      <div className="space-y-4">
-        {progressBar}
-
-        {/* Success Header */}
-        <div className="text-center py-2">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <CheckCircle className="w-10 h-10 text-green-500" />
-          </div>
-          <h3 className="text-xl font-bold text-slate-900">Booking Confirmed! ✈️</h3>
-          <p className="text-sm text-slate-500 mt-1">A confirmation itinerary has been sent to <strong>{formData.passenger_email}</strong></p>
-        </div>
-
-        {/* PNR Reference Box */}
-        <div className="bg-amber-50 border-2 border-dashed border-amber-400 rounded-xl p-4 text-center">
-          <p className="text-xs font-semibold tracking-widest text-amber-700 uppercase mb-1">Booking Reference</p>
-          <p className="font-mono text-3xl font-extrabold text-amber-600 tracking-widest">{pnr}</p>
-          <p className="text-xs text-amber-600 mt-1">Save this for check-in and inquiries</p>
-        </div>
-
-        {/* Itinerary Details */}
-        <div className="border border-slate-200 rounded-xl overflow-hidden text-sm">
-          <div className="bg-slate-800 text-white px-4 py-2.5 flex items-center gap-2">
-            <Plane className="w-4 h-4" />
-            <span className="font-semibold">Flight Itinerary</span>
-          </div>
-          <div className="divide-y divide-slate-100">
-            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Passenger</span><span className="font-semibold">{formData.passenger_name}</span></div>
-            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Email</span><span className="font-medium">{formData.passenger_email}</span></div>
-            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Route</span><span className="font-semibold">{flight.origin} → {flight.destination}</span></div>
-            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Airline</span><span className="font-medium">{flight.airline_name} · {flight.flight_number}</span></div>
-            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Cabin Class</span><span className="font-medium capitalize">{cabinClass?.replace(/_/g, " ")}</span></div>
-            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Trip Type</span><span className="font-medium capitalize">{formData.trip_type.replace(/_/g, " ")}</span></div>
-            {formData.departure_date && <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Departure</span><span className="font-medium">{new Date(formData.departure_date).toLocaleDateString("en-PH", {weekday:"short",year:"numeric",month:"long",day:"numeric"})}</span></div>}
-            {formData.return_date && <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Return</span><span className="font-medium">{new Date(formData.return_date).toLocaleDateString("en-PH", {weekday:"short",year:"numeric",month:"long",day:"numeric"})}</span></div>}
-            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Passengers</span><span className="font-medium">{totalPassengers} passenger(s)</span></div>
-            {formData.special_requests && <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Special Requests</span><span className="font-medium italic text-slate-600 max-w-[60%] text-right">{formData.special_requests}</span></div>}
-          </div>
-        </div>
-
-        {/* Payment Breakdown */}
-        <div className="border border-green-200 rounded-xl overflow-hidden text-sm">
-          <div className="bg-green-700 text-white px-4 py-2.5 font-semibold">💳 Payment Summary</div>
-          <div className="divide-y divide-slate-100">
-            <div className="flex justify-between px-4 py-2.5 bg-slate-50"><span className="text-slate-500">Airline Base Fare (75%)</span><span className="font-medium">${splitResult?.duffel.toLocaleString()}</span></div>
-            <div className="flex justify-between px-4 py-2.5"><span className="text-slate-500">Service, Taxes & Fees (25%)</span><span className="font-medium">${splitResult?.gcash.toLocaleString()}</span></div>
-            <div className="flex justify-between px-4 py-3 bg-green-50 font-bold"><span>Total Paid</span><span className="text-green-700 text-base">${totalPrice.toLocaleString()}</span></div>
-          </div>
-        </div>
-
-        {/* Email notice */}
-        <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-xs text-blue-700">
-          <CheckCircle className="w-4 h-4 text-blue-500 flex-shrink-0" />
-          <span>Full itinerary sent to <strong>{formData.passenger_email}</strong>. Check your inbox (or spam folder).</span>
-        </div>
-
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">Close</Button>
-          <Button onClick={() => window.location.href = "/MyBookings"} className="flex-1 bg-amber-500 hover:bg-amber-600 rounded-xl">View My Bookings</Button>
-        </div>
-      </div>
-    );
-  }
 
   return null;
 }
