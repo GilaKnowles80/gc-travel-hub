@@ -10,6 +10,7 @@ import { MobileSelect } from "@/components/ui/mobile-select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Loader2, Wallet, CreditCard, AlertTriangle, ShieldCheck, Info, Plane, Globe, ScanLine, XCircle } from "lucide-react";
+import { useCurrency } from "@/components/currency/CurrencyContext";
 
 const STEPS = ["Flight Details", "Passenger Form", "Review & Rules", "Payment", "Confirmation"];
 
@@ -211,6 +212,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   });
   const [bookingResult, setBookingResult] = useState(null);
   const [splitResult, setSplitResult] = useState(null);
+  const [bookingError, setBookingError] = useState("");
   const [geoInfo, setGeoInfo] = useState(null);
   const [geoLoading, setGeoLoading] = useState(true);
   const [idType, setIdType] = useState("passport");
@@ -238,6 +240,7 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   }, []);
 
   const queryClient = useQueryClient();
+  const { convertPrice } = useCurrency();
 
   // ── ID Validation ──────────────────────────────────────────────────
   const ID_TYPES = [
@@ -346,71 +349,43 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
         number_of_passengers: totalPassengers || 1,
         special_requests: formData.special_requests,
         total_price: totalPrice,
-        payment_status: "paid",
-        status: "confirmed",
-        supplier: "biyaheko",
-      });
-      return booking;
-    },
-    onSuccess: async (booking) => {
-      setBookingResult(booking);
-      // Auto split payment internally
-      setSplitResult({
-        duffel: duffelShare,
-        gcash: gcashShare,
-        status: "processed",
-      });
-      queryClient.invalidateQueries({ queryKey: ["flight-bookings"] });
-
-      // Record SalesActivity and SalesCommission
-      const currentUser = await base44.auth.me().catch(() => null);
-      const salesPerson = currentUser?.email || "system";
-      const commissionRate = 25; // GC Travel's markup is 25%
-      const commissionAmount = +(totalPrice * 0.25).toFixed(2);
-
-      base44.entities.SalesActivity.create({
-        lead_id: booking.id, // use booking id as reference since no lead
-        sales_person: salesPerson,
-        activity_type: "status_change",
-        subject: `Flight Booking Confirmed — ${flight.origin} → ${flight.destination}`,
-        description: `Booking ${booking.booking_ref || booking.id?.slice(-8)} for ${formData.passenger_name} (${formData.passenger_email}). ${totalPassengers} pax, ${cabinClass?.replace(/_/g, " ")}, Total: $${totalPrice.toLocaleString()}`,
-        outcome: "positive",
-      }).catch(console.error);
-
-      base44.entities.SalesCommission.create({
-        sales_person: salesPerson,
-        booking_id: booking.id,
-        booking_type: "flight",
-        booking_value: totalPrice,
-        commission_rate: commissionRate,
-        commission_amount: commissionAmount,
+        offer_id: flight.offer_id || null,
+        supplier_fare: duffelShare,
+        supplier_currency: flight.currency || "USD",
+        payment_status: "unpaid",
         status: "pending",
-        notes: `${flight.airline_name} ${flight.flight_number} | ${flight.origin}→${flight.destination} | ${formData.passenger_name} | Ref: ${booking.booking_ref || booking.id?.slice(-8)}`,
-      }).catch(console.error);
+        supplier: "duffel",
+      });
 
-      // Send booking confirmation email automatically
-      const pnr = booking.id?.slice(-8).toUpperCase() || "GC" + Date.now().toString().slice(-6);
-      base44.functions.invoke("sendBookingConfirmation", {
-        pnr,
-        customer_email: formData.passenger_email,
-        customer_name: formData.passenger_name,
-        product_type: "flight",
-        item_name: `${flight.airline_name} ${flight.flight_number}`,
-        total_price: totalPrice,
-        booking_date: new Date().toISOString(),
-        status: "confirmed",
-        origin: flight.origin,
-        destination: flight.destination,
-        departure_date: formData.departure_date,
-        return_date: formData.return_date || null,
-        airline: flight.airline_name,
-        flight_number: flight.flight_number,
-        cabin_class: cabinClass,
-        passengers: `${totalPassengers} passenger(s)`,
-        special_requests: formData.special_requests || null,
-      }).catch(console.error);
+      // Convert USD total → PHP for the PayMongo charge
+      let phpAmount = convertPrice(totalPrice, "USD", "PHP");
+      // Guard: if exchange rates aren't loaded, convertPrice returns the USD number unchanged
+      if (!phpAmount || phpAmount <= totalPrice * 1.5) {
+        phpAmount = totalPrice * 57; // approximate USD→PHP fallback
+      }
+      phpAmount = Math.round(phpAmount);
 
-      setStep(5);
+      // Create a real PayMongo checkout session (GCash, Maya, card, QRPh, etc.)
+      const { data } = await base44.functions.invoke("createPayMongoCheckout", {
+        bookingType: "flight",
+        bookingId: booking.id,
+        amount: phpAmount,
+        description: `${flight.airline_name} ${flight.flight_number} | ${flight.origin}→${flight.destination} | ${cabinClass} | ${totalPassengers} pax`,
+        successUrl: `${window.location.origin}/FlightPaymentSuccess?booking_id=${booking.id}`,
+        cancelUrl: `${window.location.origin}/Flights?payment=cancelled`,
+      });
+
+      if (!data?.checkoutUrl) {
+        throw new Error("Could not start payment. Please try again.");
+      }
+      return { checkoutUrl: data.checkoutUrl };
+    },
+    onSuccess: ({ checkoutUrl }) => {
+      // Redirect to PayMongo — the airline order is created after payment via webhook
+      window.location.href = checkoutUrl;
+    },
+    onError: (err) => {
+      setBookingError(err.message || "Booking failed. Please try again.");
     },
   });
 
@@ -690,6 +665,12 @@ export default function FlightBookingForm({ flight, cabinClass, onClose, tripTyp
   if (step === 4) return (
     <div className="space-y-4">
       {progressBar}
+      {bookingError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2 text-sm text-red-700">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+          {bookingError}
+        </div>
+      )}
       <h3 className="text-lg font-semibold text-slate-900">Payment Method</h3>
 
       <div className="bg-amber-50 rounded-xl p-3 text-sm font-bold flex justify-between">

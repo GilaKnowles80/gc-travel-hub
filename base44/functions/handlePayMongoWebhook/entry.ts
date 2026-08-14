@@ -38,10 +38,16 @@ Deno.serve(async (req) => {
       // Update booking based on type
       switch (booking_type) {
         case 'flight':
+          // Mark payment received; status stays 'pending' until the airline (Duffel) confirms the order
           await base44.asServiceRole.entities.FlightBooking.update(booking_id, {
-            payment_status: 'paid',
-            status: 'confirmed'
+            payment_status: 'paid'
           });
+          // Create the real airline order now that payment is confirmed
+          try {
+            await base44.asServiceRole.functions.invoke('bookFlightDuffel', { bookingId: booking_id });
+          } catch (err) {
+            console.error('[DUFFEL] Airline booking failed after payment for', booking_id, err.message);
+          }
           break;
         
         case 'hotel':
@@ -116,11 +122,14 @@ Deno.serve(async (req) => {
       if (booking) {
         const userEmail = booking.passenger_email || booking.guest_email || booking.renter_email || booking.applicant_email || booking.user_email;
         
-        await base44.asServiceRole.integrations.Core.SendEmail({
-          to: userEmail,
-          subject: 'Payment Confirmed - GC Travel & Tours',
-          body: `Your payment has been confirmed for booking ${booking_id}. You will receive your booking details shortly.`
-        });
+        // For flights, bookFlightDuffel sends the real confirmation email — skip the generic one
+        if (booking_type !== 'flight') {
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            to: userEmail,
+            subject: 'Payment Confirmed - GC Travel & Tours',
+            body: `Your payment has been confirmed for booking ${booking_id}. You will receive your booking details shortly.`
+          });
+        }
 
         // Credit wallet with 5% cashback
         try {

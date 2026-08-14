@@ -1,28 +1,41 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-// ─── GC Travel Airline Payment Flow ─────────────────────────────────────────
-// 1. Customer pays 100% → GC E-Wallet (temporary holding)
-// 2. System sends booking to airline API (Duffel)
-// 3. CONFIRMED → Auto split: 75% Supplier, 25% GC Travel
-// 4. FAILED    → 100% refund held in wallet for customer to rebook or withdraw
+// ─── GC Travel Airline Booking Flow (real) ──────────────────────────────────
+// Triggered by the PayMongo webhook AFTER a flight payment is confirmed.
+// Creates the real Duffel airline order, then:
+//   SUCCESS  → booking confirmed + airline reference + 75/25 revenue split
+//   FAILURE  → booking cancelled + payment marked refunded + customer notified
 // ────────────────────────────────────────────────────────────────────────────
 
-const SUPPLIER_PCT   = 0.75;
-const GC_MARKUP_PCT  = 0.25;
+const SUPPLIER_PCT = 0.75;
+const GC_MARKUP_PCT = 0.25;
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const { bookingId } = await req.json();
+    if (!bookingId) {
+      return Response.json({ error: 'Missing bookingId' }, { status: 400 });
     }
 
-    const { offerId, passengers, walletTransactionId, totalAmount } = await req.json();
+    // Load the booking record (service role — called from the webhook with no user session)
+    const bookings = await base44.asServiceRole.entities.FlightBooking.filter({ id: bookingId });
+    const booking = bookings?.[0];
+    if (!booking) {
+      return Response.json({ error: 'Booking not found' }, { status: 404 });
+    }
+    // Idempotency / guard: only book once payment is actually confirmed
+    if (booking.status === 'confirmed') {
+      return Response.json({ success: true, alreadyConfirmed: true, booking_id: bookingId });
+    }
+    if (booking.payment_status !== 'paid') {
+      return Response.json({ error: 'Booking is not paid yet — cannot create airline order' }, { status: 400 });
+    }
 
-    if (!offerId || !passengers || passengers.length === 0) {
-      return Response.json({ error: 'Missing required parameters' }, { status: 400 });
+    const offerId = booking.offer_id;
+    if (!offerId) {
+      return Response.json({ error: 'No Duffel offer linked to this booking' }, { status: 400 });
     }
 
     const duffelApiKey = Deno.env.get('DUFFEL_API_KEY');
@@ -30,31 +43,35 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Duffel API key not configured' }, { status: 500 });
     }
 
-    // Format passengers for Duffel
-    const formattedPassengers = passengers.map(p => ({
-      id: p.id || crypto.randomUUID(),
-      given_name: p.first_name || p.given_name,
-      family_name: p.last_name || p.family_name,
-      born_on: p.date_of_birth || p.born_on,
-      email: p.email,
-      phone_number: p.phone || p.phone_number,
-      gender: p.gender?.toLowerCase() === 'male' ? 'm' : 'f',
-      title: p.gender?.toLowerCase() === 'male' ? 'mr' : 'ms'
+    // Build passengers from the booking record (primary passenger details per seat)
+    const fullName = (booking.passenger_name || 'Passenger Passenger').trim();
+    const nameParts = fullName.split(/\s+/);
+    const basePax = {
+      given_name: nameParts[0] || 'Passenger',
+      family_name: nameParts.slice(1).join(' ') || 'Passenger',
+      born_on: booking.date_of_birth || '1990-01-01',
+      email: booking.passenger_email,
+      phone_number: booking.passenger_phone,
+      gender: 'm',
+      title: 'mr'
+    };
+    const paxCount = Math.max(1, booking.number_of_passengers || 1);
+    const formattedPassengers = Array.from({ length: paxCount }, () => ({
+      id: crypto.randomUUID(),
+      ...basePax
     }));
 
-    console.log(`[DUFFEL BOOKING] Sending booking request for offer: ${offerId} | Customer: ${user.email}`);
+    const supplierFare = String(booking.supplier_fare ?? +(booking.total_price * SUPPLIER_PCT).toFixed(2));
+    const supplierCurrency = booking.supplier_currency || 'USD';
 
-    // Send booking request to Duffel (airline API)
+    console.log(`[DUFFEL BOOKING] booking=${bookingId} offer=${offerId} pax=${paxCount} fare=${supplierFare} ${supplierCurrency}`);
+
     const orderBody = {
       data: {
         selected_offers: [offerId],
         passengers: formattedPassengers,
         type: 'instant',
-        payments: [{
-          type: 'balance',
-          amount: '0.00',
-          currency: 'USD'
-        }]
+        payments: [{ type: 'balance', amount: supplierFare, currency: supplierCurrency }]
       }
     };
 
@@ -70,169 +87,159 @@ Deno.serve(async (req) => {
 
     // ─── BOOKING FAILED ───────────────────────────────────────────────────
     if (!orderResponse.ok) {
-      const errorData = await orderResponse.json();
-      console.error('[DUFFEL BOOKING FAILED]', errorData);
-
-      // Funds remain in GC E-Wallet — notify customer
+      const errorData = await orderResponse.json().catch(() => ({}));
       const failureReason = errorData?.errors?.[0]?.message || 'Airline booking failed';
+      console.error('[DUFFEL BOOKING FAILED]', JSON.stringify(errorData));
+
+      // Customer already paid via PayMongo → mark for refund
+      await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
+        status: 'cancelled',
+        payment_status: 'refunded'
+      });
 
       try {
         await base44.asServiceRole.entities.Notification.create({
-          user_email: user.email,
-          title: '❌ Flight Booking Failed — Funds Safe',
-          message: `Your flight booking could not be confirmed (${failureReason}). Your payment of ₱${totalAmount || 'the full amount'} remains safely in your GC E-Wallet. You can rebook or request a full withdrawal.`,
+          user_email: booking.passenger_email,
+          title: '❌ Flight Booking Failed — Refund Processing',
+          message: `Your flight booking could not be confirmed (${failureReason}). A full refund will be processed to your original payment method within 3-7 business days. We apologize for the inconvenience.`,
           type: 'booking_failed',
-          link: '/Wallet'
+          link: '/MyFlightBookings'
         });
-      } catch (notifErr) {
-        console.error('[NOTIFY] Failed to send booking failure notification:', notifErr.message);
-      }
+      } catch (e) { console.error('[NOTIFY]', e.message); }
 
-      // Log audit trail
       try {
         await base44.asServiceRole.entities.AuditLog.create({
           action: 'flight_booking_failed',
           entity_type: 'FlightBooking',
-          entity_id: walletTransactionId || 'unknown',
-          details: JSON.stringify({
-            offer_id: offerId,
-            user_email: user.email,
-            wallet_transaction_id: walletTransactionId,
-            failure_reason: failureReason,
-            funds_status: '100% held in GC E-Wallet — available for rebook or refund'
-          }),
-          user_email: user.email,
+          entity_id: bookingId,
+          details: JSON.stringify({ offer_id: offerId, failure_reason: failureReason, refund: 'pending' }),
+          user_email: booking.passenger_email,
           timestamp: new Date().toISOString()
         });
-      } catch (auditErr) {
-        console.error('[AUDIT] Failed to log booking failure:', auditErr.message);
-      }
+      } catch (e) { console.error('[AUDIT]', e.message); }
 
-      return Response.json({
-        success: false,
-        error: 'Flight booking failed',
-        reason: failureReason,
-        funds_status: 'held_in_wallet',
-        message: 'Your payment is safely held in your GC E-Wallet. You may rebook or request a full refund.',
-        details: errorData
-      }, { status: 200 }); // 200 so frontend can read the message
+      return Response.json({ success: false, error: failureReason, refund: 'processing' }, { status: 200 });
     }
 
     // ─── BOOKING SUCCESS ──────────────────────────────────────────────────
     const order = await orderResponse.json();
     const confirmedAmount = parseFloat(order.data.total_amount);
-    const supplierAmount  = parseFloat((confirmedAmount * SUPPLIER_PCT).toFixed(2));
-    const gcMarkupAmount  = parseFloat((confirmedAmount * GC_MARKUP_PCT).toFixed(2));
+    const supplierAmount = parseFloat((confirmedAmount * SUPPLIER_PCT).toFixed(2));
+    const gcMarkupAmount = parseFloat((confirmedAmount * GC_MARKUP_PCT).toFixed(2));
+    const airlineRef = order.data.booking_reference;
 
-    console.log(`[DUFFEL SUCCESS] Order: ${order.data.id} | Total: ${confirmedAmount} | Supplier(75%): ${supplierAmount} | GC(25%): ${gcMarkupAmount}`);
+    console.log(`[DUFFEL SUCCESS] Order: ${order.data.id} | Airline Ref: ${airlineRef} | Total: ${confirmedAmount}`);
 
-    // Create flight booking record (confirmed)
-    const flightBooking = await base44.asServiceRole.entities.FlightBooking.create({
-      user_email: user.email,
-      flight_number: order.data.booking_reference,
-      passenger_name: `${passengers[0].first_name || passengers[0].given_name} ${passengers[0].last_name || passengers[0].family_name}`,
-      passenger_email: passengers[0].email,
-      passenger_phone: passengers[0].phone || passengers[0].phone_number,
-      passport_number: passengers[0].passport_number,
-      date_of_birth: passengers[0].date_of_birth || passengers[0].born_on,
-      cabin_class: order.data.slices[0].segments[0].passengers[0].cabin_class,
-      number_of_passengers: passengers.length,
-      total_price: confirmedAmount,
+    // Update the existing booking with the airline confirmation
+    await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
       status: 'confirmed',
       payment_status: 'paid',
       supplier: 'duffel',
-      supplier_reference: order.data.id,
-      route: `${order.data.slices[0].origin.city_name} - ${order.data.slices[0].destination.city_name}`,
-      trip_type: order.data.slices.length > 1 ? 'roundtrip' : 'one_way'
+      supplier_reference: order.data.id
     });
 
-    // Auto-split: log 75/25 revenue split (triggered ONLY on confirmed booking)
+    // Revenue split record (75% airline / 25% GC Travel)
     try {
       await base44.asServiceRole.entities.PaymentSplit.create({
-        booking_id: flightBooking.id,
+        booking_id: bookingId,
         booking_type: 'flight',
-        gross_amount: confirmedAmount,
-        supplier_amount: supplierAmount,
-        agency_amount: gcMarkupAmount,
-        currency: order.data.total_currency || 'USD',
-        user_email: user.email,
-        split_date: new Date().toISOString(),
-        status: 'settled',
-        notes: `Auto-split on confirmed Duffel booking ${order.data.id}. 75% (${supplierAmount}) to airline supplier, 25% (${gcMarkupAmount}) to GC Travel.`
+        total_amount: booking.total_price,
+        supplier_payout: supplierAmount,
+        gc_commission: gcMarkupAmount,
+        payment_method: 'card',
+        currency: order.data.total_currency || supplierCurrency,
+        status: 'settled'
       });
+    } catch (e) { console.error('[SPLIT]', e.message); }
 
-      console.log(`[AUTO SPLIT] ✅ Booking confirmed. 75% supplier: ${supplierAmount} | 25% GC Travel: ${gcMarkupAmount}`);
-    } catch (splitErr) {
-      console.error('[SPLIT] Revenue split log error:', splitErr.message);
-    }
-
-    // Create pending supplier payment record (75% to airline)
+    // Pending supplier payment record (75% to be settled with the airline)
     try {
-      const existing = await base44.asServiceRole.entities.SupplierPayment.filter({ booking_id: flightBooking.id });
+      const existing = await base44.asServiceRole.entities.SupplierPayment.filter({ booking_id: bookingId });
       if (existing.length === 0) {
         await base44.asServiceRole.entities.SupplierPayment.create({
-          booking_id: flightBooking.id,
+          booking_id: bookingId,
           booking_type: 'flight',
           supplier: 'duffel',
           supplier_amount: supplierAmount,
-          customer_paid_amount: confirmedAmount,
+          customer_paid_amount: booking.total_price,
           markup_retained: gcMarkupAmount,
           payment_status: 'pending',
           payment_method: 'manual',
-          notes: `Duffel flight confirmed. 75% (${supplierAmount}) to be settled with airline supplier. 25% (${gcMarkupAmount}) retained by GC Travel.`
+          notes: `Duffel order ${order.data.id} confirmed. 75% (${supplierAmount}) to be settled with airline.`
         });
-        console.log(`[SUPPLIER PAYMENT] Pending record created: ${supplierAmount} to Duffel/airline`);
       }
-    } catch (supErr) {
-      console.error('[SUPPLIER] Record creation error:', supErr.message);
-    }
+    } catch (e) { console.error('[SUPPLIER]', e.message); }
 
-    // Audit trail for successful split
+    // Audit trail
     try {
       await base44.asServiceRole.entities.AuditLog.create({
-        action: 'flight_booking_split_executed',
+        action: 'flight_booking_confirmed',
         entity_type: 'FlightBooking',
-        entity_id: flightBooking.id,
+        entity_id: bookingId,
         details: JSON.stringify({
           duffel_order_id: order.data.id,
-          booking_reference: order.data.booking_reference,
+          airline_reference: airlineRef,
           total_amount: confirmedAmount,
           supplier_75pct: supplierAmount,
-          gc_travel_25pct: gcMarkupAmount,
-          wallet_transaction_id: walletTransactionId,
-          split_trigger: 'booking_confirmed'
+          gc_25pct: gcMarkupAmount
         }),
-        user_email: user.email,
+        user_email: booking.passenger_email,
         timestamp: new Date().toISOString()
       });
-    } catch (auditErr) {
-      console.error('[AUDIT] Split audit log error:', auditErr.message);
-    }
+    } catch (e) { console.error('[AUDIT]', e.message); }
 
-    // Send success notification to customer
+    // Sales activity + commission
+    try {
+      await base44.asServiceRole.entities.SalesActivity.create({
+        lead_id: bookingId,
+        sales_person: booking.passenger_email,
+        activity_type: 'status_change',
+        subject: `Flight Booking Confirmed — ${booking.route}`,
+        description: `Booking ${booking.booking_ref || bookingId.slice(-8)} for ${booking.passenger_name}. ${paxCount} pax. Total: ${booking.total_price}`,
+        outcome: 'positive'
+      });
+    } catch (e) { console.error('[SALES]', e.message); }
+
+    try {
+      await base44.asServiceRole.entities.SalesCommission.create({
+        sales_person: booking.passenger_email,
+        booking_id: bookingId,
+        booking_type: 'flight',
+        booking_value: booking.total_price,
+        commission_rate: 25,
+        commission_amount: gcMarkupAmount,
+        status: 'pending',
+        notes: `Duffel order ${order.data.id} | ${booking.passenger_name} | Ref: ${booking.booking_ref || bookingId.slice(-8)}`
+      });
+    } catch (e) { console.error('[COMMISSION]', e.message); }
+
+    // Confirmation notification
     try {
       await base44.asServiceRole.entities.Notification.create({
-        user_email: user.email,
+        user_email: booking.passenger_email,
         title: '✅ Flight Confirmed — E-Ticket Issued',
-        message: `Your flight (${order.data.booking_reference}) has been confirmed and your e-ticket is on the way! Route: ${order.data.slices[0].origin.city_name} → ${order.data.slices[0].destination.city_name}`,
+        message: `Your flight has been confirmed! Airline reference: ${airlineRef}. Route: ${booking.route}. Your e-ticket details have been sent to your email.`,
         type: 'payment_confirmed',
-        booking_id: flightBooking.id,
+        booking_id: bookingId,
         link: '/MyFlightBookings'
       });
-    } catch (notifErr) {
-      console.error('[NOTIFY] Success notification error:', notifErr.message);
-    }
+    } catch (e) { console.error('[NOTIFY]', e.message); }
+
+    // Confirmation email
+    try {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: booking.passenger_email,
+        subject: `Flight Confirmed — ${booking.booking_ref || airlineRef}`,
+        body: `Hello ${booking.passenger_name},\n\nYour flight has been confirmed!\n\nAirline Reference: ${airlineRef}\nDuffel Order: ${order.data.id}\nRoute: ${booking.route}\nFlight: ${booking.flight_number}\nCabin: ${booking.cabin_class}\nPassengers: ${paxCount}\n\nThank you for booking with GC Travel & Tours. Please arrive at the airport at least 3 hours before your international flight.`
+      });
+    } catch (e) { console.error('[EMAIL]', e.message); }
 
     return Response.json({
       success: true,
-      booking: flightBooking,
-      order: order.data,
-      split: {
-        total: confirmedAmount,
-        supplier_75pct: supplierAmount,
-        gc_travel_25pct: gcMarkupAmount,
-        status: 'auto_split_complete'
-      }
+      booking_id: bookingId,
+      duffel_order_id: order.data.id,
+      airline_reference: airlineRef,
+      split: { total: confirmedAmount, supplier_75pct: supplierAmount, gc_25pct: gcMarkupAmount }
     });
 
   } catch (error) {
