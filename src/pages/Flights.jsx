@@ -216,6 +216,18 @@ export default function Flights() {
 
   const flights = flightData?.flights || [];
 
+  // Auto-show Supplier Portals when Duffel returns no products (or errors);
+  // switch back to Duffel when results are present or a new search is loading.
+  useEffect(() => {
+    if (!searchTriggered) return;
+    if (isLoading) { setResultsTab("duffel"); return; }
+    if (error || flights.length === 0) {
+      setResultsTab("suppliers");
+    } else {
+      setResultsTab("duffel");
+    }
+  }, [searchTriggered, isLoading, error, flights.length]);
+
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -572,22 +584,20 @@ export default function Flights() {
           airlines={airlines}
           maxPrice={maxPrice} />
 
-        {searchTriggered && (
-          <div className="flex items-center gap-2 mb-4 border-b border-slate-200">
-            <button
-              onClick={() => setResultsTab("duffel")}
-              className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "duffel" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
-            >
-              Duffel Flights {flights.length > 0 ? `(${flights.length})` : ""}
-            </button>
-            <button
-              onClick={() => setResultsTab("suppliers")}
-              className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "suppliers" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
-            >
-              Supplier Portals
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-2 mb-4 border-b border-slate-200">
+          <button
+            onClick={() => setResultsTab("duffel")}
+            className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "duffel" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+          >
+            Duffel Flights {flights.length > 0 ? `(${flights.length})` : ""}
+          </button>
+          <button
+            onClick={() => setResultsTab("suppliers")}
+            className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "suppliers" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+          >
+            Supplier Portals
+          </button>
+        </div>
 
         {resultsTab === "suppliers" ? (
           <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
