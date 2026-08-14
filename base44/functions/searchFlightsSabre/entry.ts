@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     }
 
     // Get OAuth token from Sabre
-    const tokenResponse = await fetch('https://api.cert.sabre.com/v2/auth/token', {
+    const tokenResponse = await fetch('https://api.sabre.com/v2/auth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       }
     };
 
-    const flightResponse = await fetch('https://api.cert.sabre.com/v1/shop/flights/fares', {
+    const flightResponse = await fetch('https://api.sabre.com/v1/shop/flights/fares', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${tokenData.access_token}`,

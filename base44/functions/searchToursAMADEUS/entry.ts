@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
         }
 
         // Get Amadeus access token
-        const tokenResponse = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+        const tokenResponse = await fetch('https://api.amadeus.com/v1/security/oauth2/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
         });
 
         const tourResponse = await fetch(
-            `https://test.api.amadeus.com/v2/shopping/activities?${searchParams}`,
+            `https://api.amadeus.com/v2/shopping/activities?${searchParams}`,
             {
                 headers: {
                     'Authorization': `Bearer ${access_token}`

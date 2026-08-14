@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const accessToken = tokenRes.data;
 
     // Get hotel offers
-    const offersUrl = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${hotelIds.join(',')}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&adults=${adults}&roomQuantity=${roomQuantity}`;
+    const offersUrl = `https://api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${hotelIds.join(',')}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&adults=${adults}&roomQuantity=${roomQuantity}`;
     
     const offersRes = await fetch(offersUrl, {
       headers: { 'Authorization': `Bearer ${accessToken}` }

@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const accessToken = tokenRes.data;
 
     // Search hotels by geocode
-    const searchUrl = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=KM&hotelSource=ALL`;
+    const searchUrl = `https://api.amadeus.com/v1/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=${radius}&radiusUnit=KM&hotelSource=ALL`;
     
     const hotelListRes = await fetch(searchUrl, {
       headers: { 'Authorization': `Bearer ${accessToken}` }
@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
     }
 
     // Get hotel offers
-    const offersUrl = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${hotelIds.join(',')}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&adults=${adults}&roomQuantity=${roomQuantity}`;
+    const offersUrl = `https://api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${hotelIds.join(',')}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&adults=${adults}&roomQuantity=${roomQuantity}`;
     
     const offersRes = await fetch(offersUrl, {
       headers: { 'Authorization': `Bearer ${accessToken}` }
