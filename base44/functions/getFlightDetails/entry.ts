@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
         }
 
         // Get Amadeus access token
-        const tokenResponse = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+        const tokenResponse = await fetch('https://api.amadeus.com/v1/security/oauth2/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
 
         // Price the flight offer to get updated pricing
         const priceResponse = await fetch(
-            'https://test.api.amadeus.com/v1/shopping/flight-offers/pricing',
+            'https://api.amadeus.com/v1/shopping/flight-offers/pricing',
             {
                 method: 'POST',
                 headers: {

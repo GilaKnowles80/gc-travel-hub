@@ -177,6 +177,7 @@ export default function Flights() {
           
           return {
             id: `${offer.source}_${idx}`,
+            offer_id: offer.id, // preserve the real Duffel offer ID for booking
             airline_name: offer.airline_name,
             flight_number: offer.flight_number,
             origin: offer.origin,
