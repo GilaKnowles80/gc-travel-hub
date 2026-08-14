@@ -453,9 +453,10 @@ export default function HeroSection() {
 
               {/* TOURS */}
               {searchType === "tours" && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                   <div className="md:col-span-2"><FieldLabel icon={MapPin} text="Destination" /><Input placeholder="e.g. Palawan, Bali, Paris" className="rounded-xl" value={destination} onChange={e => setDestination(e.target.value)} /></div>
                   <div><FieldLabel icon={Calendar} text="Travel Date" /><Input type="date" className="rounded-xl cursor-pointer" value={onwardDate} onChange={e => setOnwardDate(e.target.value)} /></div>
+                  <div><FieldLabel icon={Calendar} text="Return Date" /><Input type="date" className="rounded-xl cursor-pointer" value={returnDate} onChange={e => setReturnDate(e.target.value)} min={onwardDate || undefined} /></div>
                   <div>
                     <FieldLabel icon={Compass} text="Category" />
                     <Select value={tripType} onValueChange={setTripType}>
@@ -471,8 +472,8 @@ export default function HeroSection() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="md:col-span-4">
-                    <Link to={`${createPageUrl("Tours")}?destination=${destination}&category=${tripType}&date=${onwardDate}`}>
+                  <div className="md:col-span-5">
+                    <Link to={`${createPageUrl("Tours")}?destination=${destination}&category=${tripType}&date=${onwardDate}&returnDate=${returnDate}`}>
                       <Button className={BTN_SEARCH}><Search className="w-4 h-4 mr-2" />Search Tour Packages</Button>
                     </Link>
                   </div>
