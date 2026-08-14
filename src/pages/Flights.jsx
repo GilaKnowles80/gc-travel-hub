@@ -23,12 +23,14 @@ import AirportInput from "../components/flights/AirportInput";
 import FlightDurationDisplay from "../components/flights/FlightDurationDisplay";
 import moment from "moment";
 import SeatAvailabilityIndicator from "../components/flights/SeatAvailabilityIndicator";
+import SupplierPortalsPanel from "../components/shared/SupplierPortalsPanel";
 
 
 export default function Flights() {
   const queryClient = useQueryClient();
   const [showAIDiscovery, setShowAIDiscovery] = useState(false);
   const [searchTriggered, setSearchTriggered] = useState(false);
+  const [resultsTab, setResultsTab] = useState("duffel");
 
   const urlParams = new URLSearchParams(window.location.search);
   const [searchParams, setSearchParams] = useState({
@@ -287,7 +289,7 @@ export default function Flights() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Book Your Flight</h1>
-                <p className="text-slate-300">Real-time flight search powered by Duffel, Aviation Edge, Amadeus, Sabre, TravelPro, Biyaheko, Wanderlinx - 300+ airlines & live tracking</p>
+                <p className="text-slate-300">Real-time flight search powered by Duffel — 300+ airlines. Biyaheko, Wanderlinx & Tripzynx available as fallback suppliers.</p>
               </div>
               <Button
                 onClick={() => setShowAIDiscovery(!showAIDiscovery)}
@@ -570,11 +572,33 @@ export default function Flights() {
           airlines={airlines}
           maxPrice={maxPrice} />
 
-        {isLoading ? (
+        {searchTriggered && (
+          <div className="flex items-center gap-2 mb-4 border-b border-slate-200">
+            <button
+              onClick={() => setResultsTab("duffel")}
+              className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "duffel" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+            >
+              Duffel Flights {flights.length > 0 ? `(${flights.length})` : ""}
+            </button>
+            <button
+              onClick={() => setResultsTab("suppliers")}
+              className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-colors ${resultsTab === "suppliers" ? "border-amber-500 text-amber-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+            >
+              Supplier Portals
+            </button>
+          </div>
+        )}
+
+        {resultsTab === "suppliers" ? (
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+            <h3 className="text-lg font-semibold text-slate-800 mb-3">Book via Supplier Portals</h3>
+            <SupplierPortalsPanel />
+          </div>
+        ) : isLoading ? (
           <div className="grid grid-cols-1 gap-4">
             <div className="text-center py-12">
               <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-slate-600 mt-4">Searching real-time flights...</p>
+              <p className="text-slate-600 mt-4">Searching real-time flights via Duffel...</p>
             </div>
           </div>
         ) : error ? (
@@ -584,18 +608,9 @@ export default function Flights() {
             <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["realtime-flights"] })} variant="outline" className="rounded-xl mb-4">
               Retry Search
             </Button>
-            <p className="text-slate-500 text-sm mb-3">Or book directly via our supplier portals:</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <a href="https://biyaheko.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Biyaheko
-              </a>
-              <a href="https://wanderlinx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Wanderlinx
-              </a>
-              <a href="https://tripzynx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Tripzynx
-              </a>
-            </div>
+            <Button onClick={() => setResultsTab("suppliers")} className="rounded-xl bg-slate-700 hover:bg-slate-800">
+              Browse Supplier Portals
+            </Button>
           </div>
         ) : filteredFlights.length === 0 ? (
           <div className="text-center py-16">
@@ -603,23 +618,13 @@ export default function Flights() {
             <h3 className="text-xl font-semibold text-slate-600">
               {searchTriggered ? "No flights found" : "Search for flights above"}
             </h3>
-            <p className="text-slate-400 mt-2 mb-8">
-              {searchTriggered ? "Try different dates or destinations, or book directly via our supplier portals:" : "Or book directly through our supplier portals:"}
+            <p className="text-slate-400 mt-2 mb-6">
+              {searchTriggered ? "Try different dates or destinations." : "Enter your route and click Search to see live Duffel results."}
             </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <a href="https://biyaheko.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Biyaheko
-              </a>
-              <a href="https://wanderlinx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Wanderlinx
-              </a>
-              <a href="https://tripzynx.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-sm">
-                🌐 Tripzynx
-              </a>
-              <Link to={createPageUrl("BiyahekoPortal")} className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-semibold rounded-xl transition-colors text-sm">
-                🖥️ Admin Portals
-              </Link>
-            </div>
+            <Button onClick={() => setResultsTab("suppliers")} className="rounded-xl bg-slate-700 hover:bg-slate-800 mb-2">
+              Browse Supplier Portals
+            </Button>
+            <p className="text-xs text-slate-400">Biyaheko · Wanderlinx · Tripzynx + Admin Portals</p>
           </div>
         ) : (
           <>
