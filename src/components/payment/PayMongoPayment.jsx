@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { QrCode, Building2, Wallet, CreditCard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { usePayMongoConfig } from "@/hooks/usePayMongoConfig";
 
 export default function PayMongoPayment({ amount, description, bookingId, bookingType, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const { data: paymongoConfig } = usePayMongoConfig();
 
   const paymentMethods = [
     {
@@ -126,7 +128,7 @@ export default function PayMongoPayment({ amount, description, bookingId, bookin
           <div className="mt-4 text-sm text-slate-600 space-y-2">
             <p className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>
-              <span>Secure payment powered by PayMongo</span>
+              <span>Secure payment powered by PayMongo{paymongoConfig ? ` · ${paymongoConfig.mode === 'live' ? 'Live' : 'Test'} mode` : ''}</span>
             </p>
             <p className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>
