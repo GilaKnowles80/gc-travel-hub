@@ -34,6 +34,7 @@ import FinancialSpreadsheet from '@/components/admin/FinancialSpreadsheet';
 import AdminCallReceiver from '@/components/support/AdminCallReceiver';
 import UnifiedSupportCenter from '@/components/support/UnifiedSupportCenter';
 import AdminSnapshotTrend from '@/components/admin/AdminSnapshotTrend';
+import FinancialSummary from '@/components/admin/FinancialSummary';
 
 export default function AdminDashboard() {
   return (
@@ -119,6 +120,7 @@ export default function AdminDashboard() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
+            <FinancialSummary />
             <DashboardStats />
             <LiveInteractionEmails />
             <RevenueAnalytics />
