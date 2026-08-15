@@ -208,7 +208,7 @@ function LayoutContent({ children, currentPageName }) {
                 <LanguageSelector showLabel={false} />
               </div>
               {/* Public links - scrollable on mobile */}
-              <div className="flex items-center gap-1 overflow-x-auto flex-1 md:flex-none md:gap-2">
+              <div className="flex items-center gap-1 md:gap-2 overflow-x-auto flex-1 min-w-0">
                 {navLinks.filter(link => !link.adminOnly).map((link) => {
                   const IconComponent = link.icon;
                   return (
