@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
 import PullToRefresh from "@/components/mobile/PullToRefresh";
+import BottomNavigation from "@/components/mobile/BottomNavigation";
 
 import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import { LanguageProvider } from "@/components/language/LanguageContext";
@@ -312,7 +313,7 @@ function LayoutContent({ children, currentPageName }) {
               </header>
 
       {/* Page Content */}
-      <main className={isHome ? "pb-0" : "pt-16 md:pt-20 pb-0"}>
+      <main className={isHome ? "pb-20 md:pb-0" : "pt-16 md:pt-20 pb-20 md:pb-0"}>
         {/* Top Ad Banner */}
         {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
         
@@ -435,6 +436,9 @@ function LayoutContent({ children, currentPageName }) {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNavigation currentPageName={currentPageName} onTabPress={handleTabPress} />
          </div>
        </CurrencyProvider>
       </LanguageProvider>
