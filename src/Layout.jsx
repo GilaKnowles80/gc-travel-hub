@@ -78,6 +78,9 @@ function LayoutContent({ children, currentPageName }) {
   });
   const navigate = useNavigate();
   const location = useLocation();
+  const PRIMARY_TABS = ["Home", "Flights", "HotelSearch", "MyBookings", "Profile"];
+  const isPrimaryTab = PRIMARY_TABS.includes(currentPageName);
+  const showBackButton = !isPrimaryTab;
   const isHome = currentPageName === "Home";
 
   // Sync the system dark-mode preference to the 'dark' class on <html>.
@@ -194,7 +197,7 @@ function LayoutContent({ children, currentPageName }) {
             
             {/* Logo + Back Button */}
             <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-              {currentPageName !== "Home" && (
+              {showBackButton && (
                 <button
                   onClick={() => window.history.back()}
                   className="md:hidden p-2 hover:bg-slate-100/50 rounded-lg transition-colors flex-shrink-0"
@@ -203,7 +206,7 @@ function LayoutContent({ children, currentPageName }) {
                   <ChevronLeft className={`w-5 h-5 ${isHome && !scrolled ? "text-white" : "text-slate-700"}`} />
                 </button>
               )}
-              {currentPageName !== "Home" && (
+              {showBackButton && (
                 <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
                   <img
                     src="https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/3818d130c_Argie-CLogo2.jpg"
