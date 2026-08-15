@@ -11,6 +11,7 @@ import AddFundsDialog from "@/components/wallet/AddFundsDialog";
 import WithdrawFundsDialog from "@/components/wallet/WithdrawFundsDialog";
 import LiveTransactionFeed from "@/components/wallet/LiveTransactionFeed";
 import WalletFintech from "@/components/wallet/WalletFintech";
+import WalletDetailsDialog from "@/components/wallet/WalletDetailsDialog";
 
 const MAX_WALLET_AMOUNT = 1_000_000_000; // 1 billion
 
@@ -294,6 +295,15 @@ export default function WalletPage() {
               </div>
             </Card>
           </motion.div>
+        )}
+
+        {/* Wallet Details Dialog (admin) */}
+        {isAdmin && (
+          <WalletDetailsDialog
+            open={!!selectedUserEmail}
+            onOpenChange={(v) => !v && setSelectedUserEmail("")}
+            userEmail={selectedUserEmail}
+          />
         )}
       </div>
     </div>

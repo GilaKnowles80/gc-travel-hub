@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Globe, Plus, ArrowRightLeft } from "lucide-react";
+import { Globe, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+import LiveExchangeRates from "./LiveExchangeRates";
 
 export default function MultiCurrencyWallet({ user, accounts }) {
   const [open, setOpen] = useState(false);
@@ -128,31 +129,8 @@ export default function MultiCurrencyWallet({ user, accounts }) {
         </DialogContent>
       </Dialog>
 
-      {/* Exchange Rates */}
-      <Card className="p-4 bg-slate-50">
-        <h4 className="font-semibold mb-3 flex items-center gap-2">
-          <ArrowRightLeft className="w-4 h-4" />
-          Live Exchange Rates
-        </h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-          <div>
-            <p className="text-slate-600">USD/PHP</p>
-            <p className="font-bold">55.50</p>
-          </div>
-          <div>
-            <p className="text-slate-600">EUR/PHP</p>
-            <p className="font-bold">60.25</p>
-          </div>
-          <div>
-            <p className="text-slate-600">GBP/PHP</p>
-            <p className="font-bold">69.80</p>
-          </div>
-          <div>
-            <p className="text-slate-600">SGD/PHP</p>
-            <p className="font-bold">41.30</p>
-          </div>
-        </div>
-      </Card>
+      {/* Exchange Rates — live, polled + realtime */}
+      <LiveExchangeRates />
     </div>
   );
 }
