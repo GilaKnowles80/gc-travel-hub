@@ -146,37 +146,10 @@ Deno.serve(async (req) => {
       airline_name: airlineName
     });
 
-    // Revenue split record (75% airline / 25% GC Travel)
-    try {
-      await base44.asServiceRole.entities.PaymentSplit.create({
-        booking_id: bookingId,
-        booking_type: 'flight',
-        total_amount: booking.total_price,
-        supplier_payout: supplierAmount,
-        gc_commission: gcMarkupAmount,
-        payment_method: 'card',
-        currency: order.data.total_currency || supplierCurrency,
-        status: 'settled'
-      });
-    } catch (e) { console.error('[SPLIT]', e.message); }
-
-    // Pending supplier payment record (75% to be settled with the airline)
-    try {
-      const existing = await base44.asServiceRole.entities.SupplierPayment.filter({ booking_id: bookingId });
-      if (existing.length === 0) {
-        await base44.asServiceRole.entities.SupplierPayment.create({
-          booking_id: bookingId,
-          booking_type: 'flight',
-          supplier: 'duffel',
-          supplier_amount: supplierAmount,
-          customer_paid_amount: booking.total_price,
-          markup_retained: gcMarkupAmount,
-          payment_status: 'pending',
-          payment_method: 'manual',
-          notes: `Duffel order ${order.data.id} confirmed. 75% (${supplierAmount}) to be settled with airline.`
-        });
-      }
-    } catch (e) { console.error('[SUPPLIER]', e.message); }
+    // Revenue split + supplier payment are handled by the wallet escrow settle
+    // workflow (triggered by the status → confirmed change above): 75% airline
+    // / 25% GC on success, 100% refund on failure. No inline split here to
+    // avoid duplicate records.
 
     // Audit trail
     try {

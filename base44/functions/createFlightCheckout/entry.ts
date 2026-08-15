@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
     // Funds will be held until airline confirms the booking
     const booking = await base44.entities.FlightBooking.create({
       ...bookingData,
+      supplier: bookingData.supplier || 'duffel',
       payment_status: 'unpaid',
       status: 'pending'
     });

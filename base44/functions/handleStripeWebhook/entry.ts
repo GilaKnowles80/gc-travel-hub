@@ -160,26 +160,36 @@ Deno.serve(async (req) => {
 
       // 2. Update booking status
       if (booking_id && booking_type) {
-        const booking = await updateBookingStatus(base44, booking_id, booking_type, session);
+        const isFlight = booking_type === 'flight';
 
-        // 3. Log 80/20 Revenue Split (Phase 6 & 7)
-        await logRevenueSplit(base44, {
-          bookingId: booking_id,
-          bookingType: booking_type,
-          totalAmount,
-          currency,
-          userEmail: user_email || session.customer_email,
-          sessionId: session.id
-        });
-
-        // 4. Create pending supplier payment record
-        const supplier = booking?.supplier || 'direct';
-        await createSupplierPaymentRecord(base44, {
-          bookingId: booking_id,
-          bookingType: booking_type,
-          totalAmount,
-          supplier
-        });
+        // Flights: mark payment received but keep status 'pending'. The real
+        // Duffel airline order is created next by bookFlightDuffel, which sets
+        // the final status (confirmed → escrow 75/25 split, cancelled → escrow
+        // 100% refund). Other types confirm here; their escrow settle fires on
+        // this status change.
+        let booking;
+        if (isFlight) {
+          await base44.asServiceRole.entities.FlightBooking.update(booking_id, { payment_status: 'paid' });
+          booking = await base44.asServiceRole.entities.FlightBooking.get(booking_id);
+        } else {
+          booking = await updateBookingStatus(base44, booking_id, booking_type, session);
+          // Revenue split + supplier payment for non-flight types.
+          await logRevenueSplit(base44, {
+            bookingId: booking_id,
+            bookingType: booking_type,
+            totalAmount,
+            currency,
+            userEmail: user_email || session.customer_email,
+            sessionId: session.id
+          });
+          const supplier = booking?.supplier || 'direct';
+          await createSupplierPaymentRecord(base44, {
+            bookingId: booking_id,
+            bookingType: booking_type,
+            totalAmount,
+            supplier
+          });
+        }
 
         // 5. Award loyalty points (1 point per peso/dollar)
         try {
@@ -212,17 +222,13 @@ Deno.serve(async (req) => {
           });
         } catch (err) { console.error('Affiliate commission error:', err.message); }
 
-        // 7. Auto-trigger Duffel ticketing for Duffel flights
-        if (booking_type === 'flight' && booking?.supplier === 'duffel') {
+        // 7. Auto-create the real Duffel airline order (real-time, 24/7,
+        //    Expedia-style instant ticketing). bookFlightDuffel confirms on
+        //    success or cancels + flags refund on failure; both settle escrow.
+        if (isFlight && booking?.offer_id) {
           try {
-            await base44.asServiceRole.functions.invoke('processDuffelPayment', {
-              booking_id: booking_id,
-              booking_type: 'flight',
-              supplier_cost: parseFloat((totalAmount * SUPPLIER_PCT).toFixed(2)),
-              markup_amount: parseFloat((totalAmount * GC_MARKUP_PCT).toFixed(2)),
-              total_amount: totalAmount
-            });
-          } catch (err) { console.error('Duffel payment error:', err.message); }
+            await base44.asServiceRole.functions.invoke('bookFlightDuffel', { bookingId: booking_id });
+          } catch (err) { console.error('Duffel booking error:', err.message); }
         }
       }
 
@@ -273,7 +279,13 @@ Deno.serve(async (req) => {
       console.error('[PAYMENT FAILED]', pi.id, pi.last_payment_error?.message);
 
       // Per GC Airline Flow: payment gateway failure (card declined etc.)
-      // Funds never left customer — no wallet holding needed, just notify
+      // Cancel the flight booking so the wallet escrow settle workflow releases
+      // the held funds (100% refund) back to the user's withdrawable balance.
+      if (booking_id && booking_type === 'flight') {
+        try {
+          await base44.asServiceRole.entities.FlightBooking.update(booking_id, { status: 'cancelled' });
+        } catch (err) { console.error('Flight cancel on payment failure error:', err.message); }
+      }
       if (user_email) {
         try {
           await base44.asServiceRole.entities.Notification.create({
