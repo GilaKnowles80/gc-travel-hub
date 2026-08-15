@@ -30,6 +30,20 @@ Deno.serve(async (req) => {
 
     console.log(`[VISA CHECKOUT] Customer: ${user.email} | Total Visa Cost: ${totalVisaCost} | GC Service Fee (25%): ${serviceFeeCharged} | Balance at Embassy (75%): ${balanceDueAtEmbassy}`);
 
+    // Hold the 25% service fee in wallet escrow (commission-only — no merchant payout).
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: bookingId,
+        booking_type: 'visa',
+        amount: serviceFeeCharged,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     const productName = `📋 Visa Processing - ${appointment.country} (${appointment.visa_type})`;
     const description = `GC Travel Service Fee (25% of total). Remaining ₱${balanceDueAtEmbassy.toLocaleString()} payable at embassy on appointment date.`;
 

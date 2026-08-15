@@ -41,6 +41,21 @@ Deno.serve(async (req) => {
 
     console.log(`[FLIGHT CHECKOUT] Booking created: ${booking.id} — awaiting payment & airline confirmation`);
 
+    // Hold payment in wallet escrow — funds held until airline confirmation, then
+    // auto-split (75% merchant / 25% commission) or 100% release on failure.
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: booking.id,
+        booking_type: 'flight',
+        amount: totalAmount,
+        supplier: bookingData.supplier || 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     // Build description with pricing breakdown
     const currency = flightDetails.currency || 'PHP';
     const fareBreakdown = `Base Fare: ${currency} ${supplierBaseFare} | Service Fee: ${currency} ${gcMarkup} | Total: ${currency} ${totalAmount}`;

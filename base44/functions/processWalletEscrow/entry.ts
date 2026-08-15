@@ -14,12 +14,12 @@ const COMMISSION_RATE = 0.25;
 const TYPE_CONFIG = {
   flight: { entity: 'FlightBooking', emailField: 'passenger_email', totalField: 'total_price', supplierField: 'supplier' },
   hotel: { entity: 'HotelBooking', emailField: 'guest_email', totalField: 'total_price', supplierField: 'supplier' },
-  tour: { entity: 'TourBooking', emailField: 'client_email', totalField: 'total_price', supplierField: null },
+  tour: { entity: 'Booking', emailField: 'customer_email', totalField: 'total_price', supplierField: 'supplier' },
   bus: { entity: 'BusBooking', emailField: 'passenger_email', totalField: 'total_price', supplierField: 'supplier' },
   ferry: { entity: 'FerryBooking', emailField: 'passenger_email', totalField: 'total_price', supplierField: 'supplier' },
   cruise: { entity: 'CruiseBooking', emailField: 'guest_email', totalField: 'total_price', supplierField: 'supplier' },
   car_rental: { entity: 'CarRentalBooking', emailField: 'driver_email', totalField: 'total_price', supplierField: 'supplier' },
-  visa: { entity: 'VisaAppointment', emailField: 'applicant_email', totalField: 'total_price', supplierField: null },
+  visa: { entity: 'VisaAppointment', emailField: 'applicant_email', totalField: 'total_price', supplierField: null, commissionOnly: true },
   train: { entity: 'TrainBooking', emailField: 'passenger_email', totalField: 'total_price', supplierField: 'supplier' },
 };
 
@@ -114,14 +114,23 @@ export default async function(req: Request): Promise<Response> {
       const booking = bookings?.[0];
       if (!booking) return Response.json({ error: 'Booking not found' }, { status: 404 });
 
-      const amount = booking[cfg.totalField] || split?.total_amount || 0;
-      const userEmail = booking[cfg.emailField];
+      // Prefer the hold record's user_email + amount (set during checkout) so
+      // settlement targets the same wallet that escrowed the funds; fall back to
+      // the booking record when no prior hold exists.
+      let amount = booking[cfg.totalField] || 0;
+      if (split?.total_amount) amount = split.total_amount;
+      let userEmail = booking[cfg.emailField];
+      const holdTxns = await base44.asServiceRole.entities.WalletTransaction.filter({
+        reference_id: booking_id, transaction_type: 'booking_payment', status: 'pending',
+      });
+      if (holdTxns?.[0]?.user_email) userEmail = holdTxns[0].user_email;
       const supplier = coerceSupplier((cfg.supplierField && booking[cfg.supplierField]) || split?.supplier_id || 'direct');
 
       // ── SUCCESS: split 75% merchant (monthly) + 25% admin commission ──
       if (status === 'confirmed') {
-        const merchant = round2(amount * MERCHANT_RATE);
-        const commission = round2(amount * COMMISSION_RATE);
+        const commissionOnly = cfg.commissionOnly === true;
+        const merchant = commissionOnly ? 0 : round2(amount * MERCHANT_RATE);
+        const commission = commissionOnly ? amount : round2(amount * COMMISSION_RATE);
 
         if (userEmail) {
           const wallet = await getOrCreateWallet(base44, userEmail);
@@ -146,13 +155,16 @@ export default async function(req: Request): Promise<Response> {
           });
         }
 
-        // 75% merchant payable — settled monthly as Duffel collects.
-        await base44.asServiceRole.entities.SupplierPayment.create({
-          booking_id, booking_type, supplier,
-          supplier_amount: merchant, customer_paid_amount: amount, markup_retained: commission,
-          payment_status: 'pending', payment_method: 'manual',
-          notes: 'Auto-split 75% merchant share — monthly Duffel collection',
-        });
+        // 75% merchant payable — settled monthly as Duffel collects (skipped for
+        // commission-only types like visa, where the held amount is the service fee).
+        if (merchant > 0) {
+          await base44.asServiceRole.entities.SupplierPayment.create({
+            booking_id, booking_type, supplier,
+            supplier_amount: merchant, customer_paid_amount: amount, markup_retained: commission,
+            payment_status: 'pending', payment_method: 'manual',
+            notes: 'Auto-split 75% merchant share — monthly Duffel collection',
+          });
+        }
 
         return Response.json({ success: true, action: 'settle', outcome: 'success', merchant, commission });
       }

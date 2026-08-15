@@ -24,6 +24,20 @@ Deno.serve(async (req) => {
 
     console.log(`[HOTEL CHECKOUT] Customer: ${user.email} | Total: ${amount} | Supplier(75%): ${supplierAmount} | GC(25%): ${gcAmount}`);
 
+    // Hold payment in wallet escrow — funds held until booking confirmation.
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: bookingId,
+        booking_type: 'hotel',
+        amount: amount,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     const productName = hotel?.name || 'Hotel Booking';
     const productDesc = offer
       ? `Check-in: ${offer.checkInDate || ''}, Check-out: ${offer.checkOutDate || ''} | ${offer.room?.description?.text || ''}`
