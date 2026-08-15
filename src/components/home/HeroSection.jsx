@@ -278,7 +278,7 @@ export default function HeroSection() {
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 pt-20 pb-6">
         {/* Headline */}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="text-center mb-4">
-          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-2">GC Travel & Tours</p>
+          <p className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 font-bold tracking-[0.15em] uppercase text-[11px] mb-2">ARGIE-C Travel and Tours Agency</p>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight" style={{ textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>Find Your Perfect Trip</h1>
           <p className="text-amber-100 text-sm md:text-base max-w-xl mx-auto mt-2 font-medium drop-shadow-md">Curated travel experiences that transform ordinary trips into extraordinary memories</p>
         </motion.div>
