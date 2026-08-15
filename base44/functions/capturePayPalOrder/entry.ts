@@ -100,6 +100,34 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Activate premium membership on PayPal capture
+    if (bookingData?.bookingType === "premium") {
+      try {
+        const planType = bookingData?.plan_type || "monthly";
+        const planPrice = planType === "annual" ? 4990 : 499;
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + (planType === "annual" ? 12 : 1));
+        await base44.asServiceRole.entities.PremiumMembership.create({
+          user_email: user.email,
+          plan_type: planType,
+          plan_price: planPrice,
+          start_date: new Date().toISOString(),
+          end_date: endDate.toISOString(),
+          status: "active",
+        });
+        await base44.asServiceRole.entities.Notification.create({
+          user_email: user.email,
+          title: "👑 Premium Membership Activated",
+          message: `Your ${planType} premium membership is now active! Enjoy 50% off service fees, 2x loyalty points, priority support and exclusive deals.`,
+          type: "payment_confirmed",
+          link: "/PremiumMembership",
+        });
+        console.log(`[PREMIUM] Activated ${planType} for ${user.email}`);
+      } catch (err) {
+        console.error("Premium activation error:", err.message);
+      }
+    }
+
     // Send notification
     try {
       await base44.integrations.Core.SendEmail({

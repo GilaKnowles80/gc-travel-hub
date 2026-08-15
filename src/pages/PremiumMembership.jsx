@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +26,60 @@ export default function PremiumMembership() {
       return memberships[0];
     },
     enabled: !!user,
+  });
+
+  const [capturing, setCapturing] = useState(false);
+
+  // Capture PayPal payment on redirect back (?token=ORDERID appended by PayPal)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const planType = params.get("plan_type");
+    if (token && planType) {
+      setCapturing(true);
+      base44.functions
+        .invoke("capturePayPalOrder", {
+          orderId: token,
+          bookingData: { bookingType: "premium", plan_type: planType },
+        })
+        .then(() => {
+          toast.success("Premium membership activated!");
+          queryClient.invalidateQueries(["premium-membership"]);
+          window.history.replaceState({}, document.title, window.location.pathname);
+        })
+        .catch((e) => toast.error(e.message || "Payment capture failed"))
+        .finally(() => setCapturing(false));
+    }
+  }, []);
+
+  // Payoneer manual-pay: creates a pending payment + support ticket so the
+  // admin can send Payoneer account details and activate on receipt.
+  const payoneerMutation = useMutation({
+    mutationFn: async (planType) => {
+      const price = planType === "annual" ? 4990 : 499;
+      await base44.entities.Payment.create({
+        user_email: user.email,
+        booking_type: "premium",
+        booking_id: `premium-payoneer-${planType}-${Date.now()}`,
+        amount: price,
+        currency: "PHP",
+        payment_method: "payoneer",
+        status: "pending",
+        metadata: { plan_type: planType, method: "payoneer_manual" },
+      });
+      await base44.functions.invoke("createSupportTicket", {
+        customerEmail: user.email,
+        customerName: user.full_name || user.email,
+        subject: `Premium Membership — Payoneer Payment (${planType})`,
+        description: `User ${user.email} wants to pay ₱${price} via Payoneer for the ${planType} premium membership. Please send Payoneer account details and activate the membership on receipt.`,
+        bookingType: "premium",
+        priority: "medium",
+      });
+    },
+    onSuccess: () => {
+      toast.success("Request sent! We'll email you our Payoneer details within 24h.");
+    },
+    onError: (e) => toast.error(e.message || "Failed to submit request"),
   });
 
   const subscribeMutation = useMutation({
@@ -185,6 +239,35 @@ export default function PremiumMembership() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Payoneer manual option */}
+        <Card className="mb-8 border-slate-200">
+          <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-slate-800">Prefer to pay via Payoneer?</p>
+              <p className="text-sm text-slate-500">
+                No PayPal? No problem — request our Payoneer details and your membership activates once payment is received.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => payoneerMutation.mutate("monthly")}
+                disabled={payoneerMutation.isPending}
+              >
+                {payoneerMutation.isPending ? "Sending…" : "Payoneer Monthly"}
+              </Button>
+              <Button
+                variant="outline"
+                className="border-amber-400 text-amber-600"
+                onClick={() => payoneerMutation.mutate("annual")}
+                disabled={payoneerMutation.isPending}
+              >
+                {payoneerMutation.isPending ? "Sending…" : "Payoneer Annual"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Savings Calculator */}
         <Card>
