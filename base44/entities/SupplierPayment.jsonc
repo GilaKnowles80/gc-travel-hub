@@ -15,7 +15,12 @@
         "ferry",
         "bus",
         "visa",
-        "car_rental"
+        "car_rental",
+        "cruise",
+        "train",
+        "package",
+        "insurance",
+        "digital"
       ],
       "description": "Type of booking"
     },

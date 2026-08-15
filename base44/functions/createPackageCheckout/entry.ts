@@ -21,6 +21,20 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Package not found' }, { status: 404 });
     }
 
+    // Hold payment in wallet escrow — funds held until package payment confirms.
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: package_id,
+        booking_type: 'package',
+        amount: packageBooking.final_price || packageBooking.total_price || 0,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     // Build line items
     const lineItems = [];
 

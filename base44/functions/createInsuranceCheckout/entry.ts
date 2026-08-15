@@ -27,6 +27,20 @@ Deno.serve(async (req) => {
 
     console.log(`[INSURANCE CHECKOUT] Customer: ${user.email} | Total: ${amount} | Insurer(75%): ${supplierAmount} | GC(25%): ${gcAmount}`);
 
+    // Hold payment in wallet escrow — funds held until policy payment confirms.
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: bookingId,
+        booking_type: 'insurance',
+        amount: amount,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     if (paymentMethod === 'stripe') {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],

@@ -53,6 +53,20 @@ Deno.serve(async (req) => {
       download_links_sent: false,
     });
 
+    // Hold payment in wallet escrow (commission-only — 100% GC revenue on success).
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: user.email,
+        booking_id: order.id,
+        booking_type: 'digital',
+        amount: Math.round(totalUSD * 100) / 100,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,

@@ -1,0 +1,42 @@
+{
+  "name": "Auto-Settle Wallet Escrow on Insurance Update",
+  "description": "On InsurancePolicy payment_status change to paid/refunded/cancelled, settles the wallet escrow (75% insurer / 25% commission on success, 100% release on failure)",
+  "trigger": {
+    "condition": "${ .trigger.data.payment_status != .trigger.old_data.payment_status and (.trigger.data.payment_status == \"paid\" or .trigger.data.payment_status == \"refunded\" or .trigger.data.payment_status == \"cancelled\") }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "InsurancePolicy"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_settle_wallet_escrow_insurance",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "processWalletEscrow",
+            "args": {
+              "action": "settle",
+              "booking_id": "${ .trigger.entity_id }",
+              "booking_type": "insurance",
+              "status": "${ .trigger.data.payment_status }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Settle insurance wallet escrow"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -21,6 +21,9 @@ const TYPE_CONFIG = {
   car_rental: { entity: 'CarRentalBooking', emailField: 'driver_email', totalField: 'total_price', supplierField: 'supplier' },
   visa: { entity: 'VisaAppointment', emailField: 'applicant_email', totalField: 'total_price', supplierField: null, commissionOnly: true },
   train: { entity: 'TrainBooking', emailField: 'passenger_email', totalField: 'total_price', supplierField: 'supplier' },
+  package: { entity: 'PackageBooking', emailField: 'user_email', totalField: 'final_price', supplierField: null, successStatus: 'paid', failureStatuses: ['cancelled'] },
+  insurance: { entity: 'InsurancePolicy', emailField: 'user_email', totalField: 'premium', supplierField: null, successStatus: 'paid', failureStatuses: ['cancelled', 'refunded'] },
+  digital: { entity: 'DigitalOrder', emailField: 'user_email', totalField: 'total_amount', supplierField: null, successStatus: 'paid', failureStatuses: ['failed', 'cancelled', 'refunded'], commissionOnly: true },
 };
 
 const SUPPLIER_ENUM = ['biyaheko', 'wanderlinx', 'tripzynx', 'duffel', 'direct'];
@@ -127,7 +130,7 @@ export default async function(req: Request): Promise<Response> {
       const supplier = coerceSupplier((cfg.supplierField && booking[cfg.supplierField]) || split?.supplier_id || 'direct');
 
       // ── SUCCESS: split 75% merchant (monthly) + 25% admin commission ──
-      if (status === 'confirmed') {
+      if (status === (cfg.successStatus || 'confirmed')) {
         const commissionOnly = cfg.commissionOnly === true;
         const merchant = commissionOnly ? 0 : round2(amount * MERCHANT_RATE);
         const commission = commissionOnly ? amount : round2(amount * COMMISSION_RATE);
@@ -170,7 +173,7 @@ export default async function(req: Request): Promise<Response> {
       }
 
       // ── FAILURE: release 100% to withdrawable balance ─────────────────
-      if (TERMINAL_RELEASE.includes(status)) {
+      if ((cfg.failureStatuses || TERMINAL_RELEASE).includes(status)) {
         if (userEmail) {
           const wallet = await getOrCreateWallet(base44, userEmail);
           const newHeld = Math.max((wallet.held_balance || 0) - amount, 0);
