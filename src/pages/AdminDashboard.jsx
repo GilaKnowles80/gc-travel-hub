@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, Settings, Users, Receipt, TrendingUp, DollarSign, Plug } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, Receipt, TrendingUp, DollarSign, Plug, FileText } from 'lucide-react';
 import DashboardStats from '@/components/admin/DashboardStats';
 import QuickActions from '@/components/admin/QuickActions';
 import SalesReports from '@/components/admin/SalesReports';
@@ -35,6 +35,7 @@ import AdminCallReceiver from '@/components/support/AdminCallReceiver';
 import UnifiedSupportCenter from '@/components/support/UnifiedSupportCenter';
 import AdminSnapshotTrend from '@/components/admin/AdminSnapshotTrend';
 import FinancialSummary from '@/components/admin/FinancialSummary';
+import BusinessDocuments from '@/components/profile/BusinessDocuments';
 
 export default function AdminDashboard() {
   return (
@@ -68,7 +69,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid grid-cols-12 w-full max-w-6xl">
+          <TabsList className="grid grid-cols-13 w-full max-w-6xl">
             <TabsTrigger value="overview">
               <LayoutDashboard className="w-4 h-4 mr-2" />
               Overview
@@ -116,6 +117,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="manage">
               <Settings className="w-4 h-4 mr-2" />
               Manage
+            </TabsTrigger>
+            <TabsTrigger value="documents">
+              <FileText className="w-4 h-4 mr-2" />
+              Documents
             </TabsTrigger>
           </TabsList>
 
@@ -242,6 +247,10 @@ export default function AdminDashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="documents" className="space-y-6">
+            <BusinessDocuments />
           </TabsContent>
         </Tabs>
       </div>
