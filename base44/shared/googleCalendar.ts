@@ -53,3 +53,27 @@ export async function createCalendarEvent(base44, event) {
     return { ok: false, reason: 'exception', message: error.message };
   }
 }
+
+// Persists (or updates) a PassengerCalendar record for a booking so the admin
+// "Passenger Calendar" list page reflects every sync attempt. Upserts by
+// booking_id + booking_type to avoid duplicates on re-sync. Never throws.
+export async function upsertPassengerCalendar(base44, record) {
+  try {
+    const existing = await base44.asServiceRole.entities.PassengerCalendar.filter({
+      booking_id: record.booking_id,
+      booking_type: record.booking_type,
+    });
+    if (existing && existing.length > 0) {
+      const updated = await base44.asServiceRole.entities.PassengerCalendar.update(
+        existing[0].id,
+        record
+      );
+      return { id: existing[0].id, updated: true };
+    }
+    const created = await base44.asServiceRole.entities.PassengerCalendar.create(record);
+    return { id: created?.id, updated: false };
+  } catch (error) {
+    console.error('[PASSENGER CALENDAR] upsert error:', error.message);
+    return null;
+  }
+}

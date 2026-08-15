@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
-import { createCalendarEvent } from '../../shared/googleCalendar.ts';
+import { createCalendarEvent, upsertPassengerCalendar } from '../../shared/googleCalendar.ts';
 
 // Invoked automatically by the "Add Tour to Google Calendar on Confirmation"
 // workflow when a TourBooking transitions to status=confirmed.
@@ -66,6 +66,22 @@ Deno.serve(async (req) => {
     };
 
     const result = await createCalendarEvent(base44, event);
+
+    // Record this sync attempt as a PassengerCalendar record (admin list page).
+    await upsertPassengerCalendar(base44, {
+      booking_id,
+      booking_type: 'tour',
+      passenger_email: customerEmail || null,
+      passenger_name: booking.client_name || booking.customer_name || null,
+      event_title: event.summary,
+      event_start: startDate || null,
+      google_event_id: result.event_id || null,
+      google_event_link: result.event_link || null,
+      status: result.ok ? 'synced' : result.reason === 'not_connected' ? 'pending' : 'failed',
+      sync_source: 'auto',
+      last_synced_at: new Date().toISOString(),
+      error_message: result.ok ? null : result.message || result.reason,
+    });
 
     if (result.ok) {
       return Response.json({

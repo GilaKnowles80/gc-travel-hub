@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
@@ -50,6 +50,7 @@ const navLinks = [
   { name: "Ad Campaigns", page: "AdminAdCampaigns", icon: Megaphone, adminOnly: true },
   { name: "Digital Store", page: "AdminDigitalStore", icon: ShoppingBag, adminOnly: true },
   { name: "Affiliate Links", page: "AdminAffiliateAnalytics", icon: TrendingUp, adminOnly: true },
+  { name: "Passenger Calendar", page: "PassengerCalendarList", icon: Calendar, adminOnly: true },
 ];
 
 function LayoutContent({ children, currentPageName }) {

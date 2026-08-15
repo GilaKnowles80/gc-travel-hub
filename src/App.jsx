@@ -16,6 +16,7 @@ const MainPage = Pages[mainPageKey] || (() => null);
 // Standalone routes (outside the pagesConfig loop) are also code-split.
 const Earnings = lazy(() => import('@/pages/Earnings'));
 const FlightPaymentSuccess = lazy(() => import('@/pages/FlightPaymentSuccess'));
+const PassengerCalendarList = lazy(() => import('@/pages/PassengerCalendarList'));
 
 const PageFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -78,6 +79,11 @@ const AuthenticatedApp = () => {
       <Route path="/FlightPaymentSuccess" element={
         <LayoutWrapper currentPageName="FlightPaymentSuccess">
           <FlightPaymentSuccess />
+        </LayoutWrapper>
+      } />
+      <Route path="/PassengerCalendarList" element={
+        <LayoutWrapper currentPageName="PassengerCalendarList">
+          <PassengerCalendarList />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />

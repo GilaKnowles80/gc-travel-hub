@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
-import { createCalendarEvent } from '../../shared/googleCalendar.ts';
+import { createCalendarEvent, upsertPassengerCalendar } from '../../shared/googleCalendar.ts';
 
 // Invoked automatically by the "Add Flight to Google Calendar on Confirmation"
 // workflow when a FlightBooking transitions to status=confirmed.
@@ -60,6 +60,22 @@ Deno.serve(async (req) => {
     };
 
     const result = await createCalendarEvent(base44, event);
+
+    // Record this sync attempt as a PassengerCalendar record (admin list page).
+    await upsertPassengerCalendar(base44, {
+      booking_id,
+      booking_type: 'flight',
+      passenger_email: booking.passenger_email || null,
+      passenger_name: booking.passenger_name || null,
+      event_title: event.summary,
+      event_start: booking.departure_time || null,
+      google_event_id: result.event_id || null,
+      google_event_link: result.event_link || null,
+      status: result.ok ? 'synced' : result.reason === 'not_connected' ? 'pending' : 'failed',
+      sync_source: 'auto',
+      last_synced_at: new Date().toISOString(),
+      error_message: result.ok ? null : result.message || result.reason,
+    });
 
     if (result.ok) {
       try {

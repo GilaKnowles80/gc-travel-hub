@@ -1,0 +1,105 @@
+{
+  "name": "PassengerCalendar",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to the booking"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "tour"
+      ],
+      "description": "Booking type"
+    },
+    "passenger_email": {
+      "type": "string",
+      "description": "Passenger email"
+    },
+    "passenger_name": {
+      "type": "string",
+      "description": "Passenger name"
+    },
+    "event_title": {
+      "type": "string",
+      "description": "Calendar event title"
+    },
+    "event_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event start datetime"
+    },
+    "google_event_id": {
+      "type": "string",
+      "description": "Google Calendar event ID"
+    },
+    "google_event_link": {
+      "type": "string",
+      "description": "Google Calendar event link"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "synced",
+        "failed",
+        "skipped"
+      ],
+      "default": "pending",
+      "description": "Sync status"
+    },
+    "sync_source": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "manual"
+      ],
+      "default": "auto",
+      "description": "How the record was created/synced"
+    },
+    "last_synced_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last sync attempt timestamp"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if sync failed"
+    }
+  },
+  "required": [
+    "booking_id",
+    "booking_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.passenger_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
