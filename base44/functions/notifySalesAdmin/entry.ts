@@ -1,8 +1,26 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+function escapeHtml(value) {
+  if (value == null) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const { event, data } = await req.json();
 
     if (!data || !event) {
@@ -11,6 +29,7 @@ Deno.serve(async (req) => {
 
     const { entity_name, entity_id } = event;
     const booking = data;
+    const esc = escapeHtml;
 
     // Build detailed notification content
     let subject = '';
@@ -19,75 +38,75 @@ Deno.serve(async (req) => {
 
     switch (entity_name) {
       case 'FlightBooking':
-        subject = `New Flight Booking: ${booking.route}`;
+        subject = `New Flight Booking: ${esc(booking.route)}`;
         details = `
           <strong>Flight Booking</strong><br>
-          Route: ${booking.route}<br>
-          Passenger: ${booking.passenger_name}<br>
-          Email: ${booking.passenger_email}<br>
-          Phone: ${booking.passenger_phone || 'N/A'}<br>
-          Cabin Class: ${booking.cabin_class}<br>
-          Passengers: ${booking.number_of_passengers}<br>
-          Status: ${booking.status}<br>
-          Payment Status: ${booking.payment_status}<br>
-          Total: $${booking.total_price?.toFixed(2) || '0.00'}
+          Route: ${esc(booking.route)}<br>
+          Passenger: ${esc(booking.passenger_name)}<br>
+          Email: ${esc(booking.passenger_email)}<br>
+          Phone: ${esc(booking.passenger_phone || 'N/A')}<br>
+          Cabin Class: ${esc(booking.cabin_class)}<br>
+          Passengers: ${esc(booking.number_of_passengers)}<br>
+          Status: ${esc(booking.status)}<br>
+          Payment Status: ${esc(booking.payment_status)}<br>
+          Total: $${esc(booking.total_price?.toFixed(2) || '0.00')}
         `;
         amount = booking.total_price || 0;
         break;
 
       case 'HotelBooking':
-        subject = `New Hotel Booking: ${booking.hotel_name}`;
+        subject = `New Hotel Booking: ${esc(booking.hotel_name)}`;
         details = `
           <strong>Hotel Booking</strong><br>
-          Hotel: ${booking.hotel_name}<br>
-          Guest: ${booking.guest_name}<br>
-          Email: ${booking.guest_email}<br>
-          Phone: ${booking.guest_phone || 'N/A'}<br>
-          Room Type: ${booking.room_type}<br>
-          Check-in: ${booking.check_in_date}<br>
-          Check-out: ${booking.check_out_date}<br>
-          Rooms: ${booking.number_of_rooms}<br>
-          Guests: ${booking.number_of_guests}<br>
-          Status: ${booking.status}<br>
-          Payment Status: ${booking.payment_status}<br>
-          Total: $${booking.total_price?.toFixed(2) || '0.00'}
+          Hotel: ${esc(booking.hotel_name)}<br>
+          Guest: ${esc(booking.guest_name)}<br>
+          Email: ${esc(booking.guest_email)}<br>
+          Phone: ${esc(booking.guest_phone || 'N/A')}<br>
+          Room Type: ${esc(booking.room_type)}<br>
+          Check-in: ${esc(booking.check_in_date)}<br>
+          Check-out: ${esc(booking.check_out_date)}<br>
+          Rooms: ${esc(booking.number_of_rooms)}<br>
+          Guests: ${esc(booking.number_of_guests)}<br>
+          Status: ${esc(booking.status)}<br>
+          Payment Status: ${esc(booking.payment_status)}<br>
+          Total: $${esc(booking.total_price?.toFixed(2) || '0.00')}
         `;
         amount = booking.total_price || 0;
         break;
 
       case 'Booking':
-        subject = `New Tour Booking: ${booking.tour_title || 'Tour'}`;
+        subject = `New Tour Booking: ${esc(booking.tour_title || 'Tour')}`;
         details = `
           <strong>Tour Booking</strong><br>
-          Tour: ${booking.tour_title || 'N/A'}<br>
-          Customer: ${booking.customer_name}<br>
-          Email: ${booking.customer_email}<br>
-          Phone: ${booking.customer_phone || 'N/A'}<br>
-          Travelers: ${booking.number_of_travelers}<br>
-          Departure Date: ${booking.departure_date || 'N/A'}<br>
-          Status: ${booking.status}<br>
-          Payment Status: ${booking.payment_status}<br>
-          Total: $${booking.total_price?.toFixed(2) || '0.00'}
+          Tour: ${esc(booking.tour_title || 'N/A')}<br>
+          Customer: ${esc(booking.customer_name)}<br>
+          Email: ${esc(booking.customer_email)}<br>
+          Phone: ${esc(booking.customer_phone || 'N/A')}<br>
+          Travelers: ${esc(booking.number_of_travelers)}<br>
+          Departure Date: ${esc(booking.departure_date || 'N/A')}<br>
+          Status: ${esc(booking.status)}<br>
+          Payment Status: ${esc(booking.payment_status)}<br>
+          Total: $${esc(booking.total_price?.toFixed(2) || '0.00')}
         `;
         amount = booking.total_price || 0;
         break;
 
       case 'PackageBooking':
-        subject = `New Package Booking: ${booking.package_name}`;
+        subject = `New Package Booking: ${esc(booking.package_name)}`;
         const flightCount = booking.flights?.length || 0;
         const hotelCount = booking.hotels?.length || 0;
         const tourCount = booking.tours?.length || 0;
         details = `
           <strong>Package Booking</strong><br>
-          Package: ${booking.package_name}<br>
-          Customer: ${booking.user_email}<br>
-          Flights: ${flightCount}<br>
-          Hotels: ${hotelCount}<br>
-          Tours: ${tourCount}<br>
-          Status: ${booking.status}<br>
-          Total Price: $${booking.total_price?.toFixed(2) || '0.00'}<br>
-          Discount: ${booking.discount_percentage || 0}%<br>
-          Final Price: $${booking.final_price?.toFixed(2) || '0.00'}
+          Package: ${esc(booking.package_name)}<br>
+          Customer: ${esc(booking.user_email)}<br>
+          Flights: ${esc(flightCount)}<br>
+          Hotels: ${esc(hotelCount)}<br>
+          Tours: ${esc(tourCount)}<br>
+          Status: ${esc(booking.status)}<br>
+          Total Price: $${esc(booking.total_price?.toFixed(2) || '0.00')}<br>
+          Discount: ${esc(booking.discount_percentage || 0)}%<br>
+          Final Price: $${esc(booking.final_price?.toFixed(2) || '0.00')}
         `;
         amount = booking.final_price || booking.total_price || 0;
         break;
@@ -119,7 +138,7 @@ Deno.serve(async (req) => {
               ${details}
               <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 14px;">
-                Booking ID: ${entity_id}<br>
+                Booking ID: ${esc(entity_id)}<br>
                 Date: ${new Date().toLocaleString()}
               </p>
               <a href="https://app.base44.com" style="display: inline-block; padding: 12px 24px; background: #f59e0b; color: white; text-decoration: none; border-radius: 8px; margin-top: 20px;">

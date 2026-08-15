@@ -2,6 +2,12 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
 
@@ -9,8 +15,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Twilio credentials not configured' }, { status: 500 });
     }
 
-    const { identity } = await req.json().catch(() => ({}));
-    const clientIdentity = identity || 'customer_' + Date.now();
+    // Derive the call identity from the authenticated user — never from the request body.
+    const clientIdentity = 'user_' + user.id;
 
     // Use environment variables for access token generation
     const apiKeySid = Deno.env.get('TWILIO_API_KEY_SID') || accountSid;

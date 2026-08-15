@@ -26,12 +26,20 @@ const CATEGORY_ROUTING = {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
     const { ticket_id } = await req.json();
 
     if (!ticket_id) return Response.json({ error: 'Missing ticket_id' }, { status: 400 });
 
     const ticket = await base44.asServiceRole.entities.HelpdeskTicket.read(ticket_id);
     if (!ticket) return Response.json({ error: 'Ticket not found' }, { status: 404 });
+
+    // Only the ticket owner or an admin may trigger its email routing.
+    if (ticket.email !== user.email && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: you do not own this ticket' }, { status: 403 });
+    }
 
     const internalEmail = CATEGORY_ROUTING[ticket.category] || 'info@gctravelandtours.com';
     const ticketRef = `[Ticket #${ticket.id}]`;

@@ -81,15 +81,29 @@ Deno.serve(async (req) => {
     let supplierError = null;
 
     try {
-      if (supplier_api_config?.type === 'duffel') {
-        // Call Duffel API
-        const duffelResponse = await fetch(supplier_api_config.endpoint, {
+      // Never trust a client-supplied endpoint — only allow known supplier API hosts.
+      const ALLOWED_SUPPLIER_HOSTS = new Set(['api.duffel.com']);
+      const resolvedEndpoint = (() => {
+        if (!supplier_api_config?.endpoint) return null;
+        let parsed;
+        try { parsed = new URL(supplier_api_config.endpoint); } catch { return null; }
+        if (parsed.protocol !== 'https:' || !ALLOWED_SUPPLIER_HOSTS.has(parsed.hostname)) return null;
+        return supplier_api_config.endpoint;
+      })();
+
+      if (!resolvedEndpoint) {
+        throw new Error('Unauthorized or missing supplier endpoint');
+      }
+
+      if (supplier_api_config.type === 'duffel') {
+        // Call Duffel API (host allowlisted above — safe to attach the API key)
+        const duffelResponse = await fetch(resolvedEndpoint, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${Deno.env.get('DUFFEL_API_KEY')}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(supplier_api_config.params)
+          body: JSON.stringify(supplier_api_config.params || {})
         });
 
         if (!duffelResponse.ok) {
@@ -98,11 +112,11 @@ Deno.serve(async (req) => {
 
         supplierConfirmation = await duffelResponse.json();
       } else {
-        // Generic supplier API call
-        const supplierResponse = await fetch(supplier_api_config?.endpoint || '', {
+        // Generic supplier API call (only allowlisted hosts reachable)
+        const supplierResponse = await fetch(resolvedEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(supplier_api_config?.params || {})
+          body: JSON.stringify(supplier_api_config.params || {})
         });
 
         if (!supplierResponse.ok) {
