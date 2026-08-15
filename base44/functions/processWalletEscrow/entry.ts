@@ -26,7 +26,7 @@ const TYPE_CONFIG = {
   digital: { entity: 'DigitalOrder', emailField: 'user_email', totalField: 'total_amount', supplierField: null, successStatus: 'paid', failureStatuses: ['failed', 'cancelled', 'refunded'], commissionOnly: true },
 };
 
-const SUPPLIER_ENUM = ['biyaheko', 'wanderlinx', 'tripzynx', 'duffel', 'direct'];
+const SUPPLIER_ENUM = ['biyaheko', 'wanderlinx', 'tripzynx', 'duffel', '12go', 'trainline', 'direct'];
 const TERMINAL_RELEASE = ['cancelled', 'rejected', 'failed'];
 
 const round2 = (n) => Math.round(n * 100) / 100;
