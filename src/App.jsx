@@ -18,6 +18,7 @@ const Earnings = lazy(() => import('@/pages/Earnings'));
 const FlightPaymentSuccess = lazy(() => import('@/pages/FlightPaymentSuccess'));
 const PassengerCalendarList = lazy(() => import('@/pages/PassengerCalendarList'));
 const AdminFeaturedListings = lazy(() => import('@/pages/AdminFeaturedListings'));
+const TourAssistant = lazy(() => import('@/pages/TourAssistant'));
 
 const PageFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -90,6 +91,11 @@ const AuthenticatedApp = () => {
       <Route path="/AdminFeaturedListings" element={
         <LayoutWrapper currentPageName="AdminFeaturedListings">
           <AdminFeaturedListings />
+        </LayoutWrapper>
+      } />
+      <Route path="/TourAssistant" element={
+        <LayoutWrapper currentPageName="TourAssistant">
+          <TourAssistant />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
