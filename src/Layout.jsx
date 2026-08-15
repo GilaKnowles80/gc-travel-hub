@@ -459,7 +459,7 @@ function LayoutContent({ children, currentPageName }) {
               <ul className="space-y-2.5 text-slate-400 text-sm">
                 <li>info@gctravelandtours.com</li>
                 <li>+63 915 440 1150</li>
-                <li>Imus City, Cavite</li>
+                <li>Quezon City, Metro Manila</li>
                 <li>Philippines</li>
               </ul>
             </div>
