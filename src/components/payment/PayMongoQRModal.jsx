@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Copy, QrCode, Shield } from "lucide-react";
 
-const PAYMONGO_QR_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ba6f12468e8d5e020a7b5/d41202b05_image.png";
+const PAYMONGO_QR_URL = "https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/f0cdf580f_Argie-CQRCodeRecent.jpg";
 const ACCOUNT_NAME = "GC Travel and Tours Agency";
 const ACCOUNT_PHONE = "+639154401150";
 
@@ -36,11 +36,12 @@ export default function PayMongoQRModal({ open, onClose, amount, bookingType, bo
 
           {/* QR Code Image */}
           <div className="flex justify-center">
-            <div className="border-4 border-[#0063B0] rounded-2xl p-2 bg-white shadow-lg">
+            <div className="border-4 border-[#0063B0] rounded-2xl p-3 bg-white shadow-lg">
               <img
                 src={PAYMONGO_QR_URL}
-                alt="PayMongo QR Ph Code"
-                className="w-56 object-contain rounded-xl"
+                alt="GC Travel and Tours Agency — PayMongo QR Ph Code"
+                className="w-72 h-72 object-contain rounded-xl"
+                style={{ imageRendering: 'high-quality' }}
               />
             </div>
           </div>
