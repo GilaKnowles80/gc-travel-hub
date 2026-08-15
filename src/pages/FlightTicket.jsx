@@ -10,6 +10,7 @@ import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import AddToCalendarButton from "@/components/bookings/AddToCalendarButton";
 
 export default function FlightTicket() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -247,6 +248,15 @@ export default function FlightTicket() {
             <Download className="w-4 h-4 mr-2" />
             Download PDF
           </Button>
+
+          <AddToCalendarButton
+            title={`Flight ${booking.flight_number || ""} - ${booking.route || ""}`}
+            description={`Booking Ref: ${booking.id.substring(0, 8).toUpperCase()}\nPassenger: ${booking.passenger_name}\nCabin: ${booking.cabin_class?.replace(/_/g, " ")}`}
+            location={booking.route}
+            start={booking.departure_time || flight?.departure_time}
+            end={flight?.arrival_time}
+            className="w-full justify-center"
+          />
 
           <Button onClick={handlePrint} variant="outline">
             <Printer className="w-4 h-4 mr-2" />

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2, XCircle, Plane, Home, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import AddToCalendarButton from "@/components/bookings/AddToCalendarButton";
 
 // Statuses: loading | confirming | confirmed | failed | notfound
 export default function FlightPaymentSuccess() {
@@ -126,6 +127,18 @@ export default function FlightPaymentSuccess() {
                   <Home className="w-5 h-5 mr-2" /> Back to Home
                 </Button>
               </div>
+
+              {booking?.departure_time && (
+                <div className="mt-4">
+                  <AddToCalendarButton
+                    title={`Flight ${booking.flight_number || ""} - ${booking.route || ""}`}
+                    description={`Booking Ref: ${booking.booking_ref || booking.supplier_reference || ""}\nPassenger: ${booking.passenger_name}\nAirline: ${booking.airline_name || ""}`}
+                    location={booking.route}
+                    start={booking.departure_time}
+                    className="w-full"
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

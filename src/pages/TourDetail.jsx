@@ -13,6 +13,7 @@ import { createPageUrl } from "@/pages/utils";
 import BookingForm from "../components/tours/BookingForm";
 import LocationMap from "../components/shared/LocationMap";
 import TourCustomizer from "../components/tours/TourCustomizer";
+import AddToCalendarButton from "@/components/bookings/AddToCalendarButton";
 import { useCurrency } from "@/components/currency/CurrencyContext";
 
 export default function TourDetail() {
@@ -308,9 +309,30 @@ export default function TourDetail() {
                    )}
                  </div>
 
-                <p className="text-center text-xs text-slate-400 mt-3">
-                  No payment required to reserve
-                </p>
+                {tour.departure_dates?.length > 0 && (() => {
+                  const tourStart = tour.departure_dates[0];
+                  const tourEnd = new Date(
+                    new Date(tourStart).getTime() +
+                      (Number(tour.duration_days) || 1) * 24 * 60 * 60 * 1000
+                  )
+                    .toISOString()
+                    .split("T")[0];
+                  return (
+                    <AddToCalendarButton
+                      title={`Tour: ${tour.title}`}
+                      description={`Destination: ${tour.destination}\nDuration: ${tour.duration_days} days\n${tour.description || ""}`}
+                      location={tour.destination}
+                      start={tourStart}
+                      end={tourEnd}
+                      allDay
+                      className="w-full mt-2"
+                    />
+                  );
+                })()}
+
+                 <p className="text-center text-xs text-slate-400 mt-3">
+                   No payment required to reserve
+                 </p>
               </motion.div>
             </div>
           </div>
