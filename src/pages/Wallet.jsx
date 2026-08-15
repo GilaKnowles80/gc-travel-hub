@@ -12,6 +12,7 @@ import WithdrawFundsDialog from "@/components/wallet/WithdrawFundsDialog";
 import LiveTransactionFeed from "@/components/wallet/LiveTransactionFeed";
 import WalletFintech from "@/components/wallet/WalletFintech";
 import WalletDetailsDialog from "@/components/wallet/WalletDetailsDialog";
+import WalletRefundDialog from "@/components/wallet/WalletRefundDialog";
 
 const MAX_WALLET_AMOUNT = 1_000_000_000; // 1 billion
 
@@ -26,6 +27,7 @@ export default function WalletPage() {
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [allWallets, setAllWallets] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isRefundOpen, setIsRefundOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -173,7 +175,13 @@ export default function WalletPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
           <Card className="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-8 shadow-xl">
             <p className="text-amber-100 text-sm font-medium mb-2">Current Balance</p>
-            <h2 className="text-5xl font-bold mb-6">{balance.toLocaleString()}</h2>
+            <h2 className="text-5xl font-bold mb-2">{balance.toLocaleString()}</h2>
+            {(walletData?.held_balance > 0) && (
+              <p className="text-amber-100 text-sm mb-4">
+                Held in escrow: ₱{(walletData.held_balance).toLocaleString()} (pending booking confirmation)
+              </p>
+            )}
+            {!(walletData?.held_balance > 0) && <div className="mb-6" />}
 
             {/* Usage Bar */}
             <div className="mb-4">
@@ -258,7 +266,12 @@ export default function WalletPage() {
         {isAdmin && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <Card className="p-6">
-              <h3 className="text-xl font-bold text-slate-900 mb-4">All User Wallets</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-slate-900">All User Wallets</h3>
+                <Button size="sm" variant="outline" onClick={() => setIsRefundOpen(true)}>
+                  Issue Refund
+                </Button>
+              </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b-2 border-slate-200">
@@ -304,6 +317,11 @@ export default function WalletPage() {
             onOpenChange={(v) => !v && setSelectedUserEmail("")}
             userEmail={selectedUserEmail}
           />
+        )}
+
+        {/* Wallet Refund Dialog (admin) */}
+        {isAdmin && (
+          <WalletRefundDialog open={isRefundOpen} onOpenChange={setIsRefundOpen} />
         )}
       </div>
     </div>

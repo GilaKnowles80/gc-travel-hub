@@ -1,0 +1,42 @@
+{
+  "name": "Auto-Settle Wallet Escrow on Cruise Update",
+  "description": "On CruiseBooking status change to confirmed/cancelled, settles the wallet escrow (75% merchant / 25% commission on success, 100% release on failure)",
+  "trigger": {
+    "condition": "${ .trigger.data.status != .trigger.old_data.status and (.trigger.data.status == \"confirmed\" or .trigger.data.status == \"cancelled\" or .trigger.data.status == \"rejected\") }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "CruiseBooking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_settle_wallet_escrow_cruise",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "processWalletEscrow",
+            "args": {
+              "action": "settle",
+              "booking_id": "${ .trigger.entity_id }",
+              "booking_type": "cruise",
+              "status": "${ .trigger.data.status }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Settle cruise wallet escrow"
+          }
+        }
+      }
+    ]
+  }
+}
