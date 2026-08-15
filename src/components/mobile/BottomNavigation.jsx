@@ -1,6 +1,4 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { createPageUrl } from "@/pages/utils";
 import { Home, MapPin, Plane, BookOpen, User } from "lucide-react";
 
 const navItems = [
@@ -11,10 +9,10 @@ const navItems = [
   { name: "Profile", page: "Profile", icon: User },
 ];
 
-export default function BottomNavigation({ currentPageName, onTabPress }) {
+export default function BottomNavigation({ activeTab, onTabPress }) {
   const handleTabClick = (page) => {
     if (onTabPress) {
-      onTabPress(page, page === currentPageName);
+      onTabPress(page, page === activeTab);
     }
   };
 
@@ -25,13 +23,13 @@ export default function BottomNavigation({ currentPageName, onTabPress }) {
     >
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
-          const isActive = currentPageName === item.page;
+          const isActive = activeTab === item.page;
           const Icon = item.icon;
           
           return (
-            <Link
+            <button
               key={item.page}
-              to={createPageUrl(item.page)}
+              type="button"
               onClick={() => handleTabClick(item.page)}
               className={`flex flex-col items-center justify-center flex-1 h-full space-y-1 transition-colors ${
                 isActive
@@ -41,7 +39,7 @@ export default function BottomNavigation({ currentPageName, onTabPress }) {
             >
               <Icon className="w-5 h-5" />
               <span className="text-xs font-medium">{item.name}</span>
-            </Link>
+            </button>
           );
         })}
       </div>

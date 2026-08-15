@@ -23,6 +23,7 @@ import GoogleTagManager from "@/components/tracking/GoogleTagManager";
 import { AdminModeProvider, useAdminMode } from "@/components/admin/AdminModeContext";
 import AdminSearchSoundAlert from "@/components/admin/AdminSearchSoundAlert";
 import ViewModeSwitcher from "@/components/admin/ViewModeSwitcher";
+import { queryClientInstance } from "@/lib/query-client";
 
 const navLinks = [
   { name: "Home", page: "Home", icon: Home },
@@ -69,6 +70,7 @@ function LayoutContent({ children, currentPageName }) {
   }
   const adminMenuRef = React.useRef(null);
   const [supplierSubMenuOpen, setSupplierSubMenuOpen] = useState(false);
+  const BOTTOM_NAV_TABS = ["Home", "Tours", "Flights", "MyBookings", "Profile"];
   const [navigationStack, setNavigationStack] = useState({
     Home: ["/"],
     Tours: [createPageUrl("Tours")],
@@ -76,6 +78,9 @@ function LayoutContent({ children, currentPageName }) {
     MyBookings: [createPageUrl("MyBookings")],
     Profile: [createPageUrl("Profile")],
   });
+  const [activeTab, setActiveTab] = useState(
+    currentPageName && BOTTOM_NAV_TABS.includes(currentPageName) ? currentPageName : "Home"
+  );
   const navigate = useNavigate();
   const location = useLocation();
   const PRIMARY_TABS = ["Home", "Flights", "HotelSearch", "MyBookings", "Profile"];
@@ -95,34 +100,38 @@ function LayoutContent({ children, currentPageName }) {
     return () => mql.removeEventListener('change', listener);
   }, []);
 
-  // Preserve deep tab history: record each visited route on the active tab's stack
-  // so switching bottom-nav tabs restores the deepest page for that tab.
+  // Track which bottom-nav tab owns the current view. Top-level tab pages set
+  // activeTab directly; deep pages keep the previously active tab so their route
+  // is recorded under the owning tab's independent stack.
+  useEffect(() => {
+    if (BOTTOM_NAV_TABS.includes(currentPageName)) {
+      setActiveTab(currentPageName);
+    }
+  }, [currentPageName]);
+
+  // Record each visited route on the active tab's stack (de-duplicated) so
+  // switching tabs restores the deepest page recorded for that tab.
   useEffect(() => {
     const path = location.pathname;
     setNavigationStack((prev) => {
-      const key = currentPageName;
-      const stack = prev[key] || [];
+      const stack = prev[activeTab] || [];
       if (stack[stack.length - 1] === path) return prev;
-      return { ...prev, [key]: [...stack, path] };
+      return { ...prev, [activeTab]: [...stack, path] };
     });
-  }, [location.pathname, currentPageName]);
+  }, [location.pathname, activeTab]);
 
   const handleTabPress = (pageName, isCurrentTab) => {
     if (isCurrentTab) {
-      // Reset stack to root
-      const rootPath = navigationStack[pageName]?.[0];
-      if (rootPath) {
-        navigate(rootPath);
-        setNavigationStack(prev => ({
-          ...prev,
-          [pageName]: [rootPath]
-        }));
-      }
+      // Tapping the active tab resets that tab's stack back to its root.
+      const rootPath = navigationStack[pageName]?.[0] || createPageUrl(pageName);
+      setNavigationStack(prev => ({ ...prev, [pageName]: [rootPath] }));
+      if (location.pathname !== rootPath) navigate(rootPath);
     } else {
-      // Navigate to tab
+      // Switch tabs: restore the deepest page recorded for that tab (no full push).
+      setActiveTab(pageName);
       const stack = navigationStack[pageName] || [createPageUrl(pageName)];
       const lastPath = stack[stack.length - 1];
-      navigate(lastPath);
+      if (location.pathname !== lastPath) navigate(lastPath);
     }
   };
 
@@ -345,7 +354,7 @@ function LayoutContent({ children, currentPageName }) {
         {/* Top Ad Banner */}
         {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
         
-        <PullToRefresh onRefresh={() => window.location.reload()}>
+        <PullToRefresh onRefresh={async () => { await queryClientInstance.invalidateQueries(); }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPageName}
@@ -466,7 +475,7 @@ function LayoutContent({ children, currentPageName }) {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <BottomNavigation currentPageName={currentPageName} onTabPress={handleTabPress} />
+      <BottomNavigation activeTab={activeTab} onTabPress={handleTabPress} />
          </div>
        </CurrencyProvider>
       </LanguageProvider>

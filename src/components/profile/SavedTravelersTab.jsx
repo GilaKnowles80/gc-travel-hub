@@ -156,11 +156,11 @@ export default function SavedTravelersTab({ user }) {
           {travelers && travelers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {travelers.map((traveler) => (
-                <div key={traveler.id} className="p-4 border rounded-lg hover:bg-slate-50 transition-colors">
+                <div key={traveler.id} className="p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-semibold text-slate-900">{traveler.label || `${traveler.first_name} ${traveler.last_name}`}</h3>
-                      <p className="text-sm text-slate-600">{traveler.first_name} {traveler.last_name}</p>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">{traveler.label || `${traveler.first_name} ${traveler.last_name}`}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-300">{traveler.first_name} {traveler.last_name}</p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -182,14 +182,14 @@ export default function SavedTravelersTab({ user }) {
 
                   <div className="space-y-2 text-sm">
                     {traveler.date_of_birth && (
-                      <div className="flex items-center gap-2 text-slate-600">
+                      <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                         <Calendar className="w-4 h-4" />
                         {traveler.date_of_birth}
                       </div>
                     )}
-                    {traveler.email && <p className="text-slate-600">{traveler.email}</p>}
-                    {traveler.phone && <p className="text-slate-600">{traveler.phone}</p>}
-                    {traveler.passport_number && <p className="text-slate-600">Passport: {traveler.passport_number}</p>}
+                    {traveler.email && <p className="text-slate-600 dark:text-slate-300">{traveler.email}</p>}
+                    {traveler.phone && <p className="text-slate-600 dark:text-slate-300">{traveler.phone}</p>}
+                    {traveler.passport_number && <p className="text-slate-600 dark:text-slate-300">Passport: {traveler.passport_number}</p>}
                   </div>
                 </div>
               ))}
@@ -197,8 +197,8 @@ export default function SavedTravelersTab({ user }) {
           ) : (
             <div className="text-center py-8">
               <User className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-600">No saved travelers yet</p>
-              <p className="text-sm text-slate-500">Add travelers to streamline your flight bookings</p>
+              <p className="text-slate-600 dark:text-slate-300">No saved travelers yet</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Add travelers to streamline your flight bookings</p>
             </div>
           )}
         </CardContent>

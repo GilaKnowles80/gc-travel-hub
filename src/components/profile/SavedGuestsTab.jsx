@@ -141,11 +141,11 @@ export default function SavedGuestsTab({ user }) {
           {guests && guests.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {guests.map((guest) => (
-                <div key={guest.id} className="p-4 border rounded-lg hover:bg-slate-50 transition-colors">
+                <div key={guest.id} className="p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-semibold text-slate-900">{guest.label || `${guest.title} ${guest.first_name} ${guest.last_name}`}</h3>
-                      <p className="text-sm text-slate-600">{guest.title} {guest.first_name} {guest.last_name}</p>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">{guest.label || `${guest.title} ${guest.first_name} ${guest.last_name}`}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-300">{guest.title} {guest.first_name} {guest.last_name}</p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -166,8 +166,8 @@ export default function SavedGuestsTab({ user }) {
                   </div>
 
                   <div className="space-y-2 text-sm">
-                    {guest.email && <p className="text-slate-600">{guest.email}</p>}
-                    {guest.phone && <p className="text-slate-600">{guest.phone}</p>}
+                    {guest.email && <p className="text-slate-600 dark:text-slate-300">{guest.email}</p>}
+                    {guest.phone && <p className="text-slate-600 dark:text-slate-300">{guest.phone}</p>}
                   </div>
                 </div>
               ))}
@@ -175,8 +175,8 @@ export default function SavedGuestsTab({ user }) {
           ) : (
             <div className="text-center py-8">
               <User className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-600">No saved guests yet</p>
-              <p className="text-sm text-slate-500">Add guests to streamline your hotel bookings</p>
+              <p className="text-slate-600 dark:text-slate-300">No saved guests yet</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Add guests to streamline your hotel bookings</p>
             </div>
           )}
         </CardContent>
