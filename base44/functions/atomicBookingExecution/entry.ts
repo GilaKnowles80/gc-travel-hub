@@ -31,6 +31,22 @@ Deno.serve(async (req) => {
         { status: 400 }
       );
     }
+    // Backend validation of all client-supplied financial parameters.
+    if (Number(wallet_amount) < 0 || Number(card_amount) < 0) {
+      return Response.json({ error: 'Invalid wallet/card amounts' }, { status: 400 });
+    }
+    if (Number(supplier_payout) < 0 || Number(supplier_payout) > Number(total_amount)) {
+      return Response.json({ error: 'Invalid supplier payout' }, { status: 400 });
+    }
+    if (Number(service_fee) < 0 || Number(service_fee) > Number(total_amount)) {
+      return Response.json({ error: 'Invalid service fee' }, { status: 400 });
+    }
+    if (Math.abs((Number(wallet_amount) || 0) + (Number(card_amount) || 0) - Number(total_amount)) > 0.01) {
+      return Response.json({ error: 'Wallet + card amounts must equal total' }, { status: 400 });
+    }
+    if (!supplier_id) {
+      return Response.json({ error: 'Missing supplier_id' }, { status: 400 });
+    }
 
     const userEmail = user.email;
 

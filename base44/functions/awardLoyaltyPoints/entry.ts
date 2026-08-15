@@ -9,10 +9,43 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { booking_amount, booking_id, booking_type } = await req.json();
+    const { booking_id, booking_type } = await req.json();
 
-    if (!booking_amount || !booking_id || !booking_type) {
+    if (!booking_id || !booking_type) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Verify the caller owns the booking (user-scoped fetch respects each booking
+    // entity's RLS — only the owner's bookings are returned) and derive the amount
+    // server-side so a caller cannot award themselves arbitrary points.
+    const BOOKING_ENTITIES = {
+      flight: 'FlightBooking', hotel: 'HotelBooking', tour: 'TourBooking',
+      bus: 'BusBooking', ferry: 'FerryBooking', car: 'CarRentalBooking',
+      train: 'TrainBooking', cruise: 'CruiseBooking', package: 'PackageBooking',
+    };
+    const entityName = BOOKING_ENTITIES[booking_type];
+    if (!entityName) {
+      return Response.json({ error: 'Invalid booking_type' }, { status: 400 });
+    }
+    const found = await base44.entities[entityName].filter({ id: booking_id });
+    const booking = found?.[0];
+    if (!booking) {
+      return Response.json({ error: 'Booking not found' }, { status: 404 });
+    }
+    if (booking.status && booking.status !== 'confirmed') {
+      return Response.json({ error: 'Booking must be confirmed to earn points' }, { status: 400 });
+    }
+    const booking_amount = Number(booking.total_price) || 0;
+    if (booking_amount <= 0) {
+      return Response.json({ error: 'Booking amount unavailable' }, { status: 400 });
+    }
+
+    // Prevent double-award for the same booking.
+    const alreadyAwarded = await base44.asServiceRole.entities.LoyaltyTransaction.filter({
+      booking_id, user_email: user.email,
+    });
+    if (alreadyAwarded.length > 0) {
+      return Response.json({ error: 'Points already awarded for this booking' }, { status: 400 });
     }
 
     // Get loyalty settings

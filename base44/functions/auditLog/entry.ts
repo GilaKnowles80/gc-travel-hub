@@ -6,6 +6,9 @@ Deno.serve(async (req) => {
     const { action, entity_type, entity_id, changes, severity = 'low' } = await req.json();
 
     const user = await base44.auth.me().catch(() => null);
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     
     // Get IP and User Agent from request
     const ip_address = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';

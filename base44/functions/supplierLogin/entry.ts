@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import bcrypt from 'npm:bcryptjs@2.4.3';
 
 function constantTimeEquals(a, b) {
   a = String(a); b = String(b);
@@ -33,10 +34,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Account is inactive or suspended' }, { status: 403 });
     }
 
-    // Constant-time password comparison to mitigate timing attacks.
-    // NOTE: passwords are still stored in plaintext under password_hash — migrate to
-    // bcrypt/argon2 hashing and restrict Supplier read RLS to admins (follow-up).
-    if (!constantTimeEquals(String(supplier.password_hash), String(password))) {
+    // Verify the password. Supports bcrypt hashes (preferred) and legacy plaintext
+    // values. On a successful legacy-plaintext login the password is transparently
+    // re-hashed with bcrypt and stored back, migrating plaintext values out of storage.
+    const stored = String(supplier.password_hash || '');
+    const isBcrypt = stored.startsWith('$2');
+    let valid = false;
+    if (isBcrypt) {
+      valid = await bcrypt.compare(String(password), stored);
+    } else {
+      valid = constantTimeEquals(stored, String(password));
+      if (valid) {
+        try {
+          const newHash = await bcrypt.hash(String(password), 10);
+          await base44.asServiceRole.entities.Supplier.update(supplier.id, { password_hash: newHash });
+        } catch (e) {
+          console.error('Password rehash failed:', e.message);
+        }
+      }
+    }
+    if (!valid) {
       return Response.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
