@@ -348,7 +348,7 @@ function LayoutContent({ children, currentPageName }) {
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
                   <Plane className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-bold text-lg">GC Travel & Tours</span>
+                <span className="font-bold text-lg">Argie- C Travel & Tours</span>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Your trusted travel partner for unforgettable adventures around the world.
@@ -416,7 +416,7 @@ function LayoutContent({ children, currentPageName }) {
 
           <div className="border-t border-slate-800 mt-12 pt-8 text-center space-y-3">
             <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} GC Travel & Tours. All rights reserved.
+              © {new Date().getFullYear()} Argie- C Travel & Tours. All rights reserved.
             </p>
             <p className="text-slate-600 text-xs">
               Powered by{" "}
@@ -428,7 +428,9 @@ function LayoutContent({ children, currentPageName }) {
               <span className="text-slate-400">Biyaheko</span> ·{" "}
               <span className="text-slate-400">Tripzynx</span> ·{" "}
               <span className="text-slate-400">Wanderlinx</span> ·{" "}
-              <span className="text-slate-400">Stripe</span>
+              <span className="text-slate-400">Stripe</span> ·{" "}
+              <span className="text-slate-400">PayMongo</span> ·{" "}
+              <span className="text-slate-400">PayPal</span>
             </p>
           </div>
         </div>
