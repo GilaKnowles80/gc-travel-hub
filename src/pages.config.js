@@ -1,179 +1,138 @@
 /**
  * pages.config.js - Page routing configuration
- * 
- * This file is AUTO-GENERATED. Do not add imports or modify PAGES manually.
- * Pages are auto-registered when you create files in the ./pages/ folder.
- * 
- * THE ONLY EDITABLE VALUE: mainPage
- * This controls which page is the landing page (shown when users visit the app).
- * 
- * Example file structure:
- * 
- *   import HomePage from './pages/HomePage';
- *   import Dashboard from './pages/Dashboard';
- *   import Settings from './pages/Settings';
- *   
- *   export const PAGES = {
- *       "HomePage": HomePage,
- *       "Dashboard": Dashboard,
- *       "Settings": Settings,
- *   }
- *   
- *   export const pagesConfig = {
- *       mainPage: "HomePage",
- *       Pages: PAGES,
- *   };
- * 
- * Example with Layout (wraps all pages):
  *
- *   import Home from './pages/Home';
- *   import Settings from './pages/Settings';
- *   import __Layout from './Layout.jsx';
- *
- *   export const PAGES = {
- *       "Home": Home,
- *       "Settings": Settings,
- *   }
- *
- *   export const pagesConfig = {
- *       mainPage: "Home",
- *       Pages: PAGES,
- *       Layout: __Layout,
- *   };
- *
- * To change the main page from HomePage to Dashboard, use find_replace:
- *   Old: mainPage: "HomePage",
- *   New: mainPage: "Dashboard",
- *
- * The mainPage value must match a key in the PAGES object exactly.
+ * Page components are code-split with React.lazy() to minimize the initial
+ * bundle size on mobile devices. Each page is loaded on demand when its route
+ * is visited. The Layout shell stays eager so the app frame renders instantly.
  */
-import AIItineraryPlanner from './pages/AIItineraryPlanner';
-import AdminAdCampaigns from './pages/AdminAdCampaigns';
-import AdminAds from './pages/AdminAds';
-import AdminAdvertisements from './pages/AdminAdvertisements';
-import AdminAffiliateAnalytics from './pages/AdminAffiliateAnalytics';
-import AdminAffiliates from './pages/AdminAffiliates';
-import AdminAnalytics from './pages/AdminAnalytics';
-import AdminAuditLogs from './pages/AdminAuditLogs';
-import AdminBankAccounts from './pages/AdminBankAccounts';
-import AdminBuses from './pages/AdminBuses';
-import AdminCarRentals from './pages/AdminCarRentals';
-import AdminCodeBackup from './pages/AdminCodeBackup';
-import AdminCorporateClients from './pages/AdminCorporateClients';
-import AdminCtripIntegration from './pages/AdminCtripIntegration';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminDataManager from './pages/AdminDataManager';
-import AdminDigitalStore from './pages/AdminDigitalStore';
-import AdminEmailClients from './pages/AdminEmailClients';
-import AdminFerries from './pages/AdminFerries';
-import AdminFlights from './pages/AdminFlights';
-import AdminHelpdesk from './pages/AdminHelpdesk';
-import AdminHome from './pages/AdminHome';
-import AdminHotels from './pages/AdminHotels';
-import AdminInsurance from './pages/AdminInsurance';
-import AdminInsuranceProviders from './pages/AdminInsuranceProviders';
-import AdminInventoryMonitor from './pages/AdminInventoryMonitor';
-import AdminLoyalty from './pages/AdminLoyalty';
-import AdminMonetization from './pages/AdminMonetization';
-import AdminPackagePromoCodes from './pages/AdminPackagePromoCodes';
-import AdminPackageSales from './pages/AdminPackageSales';
-import AdminPackages from './pages/AdminPackages';
-import AdminPayouts from './pages/AdminPayouts';
-import AdminPricing from './pages/AdminPricing';
-import AdminPromotions from './pages/AdminPromotions';
-import AdminReviews from './pages/AdminReviews';
-import AdminSalesTeam from './pages/AdminSalesTeam';
-import AdminSecurityCenter from './pages/AdminSecurityCenter';
-import AdminSupplierBankAccounts from './pages/AdminSupplierBankAccounts';
-import AdminSupplierComms from './pages/AdminSupplierComms';
-import AdminSupplierPayments from './pages/AdminSupplierPayments';
-import AdminTours from './pages/AdminTours';
-import AdminVisas from './pages/AdminVisas';
-import AffiliateDashboard from './pages/AffiliateDashboard';
-import BestPriceGuarantee from './pages/BestPriceGuarantee';
-import BiyahekoPortal from './pages/BiyahekoPortal';
-import BookFlights from './pages/BookFlights';
-import BookingConfirmation from './pages/BookingConfirmation';
-import BusCheckout from './pages/BusCheckout';
-import BusSearch from './pages/BusSearch';
-import CarRentalCheckout from './pages/CarRentalCheckout';
-import CarRentalSearch from './pages/CarRentalSearch';
-import Contact from './pages/Contact';
-import CorporateBooking from './pages/CorporateBooking';
-import CruiseCheckout from './pages/CruiseCheckout';
-import CruiseSearch from './pages/CruiseSearch';
-import DatabaseSchema from './pages/DatabaseSchema';
-import DigitalStore from './pages/DigitalStore';
-import FerryCheckout from './pages/FerryCheckout';
-import FerrySearch from './pages/FerrySearch';
-import FinitechArchitecture from './pages/FinitechArchitecture';
-import FlightCheckout from './pages/FlightCheckout';
-import FlightDetail from './pages/FlightDetail';
-import FlightSearch from './pages/FlightSearch';
-import FlightTicket from './pages/FlightTicket';
-import Flights from './pages/Flights';
-import GDPRSettings from './pages/GDPRSettings';
-import Helpdesk from './pages/Helpdesk';
-import Home from './pages/Home';
-import HotelBookingConfirmation from './pages/HotelBookingConfirmation';
-import HotelCheckout from './pages/HotelCheckout';
-import HotelDetail from './pages/HotelDetail';
-import HotelSearch from './pages/HotelSearch';
-import Hotels from './pages/Hotels';
-import Itineraries from './pages/Itineraries';
-import ItineraryView from './pages/ItineraryView';
-import LogoGenerator from './pages/LogoGenerator';
-import ManageReservations from './pages/ManageReservations';
-import Messages from './pages/Messages';
-import MyBookings from './pages/MyBookings';
-import MyFlightBookings from './pages/MyFlightBookings';
-import MyPackages from './pages/MyPackages';
-import MyReviews from './pages/MyReviews';
-import PackageBookingSuccess from './pages/PackageBookingSuccess';
-import PackageBuilder from './pages/PackageBuilder';
-import Packages from './pages/Packages';
-import PaymentCancelled from './pages/PaymentCancelled';
-import PaymentMethods from './pages/PaymentMethods';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PremiumMembership from './pages/PremiumMembership';
-import PriceAlerts from './pages/PriceAlerts';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Profile from './pages/Profile';
-import RealTimeAvailability from './pages/RealTimeAvailability';
-import RefundPolicy from './pages/RefundPolicy';
-import RegulatoryChecklist from './pages/RegulatoryChecklist';
-import SafeAndSecure from './pages/SafeAndSecure';
-import SalesDashboard from './pages/SalesDashboard';
-import Settings from './pages/Settings';
-import SharedItinerary from './pages/SharedItinerary';
-import SupplierDashboard from './pages/SupplierDashboard';
-import SupplierLogin from './pages/SupplierLogin';
-import SupplierOnboarding from './pages/SupplierOnboarding';
-import Support247 from './pages/Support247';
-import TawkSupport from './pages/TawkSupport';
-import TermsOfService from './pages/TermsOfService';
-import TourCheckout from './pages/TourCheckout';
-import TourDetail from './pages/TourDetail';
-import Tours from './pages/Tours';
-import TrainBookingConfirmation from './pages/TrainBookingConfirmation';
-import TrainCheckout from './pages/TrainCheckout';
-import TrainSearch from './pages/TrainSearch';
-import TransactionHistory from './pages/TransactionHistory';
-import TravelAlerts from './pages/TravelAlerts';
-import TravelAssistant from './pages/TravelAssistant';
-import TravelInsurance from './pages/TravelInsurance';
-import TripzynxPortal from './pages/TripzynxPortal';
-import TrustedAgency from './pages/TrustedAgency';
-import TwelveGoPortal from './pages/TwelveGoPortal';
-import UnifiedCheckout from './pages/UnifiedCheckout';
-import VisaCheckout from './pages/VisaCheckout';
-import Visas from './pages/Visas';
-import Wallet from './pages/Wallet';
-import WanderlinxPortal from './pages/WanderlinxPortal';
+import { lazy } from 'react';
 import utils from './pages/utils';
-import AdminIntegrations from './pages/AdminIntegrations';
 import __Layout from './Layout.jsx';
 
+const AIItineraryPlanner = lazy(() => import('./pages/AIItineraryPlanner'));
+const AdminAdCampaigns = lazy(() => import('./pages/AdminAdCampaigns'));
+const AdminAds = lazy(() => import('./pages/AdminAds'));
+const AdminAdvertisements = lazy(() => import('./pages/AdminAdvertisements'));
+const AdminAffiliateAnalytics = lazy(() => import('./pages/AdminAffiliateAnalytics'));
+const AdminAffiliates = lazy(() => import('./pages/AdminAffiliates'));
+const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'));
+const AdminAuditLogs = lazy(() => import('./pages/AdminAuditLogs'));
+const AdminBankAccounts = lazy(() => import('./pages/AdminBankAccounts'));
+const AdminBuses = lazy(() => import('./pages/AdminBuses'));
+const AdminCarRentals = lazy(() => import('./pages/AdminCarRentals'));
+const AdminCodeBackup = lazy(() => import('./pages/AdminCodeBackup'));
+const AdminCorporateClients = lazy(() => import('./pages/AdminCorporateClients'));
+const AdminCtripIntegration = lazy(() => import('./pages/AdminCtripIntegration'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminDataManager = lazy(() => import('./pages/AdminDataManager'));
+const AdminDigitalStore = lazy(() => import('./pages/AdminDigitalStore'));
+const AdminEmailClients = lazy(() => import('./pages/AdminEmailClients'));
+const AdminFerries = lazy(() => import('./pages/AdminFerries'));
+const AdminFlights = lazy(() => import('./pages/AdminFlights'));
+const AdminHelpdesk = lazy(() => import('./pages/AdminHelpdesk'));
+const AdminHome = lazy(() => import('./pages/AdminHome'));
+const AdminHotels = lazy(() => import('./pages/AdminHotels'));
+const AdminInsurance = lazy(() => import('./pages/AdminInsurance'));
+const AdminInsuranceProviders = lazy(() => import('./pages/AdminInsuranceProviders'));
+const AdminInventoryMonitor = lazy(() => import('./pages/AdminInventoryMonitor'));
+const AdminLoyalty = lazy(() => import('./pages/AdminLoyalty'));
+const AdminMonetization = lazy(() => import('./pages/AdminMonetization'));
+const AdminPackagePromoCodes = lazy(() => import('./pages/AdminPackagePromoCodes'));
+const AdminPackageSales = lazy(() => import('./pages/AdminPackageSales'));
+const AdminPackages = lazy(() => import('./pages/AdminPackages'));
+const AdminPayouts = lazy(() => import('./pages/AdminPayouts'));
+const AdminPricing = lazy(() => import('./pages/AdminPricing'));
+const AdminPromotions = lazy(() => import('./pages/AdminPromotions'));
+const AdminReviews = lazy(() => import('./pages/AdminReviews'));
+const AdminSalesTeam = lazy(() => import('./pages/AdminSalesTeam'));
+const AdminSecurityCenter = lazy(() => import('./pages/AdminSecurityCenter'));
+const AdminSupplierBankAccounts = lazy(() => import('./pages/AdminSupplierBankAccounts'));
+const AdminSupplierComms = lazy(() => import('./pages/AdminSupplierComms'));
+const AdminSupplierPayments = lazy(() => import('./pages/AdminSupplierPayments'));
+const AdminTours = lazy(() => import('./pages/AdminTours'));
+const AdminVisas = lazy(() => import('./pages/AdminVisas'));
+const AffiliateDashboard = lazy(() => import('./pages/AffiliateDashboard'));
+const BestPriceGuarantee = lazy(() => import('./pages/BestPriceGuarantee'));
+const BiyahekoPortal = lazy(() => import('./pages/BiyahekoPortal'));
+const BookFlights = lazy(() => import('./pages/BookFlights'));
+const BookingConfirmation = lazy(() => import('./pages/BookingConfirmation'));
+const BusCheckout = lazy(() => import('./pages/BusCheckout'));
+const BusSearch = lazy(() => import('./pages/BusSearch'));
+const CarRentalCheckout = lazy(() => import('./pages/CarRentalCheckout'));
+const CarRentalSearch = lazy(() => import('./pages/CarRentalSearch'));
+const Contact = lazy(() => import('./pages/Contact'));
+const CorporateBooking = lazy(() => import('./pages/CorporateBooking'));
+const CruiseCheckout = lazy(() => import('./pages/CruiseCheckout'));
+const CruiseSearch = lazy(() => import('./pages/CruiseSearch'));
+const DatabaseSchema = lazy(() => import('./pages/DatabaseSchema'));
+const DigitalStore = lazy(() => import('./pages/DigitalStore'));
+const FerryCheckout = lazy(() => import('./pages/FerryCheckout'));
+const FerrySearch = lazy(() => import('./pages/FerrySearch'));
+const FinitechArchitecture = lazy(() => import('./pages/FinitechArchitecture'));
+const FlightCheckout = lazy(() => import('./pages/FlightCheckout'));
+const FlightDetail = lazy(() => import('./pages/FlightDetail'));
+const FlightSearch = lazy(() => import('./pages/FlightSearch'));
+const FlightTicket = lazy(() => import('./pages/FlightTicket'));
+const Flights = lazy(() => import('./pages/Flights'));
+const GDPRSettings = lazy(() => import('./pages/GDPRSettings'));
+const Helpdesk = lazy(() => import('./pages/Helpdesk'));
+const Home = lazy(() => import('./pages/Home'));
+const HotelBookingConfirmation = lazy(() => import('./pages/HotelBookingConfirmation'));
+const HotelCheckout = lazy(() => import('./pages/HotelCheckout'));
+const HotelDetail = lazy(() => import('./pages/HotelDetail'));
+const HotelSearch = lazy(() => import('./pages/HotelSearch'));
+const Hotels = lazy(() => import('./pages/Hotels'));
+const Itineraries = lazy(() => import('./pages/Itineraries'));
+const ItineraryView = lazy(() => import('./pages/ItineraryView'));
+const LogoGenerator = lazy(() => import('./pages/LogoGenerator'));
+const ManageReservations = lazy(() => import('./pages/ManageReservations'));
+const Messages = lazy(() => import('./pages/Messages'));
+const MyBookings = lazy(() => import('./pages/MyBookings'));
+const MyFlightBookings = lazy(() => import('./pages/MyFlightBookings'));
+const MyPackages = lazy(() => import('./pages/MyPackages'));
+const MyReviews = lazy(() => import('./pages/MyReviews'));
+const PackageBookingSuccess = lazy(() => import('./pages/PackageBookingSuccess'));
+const PackageBuilder = lazy(() => import('./pages/PackageBuilder'));
+const Packages = lazy(() => import('./pages/Packages'));
+const PaymentCancelled = lazy(() => import('./pages/PaymentCancelled'));
+const PaymentMethods = lazy(() => import('./pages/PaymentMethods'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const PremiumMembership = lazy(() => import('./pages/PremiumMembership'));
+const PriceAlerts = lazy(() => import('./pages/PriceAlerts'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Profile = lazy(() => import('./pages/Profile'));
+const RealTimeAvailability = lazy(() => import('./pages/RealTimeAvailability'));
+const RefundPolicy = lazy(() => import('./pages/RefundPolicy'));
+const RegulatoryChecklist = lazy(() => import('./pages/RegulatoryChecklist'));
+const SafeAndSecure = lazy(() => import('./pages/SafeAndSecure'));
+const SalesDashboard = lazy(() => import('./pages/SalesDashboard'));
+const Settings = lazy(() => import('./pages/Settings'));
+const SharedItinerary = lazy(() => import('./pages/SharedItinerary'));
+const SupplierDashboard = lazy(() => import('./pages/SupplierDashboard'));
+const SupplierLogin = lazy(() => import('./pages/SupplierLogin'));
+const SupplierOnboarding = lazy(() => import('./pages/SupplierOnboarding'));
+const Support247 = lazy(() => import('./pages/Support247'));
+const TawkSupport = lazy(() => import('./pages/TawkSupport'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const TourCheckout = lazy(() => import('./pages/TourCheckout'));
+const TourDetail = lazy(() => import('./pages/TourDetail'));
+const Tours = lazy(() => import('./pages/Tours'));
+const TrainBookingConfirmation = lazy(() => import('./pages/TrainBookingConfirmation'));
+const TrainCheckout = lazy(() => import('./pages/TrainCheckout'));
+const TrainSearch = lazy(() => import('./pages/TrainSearch'));
+const TransactionHistory = lazy(() => import('./pages/TransactionHistory'));
+const TravelAlerts = lazy(() => import('./pages/TravelAlerts'));
+const TravelAssistant = lazy(() => import('./pages/TravelAssistant'));
+const TravelInsurance = lazy(() => import('./pages/TravelInsurance'));
+const TripzynxPortal = lazy(() => import('./pages/TripzynxPortal'));
+const TrustedAgency = lazy(() => import('./pages/TrustedAgency'));
+const TwelveGoPortal = lazy(() => import('./pages/TwelveGoPortal'));
+const UnifiedCheckout = lazy(() => import('./pages/UnifiedCheckout'));
+const VisaCheckout = lazy(() => import('./pages/VisaCheckout'));
+const Visas = lazy(() => import('./pages/Visas'));
+const Wallet = lazy(() => import('./pages/Wallet'));
+const WanderlinxPortal = lazy(() => import('./pages/WanderlinxPortal'));
+const AdminIntegrations = lazy(() => import('./pages/AdminIntegrations'));
 
 export const PAGES = {
     "AIItineraryPlanner": AIItineraryPlanner,

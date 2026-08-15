@@ -35,7 +35,7 @@ export default function PullToRefresh({ onRefresh, children }) {
       setPullDistance(PULL_THRESHOLD);
       
       try {
-        await onRefresh();
+        if (onRefresh) await onRefresh();
       } finally {
         setTimeout(() => {
           setRefreshing(false);

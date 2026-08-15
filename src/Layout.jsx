@@ -132,10 +132,10 @@ function LayoutContent({ children, currentPageName }) {
 
   const headerBg = isHome && !scrolled
     ? "bg-transparent"
-    : "bg-white/95 backdrop-blur-md shadow-sm";
+    : "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm";
 
-  const textColor = isHome && !scrolled ? "text-white" : "text-slate-700";
-  const logoColor = isHome && !scrolled ? "text-white" : "text-slate-900";
+  const textColor = isHome && !scrolled ? "text-white" : "text-slate-700 dark:text-slate-200";
+  const logoColor = isHome && !scrolled ? "text-white" : "text-slate-900 dark:text-white";
 
   return (
     <AdminModeProvider>
@@ -317,7 +317,7 @@ function LayoutContent({ children, currentPageName }) {
         {/* Top Ad Banner */}
         {!isHome && <AdBanner placement="banner_top" currentPage={currentPageName.toLowerCase()} />}
         
-        <PullToRefresh>
+        <PullToRefresh onRefresh={() => window.location.reload()}>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPageName}
