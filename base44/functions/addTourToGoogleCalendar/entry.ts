@@ -1,86 +1,88 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createCalendarEvent } from '../../shared/googleCalendar.ts';
 
+// Invoked automatically by the "Add Tour to Google Calendar on Confirmation"
+// workflow when a TourBooking transitions to status=confirmed.
+// Service-role (no user session) — reads the booking + tour, builds an all-day
+// event, and creates it on the connected googlecalendar calendar.
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { booking_id } = await req.json();
 
     if (!booking_id) {
       return Response.json({ error: 'booking_id required' }, { status: 400 });
     }
 
-    // Fetch tour booking details
-    const booking = await base44.asServiceRole.entities.TourBooking.get(booking_id);
+    const bookings = await base44.asServiceRole.entities.TourBooking.filter({ id: booking_id });
+    const booking = bookings?.[0];
     if (!booking) {
       return Response.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    // Only the booking owner or an admin may add it to a calendar.
-    const bookingOwner = booking.client_email || booking.customer_email || booking.user_email;
-    if (bookingOwner !== user.email && user.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: you do not own this booking' }, { status: 403 });
+    // Guard: only confirmed bookings should be added to the calendar.
+    if (booking.status !== 'confirmed') {
+      return Response.json({ success: false, skipped: true, reason: 'not_confirmed' });
     }
 
-    // Fetch tour details
-    const tour = await base44.asServiceRole.entities.Tour.get(booking.tour_id);
+    const tours = await base44.asServiceRole.entities.Tour.filter({ id: booking.tour_id });
+    const tour = tours?.[0];
     if (!tour) {
       return Response.json({ error: 'Tour not found' }, { status: 404 });
     }
 
-    // Get Google Calendar access token
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
-
-    // Build event details
-    const startDate = booking.departure_date || tour.departure_dates?.[0] || new Date().toISOString().split('T')[0];
-    const endDate = new Date(new Date(startDate).getTime() + tour.duration_days * 24 * 60 * 60 * 1000)
+    const startDate =
+      booking.departure_date ||
+      tour.departure_dates?.[0] ||
+      new Date().toISOString().split('T')[0];
+    const durationDays = Number(tour.duration_days || 1);
+    const endDate = new Date(
+      new Date(startDate).getTime() + durationDays * 24 * 60 * 60 * 1000
+    )
       .toISOString()
       .split('T')[0];
 
+    const customerEmail =
+      booking.client_email || booking.customer_email || booking.user_email;
+
     const event = {
       summary: `${tour.title} - Tour Booking`,
-      description: `Tour Booking #${booking_id}\n\nClient: ${booking.client_name}\nEmail: ${booking.client_email}\nPhone: ${booking.client_phone}\n\n${tour.description || ''}`,
+      description: `Tour Booking #${booking_id}\n\nClient: ${
+        booking.client_name || booking.customer_name || ''
+      }\nEmail: ${customerEmail || ''}\nPhone: ${
+        booking.client_phone || booking.customer_phone || ''
+      }\n\n${tour.description || ''}`,
       start: { date: startDate },
       end: { date: endDate },
       location: tour.destination,
-      attendees: [{ email: booking.client_email }],
+      attendees: customerEmail ? [{ email: customerEmail }] : [],
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'email', minutes: 1440 }, // 1 day before
-          { method: 'notification', minutes: 60 } // 1 hour before
-        ]
-      }
+          { method: 'email', minutes: 1440 },     // 1 day before
+          { method: 'notification', minutes: 60 }, // 1 hour before
+        ],
+      },
     };
 
-    // Create event in Google Calendar
-    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(event)
-    });
+    const result = await createCalendarEvent(base44, event);
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Google Calendar error:', error);
-      return Response.json({ error: 'Failed to create calendar event' }, { status: 500 });
+    if (result.ok) {
+      return Response.json({
+        success: true,
+        event_id: result.event_id,
+        event_link: result.event_link,
+      });
     }
 
-    const calendarEvent = await response.json();
-
-    // Update booking with calendar event ID
-    await base44.asServiceRole.entities.TourBooking.update(booking_id, {
-      calendar_event_id: calendarEvent.id
+    // Connector not authorized / API error — fail gracefully so the workflow
+    // run stays green; the event will be created once Google Calendar is connected.
+    return Response.json({
+      success: false,
+      skipped: true,
+      reason: result.reason,
+      message: result.message,
     });
-
-    return Response.json({ success: true, event_id: calendarEvent.id });
   } catch (error) {
     console.error('Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });

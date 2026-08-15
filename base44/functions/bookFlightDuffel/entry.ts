@@ -130,12 +130,20 @@ Deno.serve(async (req) => {
 
     console.log(`[DUFFEL SUCCESS] Order: ${order.data.id} | Airline Ref: ${airlineRef} | Total: ${confirmedAmount}`);
 
+    // Extract schedule + airline details from the Duffel order so the Google
+    // Calendar automation can build an accurate event on confirmation.
+    const firstSlice = order.data.slices?.[0];
+    const departureTime = firstSlice?.segments?.[0]?.departing_at || null;
+    const airlineName = order.data.owner?.name || null;
+
     // Update the existing booking with the airline confirmation
     await base44.asServiceRole.entities.FlightBooking.update(bookingId, {
       status: 'confirmed',
       payment_status: 'paid',
       supplier: 'duffel',
-      supplier_reference: order.data.id
+      supplier_reference: order.data.id,
+      departure_time: departureTime,
+      airline_name: airlineName
     });
 
     // Revenue split record (75% airline / 25% GC Travel)

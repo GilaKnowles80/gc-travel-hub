@@ -1,0 +1,39 @@
+{
+  "name": "Add Flight to Google Calendar on Confirmation",
+  "description": "Adds the flight booking to Google Calendar when its status becomes confirmed",
+  "trigger": {
+    "condition": "${ .trigger.data.status == \"confirmed\" and .trigger.old_data.status != \"confirmed\" }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "FlightBooking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "add_flight_to_google_calendar_on_confirmation",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "addFlightToGoogleCalendar",
+            "args": {
+              "booking_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Add flight to Google Calendar"
+          }
+        }
+      }
+    ]
+  }
+}

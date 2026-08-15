@@ -26,6 +26,15 @@
       "type": "string",
       "description": "Flight number for quick reference"
     },
+    "airline_name": {
+      "type": "string",
+      "description": "Operating airline name (from the Duffel order) for calendar events"
+    },
+    "departure_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO departure datetime (from the Duffel order) for calendar events"
+    },
     "route": {
       "type": "string",
       "description": "Origin - Destination route"

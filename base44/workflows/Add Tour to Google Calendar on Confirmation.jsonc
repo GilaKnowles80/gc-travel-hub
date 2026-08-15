@@ -1,8 +1,8 @@
 {
   "name": "Add Tour to Google Calendar on Confirmation",
-  "description": "",
+  "description": "Adds the tour booking to Google Calendar when its status becomes confirmed",
   "trigger": {
-    "condition": null,
+    "condition": "${ .trigger.data.status == \"confirmed\" and .trigger.old_data.status != \"confirmed\" }",
     "config": {
       "trigger_type": "entity",
       "events": [
@@ -24,9 +24,14 @@
           "call": "invoke_backend_function",
           "with": {
             "function_name": "addTourToGoogleCalendar",
-            "args": {}
+            "args": {
+              "booking_id": "${ .trigger.entity_id }"
+            }
           },
-          "then": "end"
+          "then": "end",
+          "x-base44": {
+            "title": "Add tour to Google Calendar"
+          }
         }
       }
     ]
