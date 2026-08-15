@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
@@ -14,6 +14,7 @@ import { CurrencyProvider } from "@/components/currency/CurrencyContext";
 import { LanguageProvider } from "@/components/language/LanguageContext";
 import LanguageSelector from "@/components/language/LanguageSelector";
 import FloatingContactWidget from "@/components/support/FloatingContactWidget";
+import ReferralCapture from "@/components/affiliate/ReferralCapture";
 import { RecaptchaProvider } from "@/components/security/RecaptchaProvider";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import CookieConsent from "@/components/gdpr/CookieConsent";
@@ -51,6 +52,7 @@ const navLinks = [
   { name: "Digital Store", page: "AdminDigitalStore", icon: ShoppingBag, adminOnly: true },
   { name: "Affiliate Links", page: "AdminAffiliateAnalytics", icon: TrendingUp, adminOnly: true },
   { name: "Passenger Calendar", page: "PassengerCalendarList", icon: Calendar, adminOnly: true },
+  { name: "Featured Listings", page: "AdminFeaturedListings", icon: Star, adminOnly: true },
 ];
 
 function LayoutContent({ children, currentPageName }) {
@@ -183,6 +185,7 @@ function LayoutContent({ children, currentPageName }) {
           <GoogleTagManager />
           <GoogleAdsTracking />
           <FloatingContactWidget />
+          <ReferralCapture />
           <RealTimePaymentNotification />
           {(!user || user.role !== 'admin') && <SessionTimeout />}
           <CookieConsent />

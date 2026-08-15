@@ -30,23 +30,17 @@ export default function PremiumMembership() {
 
   const subscribeMutation = useMutation({
     mutationFn: async (planType) => {
-      const planPrice = planType === "monthly" ? 499 : 4990;
-      const endDate = moment()
-        .add(planType === "monthly" ? 1 : 12, "months")
-        .toISOString();
-
-      return await base44.entities.PremiumMembership.create({
-        user_email: user.email,
+      const res = await base44.functions.invoke("createPremiumCheckout", {
         plan_type: planType,
-        plan_price: planPrice,
-        start_date: new Date().toISOString(),
-        end_date: endDate,
-        status: "active"
       });
+      if (res?.url) {
+        window.location.href = res.url;
+      } else {
+        throw new Error(res?.error || "Could not start checkout");
+      }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["premium-membership"]);
-      toast.success("Premium membership activated!");
+    onError: (err) => {
+      toast.error(err.message || "Failed to start checkout");
     },
   });
 

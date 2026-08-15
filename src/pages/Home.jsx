@@ -14,6 +14,8 @@ import TestimonialSection from "../components/home/TestimonialSection";
 import CTASection from "../components/home/CTASection";
 import CustomerSatisfaction from "../components/home/CustomerSatisfaction";
 import AbandonmentRecovery from "../components/checkout/AbandonmentRecovery";
+import AffiliateOffersSection from "../components/affiliate/AffiliateOffersSection";
+import FeaturedListingsSection from "../components/featured/FeaturedListingsSection";
 
 export default function Home() {
   const { countryCode } = useCurrency();
@@ -62,11 +64,13 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <AbandonmentRecovery />
       </div>
+      <FeaturedListingsSection />
       <PopularFlightRoutes />
       <LiveFlightDeals />
       <FlightTrustSignals />
       <CategorySection />
       <FeaturedTours tours={displayTours} isLoading={isLoading} />
+      <AffiliateOffersSection />
       <FeaturedPackages />
       <WhyChooseUs />
       <TestimonialSection />

@@ -17,6 +17,7 @@ const MainPage = Pages[mainPageKey] || (() => null);
 const Earnings = lazy(() => import('@/pages/Earnings'));
 const FlightPaymentSuccess = lazy(() => import('@/pages/FlightPaymentSuccess'));
 const PassengerCalendarList = lazy(() => import('@/pages/PassengerCalendarList'));
+const AdminFeaturedListings = lazy(() => import('@/pages/AdminFeaturedListings'));
 
 const PageFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -84,6 +85,11 @@ const AuthenticatedApp = () => {
       <Route path="/PassengerCalendarList" element={
         <LayoutWrapper currentPageName="PassengerCalendarList">
           <PassengerCalendarList />
+        </LayoutWrapper>
+      } />
+      <Route path="/AdminFeaturedListings" element={
+        <LayoutWrapper currentPageName="AdminFeaturedListings">
+          <AdminFeaturedListings />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />

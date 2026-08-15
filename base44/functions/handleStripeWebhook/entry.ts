@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
       }
 
       // 2. Update booking status
-      if (booking_id && booking_type) {
+      if (booking_id && booking_type && booking_type !== 'premium') {
         const isFlight = booking_type === 'flight';
 
         // Flights: mark payment received but keep status 'pending'. The real
@@ -230,6 +230,33 @@ Deno.serve(async (req) => {
             await base44.asServiceRole.functions.invoke('bookFlightDuffel', { bookingId: booking_id });
           } catch (err) { console.error('Duffel booking error:', err.message); }
         }
+      }
+
+      // Activate premium membership on successful payment
+      if (booking_type === 'premium' && user_email) {
+        try {
+          const planType = session.metadata?.plan_type || 'monthly';
+          const planPrice = planType === 'annual' ? 4990 : 499;
+          const endDate = new Date();
+          endDate.setMonth(endDate.getMonth() + (planType === 'annual' ? 12 : 1));
+          await base44.asServiceRole.entities.PremiumMembership.create({
+            user_email: user_email,
+            plan_type: planType,
+            plan_price: planPrice,
+            start_date: new Date().toISOString(),
+            end_date: endDate.toISOString(),
+            status: 'active',
+            stripe_subscription_id: session.id,
+          });
+          await base44.asServiceRole.entities.Notification.create({
+            user_email,
+            title: '👑 Premium Membership Activated',
+            message: `Your ${planType} premium membership is now active! Enjoy 50% off service fees, 2x loyalty points, priority support and exclusive deals.`,
+            type: 'payment_confirmed',
+            link: '/PremiumMembership',
+          });
+          console.log(`[PREMIUM] Activated ${planType} for ${user_email}`);
+        } catch (err) { console.error('Premium activation error:', err.message); }
       }
 
       // Handle package bookings
