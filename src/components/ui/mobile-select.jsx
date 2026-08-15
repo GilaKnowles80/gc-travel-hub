@@ -21,21 +21,27 @@ export function MobileSelect({ value, onValueChange, placeholder, children, trig
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Extract options from children
-  const options = React.Children.toArray(children).flatMap(child => {
-    if (child.type?.displayName === 'SelectContent') {
-      return React.Children.toArray(child.props.children).flatMap(item => {
-        if (item.type?.displayName === 'SelectItem') {
-          return [{
-            value: item.props.value,
-            label: item.props.children
-          }];
-        }
-        return [];
-      });
+  // Extract options from children, recursing so both a full <Select> wrapper
+  // and a flat SelectTrigger + SelectContent pattern work.
+  const collectItemOptions = (node) => {
+    if (node == null || typeof node !== 'object') return [];
+    if (Array.isArray(node)) return node.flatMap(collectItemOptions);
+    if (node.type?.displayName === 'SelectItem') {
+      return [{ value: node.props.value, label: node.props.children }];
     }
-    return [];
-  });
+    return collectItemOptions(node.props?.children);
+  };
+
+  const collectOptions = (node) => {
+    if (node == null || typeof node !== 'object') return [];
+    if (Array.isArray(node)) return node.flatMap(collectOptions);
+    if (node.type?.displayName === 'SelectContent') {
+      return collectItemOptions(node.props?.children);
+    }
+    return collectOptions(node.props?.children);
+  };
+
+  const options = collectOptions(children);
 
   const selectedLabel = options.find(opt => opt.value === value)?.label || placeholder;
 

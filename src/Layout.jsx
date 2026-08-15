@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -77,7 +77,32 @@ function LayoutContent({ children, currentPageName }) {
     Profile: [createPageUrl("Profile")],
   });
   const navigate = useNavigate();
+  const location = useLocation();
   const isHome = currentPageName === "Home";
+
+  // Sync the system dark-mode preference to the 'dark' class on <html>.
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = (isDark) => {
+      document.documentElement.classList.toggle('dark', isDark);
+    };
+    apply(mql.matches);
+    const listener = (e) => apply(e.matches);
+    mql.addEventListener('change', listener);
+    return () => mql.removeEventListener('change', listener);
+  }, []);
+
+  // Preserve deep tab history: record each visited route on the active tab's stack
+  // so switching bottom-nav tabs restores the deepest page for that tab.
+  useEffect(() => {
+    const path = location.pathname;
+    setNavigationStack((prev) => {
+      const key = currentPageName;
+      const stack = prev[key] || [];
+      if (stack[stack.length - 1] === path) return prev;
+      return { ...prev, [key]: [...stack, path] };
+    });
+  }, [location.pathname, currentPageName]);
 
   const handleTabPress = (pageName, isCurrentTab) => {
     if (isCurrentTab) {

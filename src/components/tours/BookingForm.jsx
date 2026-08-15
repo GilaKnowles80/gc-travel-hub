@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, Loader2, Users, Calendar, CreditCard } from "lucide-react";
 import { toast } from "sonner";
@@ -126,16 +127,18 @@ export default function BookingForm({ tour, onClose }) {
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-2">
                 <Label>Title *</Label>
-                <Select value={form.title} onValueChange={(v) => update("title", v)}>
-                  <SelectTrigger className="rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MR">Mr.</SelectItem>
-                    <SelectItem value="MRS">Mrs.</SelectItem>
-                    <SelectItem value="MS">Ms.</SelectItem>
-                  </SelectContent>
-                </Select>
+                <MobileSelect value={form.title} onValueChange={(v) => update("title", v)} placeholder="Title">
+                  <Select value={form.title} onValueChange={(v) => update("title", v)}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MR">Mr.</SelectItem>
+                      <SelectItem value="MRS">Mrs.</SelectItem>
+                      <SelectItem value="MS">Ms.</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </MobileSelect>
               </div>
               <div className="space-y-2">
                 <Label>First Name *</Label>
@@ -231,30 +234,34 @@ export default function BookingForm({ tour, onClose }) {
             </div>
             <div className="space-y-2">
               <Label>Number of Travelers</Label>
-              <Select value={String(form.number_of_travelers)} onValueChange={(v) => update("number_of_travelers", Number(v))}>
-                <SelectTrigger className="rounded-xl">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: tour.group_size_max || 10 }, (_, i) => i + 1).map((n) => (
-                    <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "traveler" : "travelers"}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect value={String(form.number_of_travelers)} onValueChange={(v) => update("number_of_travelers", Number(v))} placeholder="Number of travelers">
+                <Select value={String(form.number_of_travelers)} onValueChange={(v) => update("number_of_travelers", Number(v))}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: tour.group_size_max || 10 }, (_, i) => i + 1).map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "traveler" : "travelers"}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
             {tour.departure_dates?.length > 0 ? (
               <div className="space-y-2">
                 <Label>Departure Date</Label>
-                <Select value={form.departure_date} onValueChange={(v) => update("departure_date", v)}>
-                  <SelectTrigger className="rounded-xl">
-                    <SelectValue placeholder="Select a date" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tour.departure_dates.map((d) => (
-                      <SelectItem key={d} value={d}>{d}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <MobileSelect value={form.departure_date} onValueChange={(v) => update("departure_date", v)} placeholder="Select a date">
+                  <Select value={form.departure_date} onValueChange={(v) => update("departure_date", v)}>
+                    <SelectTrigger className="rounded-xl">
+                      <SelectValue placeholder="Select a date" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tour.departure_dates.map((d) => (
+                        <SelectItem key={d} value={d}>{d}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </MobileSelect>
               </div>
             ) : (
               <div className="space-y-2">
