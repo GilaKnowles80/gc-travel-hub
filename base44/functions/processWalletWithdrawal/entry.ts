@@ -10,14 +10,17 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json();
-    const { amount, withdrawMethod, bankAccount, accountName, userEmail } = payload;
+    const { amount, withdrawMethod, bankAccount, accountName } = payload;
 
     if (!amount || amount <= 0) {
       return Response.json({ success: false, error: "Invalid amount" }, { status: 400 });
     }
 
+    // Always operate on the authenticated user's own wallet — never a client-supplied email.
+    const walletEmail = user.email;
+
     // Fetch user's wallet
-    const wallets = await base44.entities.Wallet.filter({ user_email: userEmail });
+    const wallets = await base44.entities.Wallet.filter({ user_email: walletEmail });
     const wallet = wallets[0];
 
     if (!wallet) {
@@ -38,7 +41,7 @@ Deno.serve(async (req) => {
     const transactionId = `wd_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     await base44.entities.WalletTransaction.create({
-      user_email: userEmail,
+      user_email: walletEmail,
       transaction_type: "withdrawal",
       amount: amount,
       description: `Withdrawal to ${withdrawMethod} - ${bankAccount}`,
@@ -51,7 +54,7 @@ Deno.serve(async (req) => {
     try {
       // Assuming there's a WithdrawalRequest entity
       await base44.asServiceRole.entities.create('WithdrawalRequest', {
-        user_email: userEmail,
+        user_email: walletEmail,
         amount: amount,
         withdraw_method: withdrawMethod,
         bank_account: bankAccount,
@@ -66,7 +69,7 @@ Deno.serve(async (req) => {
     }
 
     // Log withdrawal for audit
-    console.log(`Withdrawal requested: ${userEmail} - ₱${amount} via ${withdrawMethod} (ID: ${transactionId})`);
+    console.log(`Withdrawal requested: ${walletEmail} - ₱${amount} via ${withdrawMethod} (ID: ${transactionId})`);
 
     return Response.json({
       success: true,

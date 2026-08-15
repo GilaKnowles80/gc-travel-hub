@@ -1,5 +1,16 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+function constantTimeEquals(a, b) {
+  a = String(a); b = String(b);
+  const la = a.length, lb = b.length;
+  let diff = la ^ lb;
+  const max = Math.max(la, lb);
+  for (let i = 0; i < max; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -22,8 +33,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Account is inactive or suspended' }, { status: 403 });
     }
 
-    // Simple password verification (in production, use bcrypt)
-    if (supplier.password_hash !== password) {
+    // Constant-time password comparison to mitigate timing attacks.
+    // NOTE: passwords are still stored in plaintext under password_hash — migrate to
+    // bcrypt/argon2 hashing and restrict Supplier read RLS to admins (follow-up).
+    if (!constantTimeEquals(String(supplier.password_hash), String(password))) {
       return Response.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 

@@ -16,13 +16,43 @@ const CTRIP_IPS = [
   '47.236.92.39', '8.219.222.124', '47.236.151.68', '47.245.107.167'
 ];
 
+function ipToInt(ip) {
+  return ip.split('.').reduce((acc, oct) => (acc << 8) + (parseInt(oct, 10) >>> 0), 0) >>> 0;
+}
+
+function isCtripIp(ip) {
+  if (!ip || !/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)) return false;
+  const ipInt = ipToInt(ip);
+  for (const entry of CTRIP_IPS) {
+    if (entry === ip) return true;
+    if (entry.includes('/')) {
+      const [base, bitsStr] = entry.split('/');
+      if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(base)) continue;
+      const bits = parseInt(bitsStr, 10);
+      if (Number.isNaN(bits) || bits < 0 || bits > 32) continue;
+      const baseInt = ipToInt(base);
+      const mask = bits === 0 ? 0 : (0xFFFFFFFF << (32 - bits)) >>> 0;
+      if ((ipInt & mask) >>> 0 === (baseInt & mask) >>> 0) return true;
+    }
+  }
+  return false;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    // Validate IP (optional but recommended)
-    const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');
+    // Validate that the request originates from a trusted Ctrip source IP.
+    const clientIP = (req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '').split(',')[0].trim();
     console.log('Ctrip webhook received from IP:', clientIP);
+
+    if (!clientIP || !isCtripIp(clientIP)) {
+      console.warn('Ctrip webhook rejected: untrusted IP', clientIP);
+      return new Response(buildErrorResponse('Unauthorized source'), {
+        headers: { 'Content-Type': 'text/xml' },
+        status: 401
+      });
+    }
 
     // Parse XML body
     const xmlBody = await req.text();

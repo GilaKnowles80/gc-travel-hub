@@ -10,6 +10,14 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const { stripe_session_id, payment_id } = await req.json();
 
     if (!stripe_session_id) {
@@ -30,6 +38,14 @@ Deno.serve(async (req) => {
 
     // Update Payment record if payment_id provided
     if (payment_id) {
+      // Verify the Stripe session belongs to this payment's booking before updating.
+      const existingPayments = await base44.asServiceRole.entities.Payment.filter({ id: payment_id });
+      const existing = existingPayments[0];
+      const sessionBookingId = session.metadata?.booking_id || session.metadata?.bookingId;
+      if (existing && sessionBookingId && String(existing.booking_id) !== String(sessionBookingId)) {
+        return Response.json({ error: 'Stripe session does not match this payment record' }, { status: 403 });
+      }
+
       await base44.asServiceRole.entities.Payment.update(payment_id, {
         status: paymentStatus,
         stripe_payment_intent: paymentIntent?.id,

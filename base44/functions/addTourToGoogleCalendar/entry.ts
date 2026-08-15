@@ -3,6 +3,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { booking_id } = await req.json();
 
     if (!booking_id) {
@@ -13,6 +18,12 @@ Deno.serve(async (req) => {
     const booking = await base44.asServiceRole.entities.TourBooking.get(booking_id);
     if (!booking) {
       return Response.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // Only the booking owner or an admin may add it to a calendar.
+    const bookingOwner = booking.client_email || booking.customer_email || booking.user_email;
+    if (bookingOwner !== user.email && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: you do not own this booking' }, { status: 403 });
     }
 
     // Fetch tour details

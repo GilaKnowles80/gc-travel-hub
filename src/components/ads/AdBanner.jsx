@@ -75,11 +75,18 @@ export default function AdBanner({ placement = 'banner_top', currentPage = 'all'
 
   if (!activeAd) return null;
 
-  // External ad code
+  // External ad code — rendered in a sandboxed iframe (no allow-same-origin) so any
+  // embedded markup/scripts cannot access the parent document, cookies, or session.
   if (activeAd.ad_type === 'external_ad' && activeAd.external_code) {
     return (
       <div className="relative">
-        <div dangerouslySetInnerHTML={{ __html: activeAd.external_code }} />
+        <iframe
+          title={activeAd.title || 'Advertisement'}
+          sandbox="allow-scripts allow-popups allow-forms"
+          srcDoc={activeAd.external_code}
+          className="w-full border-0"
+          style={{ minHeight: 90 }}
+        />
       </div>
     );
   }

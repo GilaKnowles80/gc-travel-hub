@@ -40,6 +40,12 @@ Deno.serve(async (req) => {
     const booking = await base44.asServiceRole.entities[entityName].get(bookingId);
     if (!booking) return Response.json({ error: 'Booking not found' }, { status: 404 });
 
+    // Only the booking owner or an admin may refund/cancel it.
+    const bookingOwner = booking.customer_email || booking.passenger_email || booking.guest_email || booking.user_email;
+    if (bookingOwner !== user.email && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: you do not own this booking' }, { status: 403 });
+    }
+
     // ── Step 2: Check fare rules ──────────────────────────────────────────
     const nonRefundableSuppliers = ['biyaheko', 'tripzynx']; // Typically non-refundable
     const isNonRefundable = nonRefundableSuppliers.includes(booking.supplier) && bookingType === 'flight';

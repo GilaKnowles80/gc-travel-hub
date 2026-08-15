@@ -13,18 +13,11 @@ function isDomestic(booking) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-
-    // Allow both authenticated admin calls and scheduled automation calls
-    let isAuthorized = false;
-    try {
-      const user = await base44.auth.me();
-      if (user?.role === 'admin') isAuthorized = true;
-    } catch (_) {
-      // Scheduled automation - use service role
-      isAuthorized = true;
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    if (!isAuthorized) {
+    if (user.role !== 'admin') {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 

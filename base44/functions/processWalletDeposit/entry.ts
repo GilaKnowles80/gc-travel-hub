@@ -91,6 +91,29 @@ async function processPayMongoDeposit(cardData, amount) {
   }
 }
 
+async function verifyPayPalOrder(orderId, expectedAmount) {
+  try {
+    const auth = btoa(`${PAYPAL_CLIENT_ID}:${PAYPAL_SECRET}`);
+    const res = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderId}`, {
+      headers: { Authorization: `Basic ${auth}` },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { success: false, error: (data.error && data.error.message) || "PayPal order lookup failed" };
+    }
+    if (data.status !== "COMPLETED") {
+      return { success: false, error: "PayPal order is not completed" };
+    }
+    const paid = parseFloat((data.purchase_units && data.purchase_units[0] && data.purchase_units[0].amount && data.purchase_units[0].amount.value) || "0");
+    if (paid !== Number(expectedAmount)) {
+      return { success: false, error: "PayPal amount mismatch" };
+    }
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -101,12 +124,14 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json();
-    const { amount, paymentMethod, cardName, cardNumber, expMonth, expYear, cvv, userEmail } = payload;
+    const { amount, paymentMethod, cardName, cardNumber, expMonth, expYear, cvv, paypalOrderId } = payload;
 
     if (!amount || amount <= 0) {
       return Response.json({ success: false, error: "Invalid amount" }, { status: 400 });
     }
 
+    // Always credit the authenticated user's own wallet — never a client-supplied email.
+    const walletEmail = user.email;
     let result;
     
     if (paymentMethod === "stripe") {
@@ -114,8 +139,15 @@ Deno.serve(async (req) => {
     } else if (paymentMethod === "paymongo") {
       result = await processPayMongoDeposit({ cardName, cardNumber, expMonth, expYear, cvv }, amount);
     } else if (paymentMethod === "paypal") {
-      // PayPal would typically redirect to PayPal's flow
-      result = { success: true, transactionId: "paypal_" + Date.now() };
+      // Verify the real PayPal order before crediting — never trust a client-asserted payment.
+      if (!paypalOrderId) {
+        return Response.json({ success: false, error: "PayPal order ID required" }, { status: 400 });
+      }
+      const verified = await verifyPayPalOrder(paypalOrderId, amount);
+      if (!verified.success) {
+        return Response.json({ success: false, error: verified.error || "PayPal payment not verified" }, { status: 400 });
+      }
+      result = { success: true, transactionId: paypalOrderId };
     } else {
       return Response.json({ success: false, error: "Invalid payment method" }, { status: 400 });
     }
@@ -125,7 +157,7 @@ Deno.serve(async (req) => {
     }
 
     // If payment succeeded, update wallet
-    const wallets = await base44.entities.Wallet.filter({ user_email: userEmail });
+    const wallets = await base44.entities.Wallet.filter({ user_email: walletEmail });
     const currentWallet = wallets[0];
     const newBalance = (currentWallet?.balance || 0) + amount;
 
@@ -133,7 +165,7 @@ Deno.serve(async (req) => {
       await base44.entities.Wallet.update(currentWallet.id, { balance: newBalance });
     } else {
       await base44.entities.Wallet.create({
-        user_email: userEmail,
+        user_email: walletEmail,
         balance: amount,
         points_balance: 0,
       });
@@ -141,7 +173,7 @@ Deno.serve(async (req) => {
 
     // Record transaction
     await base44.entities.WalletTransaction.create({
-      user_email: userEmail,
+      user_email: walletEmail,
       transaction_type: "deposit",
       amount: amount,
       description: `Deposited ₱${amount.toLocaleString()} via ${paymentMethod}`,
@@ -149,7 +181,7 @@ Deno.serve(async (req) => {
       transaction_id: result.transactionId,
     });
 
-    console.log(`Deposit processed: ${userEmail} - ₱${amount} via ${paymentMethod}`);
+    console.log(`Deposit processed: ${walletEmail} - ₱${amount} via ${paymentMethod}`);
 
     return Response.json({ success: true, message: "Deposit successful", balance: newBalance });
   } catch (error) {
