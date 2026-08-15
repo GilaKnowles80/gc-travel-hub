@@ -8,6 +8,17 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import SecureAdminRoute from '@/components/security/SecureAdminRoute';
+
+// Pages that require admin role — all "Admin*" pages plus management/portals
+const ADMIN_PAGE_NAMES = new Set([
+  'ManageReservations', 'DatabaseSchema', 'SalesDashboard',
+  'FinitechArchitecture', 'RegulatoryChecklist', 'LogoGenerator',
+  'AdminCodeBackup', 'AdminIntegrations',
+  'BiyahekoPortal', 'TripzynxPortal', 'WanderlinxPortal', 'TwelveGoPortal',
+  'PassengerCalendarList', 'AdminFeaturedListings',
+]);
+const isAdminPage = (name) => name?.startsWith('Admin') || ADMIN_PAGE_NAMES.has(name);
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -69,7 +80,7 @@ const AuthenticatedApp = () => {
           path={`/${path}`}
           element={
             <LayoutWrapper currentPageName={path}>
-              <Page />
+              {isAdminPage(path) ? <SecureAdminRoute><Page /></SecureAdminRoute> : <Page />}
             </LayoutWrapper>
           }
         />
@@ -86,12 +97,12 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/PassengerCalendarList" element={
         <LayoutWrapper currentPageName="PassengerCalendarList">
-          <PassengerCalendarList />
+          <SecureAdminRoute><PassengerCalendarList /></SecureAdminRoute>
         </LayoutWrapper>
       } />
       <Route path="/AdminFeaturedListings" element={
         <LayoutWrapper currentPageName="AdminFeaturedListings">
-          <AdminFeaturedListings />
+          <SecureAdminRoute><AdminFeaturedListings /></SecureAdminRoute>
         </LayoutWrapper>
       } />
       <Route path="/TourAssistant" element={
