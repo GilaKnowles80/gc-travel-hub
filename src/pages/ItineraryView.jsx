@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,18 @@ export default function ItineraryView() {
     queryFn: async () => await base44.entities.Itinerary.get(itineraryId),
     enabled: !!itineraryId,
   });
+
+  // Real-time: invalidate this itinerary whenever it changes so the view
+  // updates live (e.g. when a newly confirmed flight is auto-attached).
+  useEffect(() => {
+    if (!itineraryId) return;
+    const unsubscribe = base44.entities.Itinerary.subscribe((event) => {
+      if (!event || event.id === itineraryId) {
+        queryClient.invalidateQueries({ queryKey: ["itinerary", itineraryId] });
+      }
+    });
+    return unsubscribe;
+  }, [itineraryId, queryClient]);
 
   const shareMutation = useMutation({
     mutationFn: async () => {
