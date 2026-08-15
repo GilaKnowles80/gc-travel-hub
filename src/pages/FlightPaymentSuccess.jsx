@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2, XCircle, Plane, Home, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import AddToCalendarButton from "@/components/bookings/AddToCalendarButton";
+import FlightAssistantWidget from "@/components/agents/FlightAssistantWidget";
 
 // Statuses: loading | confirming | confirmed | failed | notfound
 export default function FlightPaymentSuccess() {
@@ -80,6 +81,7 @@ export default function FlightPaymentSuccess() {
     const pnr = booking?.booking_ref || booking?.supplier_reference || (booking?.id?.slice(-8).toUpperCase());
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center p-4">
+        <FlightAssistantWidget stepLabel="Confirmation" />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -149,6 +151,7 @@ export default function FlightPaymentSuccess() {
   if (status === "failed") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+        <FlightAssistantWidget stepLabel="Confirmation" />
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-xl w-full">
           <Card className="border-0 shadow-2xl">
             <CardContent className="p-10 text-center">

@@ -12,6 +12,7 @@ import { createPageUrl } from "@/pages/utils";
 import FlightBookingForm from "../components/flights/FlightBookingForm";
 import PriceAlertDialog from "../components/flights/PriceAlertDialog";
 import ReviewList from "../components/reviews/ReviewList";
+import FlightAssistantWidget from "@/components/agents/FlightAssistantWidget";
 import ReviewForm from "../components/reviews/ReviewForm";
 import moment from "moment";
 
@@ -394,6 +395,8 @@ export default function FlightDetail() {
           </div>
         </div>
       </div>
+
+      <FlightAssistantWidget stepLabel="Flight Details" />
     </div>
   );
 }

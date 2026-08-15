@@ -12,6 +12,7 @@ import BookingSummary from "@/components/checkout/BookingSummary";
 import PaymentGuarantee from "@/components/checkout/PaymentGuarantee";
 import PriceDisplay from "@/components/currency/PriceDisplay";
 import { createPageUrl } from "@/pages/utils";
+import FlightAssistantWidget from "@/components/agents/FlightAssistantWidget";
 
 export default function FlightCheckout() {
   const navigate = useNavigate();
@@ -308,6 +309,7 @@ export default function FlightCheckout() {
           )}
         </div>
       </div>
+      <FlightAssistantWidget stepLabel="Checkout" />
     </div>
   );
 }

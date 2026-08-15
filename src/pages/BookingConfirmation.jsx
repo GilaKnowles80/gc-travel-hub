@@ -10,6 +10,7 @@ import PriceDisplay from "@/components/currency/PriceDisplay";
 import CurrencySelector from "@/components/currency/CurrencySelector";
 import { trackPurchase } from "@/components/analytics/GoogleAdsTracking";
 import { base44 } from "@/api/base44Client";
+import FlightAssistantWidget from "@/components/agents/FlightAssistantWidget";
 
 export default function BookingConfirmation() {
     const [bookingData, setBookingData] = useState(null);
@@ -259,6 +260,7 @@ export default function BookingConfirmation() {
                     </Link>
                 </motion.div>
             </div>
+            <FlightAssistantWidget stepLabel="Confirmation" />
         </div>
     );
 }
