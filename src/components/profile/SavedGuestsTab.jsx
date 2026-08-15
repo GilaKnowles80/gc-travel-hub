@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Loader2, Plus, Trash2, Edit2, User, Hotel } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -199,15 +201,18 @@ export default function SavedGuestsTab({ user }) {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label>Title</Label>
-                <select
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full h-9 rounded-md border border-input px-3"
-                >
-                  <option value="MR">Mr.</option>
-                  <option value="MRS">Mrs.</option>
-                  <option value="MS">Ms.</option>
-                </select>
+                <MobileSelect value={formData.title} onValueChange={(v) => setFormData({ ...formData, title: v })} placeholder="Title">
+                  <Select value={formData.title} onValueChange={(v) => setFormData({ ...formData, title: v })}>
+                    <SelectTrigger className="w-full h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MR">Mr.</SelectItem>
+                      <SelectItem value="MRS">Mrs.</SelectItem>
+                      <SelectItem value="MS">Ms.</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </MobileSelect>
               </div>
               <div>
                 <Label>First Name *</Label>
