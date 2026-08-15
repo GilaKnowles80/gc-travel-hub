@@ -59,8 +59,8 @@ const countryCurrencyMap = {
 };
 
 export function CurrencyProvider({ children }) {
-  const [selectedCurrency, setSelectedCurrency] = useState('PHP');
-  const [countryCode, setCountryCode] = useState('PH');
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [countryCode, setCountryCode] = useState('US');
 
   // On mount: fetch user preference AND geo-location together, then decide
   useEffect(() => {
@@ -74,7 +74,7 @@ export function CurrencyProvider({ children }) {
         if (isMounted && geo?.countryCode) {
           setCountryCode(geo.countryCode);
           // ip-api returns currency directly, fallback to map
-          const detected = geo.currency || countryCurrencyMap[geo.countryCode] || 'PHP';
+          const detected = geo.currency || countryCurrencyMap[geo.countryCode] || 'USD';
           setSelectedCurrency(detected);
         }
       } else if (isMounted && userData.preferred_currency) {
