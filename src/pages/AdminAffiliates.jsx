@@ -14,6 +14,7 @@ import moment from "moment";
 export default function AdminAffiliates() {
   const [selectedAffiliate, setSelectedAffiliate] = useState(null);
   const [showPayoutDialog, setShowPayoutDialog] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("active");
   const queryClient = useQueryClient();
 
   const { data: affiliates = [] } = useQuery({
@@ -48,6 +49,18 @@ export default function AdminAffiliates() {
   const totalPendingAmount = pendingCommissions.reduce(
     (sum, c) => sum + (c.commission_amount || 0),
     0
+  );
+
+  // Performance view: filter by status, then rank by who drives the most traffic
+  // (referrals first, bookings as tiebreak) so top partners surface to the top.
+  const filteredAffiliates = (
+    statusFilter === "all"
+      ? affiliates
+      : affiliates.filter((a) => a.status === statusFilter)
+  ).sort(
+    (a, b) =>
+      (b.total_referrals || 0) - (a.total_referrals || 0) ||
+      (b.total_bookings || 0) - (a.total_bookings || 0)
   );
 
   return (
@@ -104,7 +117,24 @@ export default function AdminAffiliates() {
           <TabsContent value="affiliates">
             <Card>
               <CardHeader>
-                <CardTitle>All Affiliates</CardTitle>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <CardTitle>Active Affiliates</CardTitle>
+                  <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
+                    {["active", "pending", "suspended", "all"].map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setStatusFilter(s)}
+                        className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-colors ${
+                          statusFilter === s
+                            ? "bg-white text-amber-700 shadow-sm"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -116,13 +146,14 @@ export default function AdminAffiliates() {
                         <th className="text-center p-3">Referrals</th>
                         <th className="text-center p-3">Bookings</th>
                         <th className="text-right p-3">Revenue</th>
+                        <th className="text-right p-3">Earned</th>
                         <th className="text-right p-3">Balance</th>
                         <th className="text-center p-3">Status</th>
                         <th className="text-center p-3">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {affiliates.map((aff) => (
+                      {filteredAffiliates.map((aff) => (
                         <tr key={aff.id} className="border-b">
                           <td className="p-3 text-sm">{aff.user_email}</td>
                           <td className="p-3 text-sm font-mono">{aff.affiliate_code}</td>
@@ -134,6 +165,9 @@ export default function AdminAffiliates() {
                           </td>
                           <td className="p-3 text-sm text-right">
                             ₱{aff.total_revenue?.toLocaleString() || 0}
+                          </td>
+                          <td className="p-3 text-sm text-right font-semibold text-amber-700">
+                            ₱{aff.total_commission_earned?.toLocaleString() || 0}
                           </td>
                           <td className="p-3 text-sm text-right font-semibold">
                             ₱{aff.commission_balance?.toLocaleString() || 0}
