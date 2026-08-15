@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Cookie, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  getStoredConsent,
+  recordConsent,
+  openConsentBanner,
+  onConsentBannerOpen,
+  CONSENT_DESCRIPTIONS
+} from '@/lib/consent';
 
 export default function CookieConsent() {
   const [show, setShow] = useState(false);
@@ -15,34 +21,29 @@ export default function CookieConsent() {
     marketing: false
   });
 
+  // Show the banner automatically only when no consent choice exists yet.
   useEffect(() => {
-    const consent = localStorage.getItem('gdpr_consent');
-    if (!consent) {
-      setTimeout(() => setShow(true), 1000);
+    if (!getStoredConsent()) {
+      const t = setTimeout(() => setShow(true), 1000);
+      return () => clearTimeout(t);
     }
   }, []);
 
-  const saveConsent = async (acceptAll = false) => {
-    const finalPrefs = acceptAll ? { essential: true, analytics: true, marketing: true } : preferences;
-    
-    try {
-      const user = await base44.auth.me().catch(() => null);
-      if (user) {
-        for (const [type, granted] of Object.entries(finalPrefs)) {
-          await base44.entities.GDPRConsent.create({
-            user_email: user.email,
-            consent_type: type,
-            granted,
-            consent_date: new Date().toISOString()
-          }).catch(console.error);
-        }
-      }
-    } catch (error) {
-      console.error('GDPR consent error:', error);
-    }
+  // Allow other parts of the app (footer link, preferences center) to re-open the banner.
+  useEffect(() => onConsentBannerOpen(() => setShow(true)), []);
 
-    localStorage.setItem('gdpr_consent', JSON.stringify(finalPrefs));
+  const saveConsent = async (mode) => {
+    let prefs;
+    if (mode === 'all') {
+      prefs = { essential: true, analytics: true, marketing: true };
+    } else if (mode === 'essential') {
+      prefs = { essential: true, analytics: false, marketing: false };
+    } else {
+      prefs = preferences;
+    }
+    await recordConsent(prefs);
     setShow(false);
+    setShowDetails(false);
   };
 
   return (
@@ -52,7 +53,7 @@ export default function CookieConsent() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4"
+          className="fixed bottom-0 left-0 right-0 z-[60] p-4"
         >
           <Card className="max-w-4xl mx-auto p-6 shadow-2xl border-2">
             <div className="flex items-start gap-4">
@@ -60,9 +61,10 @@ export default function CookieConsent() {
               <div className="flex-1">
                 <h3 className="font-bold text-lg mb-2">🍪 Cookie Consent</h3>
                 <p className="text-sm text-slate-600 mb-4">
-                  We use cookies to enhance your experience, analyze site traffic, and personalize content. 
+                  We use cookies to enhance your experience, analyze site traffic, and personalize content.
+                  You can change these preferences at any time.
                   {!showDetails && (
-                    <button 
+                    <button
                       onClick={() => setShowDetails(true)}
                       className="text-blue-600 hover:underline ml-1"
                     >
@@ -73,48 +75,45 @@ export default function CookieConsent() {
 
                 {showDetails && (
                   <div className="space-y-3 mb-4 p-4 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Checkbox checked={true} disabled />
-                      <label className="text-sm font-medium">
-                        Essential Cookies (Required)
-                      </label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        checked={preferences.analytics}
-                        onCheckedChange={(checked) => setPreferences({...preferences, analytics: checked})}
-                      />
-                      <label className="text-sm">
-                        Analytics Cookies - Help us improve our services
-                      </label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        checked={preferences.marketing}
-                        onCheckedChange={(checked) => setPreferences({...preferences, marketing: checked})}
-                      />
-                      <label className="text-sm">
-                        Marketing Cookies - Personalized offers and ads
-                      </label>
-                    </div>
+                    {['essential', 'analytics', 'marketing'].map((type) => (
+                      <div key={type} className="flex items-start gap-2">
+                        <div className="pt-0.5">
+                          <Checkbox
+                            checked={type === 'essential' ? true : preferences[type]}
+                            disabled={type === 'essential'}
+                            onCheckedChange={(checked) =>
+                              setPreferences((p) => ({ ...p, [type]: checked }))
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium capitalize">{type} Cookies</label>
+                          <p className="text-xs text-slate-500">{CONSENT_DESCRIPTIONS[type]}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                <div className="flex gap-2">
-                  <Button onClick={() => saveConsent(true)} className="bg-amber-600 hover:bg-amber-700">
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => saveConsent('all')} className="bg-amber-600 hover:bg-amber-700">
                     Accept All
                   </Button>
                   {showDetails && (
-                    <Button onClick={() => saveConsent(false)} variant="outline">
+                    <Button onClick={() => saveConsent('custom')} variant="outline">
                       Save Preferences
                     </Button>
                   )}
-                  <Button onClick={() => saveConsent(false)} variant="ghost">
-                    Essential Only
+                  <Button onClick={() => saveConsent('essential')} variant="ghost">
+                    Reject All
                   </Button>
                 </div>
               </div>
-              <button onClick={() => setShow(false)} className="text-slate-400 hover:text-slate-600">
+              <button
+                onClick={() => saveConsent('essential')}
+                className="text-slate-400 hover:text-slate-600"
+                aria-label="Dismiss and reject non-essential cookies"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -124,3 +123,5 @@ export default function CookieConsent() {
     </AnimatePresence>
   );
 }
+
+export { openConsentBanner };

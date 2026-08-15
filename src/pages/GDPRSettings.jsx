@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Shield, Download, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import ConsentPreferences from '@/components/gdpr/ConsentPreferences';
 
 export default function GDPRSettings() {
   const [user, setUser] = useState(null);
@@ -69,6 +70,8 @@ export default function GDPRSettings() {
         </div>
 
         <div className="space-y-6">
+          <ConsentPreferences />
+
           <Card>
             <CardHeader>
               <CardTitle>Export Your Data</CardTitle>

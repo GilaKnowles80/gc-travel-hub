@@ -437,6 +437,15 @@ function LayoutContent({ children, currentPageName }) {
                 <li><Link to={createPageUrl("TermsOfService")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Terms of Service</Link></li>
                 <li><Link to={createPageUrl("PrivacyPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Privacy Policy</Link></li>
                 <li><Link to={createPageUrl("RefundPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Refund Policy</Link></li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => import('@/lib/consent').then((m) => m.openConsentBanner())}
+                    className="text-slate-400 hover:text-amber-400 text-sm transition-colors cursor-pointer py-1 px-2 rounded hover:bg-slate-700/20 active:scale-95"
+                  >
+                    Cookie Preferences
+                  </button>
+                </li>
               </ul>
             </div>
 
