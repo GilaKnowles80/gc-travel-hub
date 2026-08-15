@@ -35,7 +35,13 @@
             "enum": [
               "flight",
               "tour",
-              "hotel"
+              "hotel",
+              "bus",
+              "ferry",
+              "cruise",
+              "car_rental",
+              "visa",
+              "train"
             ]
           },
           "booking_id": {

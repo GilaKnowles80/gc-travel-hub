@@ -1,0 +1,40 @@
+{
+  "name": "Auto-Attach Car Rental to Itinerary on Confirmation",
+  "description": "Attaches the car rental booking to the passenger's itinerary when its status becomes confirmed",
+  "trigger": {
+    "condition": "${ .trigger.data.status == \"confirmed\" and .trigger.old_data.status != \"confirmed\" }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "CarRentalBooking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_attach_car_rental_to_itinerary_on_confirmation",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "autoAttachBookingToItinerary",
+            "args": {
+              "booking_id": "${ .trigger.entity_id }",
+              "booking_type": "car_rental"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Attach car rental to itinerary"
+          }
+        }
+      }
+    ]
+  }
+}

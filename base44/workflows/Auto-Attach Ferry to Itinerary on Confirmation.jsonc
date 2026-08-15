@@ -1,0 +1,40 @@
+{
+  "name": "Auto-Attach Ferry to Itinerary on Confirmation",
+  "description": "Attaches the ferry booking to the passenger's itinerary when its status becomes confirmed",
+  "trigger": {
+    "condition": "${ .trigger.data.status == \"confirmed\" and .trigger.old_data.status != \"confirmed\" }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "FerryBooking"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_attach_ferry_to_itinerary_on_confirmation",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "autoAttachBookingToItinerary",
+            "args": {
+              "booking_id": "${ .trigger.entity_id }",
+              "booking_type": "ferry"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Attach ferry to itinerary"
+          }
+        }
+      }
+    ]
+  }
+}
