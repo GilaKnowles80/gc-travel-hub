@@ -49,6 +49,22 @@ Deno.serve(async (req) => {
       supplier: 'direct',
     });
 
+    // Hold payment in wallet escrow — wallet holds the real-time amount first;
+    // auto-settles (75% merchant / 25% commission on success, 100% release on
+    // failure) when the booking status flips via the processWalletEscrow workflows.
+    try {
+      await base44.functions.invoke('processWalletEscrow', {
+        action: 'hold',
+        user_email: customer_email,
+        booking_id: booking.id,
+        booking_type: product_type,
+        amount: total_price,
+        supplier: 'direct',
+      });
+    } catch (holdErr) {
+      console.error('Wallet escrow hold failed (non-fatal):', holdErr.message);
+    }
+
     // Create payment split record
     const paymentSplit = await base44.asServiceRole.entities.PaymentSplit.create({
       booking_id: booking.id,
