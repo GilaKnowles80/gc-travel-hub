@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Smartphone } from "lucide-react";
-import PayMongoPayment from "./PayMongoPayment";
+import { Wallet } from "lucide-react";
+import PayPalPayment from "./PayPalPayment";
 
 export default function PaymentMethodSelector({ 
   amount, 
-  currency = "PHP", 
+  currency = "USD", 
   bookingData,
   onSuccess,
   onError 
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("paymongo");
+  const [selectedMethod, setSelectedMethod] = useState("paypal");
 
   const paymentMethods = [
     {
-      id: "paymongo",
-      name: "PayMongo",
-      icon: Smartphone,
-      description: "GCash, Maya, Credit/Debit Cards",
+      id: "paypal",
+      name: "PayPal",
+      icon: Wallet,
+      description: "Pay with PayPal balance, bank, or card",
       available: true,
     },
   ];
@@ -72,11 +72,13 @@ export default function PaymentMethodSelector({
 
       {/* Payment Forms */}
       <div>
-        {selectedMethod === "paymongo" && (
-          <PayMongoPayment
+        {selectedMethod === "paypal" && (
+          <PayPalPayment
             amount={amount}
+            currency={currency}
             bookingData={bookingData}
             onSuccess={onSuccess}
+            onError={onError}
           />
         )}
       </div>

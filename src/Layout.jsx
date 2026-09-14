@@ -440,6 +440,7 @@ function LayoutContent({ children, currentPageName }) {
                 <li><Link to={createPageUrl("TermsOfService")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Terms of Service</Link></li>
                 <li><Link to={createPageUrl("PrivacyPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Privacy Policy</Link></li>
                 <li><Link to={createPageUrl("RefundPolicy")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Refund Policy</Link></li>
+                <li><Link to={createPageUrl("SoftwareLicense")} className="text-slate-400 hover:text-amber-400 text-sm transition-colors">Software License</Link></li>
                 <li>
                   <button
                     type="button"

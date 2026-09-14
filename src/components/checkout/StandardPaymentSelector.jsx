@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2, Smartphone } from "lucide-react";
-import PayMongoPayment from "@/components/payment/PayMongoPayment";
+import { CheckCircle2, Wallet } from "lucide-react";
+import PayPalPayment from "@/components/payment/PayPalPayment";
 
 /**
  * StandardPaymentSelector
- * - PayMongo: Local PH gateway (GCash, Maya, Credit/Debit Cards)
+ * - PayPal: Global payment gateway (PayPal balance, bank, card)
  */
 export default function StandardPaymentSelector({
   bookingData,
@@ -14,15 +14,15 @@ export default function StandardPaymentSelector({
   isProcessing,
   onPayment,
 }) {
-  const [selectedMethod, setSelectedMethod] = useState("paymongo");
+  const [selectedMethod, setSelectedMethod] = useState("paypal");
   const total = bookingData?.totalPrice || 0;
 
   const paymentMethods = [
     {
-      id: "paymongo",
-      name: "PayMongo",
-      description: "GCash, Maya, Credit/Debit Cards",
-      icon: Smartphone,
+      id: "paypal",
+      name: "PayPal",
+      description: "Pay with PayPal balance, bank, or card",
+      icon: Wallet,
     },
   ];
 
@@ -80,9 +80,10 @@ export default function StandardPaymentSelector({
       </RadioGroup>
 
       {/* Payment Action */}
-      {selectedMethod === "paymongo" && (
-        <PayMongoPayment
+      {selectedMethod === "paypal" && (
+        <PayPalPayment
           amount={total}
+          currency={bookingData?.currency || "USD"}
           bookingData={bookingData}
         />
       )}
@@ -101,9 +102,8 @@ export default function StandardPaymentSelector({
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
         <p className="text-xs text-blue-700">🔒 Your payment is encrypted and secure. We never store your card details.</p>
         <div className="flex items-center justify-center gap-3 mt-2 flex-wrap text-xs text-slate-500 font-semibold">
-          <span>PayMongo</span><span className="text-slate-300">|</span>
-          <span>GCash</span><span className="text-slate-300">|</span>
-          <span>Maya</span>
+          <span>PayPal</span><span className="text-slate-300">|</span>
+          <span>Buyer Protection</span>
         </div>
         <p className="text-xs text-blue-600 mt-1">
           Need help? <a href="tel:+639154401150" className="font-semibold underline">Call +639154401150</a> — we're here 24/7.

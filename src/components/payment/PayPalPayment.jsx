@@ -4,13 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 export default function PayPalPayment({ amount, currency = "USD", onSuccess, onError, bookingData }) {
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [clientId, setClientId] = useState(null);
+
+  React.useEffect(() => {
+    base44.functions.invoke("getPayPalConfig")
+      .then((res) => setClientId(res.data?.clientId))
+      .catch(() => setClientId(null));
+  }, []);
 
   const initialOptions = {
-    clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "sb",
+    clientId: clientId || "sb",
     currency: currency,
     intent: "capture",
   };
@@ -41,6 +49,14 @@ export default function PayPalPayment({ amount, currency = "USD", onSuccess, onE
           </div>
         )}
 
+        {!clientId && !processing && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+            <span className="ml-2 text-sm text-slate-600">Loading PayPal...</span>
+          </div>
+        )}
+
+        {clientId && (
         <PayPalScriptProvider options={initialOptions}>
           <PayPalButtons
             style={{ layout: "vertical", color: "blue", shape: "rect", label: "pay" }}
@@ -118,6 +134,7 @@ export default function PayPalPayment({ amount, currency = "USD", onSuccess, onE
             }}
           />
         </PayPalScriptProvider>
+        )}
 
         <div className="mt-4 text-xs text-slate-500 space-y-1">
           <p>• Secure payment powered by PayPal</p>

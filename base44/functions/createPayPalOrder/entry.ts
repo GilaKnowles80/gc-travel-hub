@@ -46,8 +46,10 @@ Deno.serve(async (req) => {
             currency_code: currency,
             value: amount.toFixed(2),
           },
-          description: `GC Travel Booking - ${bookingData?.bookingType || "Travel Service"}`,
-          custom_id: bookingData?.bookingId || "",
+          description: `ArGie-C Travel Booking - ${bookingData?.bookingType || "Travel Service"}`,
+          custom_id: bookingData?.bookingType && bookingData?.bookingId
+            ? `${bookingData.bookingType}:${bookingData.bookingId}`
+            : bookingData?.bookingId || "",
         },
       ],
       application_context: {

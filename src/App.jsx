@@ -31,6 +31,8 @@ const PassengerCalendarList = lazy(() => import('@/pages/PassengerCalendarList')
 const AdminFeaturedListings = lazy(() => import('@/pages/AdminFeaturedListings'));
 const TourAssistant = lazy(() => import('@/pages/TourAssistant'));
 const VisaAssistant = lazy(() => import('@/pages/VisaAssistant'));
+const SoftwareLicense = lazy(() => import('@/pages/SoftwareLicense'));
+const LiveItineraries = lazy(() => import('@/pages/LiveItineraries'));
 
 const PageFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center">
@@ -113,6 +115,16 @@ const AuthenticatedApp = () => {
       <Route path="/VisaAssistant" element={
         <LayoutWrapper currentPageName="VisaAssistant">
           <VisaAssistant />
+        </LayoutWrapper>
+      } />
+      <Route path="/SoftwareLicense" element={
+        <LayoutWrapper currentPageName="SoftwareLicense">
+          <SoftwareLicense />
+        </LayoutWrapper>
+      } />
+      <Route path="/LiveItineraries" element={
+        <LayoutWrapper currentPageName="LiveItineraries">
+          <LiveItineraries />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
