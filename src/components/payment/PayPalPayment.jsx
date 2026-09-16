@@ -108,7 +108,23 @@ export default function PayPalPayment({ amount, currency = "USD", onSuccess, onE
 
                 toast.success("Payment successful!");
                 setProcessing(false);
-                
+
+                // Notify admin of automatic PayPal checkout
+                try {
+                  await base44.functions.invoke("notifyCheckoutPayment", {
+                    bookingType: bookingData?.bookingType || "general",
+                    bookingId: bookingData?.bookingId || "",
+                    amount,
+                    currency,
+                    paymentMode: "paypal_automatic",
+                    customerEmail: bookingData?.customerEmail || "",
+                    customerName: bookingData?.customerName || "",
+                    referenceNo: details?.id || data?.orderID || "",
+                  });
+                } catch (e) {
+                  console.error("Admin notification failed:", e);
+                }
+
                 if (onSuccess) {
                   onSuccess(details);
                 }

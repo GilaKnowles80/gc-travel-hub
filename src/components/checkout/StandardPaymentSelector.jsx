@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2, Wallet } from "lucide-react";
+import { CheckCircle2, Wallet, QrCode } from "lucide-react";
 import PayPalPayment from "@/components/payment/PayPalPayment";
+import PayPalManualPayment from "@/components/payment/PayPalManualPayment";
 
 /**
  * StandardPaymentSelector
@@ -20,9 +21,15 @@ export default function StandardPaymentSelector({
   const paymentMethods = [
     {
       id: "paypal",
-      name: "PayPal",
-      description: "Pay with PayPal balance, bank, or card",
+      name: "PayPal Checkout",
+      description: "Pay instantly with PayPal balance, bank, or card",
       icon: Wallet,
+    },
+    {
+      id: "paypal_manual",
+      name: "PayPal QR / Email Transfer",
+      description: "Scan our QR code or send to our PayPal email manually",
+      icon: QrCode,
     },
   ];
 
@@ -82,6 +89,13 @@ export default function StandardPaymentSelector({
       {/* Payment Action */}
       {selectedMethod === "paypal" && (
         <PayPalPayment
+          amount={total}
+          currency={bookingData?.currency || "USD"}
+          bookingData={bookingData}
+        />
+      )}
+      {selectedMethod === "paypal_manual" && (
+        <PayPalManualPayment
           amount={total}
           currency={bookingData?.currency || "USD"}
           bookingData={bookingData}

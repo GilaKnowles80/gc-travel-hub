@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Wallet } from "lucide-react";
+import { Wallet, QrCode } from "lucide-react";
 import PayPalPayment from "./PayPalPayment";
+import PayPalManualPayment from "./PayPalManualPayment";
 
 export default function PaymentMethodSelector({ 
   amount, 
@@ -16,9 +17,16 @@ export default function PaymentMethodSelector({
   const paymentMethods = [
     {
       id: "paypal",
-      name: "PayPal",
+      name: "PayPal Checkout",
       icon: Wallet,
-      description: "Pay with PayPal balance, bank, or card",
+      description: "Pay instantly with PayPal balance, bank, or card",
+      available: true,
+    },
+    {
+      id: "paypal_manual",
+      name: "PayPal QR / Email Transfer",
+      icon: QrCode,
+      description: "Scan our QR code or send to our PayPal email manually",
       available: true,
     },
   ];
@@ -79,6 +87,14 @@ export default function PaymentMethodSelector({
             bookingData={bookingData}
             onSuccess={onSuccess}
             onError={onError}
+          />
+        )}
+        {selectedMethod === "paypal_manual" && (
+          <PayPalManualPayment
+            amount={amount}
+            currency={currency}
+            bookingData={bookingData}
+            onSuccess={onSuccess}
           />
         )}
       </div>

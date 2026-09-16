@@ -142,6 +142,8 @@ Deno.serve(async (req) => {
           const userEmail = booking.passenger_email || booking.guest_email ||
                             booking.customer_email || booking.applicant_email ||
                             booking.user_email || booking.renter_email;
+          const customerName = booking.passenger_name || booking.guest_name ||
+                               booking.customer_name || booking.applicant_name || "";
 
           if (userEmail && bookingType !== "flight") {
             await base44.asServiceRole.integrations.Core.SendEmail({
@@ -165,11 +167,27 @@ Deno.serve(async (req) => {
               console.error("[PAYPAL WEBHOOK] Wallet credit error:", err.message);
             }
           }
+
+          // Notify admin of automatic checkout
+          try {
+            await base44.asServiceRole.functions.invoke("notifyCheckoutPayment", {
+              bookingType,
+              bookingId,
+              amount: parseFloat(resource?.amount?.value || "0"),
+              currency: resource?.amount?.currency_code || "USD",
+              paymentMode: "paypal_automatic",
+              customerEmail: userEmail || "",
+              customerName,
+              referenceNo: resource?.id || event?.id || "",
+            });
+          } catch (err) {
+            console.error("[PAYPAL WEBHOOK] Admin notification error:", err.message);
+          }
         }
       } catch (err) {
         console.error("[PAYPAL WEBHOOK] Post-payment processing error:", err.message);
       }
-    }
+      }
 
     // Handle refunds
     if (eventType === "PAYMENT.CAPTURE.REFUNDED") {
