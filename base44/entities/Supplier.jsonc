@@ -14,7 +14,8 @@
         "tour_operator",
         "ferry",
         "bus",
-        "car_rental"
+        "car_rental",
+        "transport_aggregator"
       ],
       "description": "Type of supplier"
     },
