@@ -16,6 +16,7 @@ import CustomerSatisfaction from "../components/home/CustomerSatisfaction";
 import AbandonmentRecovery from "../components/checkout/AbandonmentRecovery";
 import AffiliateOffersSection from "../components/affiliate/AffiliateOffersSection";
 import FeaturedListingsSection from "../components/featured/FeaturedListingsSection";
+import TwelveGoBookingSection from "../components/home/TwelveGoBookingSection";
 
 export default function Home() {
   const { countryCode } = useCurrency();
@@ -69,6 +70,7 @@ export default function Home() {
       <LiveFlightDeals />
       <FlightTrustSignals />
       <CategorySection />
+      <TwelveGoBookingSection />
       <FeaturedTours tours={displayTours} isLoading={isLoading} />
       <AffiliateOffersSection />
       <FeaturedPackages />

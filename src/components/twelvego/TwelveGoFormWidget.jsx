@@ -20,7 +20,7 @@ export default function TwelveGoFormWidget({ width = 250, height = 320 }) {
     script.setAttribute("data-width", String(width));
     script.setAttribute("data-height", String(height));
     script.setAttribute("data-border", "1");
-    script.setAttribute("data-logo", "https://gctravelandtours.com/logo.png");
+    script.setAttribute("data-logo", "https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/ccc1d0359_logo.jpg");
     script.setAttribute("data-domain", "12go.asia");
     script.async = true;
 
