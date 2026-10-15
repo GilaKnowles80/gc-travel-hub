@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MobileSelect } from '@/components/ui/mobile-select';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Star, Plus, Trash2 } from 'lucide-react';
 
@@ -74,16 +75,18 @@ export default function TourSelector({ selectedTours, onAdd, onRemove }) {
         <CardContent className="pt-6">
           <div className="flex-1">
             <label className="text-sm font-medium">Participants</label>
-            <Select value={participants.toString()} onValueChange={(v) => setParticipants(parseInt(v))}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(n => (
-                  <SelectItem key={n} value={n.toString()}>{n} Participant{n > 1 ? 's' : ''}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <MobileSelect value={participants.toString()} onValueChange={(v) => setParticipants(parseInt(v))} placeholder="Participants">
+              <Select value={participants.toString()} onValueChange={(v) => setParticipants(parseInt(v))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(n => (
+                    <SelectItem key={n} value={n.toString()}>{n} Participant{n > 1 ? 's' : ''}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </MobileSelect>
           </div>
         </CardContent>
       </Card>

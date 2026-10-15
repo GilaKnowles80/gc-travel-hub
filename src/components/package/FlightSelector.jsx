@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MobileSelect } from '@/components/ui/mobile-select';
 import { Badge } from '@/components/ui/badge';
 import { Plane, Clock, Plus, Trash2 } from 'lucide-react';
 import moment from 'moment';
@@ -76,30 +77,34 @@ export default function FlightSelector({ selectedFlights, onAdd, onRemove }) {
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <label className="text-sm font-medium">Passengers</label>
-              <Select value={passengers.toString()} onValueChange={(v) => setPassengers(parseInt(v))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[1, 2, 3, 4, 5, 6].map(n => (
-                    <SelectItem key={n} value={n.toString()}>{n} Passenger{n > 1 ? 's' : ''}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect value={passengers.toString()} onValueChange={(v) => setPassengers(parseInt(v))} placeholder="Passengers">
+                <Select value={passengers.toString()} onValueChange={(v) => setPassengers(parseInt(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4, 5, 6].map(n => (
+                      <SelectItem key={n} value={n.toString()}>{n} Passenger{n > 1 ? 's' : ''}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
             <div className="flex-1">
               <label className="text-sm font-medium">Cabin Class</label>
-              <Select value={selectedCabin} onValueChange={setSelectedCabin}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="economy">Economy</SelectItem>
-                  <SelectItem value="premium_economy">Premium Economy</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                  <SelectItem value="first_class">First Class</SelectItem>
-                </SelectContent>
-              </Select>
+              <MobileSelect value={selectedCabin} onValueChange={setSelectedCabin} placeholder="Cabin Class">
+                <Select value={selectedCabin} onValueChange={setSelectedCabin}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="economy">Economy</SelectItem>
+                    <SelectItem value="premium_economy">Premium Economy</SelectItem>
+                    <SelectItem value="business">Business</SelectItem>
+                    <SelectItem value="first_class">First Class</SelectItem>
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
           </div>
         </CardContent>

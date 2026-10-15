@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Label } from "@/components/ui/label";
 import { Users, Home, Zap, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
@@ -111,18 +112,20 @@ export default function TourCustomizer({ tour, onPriceChange }) {
 
             <div>
               <Label>Tour Duration</Label>
-              <Select value={String(duration)} onValueChange={(v) => setDuration(Number(v))}>
-                <SelectTrigger className="mt-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[tour.duration_days, ...Array.from({ length: 5 }, (_, i) => tour.duration_days + (i + 1) * 2)].map(d => (
-                    <SelectItem key={d} value={String(d)}>
-                      {d} days
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect value={String(duration)} onValueChange={(v) => setDuration(Number(v))} placeholder="Tour Duration">
+                <Select value={String(duration)} onValueChange={(v) => setDuration(Number(v))}>
+                  <SelectTrigger className="mt-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[tour.duration_days, ...Array.from({ length: 5 }, (_, i) => tour.duration_days + (i + 1) * 2)].map(d => (
+                      <SelectItem key={d} value={String(d)}>
+                        {d} days
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
           </CardContent>
         </Card>

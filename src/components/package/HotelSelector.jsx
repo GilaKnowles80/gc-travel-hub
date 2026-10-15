@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MobileSelect } from '@/components/ui/mobile-select';
 import { Badge } from '@/components/ui/badge';
 import { Hotel, MapPin, Star, Plus, Trash2 } from 'lucide-react';
 
@@ -72,29 +73,33 @@ export default function HotelSelector({ selectedHotels, onAdd, onRemove }) {
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <label className="text-sm font-medium">Nights</label>
-              <Select value={nights.toString()} onValueChange={(v) => setNights(parseInt(v))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[1, 2, 3, 4, 5, 6, 7, 10, 14].map(n => (
-                    <SelectItem key={n} value={n.toString()}>{n} Night{n > 1 ? 's' : ''}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect value={nights.toString()} onValueChange={(v) => setNights(parseInt(v))} placeholder="Nights">
+                <Select value={nights.toString()} onValueChange={(v) => setNights(parseInt(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4, 5, 6, 7, 10, 14].map(n => (
+                      <SelectItem key={n} value={n.toString()}>{n} Night{n > 1 ? 's' : ''}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
             <div className="flex-1">
               <label className="text-sm font-medium">Rooms</label>
-              <Select value={rooms.toString()} onValueChange={(v) => setRooms(parseInt(v))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[1, 2, 3, 4].map(n => (
-                    <SelectItem key={n} value={n.toString()}>{n} Room{n > 1 ? 's' : ''}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect value={rooms.toString()} onValueChange={(v) => setRooms(parseInt(v))} placeholder="Rooms">
+                <Select value={rooms.toString()} onValueChange={(v) => setRooms(parseInt(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4].map(n => (
+                      <SelectItem key={n} value={n.toString()}>{n} Room{n > 1 ? 's' : ''}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </MobileSelect>
             </div>
           </div>
         </CardContent>

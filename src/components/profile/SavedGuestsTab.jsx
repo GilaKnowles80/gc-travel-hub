@@ -68,11 +68,21 @@ export default function SavedGuestsTab({ user }) {
     mutationFn: async (id) => {
       return await base44.entities.SavedGuest.delete(id);
     },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["saved-guests", user?.email] });
+      const prevGuests = queryClient.getQueryData(["saved-guests", user?.email]);
+      queryClient.setQueryData(["saved-guests", user?.email], (old) =>
+        old?.filter((g) => g.id !== id) || []
+      );
+      return { prevGuests };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["saved-guests"] });
       toast.success("Guest deleted successfully");
     },
-    onError: (error) => {
+    onError: (error, id, context) => {
+      if (context?.prevGuests) {
+        queryClient.setQueryData(["saved-guests", user?.email], context.prevGuests);
+      }
       toast.error(error.message || "Failed to delete guest");
     }
   });

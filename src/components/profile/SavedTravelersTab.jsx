@@ -73,11 +73,21 @@ export default function SavedTravelersTab({ user }) {
     mutationFn: async (id) => {
       return await base44.entities.SavedTraveler.delete(id);
     },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["saved-travelers", user?.email] });
+      const prevTravelers = queryClient.getQueryData(["saved-travelers", user?.email]);
+      queryClient.setQueryData(["saved-travelers", user?.email], (old) =>
+        old?.filter((t) => t.id !== id) || []
+      );
+      return { prevTravelers };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["saved-travelers"] });
       toast.success("Traveler deleted successfully");
     },
-    onError: (error) => {
+    onError: (error, id, context) => {
+      if (context?.prevTravelers) {
+        queryClient.setQueryData(["saved-travelers", user?.email], context.prevTravelers);
+      }
       toast.error(error.message || "Failed to delete traveler");
     }
   });

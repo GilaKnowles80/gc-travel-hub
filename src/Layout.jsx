@@ -219,15 +219,13 @@ function LayoutContent({ children, currentPageName }) {
                   <ChevronLeft className={`w-5 h-5 ${isHome && !scrolled ? "text-white" : "text-slate-700"}`} />
                 </button>
               )}
-              {showBackButton && (
-                <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
-                  <img
-                    src="https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/3818d130c_Argie-CLogo2.jpg"
-                    alt="ArGie-C Travel and Tours Agency"
-                    className="h-8 md:h-10 w-auto"
-                  />
-                </Link>
-              )}
+              <Link to={createPageUrl("Home")} className="flex items-center flex-shrink-0 min-w-0">
+                <img
+                  src="https://media.base44.com/images/public/698ba6f12468e8d5e020a7b5/3818d130c_Argie-CLogo2.jpg"
+                  alt="ArGie-C Travel and Tours Agency"
+                  className="h-8 md:h-10 w-auto"
+                />
+              </Link>
             </div>
 
 

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MobileSelect } from "@/components/ui/mobile-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, CheckCircle2, Loader2, FileText } from "lucide-react";
 import { toast } from "sonner";
@@ -213,20 +214,22 @@ export default function VisaAppointmentDialog({ visa, open, onOpenChange }) {
 
               <div className="space-y-2">
                 <Label>Purpose of Travel</Label>
-                <Select value={form.purpose} onValueChange={(v) => setForm({...form, purpose: v})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tourism">Tourism</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="study">Study</SelectItem>
-                    <SelectItem value="work">Work</SelectItem>
-                    <SelectItem value="family_visit">Family Visit</SelectItem>
-                    <SelectItem value="medical">Medical</SelectItem>
-                    <SelectItem value="transit">Transit</SelectItem>
-                  </SelectContent>
-                </Select>
+                <MobileSelect value={form.purpose} onValueChange={(v) => setForm({...form, purpose: v})} placeholder="Purpose of Travel">
+                  <Select value={form.purpose} onValueChange={(v) => setForm({...form, purpose: v})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tourism">Tourism</SelectItem>
+                      <SelectItem value="business">Business</SelectItem>
+                      <SelectItem value="study">Study</SelectItem>
+                      <SelectItem value="work">Work</SelectItem>
+                      <SelectItem value="family_visit">Family Visit</SelectItem>
+                      <SelectItem value="medical">Medical</SelectItem>
+                      <SelectItem value="transit">Transit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </MobileSelect>
               </div>
 
               <div className="space-y-2">
