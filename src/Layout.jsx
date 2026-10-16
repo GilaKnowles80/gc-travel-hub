@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar, Star, Ship, Car, Package, TrainFront, Stamp, Compass } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar, Star, Ship, Car, Package, TrainFront, Stamp, Compass, Bus as BusIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
@@ -32,10 +32,11 @@ const navLinks = [
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
   { name: "Tours", page: "Tours", icon: Compass },
   { name: "Cruises", page: "CruiseSearch", icon: Ship },
-  { name: "Ferries", page: "FerrySearch", icon: Ship },
-  { name: "Car Rentals", page: "CarRentalSearch", icon: Car },
+  { name: "Ferries", page: "FerrySearch", icon: Ship, poweredBy12go: true },
+  { name: "Buses", page: "BusSearch", icon: BusIcon, poweredBy12go: true },
+  { name: "Car Rentals", page: "CarRentalSearch", icon: Car, poweredBy12go: true },
   { name: "Packages", page: "Packages", icon: Package },
-  { name: "Trains", page: "TrainSearch", icon: TrainFront },
+  { name: "Trains", page: "TrainSearch", icon: TrainFront, poweredBy12go: true },
   { name: "Visas", page: "Visas", icon: Stamp },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "Profile", page: "Profile", icon: User },
@@ -271,6 +272,11 @@ function LayoutContent({ children, currentPageName }) {
                       >
                         <IconComponent className="w-4 h-4" />
                         <span className="hidden md:inline">{link.name}</span>
+                        {link.poweredBy12go && (
+                          <span className="hidden md:inline-flex items-center text-[8px] font-bold px-1 py-0.5 rounded bg-emerald-100 text-emerald-700 leading-none">
+                            12Go
+                          </span>
+                        )}
                       </button>
                     </Link>
                   );
