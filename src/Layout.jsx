@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/pages/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar, Star } from "lucide-react";
+import { Menu, X, Plane, MapPin, BookOpen, Phone, User, Bell, Shield, Mail, Building2, Users, Receipt, ArrowLeft, Crown, DollarSign, TrendingUp, Globe, Home, Megaphone, ShoppingBag, ChevronLeft, Calendar, Star, Ship, Car, Package, TrainFront, Stamp, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import RealTimePaymentNotification from "@/components/payment/RealTimePaymentNotification";
@@ -30,6 +30,13 @@ const navLinks = [
   { name: "Home", page: "Home", icon: Home },
   { name: "Flights", page: "Flights", icon: Plane },
   { name: "Hotels", page: "HotelSearch", icon: MapPin },
+  { name: "Tours", page: "Tours", icon: Compass },
+  { name: "Cruises", page: "CruiseSearch", icon: Ship },
+  { name: "Ferries", page: "FerrySearch", icon: Ship },
+  { name: "Car Rentals", page: "CarRentalSearch", icon: Car },
+  { name: "Packages", page: "Packages", icon: Package },
+  { name: "Trains", page: "TrainSearch", icon: TrainFront },
+  { name: "Visas", page: "Visas", icon: Stamp },
   { name: "My Bookings", page: "MyBookings", icon: BookOpen },
   { name: "Profile", page: "Profile", icon: User },
   { name: "Support", page: "Helpdesk", icon: Mail },
