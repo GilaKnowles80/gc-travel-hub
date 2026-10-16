@@ -18,12 +18,44 @@
       "type": "string",
       "enum": [
         "booking_created",
-        "payment_confirmed",
-        "supplier_payment_done",
+        "booking_confirmed",
+        "booking_completed",
         "booking_cancelled",
+        "booking_updated",
+        "payment_confirmed",
+        "payment_failed",
+        "refund_processed",
+        "supplier_payment_done",
+        "checkout_payment",
+        "reservation_confirmed",
+        "reservation_cancelled",
+        "reservation_updated",
+        "order_created",
+        "order_completed",
+        "order_shipped",
+        "order_cancelled",
         "info"
       ],
       "description": "Notification type"
+    },
+    "booking_type": {
+      "type": "string",
+      "enum": [
+        "flight",
+        "hotel",
+        "tour",
+        "ferry",
+        "bus",
+        "car_rental",
+        "visa",
+        "cruise",
+        "train",
+        "package",
+        "insurance",
+        "digital",
+        "reservation"
+      ],
+      "description": "Category of booking/order this notification relates to"
     },
     "booking_id": {
       "type": "string",

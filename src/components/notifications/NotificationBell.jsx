@@ -76,15 +76,51 @@ export default function NotificationBell() {
     setLastNotificationCount(notifications.length);
   }, [notifications.length]);
 
-  const getNotificationIcon = (type) => {
-    const icons = {
+  const getNotificationIcon = (type, bookingType) => {
+    const bookingTypeIcons = {
+      flight: "✈️",
+      hotel: "🏨",
+      tour: "🗺️",
+      ferry: "⛴️",
+      bus: "🚌",
+      car_rental: "🚗",
+      visa: "🛂",
+      cruise: "🚢",
+      train: "🚆",
+      package: "📦",
+      insurance: "🛡️",
+      digital: "🛍️",
+      reservation: "📋",
+    };
+    const typeIcons = {
       booking_created: "🎫",
-      payment_confirmed: "✅",
-      supplier_payment_done: "💸",
+      booking_confirmed: "✅",
+      booking_completed: "🎉",
       booking_cancelled: "❌",
+      booking_updated: "📝",
+      payment_confirmed: "💳",
+      payment_failed: "⚠️",
+      refund_processed: "💰",
+      supplier_payment_done: "💸",
+      checkout_payment: "🧾",
+      reservation_confirmed: "📋",
+      reservation_cancelled: "❌",
+      reservation_updated: "📝",
+      order_created: "🛍️",
+      order_completed: "✅",
+      order_shipped: "📧",
+      order_cancelled: "❌",
       info: "ℹ️",
     };
-    return icons[type] || "🔔";
+    return bookingTypeIcons[bookingType] || typeIcons[type] || "🔔";
+  };
+
+  const getNotificationColor = (type) => {
+    if (type?.includes("cancelled") || type === "payment_failed") return "text-red-500";
+    if (type?.includes("confirmed") || type?.includes("completed") || type === "payment_confirmed") return "text-green-500";
+    if (type?.includes("created") || type === "checkout_payment" || type === "order_created") return "text-amber-500";
+    if (type?.includes("updated") || type === "order_shipped") return "text-blue-500";
+    return "text-slate-500";
   };
 
   if (!user) return null;
@@ -131,7 +167,7 @@ export default function NotificationBell() {
                   }`}
                 >
                   <div className="flex gap-3">
-                    <div className="text-2xl">{getNotificationIcon(notification.type)}</div>
+                    <div className="text-2xl">{getNotificationIcon(notification.type, notification.booking_type)}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start mb-1">
                         <p className="font-semibold text-sm">{notification.title}</p>
@@ -156,11 +192,18 @@ export default function NotificationBell() {
                           </Button>
                         </div>
                       </div>
-                      <p className="text-sm text-slate-600 mb-2">{notification.message}</p>
+                      <p className="text-sm text-slate-600 mb-2 whitespace-pre-line">{notification.message}</p>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-slate-400">
-                          {formatDistanceToNow(new Date(notification.created_date), { addSuffix: true })}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-400">
+                            {formatDistanceToNow(new Date(notification.created_date), { addSuffix: true })}
+                          </span>
+                          {notification.booking_type && (
+                            <Badge variant="outline" className={`text-[10px] capitalize ${getNotificationColor(notification.type)}`}>
+                              {notification.booking_type.replace(/_/g, ' ')}
+                            </Badge>
+                          )}
+                        </div>
                         {notification.link && (
                           <a
                             href={notification.link}
