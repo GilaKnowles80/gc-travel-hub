@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Train, ArrowRight, ExternalLink, Loader } from 'lucide-react';
+import { Train, ExternalLink } from 'lucide-react';
 import StationSelector from './StationSelector';
 
 export default function TrainlineSearchWidget() {
@@ -13,34 +12,15 @@ export default function TrainlineSearchWidget() {
     destination: '',
     date: ''
   });
-  const [loading, setLoading] = useState(false);
-  const [redirectUrl, setRedirectUrl] = useState(null);
 
-  const handleSearch = async () => {
-    if (!filters.origin || !filters.destination || !filters.date) {
-      alert('Please fill in all fields');
+  const handleSearch = () => {
+    if (!filters.origin || !filters.destination) {
+      alert('Please fill in origin and destination');
       return;
     }
-
-    setLoading(true);
-    try {
-      const response = await base44.functions.invoke('searchTrainline', {
-        origin: filters.origin,
-        destination: filters.destination,
-        departure_date: filters.date
-      });
-
-      if (response.data?.redirect_url) {
-        // Open Trainline in new tab
-        window.open(response.data.redirect_url, '_blank');
-        setRedirectUrl(response.data.redirect_url);
-      }
-    } catch (error) {
-      console.error('Search error:', error);
-      alert('Error searching Trainline. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    const datePart = filters.date ? `/${filters.date}` : '';
+    const url = `https://www.thetrainline.com/trains/${encodeURIComponent(filters.origin)}/${encodeURIComponent(filters.destination)}${datePart}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -56,38 +36,28 @@ export default function TrainlineSearchWidget() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-          <StationSelector 
-            value={filters.origin} 
-            onChange={(v) => setFilters({...filters, origin: v})} 
-            placeholder="From station..." 
+          <StationSelector
+            value={filters.origin}
+            onChange={(v) => setFilters({...filters, origin: v})}
+            placeholder="From station..."
           />
-          <StationSelector 
-            value={filters.destination} 
-            onChange={(v) => setFilters({...filters, destination: v})} 
-            placeholder="To station..." 
+          <StationSelector
+            value={filters.destination}
+            onChange={(v) => setFilters({...filters, destination: v})}
+            placeholder="To station..."
           />
-          <Input 
-            type="date" 
-            value={filters.date} 
-            onChange={(e) => setFilters({...filters, date: e.target.value})} 
+          <Input
+            type="date"
+            value={filters.date}
+            onChange={(e) => setFilters({...filters, date: e.target.value})}
             className="md:col-span-1"
           />
-          <Button 
-            className="md:col-span-2 bg-blue-600 hover:bg-blue-700" 
+          <Button
+            className="md:col-span-2 bg-blue-600 hover:bg-blue-700"
             onClick={handleSearch}
-            disabled={loading}
           >
-            {loading ? (
-              <>
-                <Loader className="w-4 h-4 mr-2 animate-spin" />
-                Searching...
-              </>
-            ) : (
-              <>
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Search on Trainline
-              </>
-            )}
+            <ExternalLink className="w-4 h-4 mr-2" />
+            Search on Trainline
           </Button>
         </div>
 

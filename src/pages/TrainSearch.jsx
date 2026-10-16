@@ -46,28 +46,37 @@ export default function TrainSearch() {
     if (!filters.origin && !filters.destination) return;
     setAiLoading(true);
     setAiResults([]);
-    const { data } = await base44.functions.invoke('getAISchedules', {
-      service_type: 'train',
-      origin: filters.origin,
-      destination: filters.destination,
-      date: filters.date
-    });
-    const mapped = (data?.results || []).map((r, i) => ({
-      id: `ai-${i}`,
-      operator: r.operator || 'Unknown',
-      train_number: r.train_number || `TRN-${i + 1}`,
-      train_type: r.train_type || 'intercity',
-      origin_station: r.origin_station || r.origin || filters.origin,
-      destination_station: r.destination_station || r.destination || filters.destination,
-      departure_time: r.departure_time || new Date().toISOString(),
-      arrival_time: r.arrival_time,
-      duration_hours: r.duration_hours || r.duration,
-      class_types: r.class_types || [{ class: 'economy', price: parseFloat(r.price) || 0, seats_available: 50 }],
-      amenities: r.amenities || [],
-      _ai: true
-    }));
-    setAiResults(mapped);
-    setAiLoading(false);
+    try {
+      const result = await Promise.race([
+        base44.functions.invoke('getAISchedules', {
+          service_type: 'train',
+          origin: filters.origin,
+          destination: filters.destination,
+          date: filters.date
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000))
+      ]);
+      const data = result?.data;
+      const mapped = (data?.results || []).map((r, i) => ({
+        id: `ai-${i}`,
+        operator: r.operator || 'Unknown',
+        train_number: r.train_number || `TRN-${i + 1}`,
+        train_type: r.train_type || 'intercity',
+        origin_station: r.origin_station || r.origin || filters.origin,
+        destination_station: r.destination_station || r.destination || filters.destination,
+        departure_time: r.departure_time || new Date().toISOString(),
+        arrival_time: r.arrival_time,
+        duration_hours: r.duration_hours || r.duration,
+        class_types: r.class_types || [{ class: 'economy', price: parseFloat(r.price) || 0, seats_available: 50 }],
+        amenities: r.amenities || [],
+        _ai: true
+      }));
+      setAiResults(mapped);
+    } catch (err) {
+      setAiResults([]);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const filteredTrains = (searched && (filters.origin || filters.destination))
